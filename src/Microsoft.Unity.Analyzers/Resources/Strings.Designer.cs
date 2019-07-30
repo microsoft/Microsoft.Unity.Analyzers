@@ -124,6 +124,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use the generic form of GetComponent.
+        /// </summary>
+        internal static string NonGenericGetComponentCodeFixTitle {
+            get {
+                return ResourceManager.GetString("NonGenericGetComponentCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of the generic form of GetComponent is preferred for type safety..
+        /// </summary>
+        internal static string NonGenericGetComponentDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("NonGenericGetComponentDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method &apos;{0}&apos; has a preferred generic overload..
+        /// </summary>
+        internal static string NonGenericGetComponentDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("NonGenericGetComponentDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of non generic GetComponent.
+        /// </summary>
+        internal static string NonGenericGetComponentDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("NonGenericGetComponentDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use CompareTag method.
         /// </summary>
         internal static string TagComparisonCodeFixTitle {

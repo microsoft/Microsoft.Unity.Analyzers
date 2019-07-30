@@ -150,4 +150,16 @@
   <data name="TagComparisonDiagnosticTitle" xml:space="preserve">
     <value>Inefficient tag comparison</value>
   </data>
+  <data name="NonGenericGetComponentCodeFixTitle" xml:space="preserve">
+    <value>Use the generic form of GetComponent</value>
+  </data>
+  <data name="NonGenericGetComponentDiagnosticDescription" xml:space="preserve">
+    <value>Usage of the generic form of GetComponent is preferred for type safety.</value>
+  </data>
+  <data name="NonGenericGetComponentDiagnosticMessageFormat" xml:space="preserve">
+    <value>Method '{0}' has a preferred generic overload.</value>
+  </data>
+  <data name="NonGenericGetComponentDiagnosticTitle" xml:space="preserve">
+    <value>Usage of non generic GetComponent</value>
+  </data>
 </root>
