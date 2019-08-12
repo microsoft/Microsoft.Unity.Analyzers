@@ -24,6 +24,7 @@ namespace Microsoft.Unity.Analyzers
 		private readonly Type _metadata;
 
 		public bool HasMessages => _metadata != null;
+		public Type Metadata => _metadata;
 
 		public ScriptInfo(ITypeSymbol symbol)
 		{

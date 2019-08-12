@@ -162,4 +162,28 @@
   <data name="NonGenericGetComponentDiagnosticTitle" xml:space="preserve">
     <value>Usage of non generic GetComponent</value>
   </data>
+  <data name="UpdateWithoutFixedDeltaTimeCodeFixTitle" xml:space="preserve">
+    <value>Use Time.deltaTime</value>
+  </data>
+  <data name="UpdateWithoutFixedDeltaTimeDiagnosticDescription" xml:space="preserve">
+    <value>Update message is frame-rate dependent, and should use Time.deltaTime instead of Time.fixedDeltaTime.</value>
+  </data>
+  <data name="UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat" xml:space="preserve">
+    <value>Usage of Time.fixedDeltaTime is suspicious in Update message</value>
+  </data>
+  <data name="UpdateWithoutFixedDeltaTimeDiagnosticTitle" xml:space="preserve">
+    <value>Suspicious Time.fixedDeltaTime usage</value>
+  </data>
+  <data name="FixedUpdateWithoutDeltaTimeCodeFixTitle" xml:space="preserve">
+    <value>Use Time.fixedDeltaTime</value>
+  </data>
+  <data name="FixedUpdateWithoutDeltaTimeDiagnosticDescription" xml:space="preserve">
+    <value>FixedUpdate message is frame-rate independent, and should use Time.fixedDeltaTime instead of Time.deltaTime.</value>
+  </data>
+  <data name="FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat" xml:space="preserve">
+    <value>Usage of Time.deltaTime is suspicious in FixedUpdate message</value>
+  </data>
+  <data name="FixedUpdateWithoutDeltaTimeDiagnosticTitle" xml:space="preserve">
+    <value>Suspicious Time.deltaTime usage</value>
+  </data>
 </root>

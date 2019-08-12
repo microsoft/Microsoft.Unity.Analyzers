@@ -124,6 +124,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use Time.fixedDeltaTime.
+        /// </summary>
+        internal static string FixedUpdateWithoutDeltaTimeCodeFixTitle {
+            get {
+                return ResourceManager.GetString("FixedUpdateWithoutDeltaTimeCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FixedUpdate message is frame-rate independent, and should use Time.fixedDeltaTime instead of Time.deltaTime..
+        /// </summary>
+        internal static string FixedUpdateWithoutDeltaTimeDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("FixedUpdateWithoutDeltaTimeDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of Time.deltaTime is suspicious in FixedUpdate message.
+        /// </summary>
+        internal static string FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suspicious Time.deltaTime usage.
+        /// </summary>
+        internal static string FixedUpdateWithoutDeltaTimeDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("FixedUpdateWithoutDeltaTimeDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use the generic form of GetComponent.
         /// </summary>
         internal static string NonGenericGetComponentCodeFixTitle {
@@ -192,6 +228,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string TagComparisonDiagnosticTitle {
             get {
                 return ResourceManager.GetString("TagComparisonDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Time.deltaTime.
+        /// </summary>
+        internal static string UpdateWithoutFixedDeltaTimeCodeFixTitle {
+            get {
+                return ResourceManager.GetString("UpdateWithoutFixedDeltaTimeCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update message is frame-rate dependent, and should use Time.deltaTime instead of Time.fixedDeltaTime..
+        /// </summary>
+        internal static string UpdateWithoutFixedDeltaTimeDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("UpdateWithoutFixedDeltaTimeDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of Time.fixedDeltaTime is suspicious in Update message.
+        /// </summary>
+        internal static string UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suspicious Time.fixedDeltaTime usage.
+        /// </summary>
+        internal static string UpdateWithoutFixedDeltaTimeDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("UpdateWithoutFixedDeltaTimeDiagnosticTitle", resourceCulture);
             }
         }
     }
