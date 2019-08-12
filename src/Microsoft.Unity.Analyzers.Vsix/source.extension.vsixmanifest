@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Microsoft.Unity.Analyzers.06b38c28-8435-4629-8395-cc04a733f39b" Version="1.0" Language="en-US" Publisher="jbevain"/>
+    <Identity Id="Microsoft.Unity.Analyzers.06b38c28-8435-4629-8395-cc04a733f39b" Version="1.0" Language="en-US" Publisher="Microsoft Corporation"/>
     <DisplayName>Microsoft.Unity.Analyzers</DisplayName>
     <Description xml:space="preserve">Diagnostics and CodeFixes for Unity</Description>
   </Metadata>
