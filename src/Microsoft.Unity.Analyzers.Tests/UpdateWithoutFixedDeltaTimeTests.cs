@@ -3,14 +3,14 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-    using Verify = UnityCodeFixVerifier<UpdateWithoutFixedDeltaTimeAnalyzer, UpdateWithoutFixedDeltaTimeCodeFix>;
+	using Verify = UnityCodeFixVerifier<UpdateWithoutFixedDeltaTimeAnalyzer, UpdateWithoutFixedDeltaTimeCodeFix>;
 
-    public class UpdateWithoutFixedDeltaTimeTests
-    {
-        [Fact]
-        public async Task UpdateWithFixedDeltaTime ()
-        {
-            const string test = @"
+	public class UpdateWithoutFixedDeltaTimeTests
+	{
+		[Fact]
+		public async Task UpdateWithFixedDeltaTime()
+		{
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -22,9 +22,9 @@ class Camera : MonoBehaviour
 }
 ";
 
-            var diagnostic = Verify.Diagnostic().WithLocation(8, 25);
+			var diagnostic = Verify.Diagnostic().WithLocation(8, 25);
 
-            const string fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -35,7 +35,7 @@ class Camera : MonoBehaviour
      }
 }
 ";
-            await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
-        }
-    }
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+	}
 }

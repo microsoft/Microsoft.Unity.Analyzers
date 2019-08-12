@@ -8,17 +8,7 @@ namespace Microsoft.Unity.Analyzers
 {
 	class ScriptInfo
 	{
-		private static readonly Type[] Types =
-		{
-			typeof(UnityEngine.Networking.NetworkBehaviour),
-			typeof(UnityEngine.StateMachineBehaviour),
-			typeof(UnityEngine.EventSystems.UIBehaviour),
-			typeof(UnityEditor.ScriptableWizard),
-			typeof(UnityEditor.EditorWindow),
-			typeof(UnityEditor.Editor),
-			typeof(UnityEngine.ScriptableObject),
-			typeof(UnityEngine.MonoBehaviour),
-		};
+		private static readonly Type[] Types = {typeof(UnityEngine.Networking.NetworkBehaviour), typeof(UnityEngine.StateMachineBehaviour), typeof(UnityEngine.EventSystems.UIBehaviour), typeof(UnityEditor.ScriptableWizard), typeof(UnityEditor.EditorWindow), typeof(UnityEditor.Editor), typeof(UnityEngine.ScriptableObject), typeof(UnityEngine.MonoBehaviour),};
 
 		private readonly ITypeSymbol _symbol;
 		private readonly Type _metadata;
@@ -79,7 +69,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			if (type == typeof(UnityEngine.IEnumeratorOrVoid))
 				return symbol.SpecialType == SpecialType.System_Void
-					|| symbol.SpecialType == SpecialType.System_Collections_IEnumerator;
+				       || symbol.SpecialType == SpecialType.System_Collections_IEnumerator;
 
 			switch (symbol.SpecialType)
 			{
@@ -97,7 +87,7 @@ namespace Microsoft.Unity.Analyzers
 			{
 				var array = symbol as IArrayTypeSymbol;
 				return array != null
-					&& TypeMatch(type.GetElementType(), array.ElementType);
+				       && TypeMatch(type.GetElementType(), array.ElementType);
 			}
 
 			var named = symbol as INamedTypeSymbol;
@@ -119,7 +109,7 @@ namespace Microsoft.Unity.Analyzers
 
 			//return named.Name == type.TypeName()
 			return named.Name == type.Name
-				&& named.ContainingNamespace.ToDisplayString() == type.Namespace;
+			       && named.ContainingNamespace.ToDisplayString() == type.Namespace;
 		}
 
 		private bool IsImplemented(MethodInfo method)

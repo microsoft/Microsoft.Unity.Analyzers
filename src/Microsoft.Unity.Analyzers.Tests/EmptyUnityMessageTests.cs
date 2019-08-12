@@ -3,14 +3,14 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-    using Verify = UnityCodeFixVerifier<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>;
+	using Verify = UnityCodeFixVerifier<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>;
 
-    public class EmptyUnityMessageTests
-    {
-        [Fact]
-        public async Task EmptyFixedUpdate ()
-        {
-            var test = @"
+	public class EmptyUnityMessageTests
+	{
+		[Fact]
+		public async Task EmptyFixedUpdate()
+		{
+			var test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -25,9 +25,9 @@ class Camera : MonoBehaviour
 }
 ";
 
-            var diagnostic = Verify.Diagnostic().WithLocation(6, 5).WithArguments("FixedUpdate");
+			var diagnostic = Verify.Diagnostic().WithLocation(6, 5).WithArguments("FixedUpdate");
 
-            var fixedTest = @"
+			var fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -38,13 +38,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-            await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
-        }
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
 
-        [Fact]
-        public async Task FixedUpdateWithBody()
-        {
-            var test = @"
+		[Fact]
+		public async Task FixedUpdateWithBody()
+		{
+			var test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -59,8 +59,7 @@ class Camera : MonoBehaviour
     }
 }
 ";
-            await Verify.VerifyAnalyzerAsync(test);
-        }
-
-    }
+			await Verify.VerifyAnalyzerAsync(test);
+		}
+	}
 }

@@ -3,14 +3,14 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-    using Verify = UnityCodeFixVerifier<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>;
+	using Verify = UnityCodeFixVerifier<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>;
 
-    public class NonGenericGetComponentTests
-    {
-        [Fact]
-        public async Task GetComponentAs()
-        {
-            var test = @"
+	public class NonGenericGetComponentTests
+	{
+		[Fact]
+		public async Task GetComponentAs()
+		{
+			var test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -24,11 +24,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-            var diagnostic = Verify.Diagnostic()
-                .WithLocation(10, 14)
-                .WithArguments("GetComponent");
+			var diagnostic = Verify.Diagnostic()
+				.WithLocation(10, 14)
+				.WithArguments("GetComponent");
 
-            var fixedTest = @"
+			var fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -41,13 +41,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-            await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
-        }
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
 
-        [Fact]
-        public async Task CastGetComponent()
-        {
-            var test = @"
+		[Fact]
+		public async Task CastGetComponent()
+		{
+			var test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -61,11 +61,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-            var diagnostic = Verify.Diagnostic()
-                .WithLocation(10, 25)
-                .WithArguments("GetComponent");
+			var diagnostic = Verify.Diagnostic()
+				.WithLocation(10, 25)
+				.WithArguments("GetComponent");
 
-            var fixedTest = @"
+			var fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -78,13 +78,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-            await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
-        }
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
 
-        [Fact]
-        public async Task GetComponentsInChildrenBoolean()
-        {
-            var test = @"
+		[Fact]
+		public async Task GetComponentsInChildrenBoolean()
+		{
+			var test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -96,11 +96,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-            var diagnostic = Verify.Diagnostic()
-                .WithLocation(8, 9)
-                .WithArguments("GetComponentsInChildren");
+			var diagnostic = Verify.Diagnostic()
+				.WithLocation(8, 9)
+				.WithArguments("GetComponentsInChildren");
 
-            var fixedTest = @"
+			var fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -111,13 +111,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-            await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
-        }
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
 
-        [Fact]
-        public async Task GetComponentTypeVariable()
-        {
-            var test = @"
+		[Fact]
+		public async Task GetComponentTypeVariable()
+		{
+			var test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -130,15 +130,15 @@ class Camera : MonoBehaviour
 }
 ";
 
-            // We're assuming that using GetComponent with anything else than a typeof
-            // argument is from a computation that makes it impossible to use the generic form
-            await Verify.VerifyAnalyzerAsync(test);
-        }
+			// We're assuming that using GetComponent with anything else than a typeof
+			// argument is from a computation that makes it impossible to use the generic form
+			await Verify.VerifyAnalyzerAsync(test);
+		}
 
-        [Fact]
-        public async Task GetComponentGeneric()
-        {
-            var test = @"
+		[Fact]
+		public async Task GetComponentGeneric()
+		{
+			var test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -150,8 +150,8 @@ class Camera : MonoBehaviour
 }
 ";
 
-            // Verify we're not misreporting an already generic usage
-            await Verify.VerifyAnalyzerAsync(test);
-        }
-    }
+			// Verify we're not misreporting an already generic usage
+			await Verify.VerifyAnalyzerAsync(test);
+		}
+	}
 }

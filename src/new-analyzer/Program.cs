@@ -3,41 +3,37 @@ using System.IO;
 
 namespace NewAnalyzer
 {
-    class Diagnostic
-    {
-        public string Id, Name;
-    }
+	class Diagnostic
+	{
+		public string Id, Name;
+	}
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            string name;
-            if (args.Length == 0)
-            {
-                Console.Write("Diagnostic name: ");
-                name = Console.ReadLine();
-            }
-            else
-            {
-                name = args[0];
-            }
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			string name;
+			if (args.Length == 0)
+			{
+				Console.Write("Diagnostic name: ");
+				name = Console.ReadLine();
+			}
+			else
+			{
+				name = args[0];
+			}
 
-            var diagnostic = new Diagnostic
-            {
-                Id = GetNextId(),
-                Name = name,
-            };
+			var diagnostic = new Diagnostic {Id = GetNextId(), Name = name,};
 
-            CreateCodeFile(diagnostic);
-            CreateTestFile(diagnostic);
-            AddResourceEntries(diagnostic);
-        }
+			CreateCodeFile(diagnostic);
+			CreateTestFile(diagnostic);
+			AddResourceEntries(diagnostic);
+		}
 
-        private static void AddResourceEntries(Diagnostic diagnostic)
-        {
-            string template =
-@"  <data name=""$(DiagnosticName)CodeFixTitle"" xml:space=""preserve"">
+		private static void AddResourceEntries(Diagnostic diagnostic)
+		{
+			string template =
+				@"  <data name=""$(DiagnosticName)CodeFixTitle"" xml:space=""preserve"">
     <value>TODO: Add code fix title</value>
   </data>
   <data name=""$(DiagnosticName)DiagnosticDescription"" xml:space=""preserve"">
@@ -51,25 +47,25 @@ namespace NewAnalyzer
   </data>
 </root>";
 
-            var resx = GetStringsResxPath();
-            var entries = Templatize(diagnostic, template);
+			var resx = GetStringsResxPath();
+			var entries = Templatize(diagnostic, template);
 
-            var file = File.ReadAllText(resx);
-            file = file.Replace("</root>", entries);
-            File.WriteAllText(resx, file);
-        }
+			var file = File.ReadAllText(resx);
+			file = file.Replace("</root>", entries);
+			File.WriteAllText(resx, file);
+		}
 
-        private static string Templatize(Diagnostic diagnostic, string template)
-        {
-            return template
-                .Replace("$(DiagnosticName)", diagnostic.Name)
-                .Replace("$(DiagnosticId)", diagnostic.Id);
-        }
+		private static string Templatize(Diagnostic diagnostic, string template)
+		{
+			return template
+				.Replace("$(DiagnosticName)", diagnostic.Name)
+				.Replace("$(DiagnosticId)", diagnostic.Id);
+		}
 
-        private static void CreateCodeFile(Diagnostic diagnostic)
-        {
-            string template =
-@"using System.Collections.Immutable;
+		private static void CreateCodeFile(Diagnostic diagnostic)
+		{
+			string template =
+				@"using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -130,15 +126,15 @@ namespace Microsoft.Unity.Analyzers
 }
 ";
 
-            var file = Path.Combine(GetProjectPath(), diagnostic.Name + ".cs");
-            var content = Templatize(diagnostic, template);
-            File.WriteAllText(file, content);
-        }
+			var file = Path.Combine(GetProjectPath(), diagnostic.Name + ".cs");
+			var content = Templatize(diagnostic, template);
+			File.WriteAllText(file, content);
+		}
 
-        private static void CreateTestFile(Diagnostic diagnostic)
-        {
-            string template =
-@"using System.Threading.Tasks;
+		private static void CreateTestFile(Diagnostic diagnostic)
+		{
+			string template =
+				@"using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -173,91 +169,91 @@ class Camera : MonoBehaviour
 }
 ";
 
-            var file = Path.Combine(GetTestsProjectPath(), diagnostic.Name + "Tests.cs");
-            var content = Templatize(diagnostic, template);
-            File.WriteAllText(file, content);
-        }
+			var file = Path.Combine(GetTestsProjectPath(), diagnostic.Name + "Tests.cs");
+			var content = Templatize(diagnostic, template);
+			File.WriteAllText(file, content);
+		}
 
-        private static string GetStringsResxPath()
-        {
-            return Path.Combine(GetProjectPath(), "Resources", "Strings.resx");
-        }
+		private static string GetStringsResxPath()
+		{
+			return Path.Combine(GetProjectPath(), "Resources", "Strings.resx");
+		}
 
-        private static string GetProjectPath()
-        {
-            return Path.Combine(GetSourcePath(), "Microsoft.Unity.Analyzers");
-        }
+		private static string GetProjectPath()
+		{
+			return Path.Combine(GetSourcePath(), "Microsoft.Unity.Analyzers");
+		}
 
-        private static string GetTestsProjectPath()
-        {
-            return Path.Combine(GetSourcePath(), "Microsoft.Unity.Analyzers.Tests");
-        }
+		private static string GetTestsProjectPath()
+		{
+			return Path.Combine(GetSourcePath(), "Microsoft.Unity.Analyzers.Tests");
+		}
 
-        private static string GetSourcePath()
-        {
-            return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Module.FullyQualifiedName), "..", "..", "..", ".."));
-        }
+		private static string GetSourcePath()
+		{
+			return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Module.FullyQualifiedName), "..", "..", "..", ".."));
+		}
 
-        private static string[] GetAllSourceFiles()
-        {
-            return Directory.GetFiles(GetProjectPath(), "*.cs", SearchOption.AllDirectories);
-        }
+		private static string[] GetAllSourceFiles()
+		{
+			return Directory.GetFiles(GetProjectPath(), "*.cs", SearchOption.AllDirectories);
+		}
 
-        private static string GetNextId()
-        {
-            int identifier = 0;
+		private static string GetNextId()
+		{
+			int identifier = 0;
 
-            foreach (var file in GetAllSourceFiles())
-            {
-                if (TryGetAnalyzerIdentifier(file, out int id))
-                    identifier = Math.Max(identifier, id);
-            }
+			foreach (var file in GetAllSourceFiles())
+			{
+				if (TryGetAnalyzerIdentifier(file, out int id))
+					identifier = Math.Max(identifier, id);
+			}
 
-            identifier++;
+			identifier++;
 
-            return string.Format("UNT{0:D4}", identifier);
-        }
+			return string.Format("UNT{0:D4}", identifier);
+		}
 
-        private static bool TryGetAnalyzerIdentifier(string file, out int identifier)
-        {
-            identifier = -1;
+		private static bool TryGetAnalyzerIdentifier(string file, out int identifier)
+		{
+			identifier = -1;
 
-            using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (var reader = new StreamReader(fs))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (TryExtractIdentifier(line, out identifier))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
+			using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+			{
+				using (var reader = new StreamReader(fs))
+				{
+					string line;
+					while ((line = reader.ReadLine()) != null)
+					{
+						if (TryExtractIdentifier(line, out identifier))
+						{
+							return true;
+						}
+					}
+				}
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        private static bool TryExtractIdentifier(string line, out int identifier)
-        {
-            const string declarationStart = "\"UNT";
-            identifier = -1;
+		private static bool TryExtractIdentifier(string line, out int identifier)
+		{
+			const string declarationStart = "\"UNT";
+			identifier = -1;
 
-            var index = line.LastIndexOf(declarationStart);
-            if (index < 0)
-                return false;
+			var index = line.LastIndexOf(declarationStart);
+			if (index < 0)
+				return false;
 
-            index++; // "
+			index++; // "
 
-            var end = line.IndexOf("\"", ++index);
+			var end = line.IndexOf("\"", ++index);
 
-            index += 3; // UNT
+			index += 3; // UNT
 
-            var id = line.Substring(index, end - index);
+			var id = line.Substring(index, end - index);
 
-            return int.TryParse(id, out identifier);
-        }
-    }
+			return int.TryParse(id, out identifier);
+		}
+	}
 }
