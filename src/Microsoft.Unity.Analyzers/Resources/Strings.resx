@@ -198,4 +198,16 @@
   <data name="InitializeOnLoadStaticCtorDiagnosticTitle" xml:space="preserve">
     <value>Missing static constructor with InitializeOnLoad attribute</value>
   </data>
+  <data name="MessageSignatureCodeFixTitle" xml:space="preserve">
+    <value>Fix message signature</value>
+  </data>
+  <data name="MessageSignatureDiagnosticDescription" xml:space="preserve">
+    <value>An incorrect method signature was detected for this Unity message</value>
+  </data>
+  <data name="MessageSignatureDiagnosticMessageFormat" xml:space="preserve">
+    <value>Unity message '{0}' has incorrect signature</value>
+  </data>
+  <data name="MessageSignatureDiagnosticTitle" xml:space="preserve">
+    <value>Incorrect message signature</value>
+  </data>
 </root>

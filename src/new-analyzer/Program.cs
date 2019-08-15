@@ -74,55 +74,55 @@ using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class $(DiagnosticName)Analyzer : DiagnosticAnalyzer
-    {
-        public const string Id = ""$(DiagnosticId)"";
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	public class $(DiagnosticName)Analyzer : DiagnosticAnalyzer
+	{
+		public const string Id = ""$(DiagnosticId)"";
 
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-            Id,
-            title: Strings.$(DiagnosticName)DiagnosticTitle,
-            messageFormat: Strings.$(DiagnosticName)DiagnosticMessageFormat,
-            //category: DiagnosticCategory._,
-            defaultSeverity: DiagnosticSeverity.Info,
-            isEnabledByDefault: true,
-            description: Strings.$(DiagnosticName)DiagnosticDescription);
+		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+			Id,
+			title: Strings.$(DiagnosticName)DiagnosticTitle,
+			messageFormat: Strings.$(DiagnosticName)DiagnosticMessageFormat,
+			//category: DiagnosticCategory._,
+			defaultSeverity: DiagnosticSeverity.Info,
+			isEnabledByDefault: true,
+			description: Strings.$(DiagnosticName)DiagnosticDescription);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-        public override void Initialize(AnalysisContext context)
-        {
-            context.EnableConcurrentExecution();
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+		public override void Initialize(AnalysisContext context)
+		{
+			context.EnableConcurrentExecution();
+			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			
 			// TODO: context.RegisterSyntaxNodeAction
-            // example: context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
-        }
-    }
+			// example: context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
+		}
+	}
 
-    [ExportCodeFixProvider(LanguageNames.CSharp)]
-    public class $(DiagnosticName)CodeFix : CodeFixProvider
-    {
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create($(DiagnosticName)Analyzer.Id);
+	[ExportCodeFixProvider(LanguageNames.CSharp)]
+	public class $(DiagnosticName)CodeFix : CodeFixProvider
+	{
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create($(DiagnosticName)Analyzer.Id);
 
-        public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-        public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
-        {
-            //var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+		{
+			//var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-            //var declaration = root.FindNode(context.Span) as MethodDeclarationSyntax;
-            //if (declaration == null)
-            //    return;
+			//var declaration = root.FindNode(context.Span) as MethodDeclarationSyntax;
+			//if (declaration == null)
+			//    return;
 
-            //context.RegisterCodeFix(
-            //    CodeAction.Create(
-            //        Strings.$(DiagnosticName)CodeFixTitle,
-            //        ct => {},
-            //        declaration.ToFullString()),
-            //    context.Diagnostics);
-        }
-    }
+			//context.RegisterCodeFix(
+			//    CodeAction.Create(
+			//        Strings.$(DiagnosticName)CodeFixTitle,
+			//        ct => {},
+			//        declaration.ToFullString()),
+			//    context.Diagnostics);
+		}
+	}
 }
 ";
 
@@ -139,14 +139,14 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-    using Verify = UnityCodeFixVerifier<$(DiagnosticName)Analyzer, $(DiagnosticName)CodeFix>;
+	using Verify = UnityCodeFixVerifier<$(DiagnosticName)Analyzer, $(DiagnosticName)CodeFix>;
 
-    public class $(DiagnosticName)Tests
-    {
-        [Fact]
-        public async Task Test ()
-        {
-            var test = @""
+	public class $(DiagnosticName)Tests
+	{
+		[Fact]
+		public async Task Test ()
+		{
+			const string test = @""
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -154,18 +154,18 @@ class Camera : MonoBehaviour
 }
 "";
 
-            var diagnostic = Verify.Diagnostic();
+			var diagnostic = Verify.Diagnostic();
 
-            var fixedTest = @""
+			const string fixedTest = @""
 using UnityEngine;
 
 class Camera : MonoBehaviour
 {
 }
 "";
-            await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
-        }
-    }
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+	}
 }
 ";
 

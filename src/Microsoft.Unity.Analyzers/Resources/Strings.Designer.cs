@@ -196,6 +196,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fix message signature.
+        /// </summary>
+        internal static string MessageSignatureCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MessageSignatureCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An incorrect method signature was detected for this Unity message.
+        /// </summary>
+        internal static string MessageSignatureDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("MessageSignatureDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity message &apos;{0}&apos; has incorrect signature.
+        /// </summary>
+        internal static string MessageSignatureDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("MessageSignatureDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incorrect message signature.
+        /// </summary>
+        internal static string MessageSignatureDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("MessageSignatureDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use the generic form of GetComponent.
         /// </summary>
         internal static string NonGenericGetComponentCodeFixTitle {
