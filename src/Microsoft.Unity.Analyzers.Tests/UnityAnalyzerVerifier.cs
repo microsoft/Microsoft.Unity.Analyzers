@@ -24,7 +24,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public static Task VerifyAnalyzerAsync(string source, params DiagnosticResult[] expected)
 		{
-			var test = new UnityAnalyzerTest {TestCode = source};
+			var test = new UnityAnalyzerTest { TestCode = source };
 			test.ExpectedDiagnostics.AddRange(expected);
 			return test.RunAsync();
 		}
@@ -62,11 +62,11 @@ namespace Microsoft.Unity.Analyzers.Tests
 			=> VerifyCodeFixAsync(source, DiagnosticResult.EmptyDiagnosticResults, fixedSource);
 
 		public static Task VerifyCodeFixAsync(string source, DiagnosticResult expected, string fixedSource)
-			=> VerifyCodeFixAsync(source, new[] {expected}, fixedSource);
+			=> VerifyCodeFixAsync(source, new[] { expected }, fixedSource);
 
 		public static Task VerifyCodeFixAsync(string source, DiagnosticResult[] expected, string fixedSource)
 		{
-			var test = new UnityCodeFixTest {TestCode = source, FixedCode = fixedSource,};
+			var test = new UnityCodeFixTest { TestCode = source, FixedCode = fixedSource, };
 
 			//if (fixedSource == source)
 			//{

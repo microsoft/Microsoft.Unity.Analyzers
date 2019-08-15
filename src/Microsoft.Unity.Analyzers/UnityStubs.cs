@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace UnityEngine
 {
+	class Object
+	{
+	}
+
 	class Collision
 	{
 	}

@@ -210,4 +210,34 @@
   <data name="MessageSignatureDiagnosticTitle" xml:space="preserve">
     <value>Incorrect message signature</value>
   </data>
+  <data name="UnityObjectNullCoalescingCodeFixTitle" xml:space="preserve">
+    <value>Use null comparison</value>
+  </data>
+  <data name="UnityObjectNullCoalescingDiagnosticDescription" xml:space="preserve">
+    <value>Unity overrides the null comparison operator for Unity objects which is incompatible with null coalescing.</value>
+  </data>
+  <data name="UnityObjectNullCoalescingDiagnosticMessageFormat" xml:space="preserve">
+    <value>Usage of null coalescing on Unity objects is incorrect</value>
+  </data>
+  <data name="UnityObjectNullCoalescingDiagnosticTitle" xml:space="preserve">
+    <value>Do not use null coalescing on Unity objects</value>
+  </data>
+  <data name="UnityObjectNullPropagationCodeFixTitle" xml:space="preserve">
+    <value>Use null comparison</value>
+  </data>
+  <data name="UnityObjectNullPropagationDiagnosticDescription" xml:space="preserve">
+    <value>Unity overrides the null comparison operator for Unity objects which is incompatible with null propagation.</value>
+  </data>
+  <data name="UnityObjectNullPropagationDiagnosticMessageFormat" xml:space="preserve">
+    <value>Usage of null propagation on Unity objects is incorrect</value>
+  </data>
+  <data name="UnityObjectNullPropagationDiagnosticTitle" xml:space="preserve">
+    <value>Unity objects should not use null propagation</value>
+  </data>
+  <data name="UnityObjectNullCoalescingSuppressorJustification" xml:space="preserve">
+    <value>Unity objects should not use null coalescing</value>
+  </data>
+  <data name="UnityObjectNullPropagationSuppressorJustification" xml:space="preserve">
+    <value>Unity objects should not use null propagation</value>
+  </data>
 </root>

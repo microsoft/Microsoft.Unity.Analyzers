@@ -304,6 +304,96 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use null comparison.
+        /// </summary>
+        internal static string UnityObjectNullCoalescingCodeFixTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectNullCoalescingCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects which is incompatible with null coalescing..
+        /// </summary>
+        internal static string UnityObjectNullCoalescingDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("UnityObjectNullCoalescingDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of null coalescing on Unity objects is incorrect.
+        /// </summary>
+        internal static string UnityObjectNullCoalescingDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("UnityObjectNullCoalescingDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not use null coalescing on Unity objects.
+        /// </summary>
+        internal static string UnityObjectNullCoalescingDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectNullCoalescingDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use null coalescing.
+        /// </summary>
+        internal static string UnityObjectNullCoalescingSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnityObjectNullCoalescingSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use null comparison.
+        /// </summary>
+        internal static string UnityObjectNullPropagationCodeFixTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectNullPropagationCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects which is incompatible with null propagation..
+        /// </summary>
+        internal static string UnityObjectNullPropagationDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("UnityObjectNullPropagationDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of null propagation on Unity objects is incorrect.
+        /// </summary>
+        internal static string UnityObjectNullPropagationDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("UnityObjectNullPropagationDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use null propagation.
+        /// </summary>
+        internal static string UnityObjectNullPropagationDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectNullPropagationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use null propagation.
+        /// </summary>
+        internal static string UnityObjectNullPropagationSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnityObjectNullPropagationSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Time.deltaTime.
         /// </summary>
         internal static string UpdateWithoutFixedDeltaTimeCodeFixTitle {
