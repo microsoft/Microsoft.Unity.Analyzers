@@ -88,6 +88,78 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use gameObject.AddComponent().
+        /// </summary>
+        internal static string CreateMonoBehaviourInstanceCodeFixTitle {
+            get {
+                return ResourceManager.GetString("CreateMonoBehaviourInstanceCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MonoBehaviours can only be added using AddComponent(). Indeed MonoBehaviour is a component, and needs to be attached to a GameObject..
+        /// </summary>
+        internal static string CreateMonoBehaviourInstanceDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("CreateMonoBehaviourInstanceDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MonoBehavior &apos;{0}&apos; cannot be instantiated directly.
+        /// </summary>
+        internal static string CreateMonoBehaviourInstanceDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("CreateMonoBehaviourInstanceDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Direct MonoBehavior instance creation is not allowed.
+        /// </summary>
+        internal static string CreateMonoBehaviourInstanceDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("CreateMonoBehaviourInstanceDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use ScriptableObject.CreateInstance().
+        /// </summary>
+        internal static string CreateScriptableObjectInstanceCodeFixTitle {
+            get {
+                return ResourceManager.GetString("CreateScriptableObjectInstanceCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ScriptableObject can only be added using CreateInstance(). Indeed ScriptableObject needs to be created by the Unity engine to handle special message methods..
+        /// </summary>
+        internal static string CreateScriptableObjectInstanceDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("CreateScriptableObjectInstanceDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ScriptableObject &apos;{0}&apos; cannot be instantiated directly.
+        /// </summary>
+        internal static string CreateScriptableObjectInstanceDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("CreateScriptableObjectInstanceDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Direct ScriptableObject instance creation is not allowed.
+        /// </summary>
+        internal static string CreateScriptableObjectInstanceDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("CreateScriptableObjectInstanceDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete empty Unity message.
         /// </summary>
         internal static string EmptyUnityMessageCodeFixTitle {

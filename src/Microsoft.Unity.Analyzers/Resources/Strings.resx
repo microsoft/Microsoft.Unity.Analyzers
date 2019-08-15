@@ -240,4 +240,28 @@
   <data name="UnityObjectNullPropagationSuppressorJustification" xml:space="preserve">
     <value>Unity objects should not use null propagation</value>
   </data>
+  <data name="CreateMonoBehaviourInstanceCodeFixTitle" xml:space="preserve">
+    <value>Use gameObject.AddComponent()</value>
+  </data>
+  <data name="CreateMonoBehaviourInstanceDiagnosticDescription" xml:space="preserve">
+    <value>MonoBehaviours can only be added using AddComponent(). Indeed MonoBehaviour is a component, and needs to be attached to a GameObject.</value>
+  </data>
+  <data name="CreateMonoBehaviourInstanceDiagnosticMessageFormat" xml:space="preserve">
+    <value>MonoBehavior '{0}' cannot be instantiated directly</value>
+  </data>
+  <data name="CreateMonoBehaviourInstanceDiagnosticTitle" xml:space="preserve">
+    <value>Direct MonoBehavior instance creation is not allowed</value>
+  </data>
+  <data name="CreateScriptableObjectInstanceCodeFixTitle" xml:space="preserve">
+    <value>Use ScriptableObject.CreateInstance()</value>
+  </data>
+  <data name="CreateScriptableObjectInstanceDiagnosticDescription" xml:space="preserve">
+    <value>ScriptableObject can only be added using CreateInstance(). Indeed ScriptableObject needs to be created by the Unity engine to handle special message methods.</value>
+  </data>
+  <data name="CreateScriptableObjectInstanceDiagnosticMessageFormat" xml:space="preserve">
+    <value>ScriptableObject '{0}' cannot be instantiated directly</value>
+  </data>
+  <data name="CreateScriptableObjectInstanceDiagnosticTitle" xml:space="preserve">
+    <value>Direct ScriptableObject instance creation is not allowed</value>
+  </data>
 </root>
