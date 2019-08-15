@@ -160,6 +160,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add static constructor.
+        /// </summary>
+        internal static string InitializeOnLoadStaticCtorCodeFixTitle {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadStaticCtorCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When applying the InitializeOnLoad attribute to a class, you need to provide a static constructor. InitializeOnLoad attribute ensures that it will be called as the editor launches..
+        /// </summary>
+        internal static string InitializeOnLoadStaticCtorDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadStaticCtorDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class &apos;{0}&apos; tagged with InitializeOnLoad attribute is missing a static constructor.
+        /// </summary>
+        internal static string InitializeOnLoadStaticCtorDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadStaticCtorDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing static constructor with InitializeOnLoad attribute.
+        /// </summary>
+        internal static string InitializeOnLoadStaticCtorDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadStaticCtorDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use the generic form of GetComponent.
         /// </summary>
         internal static string NonGenericGetComponentCodeFixTitle {

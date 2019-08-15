@@ -186,4 +186,16 @@
   <data name="FixedUpdateWithoutDeltaTimeDiagnosticTitle" xml:space="preserve">
     <value>Suspicious Time.deltaTime usage</value>
   </data>
+  <data name="InitializeOnLoadStaticCtorCodeFixTitle" xml:space="preserve">
+    <value>Add static constructor</value>
+  </data>
+  <data name="InitializeOnLoadStaticCtorDiagnosticDescription" xml:space="preserve">
+    <value>When applying the InitializeOnLoad attribute to a class, you need to provide a static constructor. InitializeOnLoad attribute ensures that it will be called as the editor launches.</value>
+  </data>
+  <data name="InitializeOnLoadStaticCtorDiagnosticMessageFormat" xml:space="preserve">
+    <value>Class '{0}' tagged with InitializeOnLoad attribute is missing a static constructor</value>
+  </data>
+  <data name="InitializeOnLoadStaticCtorDiagnosticTitle" xml:space="preserve">
+    <value>Missing static constructor with InitializeOnLoad attribute</value>
+  </data>
 </root>
