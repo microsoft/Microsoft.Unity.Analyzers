@@ -3,9 +3,9 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<UnityObjectNullCoalescingAnalyzer, UnityObjectNullCoalescingCodeFix>;
+	using Verify = UnityCodeFixVerifier<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>;
 
-	public class UnityObjectNullCoalescingTests
+	public class UnityObjectNullHandlingTests
 	{
 		[Fact]
 		public async Task FixIdentifierCoalescing()
@@ -25,7 +25,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(11, 10);
+			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
 
 			var fixedTest = @"
 using UnityEngine;
@@ -62,7 +62,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(11, 10);
+			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
 
 			var fixedTest = @"
 using UnityEngine;
@@ -100,7 +100,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(11, 10);
+			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
 
 			var fixedTest = @"
 using UnityEngine;
@@ -117,6 +117,26 @@ class Camera : MonoBehaviour
 }
 ";
 			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+
+		[Fact]
+		public async Task DetectNullPropagation()
+		{
+			var test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+	public Transform NP()
+	{
+		return transform?.transform;
+	}
+}
+";
+
+			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule).WithLocation(8, 10);
+
+			await Verify.VerifyAnalyzerAsync(test, diagnostic);
 		}
 	}
 }

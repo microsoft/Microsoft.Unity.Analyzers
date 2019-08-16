@@ -97,7 +97,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MonoBehaviours can only be added using AddComponent(). Indeed MonoBehaviour is a component, and needs to be attached to a GameObject..
+        ///   Looks up a localized string similar to MonoBehaviours should only be created using AddComponent(). MonoBehaviour is a component, and needs to be attached to a GameObject..
         /// </summary>
         internal static string CreateMonoBehaviourInstanceDiagnosticDescription {
             get {
@@ -106,7 +106,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MonoBehavior &apos;{0}&apos; cannot be instantiated directly.
+        ///   Looks up a localized string similar to MonoBehavior &apos;{0}&apos; should not instantiated directly.
         /// </summary>
         internal static string CreateMonoBehaviourInstanceDiagnosticMessageFormat {
             get {
@@ -115,7 +115,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Direct MonoBehavior instance creation is not allowed.
+        ///   Looks up a localized string similar to MonoBehavior instance creation is not recommended.
         /// </summary>
         internal static string CreateMonoBehaviourInstanceDiagnosticTitle {
             get {
@@ -133,7 +133,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ScriptableObject can only be added using CreateInstance(). Indeed ScriptableObject needs to be created by the Unity engine to handle special message methods..
+        ///   Looks up a localized string similar to ScriptableObject should only be created using CreateInstance(). ScriptableObject needs to be created by the Unity engine to handle Unity message methods..
         /// </summary>
         internal static string CreateScriptableObjectInstanceDiagnosticDescription {
             get {
@@ -142,7 +142,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ScriptableObject &apos;{0}&apos; cannot be instantiated directly.
+        ///   Looks up a localized string similar to ScriptableObject &apos;{0}&apos; should not be instantiated directly.
         /// </summary>
         internal static string CreateScriptableObjectInstanceDiagnosticMessageFormat {
             get {
@@ -151,7 +151,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Direct ScriptableObject instance creation is not allowed.
+        ///   Looks up a localized string similar to ScriptableObject instance creation is not recommended.
         /// </summary>
         internal static string CreateScriptableObjectInstanceDiagnosticTitle {
             get {

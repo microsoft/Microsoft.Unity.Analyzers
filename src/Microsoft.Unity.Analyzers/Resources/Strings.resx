@@ -250,7 +250,7 @@
     <value>MonoBehavior '{0}' should not instantiated directly</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticTitle" xml:space="preserve">
-    <value>Direct MonoBehavior instance creation is not recommended</value>
+    <value>MonoBehavior instance creation is not recommended</value>
   </data>
   <data name="CreateScriptableObjectInstanceCodeFixTitle" xml:space="preserve">
     <value>Use ScriptableObject.CreateInstance()</value>
@@ -262,6 +262,6 @@
     <value>ScriptableObject '{0}' should not be instantiated directly</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticTitle" xml:space="preserve">
-    <value>Direct ScriptableObject instance creation is not recommended</value>
+    <value>ScriptableObject instance creation is not recommended</value>
   </data>
 </root>
