@@ -340,6 +340,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fields with a SerializeField attribute should not be made readonly.
+        /// </summary>
+        internal static string ReadonlySerializeFieldSuppressorJustification {
+            get {
+                return ResourceManager.GetString("ReadonlySerializeFieldSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use CompareTag method.
         /// </summary>
         internal static string TagComparisonCodeFixTitle {

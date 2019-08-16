@@ -267,4 +267,7 @@
   <data name="UnusedMessageSuppressorJustification" xml:space="preserve">
     <value>Unity messages are invoked by the Unity runtime</value>
   </data>
+  <data name="ReadonlySerializeFieldSuppressorJustification" xml:space="preserve">
+    <value>Fields with a SerializeField attribute should not be made readonly</value>
+  </data>
 </root>

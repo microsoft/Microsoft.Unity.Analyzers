@@ -174,6 +174,10 @@ namespace UnityEngine
 		public virtual void OnStateMachineEnter(Animator animator, int stateMachinePathHash) { }
 		public virtual void OnStateMachineExit(Animator animator, int stateMachinePathHash) { }
 	}
+
+	class SerializeField : System.Attribute
+	{
+	}
 }
 
 namespace UnityEngine.EventSystems
