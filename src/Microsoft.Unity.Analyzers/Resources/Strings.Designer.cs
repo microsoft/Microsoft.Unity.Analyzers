@@ -466,6 +466,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unity messages are invoked by the Unity runtime.
+        /// </summary>
+        internal static string UnusedMessageSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnusedMessageSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Time.deltaTime.
         /// </summary>
         internal static string UpdateWithoutFixedDeltaTimeCodeFixTitle {

@@ -264,4 +264,7 @@
   <data name="CreateScriptableObjectInstanceDiagnosticTitle" xml:space="preserve">
     <value>ScriptableObject instance creation is not recommended</value>
   </data>
+  <data name="UnusedMessageSuppressorJustification" xml:space="preserve">
+    <value>Unity messages are invoked by the Unity runtime</value>
+  </data>
 </root>
