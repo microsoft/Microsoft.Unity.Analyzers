@@ -48,14 +48,31 @@ using UnityEngine;
 
 class Foo : MonoBehaviour { }
 
-class Program // We should be at least in a UnityComponent to allow the diagnostic/codefix
+class Program
 {
     public void Main() {
         Foo foo = new Foo();
     }
 }
 ";
-			await Verify.VerifyAnalyzerAsync(test);
+			var diagnostic = Verify.Diagnostic(CreateInstanceAnalyzer.MonoBehaviourId).WithLocation(9, 19).WithArguments("Foo");
+
+			// We report the diagnostic but can not offer a codefix
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Foo : MonoBehaviour { }
+
+class Program
+{
+    public void Main() {
+        Foo foo = new Foo();
+    }
+}
+";
+
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
 		}
 
 		[Fact]

@@ -10,24 +10,14 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
-using UnityEngine;
+
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class CreateInstanceAnalyzer : DiagnosticAnalyzer
 	{
-		public const string ScriptableObjectId = "UNT0011";
-
-		public static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
-			ScriptableObjectId,
-			title: Strings.CreateScriptableObjectInstanceDiagnosticTitle,
-			messageFormat: Strings.CreateScriptableObjectInstanceDiagnosticMessageFormat,
-			category: DiagnosticCategory.TypeSafety,
-			defaultSeverity: DiagnosticSeverity.Info,
-			isEnabledByDefault: true,
-			description: Strings.CreateScriptableObjectInstanceDiagnosticDescription);
-
 		public const string MonoBehaviourId = "UNT0010";
 
 		public static readonly DiagnosticDescriptor MonoBehaviourIdRule = new DiagnosticDescriptor(
@@ -39,7 +29,18 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.CreateMonoBehaviourInstanceDiagnosticDescription);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ScriptableObjectRule, MonoBehaviourIdRule);
+		public const string ScriptableObjectId = "UNT0011";
+
+		public static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
+			ScriptableObjectId,
+			title: Strings.CreateScriptableObjectInstanceDiagnosticTitle,
+			messageFormat: Strings.CreateScriptableObjectInstanceDiagnosticMessageFormat,
+			category: DiagnosticCategory.TypeSafety,
+			defaultSeverity: DiagnosticSeverity.Info,
+			isEnabledByDefault: true,
+			description: Strings.CreateScriptableObjectInstanceDiagnosticDescription);
+
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(MonoBehaviourIdRule, ScriptableObjectRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -53,47 +54,18 @@ namespace Microsoft.Unity.Analyzers
 			if (!(context.Node is ObjectCreationExpressionSyntax creation))
 				return;
 
-			var symbolInfo = ModelExtensions.GetSymbolInfo(context.SemanticModel, creation);
-			var typeSymbol = symbolInfo.Symbol.ContainingType;
-
-			var scriptInfo = new ScriptInfo(typeSymbol);
-			if (scriptInfo.Metadata == typeof(ScriptableObject))
-				context.ReportDiagnostic(Diagnostic.Create(ScriptableObjectRule, creation.GetLocation(), typeSymbol.Name));
-
-			// For MonoBehaviour, we have to check that the current class is an Unity Component, so gameObject field is available
-			if (scriptInfo.Metadata != typeof(MonoBehaviour))
-				return;
-
-			var classDeclarationSyntax = creation
-				.Ancestors()
-				.OfType<ClassDeclarationSyntax>()
-				.FirstOrDefault();
-
-			if (classDeclarationSyntax == null)
-				return;
-
-			var classSymbol = ModelExtensions.GetDeclaredSymbol(context.SemanticModel, classDeclarationSyntax) as ITypeSymbol;
-			var componentSymbol = context.Compilation.GetTypeByMetadataName("UnityEngine.Component");
-
-			if (InheritsFrom(classSymbol, componentSymbol))
-				context.ReportDiagnostic(Diagnostic.Create(MonoBehaviourIdRule, creation.GetLocation(), typeSymbol.Name));
-		}
-
-		private static bool InheritsFrom(ITypeSymbol symbol, ITypeSymbol type)
-		{
-			if (symbol == null || type == null)
-				return false;
-
-			var baseType = symbol.BaseType;
-			while (baseType != null)
+			var typeInfo = context.SemanticModel.GetTypeInfo(creation);
+			if (typeInfo.Type.Extends(typeof(UnityEngine.ScriptableObject)))
 			{
-				if (type.Equals(baseType))
-					return true;
-
-				baseType = baseType.BaseType;
+				context.ReportDiagnostic(Diagnostic.Create(ScriptableObjectRule, creation.GetLocation(), typeInfo.Type.Name));
+				return;
 			}
 
-			return false;
+			if (typeInfo.Type.Extends(typeof(UnityEngine.MonoBehaviour)))
+			{
+				context.ReportDiagnostic(Diagnostic.Create(MonoBehaviourIdRule, creation.GetLocation(), typeInfo.Type.Name));
+				return;
+			}
 		}
 	}
 
@@ -101,53 +73,74 @@ namespace Microsoft.Unity.Analyzers
 	public class CreateInstanceCodeFix : CodeFixProvider
 	{
 		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CreateInstanceAnalyzer.MonoBehaviourId, CreateInstanceAnalyzer.ScriptableObjectId);
+
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+			var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
 
 			if (!(root.FindNode(context.Span) is ObjectCreationExpressionSyntax creation))
 				return;
 
-			var id = context.Diagnostics.Select(d => d.Id).FirstOrDefault();
+			var diagnostic = context.Diagnostics.FirstOrDefault();
+			if (diagnostic == null)
+				return;
 
-			Func<CancellationToken, Task<Document>> replacer;
-			if (id == CreateInstanceAnalyzer.ScriptableObjectId)
-				replacer = ct => ReplaceWithInvocationAsync(context.Document, creation, "ScriptableObject", "CreateInstance", ct);
-			else
-				replacer = ct => ReplaceWithInvocationAsync(context.Document, creation, "gameObject", "AddComponent", ct);
+			if (diagnostic.Id == CreateInstanceAnalyzer.ScriptableObjectId)
+			{
+				context.RegisterCodeFix(
+					CodeAction.Create(
+						Strings.CreateScriptableObjectInstanceCodeFixTitle,
+						ct => ReplaceWithInvocationAsync(context.Document, creation, "ScriptableObject", "CreateInstance", ct),
+						creation.ToFullString()),
+					context.Diagnostics);
+			}
+			else if (diagnostic.Id == CreateInstanceAnalyzer.MonoBehaviourId)
+			{
+				if (!IsInsideComponent(creation, model))
+					return;
 
-			context.RegisterCodeFix(
-				CodeAction.Create(
-					Strings.CreateScriptableObjectInstanceCodeFixTitle,
-					replacer,
-					creation.ToFullString()),
+				context.RegisterCodeFix(
+					CodeAction.Create(
+						Strings.CreateMonoBehaviourInstanceCodeFixTitle,
+						ct => ReplaceWithInvocationAsync(context.Document, creation, "gameObject", "AddComponent", ct),
+						creation.ToFullString()),
 				context.Diagnostics);
+			}
 		}
 
-		protected async Task<Document> ReplaceWithInvocationAsync(Document document, ObjectCreationExpressionSyntax creation, string identifierName, string genericMethodName, CancellationToken ct)
+		private static bool IsInsideComponent(ObjectCreationExpressionSyntax creation, SemanticModel model)
 		{
-			var root = await document
-				.GetSyntaxRootAsync(ct)
-				.ConfigureAwait(false);
+			var classDeclaration = creation
+				.Ancestors()
+				.OfType<ClassDeclarationSyntax>()
+				.FirstOrDefault();
 
-			var semanticModel = await document
-				.GetSemanticModelAsync(ct)
-				.ConfigureAwait(false);
+			if (classDeclaration == null)
+				return false;
 
-			var symbolInfo = ModelExtensions.GetSymbolInfo(semanticModel, creation);
-			var typeSymbol = symbolInfo.Symbol.ContainingType;
+			var symbol = model.GetDeclaredSymbol(classDeclaration) as ITypeSymbol;
+			return symbol.Extends(typeof(UnityEngine.Component));
+		}
 
-			var invocation = SyntaxFactory.InvocationExpression(
-				SyntaxFactory.MemberAccessExpression(
+		private async Task<Document> ReplaceWithInvocationAsync(Document document, ObjectCreationExpressionSyntax creation, string identifierName, string genericMethodName, CancellationToken cancellationToken)
+		{
+			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+			var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+			var typeInfo = semanticModel.GetTypeInfo(creation);
+
+			var invocation = InvocationExpression(
+				MemberAccessExpression(
 					SyntaxKind.SimpleMemberAccessExpression,
-					SyntaxFactory.IdentifierName(identifierName),
-					SyntaxFactory.GenericName(SyntaxFactory.Identifier(genericMethodName))
+					IdentifierName(identifierName),
+					GenericName(Identifier(genericMethodName))
 						.WithTypeArgumentList(
-							SyntaxFactory.TypeArgumentList(
-								SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-									SyntaxFactory.IdentifierName(typeSymbol.Name))))));
+							TypeArgumentList(
+								SingletonSeparatedList<TypeSyntax>(
+									IdentifierName(typeInfo.Type.Name))))));
 
 			var newRoot = root.ReplaceNode(creation, invocation);
 			return document.WithSyntaxRoot(newRoot);

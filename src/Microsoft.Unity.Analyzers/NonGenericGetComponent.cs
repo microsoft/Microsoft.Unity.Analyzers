@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.Unity.Analyzers.Resources;
+
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers
@@ -37,7 +38,6 @@ namespace Microsoft.Unity.Analyzers
 		{
 			context.EnableConcurrentExecution();
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-
 			context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
 		}
 
@@ -68,14 +68,14 @@ namespace Microsoft.Unity.Analyzers
 			if (method == null)
 				return false;
 
-			var containingType = method.ContainingType.ToDisplayString();
-			if (containingType != typeof(UnityEngine.Component).FullName && containingType != typeof(UnityEngine.GameObject).FullName)
+			var containingType = method.ContainingType;
+			if (!containingType.Matches(typeof(UnityEngine.Component)) && !containingType.Matches(typeof(UnityEngine.GameObject)))
 				return false;
 
 			if (!MethodNames.Contains(method.Name))
 				return false;
 
-			if (method.Parameters.Length == 0 || method.Parameters[0].Type.ToDisplayString() != typeof(Type).FullName)
+			if (method.Parameters.Length == 0 || !method.Parameters[0].Type.Matches(typeof(Type)))
 				return false;
 
 			methodName = method.Name;

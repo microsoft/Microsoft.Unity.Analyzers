@@ -42,27 +42,10 @@ namespace Microsoft.Unity.Analyzers
 			if (type.Type == null)
 				return;
 
-			if (!IsUnityObject(type.Type))
+			if (!type.Type.Extends(typeof(UnityEngine.Object)))
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, binary.GetLocation(), binary.ToFullString()));
-		}
-
-		internal static bool IsUnityObject(ISymbol symbol)
-		{
-			var type = symbol as ITypeSymbol;
-			if (type == null)
-				return false;
-
-			while (type != null)
-			{
-				if (type.ToDisplayString() == typeof(UnityEngine.Object).FullName)
-					return true;
-
-				type = type.BaseType;
-			}
-
-			return false;
 		}
 	}
 

@@ -44,8 +44,7 @@ namespace Microsoft.Unity.Analyzers
 
 			var isInitOnLoad = typeSymbol
 				.GetAttributes()
-				.Select(a => a.AttributeClass)
-				.Any(c => c.Name == "InitializeOnLoadAttribute" && c.ContainingNamespace.Name == "UnityEditor");
+				.Any(a => a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadAttribute)));
 
 			if (!isInitOnLoad)
 				return;

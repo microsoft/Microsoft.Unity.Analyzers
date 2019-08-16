@@ -61,7 +61,7 @@ namespace Microsoft.Unity.Analyzers
 			if (type.Type == null)
 				return;
 
-			if (!UnityObjectNullCoalescingAnalyzer.IsUnityObject(type.Type))
+			if (!type.Type.Extends(typeof(UnityEngine.Object)))
 				return;
 
 			if (diagnostic.Id == NullCoalescingRule.SuppressedDiagnosticId)

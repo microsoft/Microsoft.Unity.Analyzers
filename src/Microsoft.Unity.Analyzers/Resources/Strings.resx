@@ -244,24 +244,24 @@
     <value>Use gameObject.AddComponent()</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticDescription" xml:space="preserve">
-    <value>MonoBehaviours can only be added using AddComponent(). Indeed MonoBehaviour is a component, and needs to be attached to a GameObject.</value>
+    <value>MonoBehaviours should only be created using AddComponent(). MonoBehaviour is a component, and needs to be attached to a GameObject.</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticMessageFormat" xml:space="preserve">
-    <value>MonoBehavior '{0}' cannot be instantiated directly</value>
+    <value>MonoBehavior '{0}' should not instantiated directly</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticTitle" xml:space="preserve">
-    <value>Direct MonoBehavior instance creation is not allowed</value>
+    <value>Direct MonoBehavior instance creation is not recommended</value>
   </data>
   <data name="CreateScriptableObjectInstanceCodeFixTitle" xml:space="preserve">
     <value>Use ScriptableObject.CreateInstance()</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticDescription" xml:space="preserve">
-    <value>ScriptableObject can only be added using CreateInstance(). Indeed ScriptableObject needs to be created by the Unity engine to handle special message methods.</value>
+    <value>ScriptableObject should only be created using CreateInstance(). ScriptableObject needs to be created by the Unity engine to handle Unity message methods.</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticMessageFormat" xml:space="preserve">
-    <value>ScriptableObject '{0}' cannot be instantiated directly</value>
+    <value>ScriptableObject '{0}' should not be instantiated directly</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticTitle" xml:space="preserve">
-    <value>Direct ScriptableObject instance creation is not allowed</value>
+    <value>Direct ScriptableObject instance creation is not recommended</value>
   </data>
 </root>

@@ -46,7 +46,7 @@ namespace Microsoft.Unity.Analyzers
 				if (accessibility.HasValue && !AccessibilityMatch(message, accessibility.Value))
 					continue;
 
-				if (returnType != null && !TypeMatch(message.ReturnType, returnType))
+				if (returnType != null && !returnType.Matches(message.ReturnType))
 					continue;
 
 				yield return message;
@@ -63,53 +63,6 @@ namespace Microsoft.Unity.Analyzers
 				return accessibility == Accessibility.Protected;
 
 			return true;
-		}
-
-		private static bool TypeMatch(Type type, ITypeSymbol symbol)
-		{
-			if (type == typeof(UnityEngine.IEnumeratorOrVoid))
-				return symbol.SpecialType == SpecialType.System_Void
-					   || symbol.SpecialType == SpecialType.System_Collections_IEnumerator;
-
-			switch (symbol.SpecialType)
-			{
-				case SpecialType.System_Void:
-					return type == typeof(void);
-				case SpecialType.System_Boolean:
-					return type == typeof(bool);
-				case SpecialType.System_Int32:
-					return type == typeof(int);
-				case SpecialType.System_Single:
-					return type == typeof(float);
-			}
-
-			if (type.IsArray)
-			{
-				var array = symbol as IArrayTypeSymbol;
-				return array != null
-					   && TypeMatch(type.GetElementType(), array.ElementType);
-			}
-
-			var named = symbol as INamedTypeSymbol;
-			if (named == null)
-				return false;
-
-			if (type.IsConstructedGenericType)
-			{
-				var args = type.GetTypeInfo().GenericTypeArguments;
-				if (args.Length != named.TypeArguments.Length)
-					return false;
-
-				for (var i = 0; i < args.Length; i++)
-					if (!TypeMatch(args[i], named.TypeArguments[i]))
-						return false;
-
-				return TypeMatch(type.GetGenericTypeDefinition(), named.ConstructedFrom);
-			}
-
-			//return named.Name == type.TypeName()
-			return named.Name == type.Name
-				   && named.ContainingNamespace.ToDisplayString() == type.Namespace;
 		}
 
 		private bool IsImplemented(MethodInfo method)
@@ -132,7 +85,7 @@ namespace Microsoft.Unity.Analyzers
 			if (method.Name != symbol.Name)
 				return false;
 
-			if (!TypeMatch(method.ReturnType, symbol.ReturnType))
+			if (!symbol.ReturnType.Matches(method.ReturnType))
 				return false;
 
 			var parameters = method.GetParameters();
@@ -141,7 +94,7 @@ namespace Microsoft.Unity.Analyzers
 
 			for (var i = 0; i < parameters.Length; i++)
 			{
-				if (!TypeMatch(parameters[i].ParameterType, symbol.Parameters[i].Type))
+				if (!symbol.Parameters[i].Type.Matches(parameters[i].ParameterType))
 					return false;
 			}
 
@@ -170,7 +123,7 @@ namespace Microsoft.Unity.Analyzers
 
 				for (var i = 0; i < Types.Length; i++)
 				{
-					if (TypeMatch(Types[i], baseType))
+					if (baseType.Matches(Types[i]))
 						return Types[i];
 				}
 			}

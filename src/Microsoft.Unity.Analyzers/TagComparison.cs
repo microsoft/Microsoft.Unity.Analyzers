@@ -82,8 +82,7 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			return property.Name == "tag"
-			       && property.ContainingType.Name == "Component"
-			       && property.ContainingType.ContainingNamespace.Name == "UnityEngine";
+				&& property.ContainingType.Matches(typeof(UnityEngine.Component));
 		}
 	}
 

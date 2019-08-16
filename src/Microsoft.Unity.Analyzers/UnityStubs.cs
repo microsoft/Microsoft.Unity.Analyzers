@@ -268,4 +268,8 @@ namespace UnityEditor
 		void OnWizardCreate() { }
 		void OnWizardOtherButton() { }
 	}
+
+	class InitializeOnLoadAttribute : System.Attribute
+	{
+	}
 }
