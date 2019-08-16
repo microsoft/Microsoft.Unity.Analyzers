@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,11 +60,10 @@ namespace Microsoft.Unity.Analyzers
 				return;
 			}
 
-			if (typeInfo.Type.Extends(typeof(UnityEngine.MonoBehaviour)))
-			{
-				context.ReportDiagnostic(Diagnostic.Create(MonoBehaviourIdRule, creation.GetLocation(), typeInfo.Type.Name));
+			if (!typeInfo.Type.Extends(typeof(UnityEngine.MonoBehaviour)))
 				return;
-			}
+
+			context.ReportDiagnostic(Diagnostic.Create(MonoBehaviourIdRule, creation.GetLocation(), typeInfo.Type.Name));
 		}
 	}
 
@@ -88,26 +86,26 @@ namespace Microsoft.Unity.Analyzers
 			if (diagnostic == null)
 				return;
 
-			if (diagnostic.Id == CreateInstanceAnalyzer.ScriptableObjectId)
+			switch (diagnostic.Id)
 			{
-				context.RegisterCodeFix(
-					CodeAction.Create(
-						Strings.CreateScriptableObjectInstanceCodeFixTitle,
-						ct => ReplaceWithInvocationAsync(context.Document, creation, "ScriptableObject", "CreateInstance", ct),
-						creation.ToFullString()),
-					context.Diagnostics);
-			}
-			else if (diagnostic.Id == CreateInstanceAnalyzer.MonoBehaviourId)
-			{
-				if (!IsInsideComponent(creation, model))
+				case CreateInstanceAnalyzer.ScriptableObjectId:
+					context.RegisterCodeFix(
+						CodeAction.Create(
+							Strings.CreateScriptableObjectInstanceCodeFixTitle,
+							ct => ReplaceWithInvocationAsync(context.Document, creation, "ScriptableObject", "CreateInstance", ct),
+							creation.ToFullString()),
+						context.Diagnostics);
+					break;
+				case CreateInstanceAnalyzer.MonoBehaviourId when !IsInsideComponent(creation, model):
 					return;
-
-				context.RegisterCodeFix(
-					CodeAction.Create(
-						Strings.CreateMonoBehaviourInstanceCodeFixTitle,
-						ct => ReplaceWithInvocationAsync(context.Document, creation, "gameObject", "AddComponent", ct),
-						creation.ToFullString()),
-				context.Diagnostics);
+				case CreateInstanceAnalyzer.MonoBehaviourId:
+					context.RegisterCodeFix(
+						CodeAction.Create(
+							Strings.CreateMonoBehaviourInstanceCodeFixTitle,
+							ct => ReplaceWithInvocationAsync(context.Document, creation, "gameObject", "AddComponent", ct),
+							creation.ToFullString()),
+						context.Diagnostics);
+					break;
 			}
 		}
 
