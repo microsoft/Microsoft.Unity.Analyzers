@@ -32,7 +32,15 @@ namespace Microsoft.Unity.Analyzers
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-		private static readonly HashSet<string> MethodNames = new HashSet<string>(new[] {"GetComponent", "GetComponents", "GetComponentInChildren", "GetComponentsInChildren", "GetComponentInParent", "GetComponentsInParent",});
+		private static readonly HashSet<string> MethodNames = new HashSet<string>(new[]
+		{
+			"GetComponent",
+			"GetComponents",
+			"GetComponentInChildren",
+			"GetComponentsInChildren",
+			"GetComponentInParent",
+			"GetComponentsInParent",
+		});
 
 		public override void Initialize(AnalysisContext context)
 		{
