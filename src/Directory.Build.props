@@ -1,0 +1,23 @@
+<Project>
+  <!-- This file is only used when building Analyzers from VSTU solution -->
+  <PropertyGroup>
+    <VstuDirectory>$(MSBuildThisFileDirectory)..\..\..\</VstuDirectory>
+  </PropertyGroup>
+  
+  <Import Project="$(VstuDirectory)build\UnityVS.props" Condition="Exists('$(VstuDirectory)build\UnityVS.props')" />
+  <Import Project="$(VstuDirectory)build\UnityVS.Signing.props" Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.props')" />
+  <PropertyGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">  
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Configurations>Debug;Release;DebugRelease</Configurations>
+    <LangVersion>7</LangVersion>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(VstuDirectory)libs\ProductInfo.cs')">
+    <Compile Include="$(VstuDirectory)libs\ProductInfo.cs" />
+  </ItemGroup>
+</Project>
