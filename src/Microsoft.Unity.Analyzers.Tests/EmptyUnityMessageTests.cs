@@ -25,7 +25,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(6, 5).WithArguments("FixedUpdate");
+			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("FixedUpdate");
 
 			var fixedTest = @"
 using UnityEngine;

@@ -53,7 +53,7 @@ namespace Microsoft.Unity.Analyzers
 			if (typeSymbol.StaticConstructors.Any(c => !c.IsImplicitlyDeclared))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, classDeclaration.GetLocation(), typeSymbol.Name));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, classDeclaration.Identifier.GetLocation(), typeSymbol.Name));
 		}
 	}
 

@@ -58,7 +58,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!scriptInfo.IsMessage(symbol))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, method.GetLocation(), symbol.Name));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), symbol.Name));
 		}
 	}
 

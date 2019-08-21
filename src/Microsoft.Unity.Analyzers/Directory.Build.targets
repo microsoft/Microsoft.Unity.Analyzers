@@ -1,5 +1,6 @@
 <Project>
   <!-- This file is only used when building Analyzers from VSTU solution -->
+
   <PropertyGroup Condition="Exists('$(VstuDirectory)tools\analyzers.bat')">
     <BuildDependsOn>PreProcessBuild;$(BuildDependsOn);PostProcessBuild</BuildDependsOn>
   </PropertyGroup>
@@ -9,4 +10,6 @@
     <Exec Command="&quot;$(VstuDirectory)tools\analyzers.bat&quot; &quot;$(OutputPath)&quot; $(ProductFileDisplayName)" Condition=" '$(OS)' != 'Unix' " />
     <Exec Command="&quot;$(VstuDirectory)tools\analyzers&quot; &quot;$(OutputPath)&quot; $(ProductFileDisplayName)" Condition=" '$(OS)' == 'Unix' " />
   </Target>
+  
+  <Import Project="$(VstuDirectory)build\UnityVS.Signing.targets" Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.targets')" />
 </Project>

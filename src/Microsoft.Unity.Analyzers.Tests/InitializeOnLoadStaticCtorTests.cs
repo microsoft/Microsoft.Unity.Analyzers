@@ -20,7 +20,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(5, 1).WithArguments("Camera");
+			var diagnostic = Verify.Diagnostic().WithLocation(6, 7).WithArguments("Camera");
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -45,20 +45,20 @@ using UnityEngine;
 using UnityEditor;
 
 [InitializeOnLoad]
-class Camera : MonoBehaviour
+public sealed class Camera : MonoBehaviour
 {
     public static readonly int willGenerateImplicitStaticCtor = 666;
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(5, 1).WithArguments("Camera");
+			var diagnostic = Verify.Diagnostic().WithLocation(6, 21).WithArguments("Camera");
 
 			const string fixedTest = @"
 using UnityEngine;
 using UnityEditor;
 
 [InitializeOnLoad]
-class Camera : MonoBehaviour
+public sealed class Camera : MonoBehaviour
 {
     static Camera()
     {
