@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -9,12 +10,17 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnusedMessageSuppressor : DiagnosticSuppressor
 	{
-		private static readonly SuppressionDescriptor Rule = new SuppressionDescriptor(
+		private static readonly SuppressionDescriptor MethodRule = new SuppressionDescriptor(
 			id: "USP0003",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedMessageSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
+		private static readonly SuppressionDescriptor ParameterRule = new SuppressionDescriptor(
+			id: "USP0005",
+			suppressedDiagnosticId: "IDE0060",
+			justification: Strings.UnusedMessageSuppressorJustification);
+
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, ParameterRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{
@@ -27,18 +33,26 @@ namespace Microsoft.Unity.Analyzers
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var node = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken).FindNode(diagnostic.Location.SourceSpan);
-			var method = node as MethodDeclarationSyntax;
-			if (method == null)
+
+			if (node is ParameterSyntax)
+				node = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+
+			if (!(node is MethodDeclarationSyntax method))
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			var methodSymbol = model.GetDeclaredSymbol(method) as IMethodSymbol;
-			if (methodSymbol == null)
+			if (!(model.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
 				return;
 
 			var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
 			if (scriptInfo.IsMessage(methodSymbol))
-				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
+			{
+				foreach(var suppression in SupportedSuppressions)
+				{
+					if (suppression.SuppressedDiagnosticId == diagnostic.Id)
+						context.ReportSuppression(Suppression.Create(suppression, diagnostic));
+				}
+			}
 		}
 	}
 }
