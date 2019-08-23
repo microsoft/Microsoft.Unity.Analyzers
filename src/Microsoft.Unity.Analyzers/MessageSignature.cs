@@ -83,12 +83,12 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					Strings.MessageSignatureCodeFixTitle,
-					ct => FixMethodDeclarationSignature(context.Document, methodDeclaration, ct),
+					ct => FixMethodDeclarationSignatureAsync(context.Document, methodDeclaration, ct),
 					methodDeclaration.ToFullString()),
 				context.Diagnostics);
 		}
 
-		private static async Task<Document> FixMethodDeclarationSignature(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken ct)
+		private static async Task<Document> FixMethodDeclarationSignatureAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken ct)
 		{
 			var root = await document
 				.GetSyntaxRootAsync(ct)

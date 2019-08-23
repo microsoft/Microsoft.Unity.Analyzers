@@ -90,7 +90,7 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					Strings.UnityObjectNullCoalescingCodeFixTitle,
-					ct => ReplaceNullCoalescing(context.Document, coalescing, ct),
+					ct => ReplaceNullCoalescingAsync(context.Document, coalescing, ct),
 					coalescing.ToFullString()),
 				context.Diagnostics);
 		}
@@ -108,7 +108,7 @@ namespace Microsoft.Unity.Analyzers
 			return true;
 		}
 
-		private static async Task<Document> ReplaceNullCoalescing(Document document, BinaryExpressionSyntax coalescing, CancellationToken cancellationToken)
+		private static async Task<Document> ReplaceNullCoalescingAsync(Document document, BinaryExpressionSyntax coalescing, CancellationToken cancellationToken)
 		{
 			// obj ?? foo -> obj != null ? obj : foo
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);

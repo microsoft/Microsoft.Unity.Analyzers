@@ -114,7 +114,7 @@ namespace Microsoft.Unity.Analyzers
 					context.RegisterCodeFix(
 						CodeAction.Create(
 							Strings.UpdateWithoutFixedDeltaTimeCodeFixTitle,
-							ct => ReplaceDeltaTimeIdentifier(context.Document, identifierName, "deltaTime", ct),
+							ct => ReplaceDeltaTimeIdentifierAsync(context.Document, identifierName, "deltaTime", ct),
 							identifierName.ToFullString()),
 						context.Diagnostics);
 					break;
@@ -122,14 +122,14 @@ namespace Microsoft.Unity.Analyzers
 					context.RegisterCodeFix(
 						CodeAction.Create(
 							Strings.FixedUpdateWithoutDeltaTimeCodeFixTitle,
-							ct => ReplaceDeltaTimeIdentifier(context.Document, identifierName, "fixedDeltaTime", ct),
+							ct => ReplaceDeltaTimeIdentifierAsync(context.Document, identifierName, "fixedDeltaTime", ct),
 							identifierName.ToFullString()),
 						context.Diagnostics);
 					break;
 			}
 		}
 
-		protected async Task<Document> ReplaceDeltaTimeIdentifier(Document document, IdentifierNameSyntax identifierName, string name, CancellationToken ct)
+		protected async Task<Document> ReplaceDeltaTimeIdentifierAsync(Document document, IdentifierNameSyntax identifierName, string name, CancellationToken ct)
 		{
 			var root = await document
 				.GetSyntaxRootAsync(ct)

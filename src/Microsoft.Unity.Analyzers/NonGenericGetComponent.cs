@@ -109,12 +109,12 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					Strings.NonGenericGetComponentCodeFixTitle,
-					ct => UseGenericGetComponent(context.Document, invocation, ct),
+					ct => UseGenericGetComponentAsync(context.Document, invocation, ct),
 					invocation.ToFullString()),
 				context.Diagnostics);
 		}
 
-		private static async Task<Document> UseGenericGetComponent(Document document, InvocationExpressionSyntax invocation, CancellationToken cancellationToken)
+		private static async Task<Document> UseGenericGetComponentAsync(Document document, InvocationExpressionSyntax invocation, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
