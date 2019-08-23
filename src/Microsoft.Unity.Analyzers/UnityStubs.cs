@@ -74,9 +74,11 @@ namespace UnityEngine
 
 	class ScriptableObject
 	{
+		void Awake() { }
 		void OnDestroy() { }
 		void OnDisable() { }
 		void OnEnable() { }
+		void OnValidate() { }
 	}
 
 	class IEnumeratorOrVoid
@@ -154,6 +156,7 @@ namespace UnityEngine
 		void OnRectTransformRemoved() { }
 		void OnCanvasGroupChanged() { }
 		IEnumeratorOrVoid OnParticleTrigger() { return null; }
+		void OnParticleSystemStopped() { }
 	}
 
 	class Animator
@@ -244,12 +247,22 @@ namespace UnityEngine.Networking
 	}
 }
 
+namespace UnityEngine.UIElements
+{
+	class VisualElement
+	{
+	}
+}
+
 namespace UnityEditor
 {
 	using UnityEngine;
+	using UnityEngine.UIElements;
 
 	class Editor : ScriptableObject
 	{
+		protected virtual VisualElement CreateInspectorGUI() { return null; }
+		protected virtual bool ShouldHideOpenButton() { return false; }
 		void OnSceneGUI() { }
 	}
 
