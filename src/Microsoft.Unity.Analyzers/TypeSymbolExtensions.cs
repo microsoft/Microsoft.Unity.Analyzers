@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Unity.Analyzers
 {
-	static class TypeSymbolExtensions
+	internal static class TypeSymbolExtensions
 	{
 		public static bool Extends(this ITypeSymbol symbol, Type type)
 		{

@@ -49,15 +49,14 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
 		}
 
-		private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
 			var symbol = context.SemanticModel.GetSymbolInfo(invocation);
 			if (symbol.Symbol == null)
 				return;
 
-			string methodName;
-			if (!IsNonGenericGetComponent(symbol.Symbol, out methodName))
+			if (!IsNonGenericGetComponent(symbol.Symbol, out var methodName))
 				return;
 
 			if (!(invocation.Expression is IdentifierNameSyntax))
@@ -72,8 +71,7 @@ namespace Microsoft.Unity.Analyzers
 		private static bool IsNonGenericGetComponent(ISymbol symbol, out string methodName)
 		{
 			methodName = null;
-			var method = symbol as IMethodSymbol;
-			if (method == null)
+			if (!(symbol is IMethodSymbol method))
 				return false;
 
 			var containingType = method.ContainingType;

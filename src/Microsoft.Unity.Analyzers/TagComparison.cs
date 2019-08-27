@@ -36,7 +36,7 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.EqualsExpression);
 		}
 
-		private void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
 			var binary = (BinaryExpressionSyntax)context.Node;
 
@@ -67,7 +67,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsStringLiteral(SyntaxNode node) => node.IsKind(SyntaxKind.StringLiteralExpression);
 
-		private bool IsTagComparison(SyntaxNode x, SyntaxNode y, SyntaxNodeAnalysisContext context)
+		private static bool IsTagComparison(SyntaxNode x, SyntaxNode y, SyntaxNodeAnalysisContext context)
 		{
 			if (!IsStringLiteral(y))
 				return false;

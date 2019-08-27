@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Unity.Analyzers
 {
-	class ScriptInfo
+	internal class ScriptInfo
 	{
 		private static readonly Type[] Types = { typeof(UnityEngine.Networking.NetworkBehaviour), typeof(UnityEngine.StateMachineBehaviour), typeof(UnityEngine.EventSystems.UIBehaviour), typeof(UnityEditor.ScriptableWizard), typeof(UnityEditor.EditorWindow), typeof(UnityEditor.Editor), typeof(UnityEngine.ScriptableObject), typeof(UnityEngine.MonoBehaviour), };
 
@@ -103,13 +103,7 @@ namespace Microsoft.Unity.Analyzers
 
 		public bool IsMessage(IMethodSymbol method)
 		{
-			foreach (var message in GetMessages())
-			{
-				if (MethodMatch(message, method))
-					return true;
-			}
-
-			return false;
+			return GetMessages().Any(message => MethodMatch(message, method));
 		}
 
 		private static Type GetMatchingMetadata(ITypeSymbol symbol)
@@ -121,10 +115,10 @@ namespace Microsoft.Unity.Analyzers
 
 				var baseType = symbol.BaseType;
 
-				for (var i = 0; i < Types.Length; i++)
+				foreach (var t in Types)
 				{
-					if (baseType.Matches(Types[i]))
-						return Types[i];
+					if (baseType.Matches(t))
+						return t;
 				}
 			}
 

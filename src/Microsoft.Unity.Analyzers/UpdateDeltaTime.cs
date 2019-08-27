@@ -18,7 +18,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string UpdateId = "UNT0004";
 
-		public static readonly DiagnosticDescriptor UpdateRule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor UpdateRule = new DiagnosticDescriptor(
 			UpdateId,
 			title: Strings.UpdateWithoutFixedDeltaTimeDiagnosticTitle,
 			messageFormat: Strings.UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat,
@@ -29,7 +29,7 @@ namespace Microsoft.Unity.Analyzers
 
 		public const string FixedUpdateId = "UNT0005";
 
-		public static readonly DiagnosticDescriptor FixedUpdateRule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor FixedUpdateRule = new DiagnosticDescriptor(
 			FixedUpdateId,
 			title: Strings.FixedUpdateWithoutDeltaTimeDiagnosticTitle,
 			messageFormat: Strings.FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat,
@@ -129,7 +129,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		protected async Task<Document> ReplaceDeltaTimeIdentifierAsync(Document document, IdentifierNameSyntax identifierName, string name, CancellationToken ct)
+		private static async Task<Document> ReplaceDeltaTimeIdentifierAsync(Document document, IdentifierNameSyntax identifierName, string name, CancellationToken ct)
 		{
 			var root = await document
 				.GetSyntaxRootAsync(ct)

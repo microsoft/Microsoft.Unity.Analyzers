@@ -34,7 +34,7 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
 		}
 
-		private void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
 			var method = (MethodDeclarationSyntax)context.Node;
 			var symbol = context.SemanticModel.GetDeclaredSymbol(method);

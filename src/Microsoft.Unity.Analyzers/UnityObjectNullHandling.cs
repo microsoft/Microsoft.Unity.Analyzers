@@ -42,19 +42,19 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterSyntaxNodeAction(AnalyzeConditionalAccessExpression, SyntaxKind.ConditionalAccessExpression);
 		}
 
-		private void AnalyzeCoalesceExpression(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeCoalesceExpression(SyntaxNodeAnalysisContext context)
 		{
 			var binary = (BinaryExpressionSyntax)context.Node;
 			AnalyzeExpression(binary, binary.Left, context, NullCoalescingRule);
 		}
 
-		private void AnalyzeConditionalAccessExpression(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeConditionalAccessExpression(SyntaxNodeAnalysisContext context)
 		{
 			var access = (ConditionalAccessExpressionSyntax)context.Node;
 			AnalyzeExpression(access, access.Expression, context, NullPropagationRule);
 		}
 
-		private void AnalyzeExpression(ExpressionSyntax originalExpression, ExpressionSyntax typedExpression, SyntaxNodeAnalysisContext context, DiagnosticDescriptor rule)
+		private static void AnalyzeExpression(ExpressionSyntax originalExpression, ExpressionSyntax typedExpression, SyntaxNodeAnalysisContext context, DiagnosticDescriptor rule)
 		{
 			var type = context.SemanticModel.GetTypeInfo(typedExpression);
 			if (type.Type == null)
@@ -78,8 +78,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			var coalescing = root.FindNode(context.Span) as BinaryExpressionSyntax;
-			if (coalescing == null)
+			if (!(root.FindNode(context.Span) is BinaryExpressionSyntax coalescing))
 				return;
 
 			// We do not want to fix expressions with possible side effects such as `Foo() ?? bar`
@@ -122,7 +121,7 @@ namespace Microsoft.Unity.Analyzers
 	}
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
+	internal class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 	{
 		private static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
 			id: "USP0001",
@@ -144,7 +143,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var node = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken).FindNode(diagnostic.Location.SourceSpan);
 			if (node == null)

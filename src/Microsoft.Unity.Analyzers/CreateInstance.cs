@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string MonoBehaviourId = "UNT0010";
 
-		public static readonly DiagnosticDescriptor MonoBehaviourIdRule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor MonoBehaviourIdRule = new DiagnosticDescriptor(
 			MonoBehaviourId,
 			title: Strings.CreateMonoBehaviourInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateMonoBehaviourInstanceDiagnosticMessageFormat,
@@ -30,7 +30,7 @@ namespace Microsoft.Unity.Analyzers
 
 		public const string ScriptableObjectId = "UNT0011";
 
-		public static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
 			ScriptableObjectId,
 			title: Strings.CreateScriptableObjectInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateScriptableObjectInstanceDiagnosticMessageFormat,
@@ -123,7 +123,7 @@ namespace Microsoft.Unity.Analyzers
 			return symbol.Extends(typeof(UnityEngine.Component));
 		}
 
-		private async Task<Document> ReplaceWithInvocationAsync(Document document, ObjectCreationExpressionSyntax creation, string identifierName, string genericMethodName, CancellationToken cancellationToken)
+		private static async Task<Document> ReplaceWithInvocationAsync(Document document, ObjectCreationExpressionSyntax creation, string identifierName, string genericMethodName, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);

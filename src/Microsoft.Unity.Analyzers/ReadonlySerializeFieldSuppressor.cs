@@ -24,15 +24,14 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var node = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken).FindNode(diagnostic.Location.SourceSpan);
 			if (node == null)
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			var fieldSymbol = model.GetDeclaredSymbol(node) as IFieldSymbol;
-			if (fieldSymbol == null)
+			if (!(model.GetDeclaredSymbol(node) is IFieldSymbol fieldSymbol))
 				return;
 
 			if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))

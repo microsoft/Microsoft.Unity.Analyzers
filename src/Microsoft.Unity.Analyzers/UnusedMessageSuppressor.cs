@@ -45,13 +45,13 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
-			if (scriptInfo.IsMessage(methodSymbol))
+			if (!scriptInfo.IsMessage(methodSymbol))
+				return;
+
+			foreach(var suppression in SupportedSuppressions)
 			{
-				foreach(var suppression in SupportedSuppressions)
-				{
-					if (suppression.SuppressedDiagnosticId == diagnostic.Id)
-						context.ReportSuppression(Suppression.Create(suppression, diagnostic));
-				}
+				if (suppression.SuppressedDiagnosticId == diagnostic.Id)
+					context.ReportSuppression(Suppression.Create(suppression, diagnostic));
 			}
 		}
 	}
