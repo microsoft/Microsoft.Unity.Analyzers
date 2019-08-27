@@ -6,7 +6,7 @@ using Microsoft.Win32;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	static class UnityPath
+	internal static class UnityPath
 	{
 		private static readonly List<string> UnityInstallations = new List<string>();
 

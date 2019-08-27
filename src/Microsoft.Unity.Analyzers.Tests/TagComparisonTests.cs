@@ -10,7 +10,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		[Fact]
 		public async Task TagAsIdentifier()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -24,7 +24,7 @@ public class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic().WithLocation(8, 19);
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -41,7 +41,7 @@ public class Camera : MonoBehaviour
 		[Fact]
 		public async Task TagProperty()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -57,7 +57,7 @@ public class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic().WithLocation(10, 19);
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -76,7 +76,7 @@ public class Camera : MonoBehaviour
 		[Fact]
 		public async Task TagAsIdentifierRhs()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -90,7 +90,7 @@ public class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic().WithLocation(8, 19);
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -107,7 +107,7 @@ public class Camera : MonoBehaviour
 		[Fact]
 		public async Task TagPropertyRhs()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour
@@ -123,7 +123,7 @@ public class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic().WithLocation(10, 19);
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 public class Camera : MonoBehaviour

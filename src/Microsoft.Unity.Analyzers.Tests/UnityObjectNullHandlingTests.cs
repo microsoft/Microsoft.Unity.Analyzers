@@ -10,7 +10,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		[Fact]
 		public async Task FixIdentifierCoalescing()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -27,7 +27,7 @@ class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -47,7 +47,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task FixMemberCoalescing()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -64,7 +64,7 @@ class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -85,7 +85,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task CantFixSideEffect()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -102,7 +102,7 @@ class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -122,7 +122,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task DetectNullPropagation()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour

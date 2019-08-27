@@ -10,7 +10,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		[Fact]
 		public async Task EmptyFixedUpdate()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -27,7 +27,7 @@ class Camera : MonoBehaviour
 
 			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("FixedUpdate");
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -44,7 +44,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task FixedUpdateWithBody()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour

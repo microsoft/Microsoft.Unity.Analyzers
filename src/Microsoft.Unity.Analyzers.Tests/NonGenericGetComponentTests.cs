@@ -10,7 +10,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		[Fact]
 		public async Task GetComponentAs()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -28,7 +28,7 @@ class Camera : MonoBehaviour
 				.WithLocation(10, 14)
 				.WithArguments("GetComponent");
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -47,7 +47,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task CastGetComponent()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -65,7 +65,7 @@ class Camera : MonoBehaviour
 				.WithLocation(10, 25)
 				.WithArguments("GetComponent");
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -84,7 +84,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task GetComponentsInChildrenBoolean()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -100,7 +100,7 @@ class Camera : MonoBehaviour
 				.WithLocation(8, 9)
 				.WithArguments("GetComponentsInChildren");
 
-			var fixedTest = @"
+			const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -117,7 +117,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task GetComponentTypeVariable()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -138,7 +138,7 @@ class Camera : MonoBehaviour
 		[Fact]
 		public async Task GetComponentGeneric()
 		{
-			var test = @"
+			const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
