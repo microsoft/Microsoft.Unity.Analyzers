@@ -127,10 +127,10 @@
     <value>Type Safety</value>
   </data>
   <data name="EmptyUnityMessageCodeFixTitle" xml:space="preserve">
-    <value>Delete empty Unity message</value>
+    <value>Remove empty Unity message</value>
   </data>
   <data name="EmptyUnityMessageDiagnosticDescription" xml:space="preserve">
-    <value>Unity messages are called by the runtime even if they are empty, do not declare them to avoid uncesseray processing by the Unity runtime.</value>
+    <value>Unity messages are called by the runtime even if they are empty, remove them to avoid unnecessary processing by the Unity runtime.</value>
   </data>
   <data name="EmptyUnityMessageDiagnosticMessageFormat" xml:space="preserve">
     <value>Unity message '{0}' is declared but is empty</value>
