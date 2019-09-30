@@ -130,10 +130,10 @@
     <value>Remove empty Unity message</value>
   </data>
   <data name="EmptyUnityMessageDiagnosticDescription" xml:space="preserve">
-    <value>Unity messages are called by the runtime even if they're empty. Remove them to avoid unnecessary processing.</value>
+    <value>Unity messages are called by the runtime even if they are empty, remove them to avoid unnecessary processing by the Unity runtime.</value>
   </data>
   <data name="EmptyUnityMessageDiagnosticMessageFormat" xml:space="preserve">
-    <value>The Unity message "{0}" is empty.</value>
+    <value>Unity message '{0}' is declared but is empty</value>
   </data>
   <data name="EmptyUnityMessageDiagnosticTitle" xml:space="preserve">
     <value>Empty Unity message</value>
@@ -142,10 +142,10 @@
     <value>Use CompareTag method</value>
   </data>
   <data name="TagComparisonDiagnosticDescription" xml:space="preserve">
-    <value>Comparing tags using == is slower than using the built-in CompareTag method.</value>
+    <value>Tag comparison using string equality is slower than the built-in CompareTag method.</value>
   </data>
   <data name="TagComparisonDiagnosticMessageFormat" xml:space="preserve">
-    <value>Comparing tags using == is inefficient.</value>
+    <value>Tag comparison using == is inefficient</value>
   </data>
   <data name="TagComparisonDiagnosticTitle" xml:space="preserve">
     <value>Inefficient tag comparison</value>
@@ -157,7 +157,7 @@
     <value>Usage of the generic form of GetComponent is preferred for type safety.</value>
   </data>
   <data name="NonGenericGetComponentDiagnosticMessageFormat" xml:space="preserve">
-    <value>Method "{0}" has a preferred generic overload.</value>
+    <value>Method '{0}' has a preferred generic overload.</value>
   </data>
   <data name="NonGenericGetComponentDiagnosticTitle" xml:space="preserve">
     <value>Usage of non generic GetComponent</value>
@@ -166,46 +166,46 @@
     <value>Use Time.deltaTime</value>
   </data>
   <data name="UpdateWithoutFixedDeltaTimeDiagnosticDescription" xml:space="preserve">
-    <value>Update is dependent on the frame rate. Use Time.deltaTime instead of Time.fixedDeltaTime.</value>
+    <value>Update message is frame-rate dependent, and should use Time.deltaTime instead of Time.fixedDeltaTime.</value>
   </data>
   <data name="UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat" xml:space="preserve">
-    <value>Update should use Time.deltaTime.</value>
+    <value>Usage of Time.fixedDeltaTime is suspicious in Update message</value>
   </data>
   <data name="UpdateWithoutFixedDeltaTimeDiagnosticTitle" xml:space="preserve">
-    <value>Time.fixedDeltaTime used with Update</value>
+    <value>Suspicious Time.fixedDeltaTime usage</value>
   </data>
   <data name="FixedUpdateWithoutDeltaTimeCodeFixTitle" xml:space="preserve">
     <value>Use Time.fixedDeltaTime</value>
   </data>
   <data name="FixedUpdateWithoutDeltaTimeDiagnosticDescription" xml:space="preserve">
-    <value>FixedUpdate is independent of the frame rate. Use Time.fixedDeltaTime instead of Time.deltaTime.</value>
+    <value>FixedUpdate message is frame-rate independent, and should use Time.fixedDeltaTime instead of Time.deltaTime.</value>
   </data>
   <data name="FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat" xml:space="preserve">
-    <value>FixedUpdate should use Time.fixedDeltaTime.</value>
+    <value>Usage of Time.deltaTime is suspicious in FixedUpdate message</value>
   </data>
   <data name="FixedUpdateWithoutDeltaTimeDiagnosticTitle" xml:space="preserve">
-    <value>Time.deltaTime used with FixedUpdate</value>
+    <value>Suspicious Time.deltaTime usage</value>
   </data>
   <data name="InitializeOnLoadStaticCtorCodeFixTitle" xml:space="preserve">
     <value>Add static constructor</value>
   </data>
   <data name="InitializeOnLoadStaticCtorDiagnosticDescription" xml:space="preserve">
-    <value>Provide a static constructor when applying the InitializeOnLoad attribute to a class. This will call it when the editor launches.</value>
+    <value>When applying the InitializeOnLoad attribute to a class, you need to provide a static constructor. InitializeOnLoad attribute ensures that it will be called as the editor launches.</value>
   </data>
   <data name="InitializeOnLoadStaticCtorDiagnosticMessageFormat" xml:space="preserve">
-    <value>The class "{0}" tagged with the InitializeOnLoad attribute is missing a static conductor.</value>
+    <value>Class '{0}' tagged with InitializeOnLoad attribute is missing a static constructor</value>
   </data>
   <data name="InitializeOnLoadStaticCtorDiagnosticTitle" xml:space="preserve">
-    <value>Missing static constructor with InitializeOnLoad</value>
+    <value>Missing static constructor with InitializeOnLoad attribute</value>
   </data>
   <data name="MessageSignatureCodeFixTitle" xml:space="preserve">
     <value>Fix message signature</value>
   </data>
   <data name="MessageSignatureDiagnosticDescription" xml:space="preserve">
-    <value>This Unity message uses an incorrect method signature.</value>
+    <value>An incorrect method signature was detected for this Unity message</value>
   </data>
   <data name="MessageSignatureDiagnosticMessageFormat" xml:space="preserve">
-    <value>The Unity message "{0}" has an incorrect signature.</value>
+    <value>Unity message '{0}' has incorrect signature</value>
   </data>
   <data name="MessageSignatureDiagnosticTitle" xml:space="preserve">
     <value>Incorrect message signature</value>
@@ -214,60 +214,60 @@
     <value>Use null comparison</value>
   </data>
   <data name="UnityObjectNullCoalescingDiagnosticDescription" xml:space="preserve">
-    <value>Unity overrides the null comparison operator for Unity objects, which is incompatible with null coalescing.</value>
+    <value>Unity overrides the null comparison operator for Unity objects which is incompatible with null coalescing.</value>
   </data>
   <data name="UnityObjectNullCoalescingDiagnosticMessageFormat" xml:space="preserve">
-    <value>Unity objects should not use null coalescing.</value>
+    <value>Usage of null coalescing on Unity objects is incorrect</value>
   </data>
   <data name="UnityObjectNullCoalescingDiagnosticTitle" xml:space="preserve">
-    <value>Null coalescing on Unity objects</value>
+    <value>Do not use null coalescing on Unity objects</value>
   </data>
   <data name="UnityObjectNullPropagationCodeFixTitle" xml:space="preserve">
     <value>Use null comparison</value>
   </data>
   <data name="UnityObjectNullPropagationDiagnosticDescription" xml:space="preserve">
-    <value>Unity overrides the null comparison operator for Unity objects, which is incompatible with null propagation.</value>
+    <value>Unity overrides the null comparison operator for Unity objects which is incompatible with null propagation.</value>
   </data>
   <data name="UnityObjectNullPropagationDiagnosticMessageFormat" xml:space="preserve">
-    <value>Unity objects should not use null propagation.</value>
+    <value>Usage of null propagation on Unity objects is incorrect</value>
   </data>
   <data name="UnityObjectNullPropagationDiagnosticTitle" xml:space="preserve">
-    <value>Null propagation on Unity objects</value>
+    <value>Unity objects should not use null propagation</value>
   </data>
   <data name="UnityObjectNullCoalescingSuppressorJustification" xml:space="preserve">
-    <value>Unity objects should not use null coalescing.</value>
+    <value>Unity objects should not use null coalescing</value>
   </data>
   <data name="UnityObjectNullPropagationSuppressorJustification" xml:space="preserve">
-    <value>Unity objects should not use null propagation.</value>
+    <value>Unity objects should not use null propagation</value>
   </data>
   <data name="CreateMonoBehaviourInstanceCodeFixTitle" xml:space="preserve">
     <value>Use gameObject.AddComponent()</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticDescription" xml:space="preserve">
-    <value>Use AddComponent() to create MonoBehaviours. A MonoBehaviour component needs to be attached to a GameObject.</value>
+    <value>MonoBehaviours should only be created using AddComponent(). MonoBehaviour is a component, and needs to be attached to a GameObject.</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticMessageFormat" xml:space="preserve">
-    <value>MonoBehaviour "{0}" should not be instantiated directly.</value>
+    <value>MonoBehavior '{0}' should not instantiated directly</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticTitle" xml:space="preserve">
-    <value>MonoBehaviour instance creation</value>
+    <value>MonoBehavior instance creation is not recommended</value>
   </data>
   <data name="CreateScriptableObjectInstanceCodeFixTitle" xml:space="preserve">
     <value>Use ScriptableObject.CreateInstance()</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticDescription" xml:space="preserve">
-    <value>Use CreateInstance() to create a ScriptableObject. To handle Unity message methods, the Unity engine needs to create the ScriptableObject.</value>
+    <value>ScriptableObject should only be created using CreateInstance(). ScriptableObject needs to be created by the Unity engine to handle Unity message methods.</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticMessageFormat" xml:space="preserve">
-    <value>ScriptableObject "{0}" should not be instantiated directly.</value>
+    <value>ScriptableObject '{0}' should not be instantiated directly</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticTitle" xml:space="preserve">
-    <value>ScriptableObject instance creation</value>
+    <value>ScriptableObject instance creation is not recommended</value>
   </data>
   <data name="UnusedMessageSuppressorJustification" xml:space="preserve">
-    <value>The Unity runtime invokes Unity messages.</value>
+    <value>Unity messages are invoked by the Unity runtime</value>
   </data>
   <data name="ReadonlySerializeFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't set fields with a SerializeField attribute to read-only.</value>
+    <value>Fields with a SerializeField attribute should not be made readonly</value>
   </data>
 </root>
