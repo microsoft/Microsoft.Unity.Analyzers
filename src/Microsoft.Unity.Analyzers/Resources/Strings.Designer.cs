@@ -97,7 +97,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MonoBehaviours should only be created using AddComponent(). MonoBehaviour is a component, and needs to be attached to a GameObject..
+        ///   Looks up a localized string similar to Use AddComponent() to create MonoBehaviours. A MonoBehaviour component needs to be attached to a GameObject..
         /// </summary>
         internal static string CreateMonoBehaviourInstanceDiagnosticDescription {
             get {
@@ -106,7 +106,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MonoBehavior &apos;{0}&apos; should not instantiated directly.
+        ///   Looks up a localized string similar to MonoBehaviour &quot;{0}&quot; should not be instantiated directly..
         /// </summary>
         internal static string CreateMonoBehaviourInstanceDiagnosticMessageFormat {
             get {
@@ -115,7 +115,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MonoBehavior instance creation is not recommended.
+        ///   Looks up a localized string similar to MonoBehaviour instance creation.
         /// </summary>
         internal static string CreateMonoBehaviourInstanceDiagnosticTitle {
             get {
@@ -133,7 +133,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ScriptableObject should only be created using CreateInstance(). ScriptableObject needs to be created by the Unity engine to handle Unity message methods..
+        ///   Looks up a localized string similar to Use CreateInstance() to create a ScriptableObject. To handle Unity message methods, the Unity engine needs to create the ScriptableObject..
         /// </summary>
         internal static string CreateScriptableObjectInstanceDiagnosticDescription {
             get {
@@ -142,7 +142,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ScriptableObject &apos;{0}&apos; should not be instantiated directly.
+        ///   Looks up a localized string similar to ScriptableObject &quot;{0}&quot; should not be instantiated directly..
         /// </summary>
         internal static string CreateScriptableObjectInstanceDiagnosticMessageFormat {
             get {
@@ -151,7 +151,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ScriptableObject instance creation is not recommended.
+        ///   Looks up a localized string similar to ScriptableObject instance creation.
         /// </summary>
         internal static string CreateScriptableObjectInstanceDiagnosticTitle {
             get {
@@ -160,7 +160,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete empty Unity message.
+        ///   Looks up a localized string similar to Remove empty Unity message.
         /// </summary>
         internal static string EmptyUnityMessageCodeFixTitle {
             get {
@@ -169,7 +169,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity messages are called by the runtime even if they are empty, do not declare them to avoid uncesseray processing by the Unity runtime..
+        ///   Looks up a localized string similar to Unity messages are called by the runtime even if they&apos;re empty. Remove them to avoid unnecessary processing..
         /// </summary>
         internal static string EmptyUnityMessageDiagnosticDescription {
             get {
@@ -178,7 +178,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity message &apos;{0}&apos; is declared but is empty.
+        ///   Looks up a localized string similar to The Unity message &quot;{0}&quot; is empty..
         /// </summary>
         internal static string EmptyUnityMessageDiagnosticMessageFormat {
             get {
@@ -205,7 +205,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FixedUpdate message is frame-rate independent, and should use Time.fixedDeltaTime instead of Time.deltaTime..
+        ///   Looks up a localized string similar to FixedUpdate is independent of the frame rate. Use Time.fixedDeltaTime instead of Time.deltaTime..
         /// </summary>
         internal static string FixedUpdateWithoutDeltaTimeDiagnosticDescription {
             get {
@@ -214,7 +214,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage of Time.deltaTime is suspicious in FixedUpdate message.
+        ///   Looks up a localized string similar to FixedUpdate should use Time.fixedDeltaTime..
         /// </summary>
         internal static string FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat {
             get {
@@ -223,7 +223,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Suspicious Time.deltaTime usage.
+        ///   Looks up a localized string similar to Time.deltaTime used with FixedUpdate.
         /// </summary>
         internal static string FixedUpdateWithoutDeltaTimeDiagnosticTitle {
             get {
@@ -241,7 +241,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When applying the InitializeOnLoad attribute to a class, you need to provide a static constructor. InitializeOnLoad attribute ensures that it will be called as the editor launches..
+        ///   Looks up a localized string similar to Provide a static constructor when applying the InitializeOnLoad attribute to a class. This will call it when the editor launches..
         /// </summary>
         internal static string InitializeOnLoadStaticCtorDiagnosticDescription {
             get {
@@ -250,7 +250,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Class &apos;{0}&apos; tagged with InitializeOnLoad attribute is missing a static constructor.
+        ///   Looks up a localized string similar to The class &quot;{0}&quot; tagged with the InitializeOnLoad attribute is missing a static conductor..
         /// </summary>
         internal static string InitializeOnLoadStaticCtorDiagnosticMessageFormat {
             get {
@@ -259,7 +259,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Missing static constructor with InitializeOnLoad attribute.
+        ///   Looks up a localized string similar to Missing static constructor with InitializeOnLoad.
         /// </summary>
         internal static string InitializeOnLoadStaticCtorDiagnosticTitle {
             get {
@@ -277,7 +277,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An incorrect method signature was detected for this Unity message.
+        ///   Looks up a localized string similar to This Unity message uses an incorrect method signature..
         /// </summary>
         internal static string MessageSignatureDiagnosticDescription {
             get {
@@ -286,7 +286,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity message &apos;{0}&apos; has incorrect signature.
+        ///   Looks up a localized string similar to The Unity message &quot;{0}&quot; has an incorrect signature..
         /// </summary>
         internal static string MessageSignatureDiagnosticMessageFormat {
             get {
@@ -322,7 +322,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Method &apos;{0}&apos; has a preferred generic overload..
+        ///   Looks up a localized string similar to Method &quot;{0}&quot; has a preferred generic overload..
         /// </summary>
         internal static string NonGenericGetComponentDiagnosticMessageFormat {
             get {
@@ -340,7 +340,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fields with a SerializeField attribute should not be made readonly.
+        ///   Looks up a localized string similar to Don&apos;t set fields with a SerializeField attribute to read-only..
         /// </summary>
         internal static string ReadonlySerializeFieldSuppressorJustification {
             get {
@@ -358,7 +358,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tag comparison using string equality is slower than the built-in CompareTag method..
+        ///   Looks up a localized string similar to Comparing tags using == is slower than using the built-in CompareTag method..
         /// </summary>
         internal static string TagComparisonDiagnosticDescription {
             get {
@@ -367,7 +367,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tag comparison using == is inefficient.
+        ///   Looks up a localized string similar to Comparing tags using == is inefficient..
         /// </summary>
         internal static string TagComparisonDiagnosticMessageFormat {
             get {
@@ -394,7 +394,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects which is incompatible with null coalescing..
+        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects, which is incompatible with null coalescing..
         /// </summary>
         internal static string UnityObjectNullCoalescingDiagnosticDescription {
             get {
@@ -403,7 +403,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage of null coalescing on Unity objects is incorrect.
+        ///   Looks up a localized string similar to Unity objects should not use null coalescing..
         /// </summary>
         internal static string UnityObjectNullCoalescingDiagnosticMessageFormat {
             get {
@@ -412,7 +412,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do not use null coalescing on Unity objects.
+        ///   Looks up a localized string similar to Null coalescing on Unity objects.
         /// </summary>
         internal static string UnityObjectNullCoalescingDiagnosticTitle {
             get {
@@ -421,7 +421,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity objects should not use null coalescing.
+        ///   Looks up a localized string similar to Unity objects should not use null coalescing..
         /// </summary>
         internal static string UnityObjectNullCoalescingSuppressorJustification {
             get {
@@ -439,7 +439,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects which is incompatible with null propagation..
+        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects, which is incompatible with null propagation..
         /// </summary>
         internal static string UnityObjectNullPropagationDiagnosticDescription {
             get {
@@ -448,7 +448,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage of null propagation on Unity objects is incorrect.
+        ///   Looks up a localized string similar to Unity objects should not use null propagation..
         /// </summary>
         internal static string UnityObjectNullPropagationDiagnosticMessageFormat {
             get {
@@ -457,7 +457,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity objects should not use null propagation.
+        ///   Looks up a localized string similar to Null propagation on Unity objects.
         /// </summary>
         internal static string UnityObjectNullPropagationDiagnosticTitle {
             get {
@@ -466,7 +466,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity objects should not use null propagation.
+        ///   Looks up a localized string similar to Unity objects should not use null propagation..
         /// </summary>
         internal static string UnityObjectNullPropagationSuppressorJustification {
             get {
@@ -475,7 +475,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unity messages are invoked by the Unity runtime.
+        ///   Looks up a localized string similar to The Unity runtime invokes Unity messages..
         /// </summary>
         internal static string UnusedMessageSuppressorJustification {
             get {
@@ -493,7 +493,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update message is frame-rate dependent, and should use Time.deltaTime instead of Time.fixedDeltaTime..
+        ///   Looks up a localized string similar to Update is dependent on the frame rate. Use Time.deltaTime instead of Time.fixedDeltaTime..
         /// </summary>
         internal static string UpdateWithoutFixedDeltaTimeDiagnosticDescription {
             get {
@@ -502,7 +502,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage of Time.fixedDeltaTime is suspicious in Update message.
+        ///   Looks up a localized string similar to Update should use Time.deltaTime..
         /// </summary>
         internal static string UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat {
             get {
@@ -511,7 +511,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Suspicious Time.fixedDeltaTime usage.
+        ///   Looks up a localized string similar to Time.fixedDeltaTime used with Update.
         /// </summary>
         internal static string UpdateWithoutFixedDeltaTimeDiagnosticTitle {
             get {
