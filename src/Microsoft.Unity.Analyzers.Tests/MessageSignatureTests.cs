@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<MessageSignatureAnalyzer, MessageSignatureCodeFix>;
 
-	public class MessageSignatureTests
+	public class MessageSignatureTests : BaseTest<MessageSignatureAnalyzer, MessageSignatureCodeFix>
 	{
 		[Fact]
 		public async Task MessageSignature()

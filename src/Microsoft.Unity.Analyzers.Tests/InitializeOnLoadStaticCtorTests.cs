@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>;
 
-	public class InitializeOnLoadStaticCtorTests
+	public class InitializeOnLoadStaticCtorTests : BaseTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
 	{
 		[Fact]
 		public async Task InitializeOnLoadWithoutStaticCtor()

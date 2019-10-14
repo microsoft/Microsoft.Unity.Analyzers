@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<TagComparisonAnalyzer, TagComparisonCodeFix>;
 
-	public class TagComparisonTests
+	public class TagComparisonTests : BaseTest<TagComparisonAnalyzer, TagComparisonCodeFix>
 	{
 		[Fact]
 		public async Task TagAsIdentifier()

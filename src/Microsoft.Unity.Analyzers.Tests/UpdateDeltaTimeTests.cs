@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>;
 
-	public class UpdateWithoutDeltaTimeTests
+	public class UpdateWithoutDeltaTimeTests : BaseTest<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
 	{
 		[Fact]
 		public async Task FixedUpdateWithDeltaTime()

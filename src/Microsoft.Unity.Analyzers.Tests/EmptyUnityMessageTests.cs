@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>;
 
-	public class EmptyUnityMessageTests
+	public class EmptyUnityMessageTests : BaseTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
 	{
 		[Fact]
 		public async Task EmptyFixedUpdate()

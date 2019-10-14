@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>;
 
-	public class NonGenericGetComponentTests
+	public class NonGenericGetComponentTests : BaseTest<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>
 	{
 		[Fact]
 		public async Task GetComponentAs()

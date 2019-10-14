@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<CreateInstanceAnalyzer, CreateInstanceCodeFix>;
 
-	public class CreateInstanceTests
+	public class CreateInstanceTests : BaseTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 	{
 		[Fact]
 		public async Task CreateMonoBehaviourInstance()

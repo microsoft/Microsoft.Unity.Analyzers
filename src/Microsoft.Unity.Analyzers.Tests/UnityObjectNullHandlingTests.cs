@@ -5,7 +5,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	using Verify = UnityCodeFixVerifier<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>;
 
-	public class UnityObjectNullHandlingTests
+	public class UnityObjectNullHandlingTests : BaseTest<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>
 	{
 		[Fact]
 		public async Task FixIdentifierCoalescing()

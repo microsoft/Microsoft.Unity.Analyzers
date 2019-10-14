@@ -37,7 +37,8 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
 			var method = (MethodDeclarationSyntax)context.Node;
-			var symbol = context.SemanticModel.GetDeclaredSymbol(method);
+			if (method?.Body == null)
+				return;
 
 			if (method.Modifiers.Any(SyntaxKind.AbstractKeyword) || method.Modifiers.Any(SyntaxKind.VirtualKeyword))
 				return;
@@ -54,6 +55,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!scriptInfo.HasMessages)
 				return;
 
+			var symbol = context.SemanticModel.GetDeclaredSymbol(method);
 			if (!scriptInfo.IsMessage(symbol))
 				return;
 
