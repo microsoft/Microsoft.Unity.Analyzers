@@ -270,4 +270,7 @@
   <data name="ReadonlySerializeFieldSuppressorJustification" xml:space="preserve">
     <value>Don't set fields with a SerializeField attribute to read-only.</value>
   </data>
+  <data name="UnusedSerializeFieldSuppressorJustification" xml:space="preserve">
+    <value>Don't flag private fields with a SerializeField attribute as unused.</value>
+  </data>
 </root>

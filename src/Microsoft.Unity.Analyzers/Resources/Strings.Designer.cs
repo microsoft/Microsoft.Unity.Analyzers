@@ -484,6 +484,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag private fields with a SerializeField attribute as unused..
+        /// </summary>
+        internal static string UnusedSerializeFieldSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnusedSerializeFieldSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Time.deltaTime.
         /// </summary>
         internal static string UpdateWithoutFixedDeltaTimeCodeFixTitle {
