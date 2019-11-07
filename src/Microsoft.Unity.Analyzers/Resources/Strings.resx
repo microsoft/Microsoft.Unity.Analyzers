@@ -273,4 +273,7 @@
   <data name="UnusedSerializeFieldSuppressorJustification" xml:space="preserve">
     <value>Don't flag private fields with a SerializeField attribute as unused.</value>
   </data>
+  <data name="NeverAssignedSerializeFieldSuppressorJustification" xml:space="preserve">
+    <value>Don't flag fields with a SerializeField attribute as never assigned.</value>
+  </data>
 </root>

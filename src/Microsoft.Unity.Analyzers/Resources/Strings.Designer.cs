@@ -304,6 +304,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag fields with a SerializeField attribute as never assigned..
+        /// </summary>
+        internal static string NeverAssignedSerializeFieldSuppressorJustification {
+            get {
+                return ResourceManager.GetString("NeverAssignedSerializeFieldSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use the generic form of GetComponent.
         /// </summary>
         internal static string NonGenericGetComponentCodeFixTitle {

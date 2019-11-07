@@ -20,7 +20,13 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedSerializeFieldSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(ReadonlyRule, UnusedRule);
+		// Note that this one, is only used for full builds in VS
+		private static readonly SuppressionDescriptor NeverAssignedRule = new SuppressionDescriptor(
+			id: "USP0007",
+			suppressedDiagnosticId: "CS0649",
+			justification: Strings.NeverAssignedSerializeFieldSuppressorJustification);
+
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(ReadonlyRule, UnusedRule, NeverAssignedRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{
