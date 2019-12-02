@@ -8,13 +8,13 @@ namespace Microsoft.Unity.Analyzers
 {
 	internal class ScriptInfo
 	{
-		private static readonly Type[] Types = { typeof(UnityEngine.Networking.NetworkBehaviour), typeof(UnityEngine.StateMachineBehaviour), typeof(UnityEngine.EventSystems.UIBehaviour), typeof(UnityEditor.ScriptableWizard), typeof(UnityEditor.EditorWindow), typeof(UnityEditor.Editor), typeof(UnityEngine.ScriptableObject), typeof(UnityEngine.MonoBehaviour), };
+		private static readonly Type[] _types = { typeof(UnityEngine.Networking.NetworkBehaviour), typeof(UnityEngine.StateMachineBehaviour), typeof(UnityEngine.EventSystems.UIBehaviour), typeof(UnityEditor.ScriptableWizard), typeof(UnityEditor.EditorWindow), typeof(UnityEditor.Editor), typeof(UnityEngine.ScriptableObject), typeof(UnityEngine.MonoBehaviour), };
 
 		private readonly ITypeSymbol _symbol;
-		private readonly Type _metadata;
+		private readonly Type? _metadata;
 
 		public bool HasMessages => _metadata != null;
-		public Type Metadata => _metadata;
+		public Type? Metadata => _metadata;
 
 		public ScriptInfo(ITypeSymbol symbol)
 		{
@@ -22,7 +22,7 @@ namespace Microsoft.Unity.Analyzers
 			_metadata = GetMatchingMetadata(symbol);
 		}
 
-		public static MethodInfo[] Messages { get; } = Types.SelectMany(GetMessages).ToArray();
+		public static MethodInfo[] Messages { get; } = _types.SelectMany(GetMessages).ToArray();
 
 		public IEnumerable<MethodInfo> GetMessages()
 		{
@@ -36,7 +36,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		public IEnumerable<MethodInfo> GetNotImplementedMessages(Accessibility? accessibility = null, ITypeSymbol returnType = null)
+		public IEnumerable<MethodInfo> GetNotImplementedMessages(Accessibility? accessibility = null, ITypeSymbol? returnType = null)
 		{
 			foreach (var message in GetMessages())
 			{
@@ -69,8 +69,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			foreach (var member in _symbol.GetMembers())
 			{
-				var methodSymbol = member as IMethodSymbol;
-				if (methodSymbol == null)
+				if (!(member is IMethodSymbol methodSymbol))
 					continue;
 
 				if (MethodMatch(method, methodSymbol))
@@ -106,7 +105,7 @@ namespace Microsoft.Unity.Analyzers
 			return GetMessages().Any(message => MethodMatch(message, method));
 		}
 
-		private static Type GetMatchingMetadata(ITypeSymbol symbol)
+		private static Type? GetMatchingMetadata(ITypeSymbol symbol)
 		{
 			for (; symbol != null; symbol = symbol.BaseType)
 			{
@@ -115,7 +114,7 @@ namespace Microsoft.Unity.Analyzers
 
 				var baseType = symbol.BaseType;
 
-				foreach (var t in Types)
+				foreach (var t in _types)
 				{
 					if (baseType.Matches(t))
 						return t;

@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string MonoBehaviourId = "UNT0010";
 
-		private static readonly DiagnosticDescriptor MonoBehaviourIdRule = new DiagnosticDescriptor(
+		public static readonly DiagnosticDescriptor MonoBehaviourIdRule = new DiagnosticDescriptor(
 			MonoBehaviourId,
 			title: Strings.CreateMonoBehaviourInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateMonoBehaviourInstanceDiagnosticMessageFormat,
@@ -30,7 +30,7 @@ namespace Microsoft.Unity.Analyzers
 
 		public const string ScriptableObjectId = "UNT0011";
 
-		private static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
+		public static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
 			ScriptableObjectId,
 			title: Strings.CreateScriptableObjectInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateScriptableObjectInstanceDiagnosticMessageFormat,

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace UnityEngine
 {
+#pragma warning disable CS8603 // Possible null reference return.
 	class Object
 	{
 	}
@@ -289,4 +290,5 @@ namespace UnityEditor
 	class InitializeOnLoadAttribute : System.Attribute
 	{
 	}
+#pragma warning restore CS8603 // Possible null reference return.
 }
