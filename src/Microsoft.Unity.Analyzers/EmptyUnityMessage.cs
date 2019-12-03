@@ -79,8 +79,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			var declaration = root.FindNode(context.Span) as MethodDeclarationSyntax;
-			if (declaration == null)
+			if (!(root.FindNode(context.Span) is MethodDeclarationSyntax declaration))
 				return;
 
 			context.RegisterCodeFix(

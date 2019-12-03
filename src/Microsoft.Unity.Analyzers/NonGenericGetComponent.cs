@@ -105,8 +105,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			var invocation = root.FindNode(context.Span) as InvocationExpressionSyntax;
-			if (invocation == null)
+			if (!(root.FindNode(context.Span) is InvocationExpressionSyntax invocation))
 				return;
 
 			context.RegisterCodeFix(
