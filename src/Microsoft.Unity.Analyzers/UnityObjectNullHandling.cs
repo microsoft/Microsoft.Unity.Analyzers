@@ -101,13 +101,15 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool HasSideEffect(ExpressionSyntax expression)
 		{
-			return expression.Kind() switch
+			switch (expression.Kind())
 			{
-				SyntaxKind.SimpleMemberAccessExpression => false,
-				SyntaxKind.PointerMemberAccessExpression => false,
-				SyntaxKind.IdentifierName => false,
-				_ => true
-			};
+				case SyntaxKind.SimpleMemberAccessExpression:
+				case SyntaxKind.PointerMemberAccessExpression:
+				case SyntaxKind.IdentifierName:
+					return false;
+			}
+
+			return true;
 		}
 
 		private static async Task<Document> ReplaceNullCoalescingAsync(Document document, BinaryExpressionSyntax coalescing, CancellationToken cancellationToken)
@@ -126,12 +128,12 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	internal class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 	{
-		public static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
+		private static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
 			id: "USP0001",
 			suppressedDiagnosticId: "IDE0029",
 			justification: Strings.UnityObjectNullCoalescingSuppressorJustification);
 
-		public static readonly SuppressionDescriptor NullPropagationRule = new SuppressionDescriptor(
+		private static readonly SuppressionDescriptor NullPropagationRule = new SuppressionDescriptor(
 			id: "USP0002",
 			suppressedDiagnosticId: "IDE0031",
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);

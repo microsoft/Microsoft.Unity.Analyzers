@@ -24,7 +24,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string Id = "UNT0006";
 
-		public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			Id,
 			title: Strings.MessageSignatureDiagnosticTitle,
 			messageFormat: Strings.MessageSignatureDiagnosticMessageFormat,

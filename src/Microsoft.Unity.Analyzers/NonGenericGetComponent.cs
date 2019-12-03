@@ -26,7 +26,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string Id = "UNT0003";
 
-		public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			Id,
 			title: Strings.NonGenericGetComponentDiagnosticTitle,
 			messageFormat: Strings.NonGenericGetComponentDiagnosticMessageFormat,
@@ -37,7 +37,7 @@ namespace Microsoft.Unity.Analyzers
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-		private static readonly HashSet<string> _methodNames = new HashSet<string>(new[]
+		private static readonly HashSet<string> MethodNames = new HashSet<string>(new[]
 		{
 			"GetComponent",
 			"GetComponents",
@@ -73,7 +73,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), methodName));
 		}
 
-		private static bool IsNonGenericGetComponent(ISymbol symbol, out string? methodName)
+		private static bool IsNonGenericGetComponent(ISymbol symbol, out string methodName)
 		{
 			methodName = null;
 			if (!(symbol is IMethodSymbol method))
@@ -83,7 +83,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!containingType.Matches(typeof(UnityEngine.Component)) && !containingType.Matches(typeof(UnityEngine.GameObject)))
 				return false;
 
-			if (!_methodNames.Contains(method.Name))
+			if (!MethodNames.Contains(method.Name))
 				return false;
 
 			if (method.Parameters.Length == 0 || !method.Parameters[0].Type.Matches(typeof(Type)))
@@ -105,7 +105,8 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root.FindNode(context.Span) is InvocationExpressionSyntax invocation))
+			var invocation = root.FindNode(context.Span) as InvocationExpressionSyntax;
+			if (invocation == null)
 				return;
 
 			context.RegisterCodeFix(
@@ -143,12 +144,12 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsParentCastingResult(InvocationExpressionSyntax invocation)
 		{
-			return invocation.Parent switch
+			switch (invocation.Parent)
 			{
-				CastExpressionSyntax _ => true,
-				BinaryExpressionSyntax be => be.IsKind(SyntaxKind.AsExpression),
-				_ => false,
-			};
+				case CastExpressionSyntax _: return true;
+				case BinaryExpressionSyntax be: return be.IsKind(SyntaxKind.AsExpression);
+				default: return false;
+			}
 		}
 	}
 }

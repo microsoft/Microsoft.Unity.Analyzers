@@ -23,7 +23,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string Id = "UNT0002";
 
-		public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			Id,
 			title: Strings.TagComparisonDiagnosticTitle,
 			messageFormat: Strings.TagComparisonDiagnosticMessageFormat,
@@ -50,7 +50,8 @@ namespace Microsoft.Unity.Analyzers
 			if (!IsSupportedMethod(context, nameSyntax))
 				return;
 
-			if (expr.Expression is MemberAccessExpressionSyntax mae)
+			var mae = expr.Expression as MemberAccessExpressionSyntax;
+			if (mae != null)
 			{
 				if (IsReportableExpression(context, mae.Expression))
 					context.ReportDiagnostic(Diagnostic.Create(Rule, expr.GetLocation()));
@@ -65,7 +66,8 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeBinaryExpression(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is BinaryExpressionSyntax expr))
+			var expr = context.Node as BinaryExpressionSyntax;
+			if (expr == null)
 				return;
 
 			if (IsReportableExpression(context, expr.Left)
@@ -73,13 +75,14 @@ namespace Microsoft.Unity.Analyzers
 				context.ReportDiagnostic(Diagnostic.Create(Rule, expr.GetLocation()));
 		}
 
-		private static bool IsSupportedMethod(SyntaxNodeAnalysisContext context, ExpressionSyntax? nameSyntax)
+		private static bool IsSupportedMethod(SyntaxNodeAnalysisContext context, ExpressionSyntax nameSyntax)
 		{
 			if (nameSyntax == null)
 				return false;
 
 			var symbolInfo = context.SemanticModel.GetSymbolInfo(nameSyntax);
-			if (!(symbolInfo.Symbol is IMethodSymbol symbol))
+			var symbol = symbolInfo.Symbol as IMethodSymbol;
+			if (symbol == null)
 				return false;
 
 			if (symbol.Name != "Equals" || symbol.Parameters.Length > 2)
@@ -92,14 +95,19 @@ namespace Microsoft.Unity.Analyzers
 			return containgType.Matches(typeof(string)) || containgType.Matches(typeof(object));
 		}
 
-		private static NameSyntax? GetMethodNameSyntax(InvocationExpressionSyntax expr)
+		private static NameSyntax GetMethodNameSyntax(InvocationExpressionSyntax expr)
 		{
-			return expr.Expression switch
-			{
-				MemberAccessExpressionSyntax mae => mae.Name,
-				IdentifierNameSyntax ies => ies,
-				_ => default(NameSyntax)
-			};
+			var nameSyntax = default(NameSyntax);
+
+			var mae = expr.Expression as MemberAccessExpressionSyntax;
+			if (mae != null)
+				nameSyntax = mae.Name;
+
+			var ies = expr.Expression as IdentifierNameSyntax;
+			if (ies != null)
+				nameSyntax = ies;
+
+			return nameSyntax;
 		}
 
 		private static bool IsReportableExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax expr)
@@ -115,7 +123,8 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsReportableSymbol(ISymbol symbol)
 		{
-			if (!(symbol is IPropertySymbol propertySymbol))
+			var propertySymbol = symbol as IPropertySymbol;
+			if (propertySymbol == null)
 				return false;
 
 			var containingType = propertySymbol.ContainingType;
@@ -134,14 +143,14 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			var node = root
-				.FindNode(context.Span).DescendantNodesAndSelf()
-				.FirstOrDefault(n => n is BinaryExpressionSyntax || n is InvocationExpressionSyntax);
+			var node = root.FindNode(context.Span)
+				.DescendantNodesAndSelf().Where(n => n is BinaryExpressionSyntax || n is InvocationExpressionSyntax)
+				.FirstOrDefault();
 
 			if (node == null)
 				return;
 
-			Func<CancellationToken, Task<Document>> action;
+			Func<CancellationToken, Task<Document>> action = null;
 			switch(node)
 			{
 				case BinaryExpressionSyntax bes:
@@ -150,8 +159,6 @@ namespace Microsoft.Unity.Analyzers
 				case InvocationExpressionSyntax ies:
 					action = ct => ReplaceInvocationExpressionAsync(context.Document, ies, ct);
 					break;
-				default:
-					return;
 			}
 
 			context.RegisterCodeFix(
@@ -167,7 +174,8 @@ namespace Microsoft.Unity.Analyzers
 			var root = await document.GetSyntaxRootAsync(ct).ConfigureAwait(false);
 			var model = await document.GetSemanticModelAsync(ct).ConfigureAwait(false);
 
-			SortExpressions(model, expr, out var tagExpression, out var otherExpression);
+			ExpressionSyntax tagExpression, otherExpression;
+			SortExpressions(model, expr, out tagExpression, out otherExpression);
 
 			var replacement = BuildReplacementNode(tagExpression, otherExpression);
 			return document.WithSyntaxRoot(root.ReplaceNode(expr, replacement));
@@ -178,7 +186,8 @@ namespace Microsoft.Unity.Analyzers
 			var root = await document.GetSyntaxRootAsync(ct).ConfigureAwait(false);
 			var model = await document.GetSemanticModelAsync(ct).ConfigureAwait(false);
 
-			SortExpressions(model, expr, out var tagExpression, out var otherExpression);
+			ExpressionSyntax tagExpression, otherExpression;
+			SortExpressions(model, expr, out tagExpression, out otherExpression);
 
 			var replacement = BuildReplacementNode(tagExpression, otherExpression);
 
@@ -205,7 +214,8 @@ namespace Microsoft.Unity.Analyzers
 		private static void SortExpressions(SemanticModel model, InvocationExpressionSyntax expr, out ExpressionSyntax tagExpression,
 			out ExpressionSyntax otherExpression)
 		{
-			if (expr.Expression is MemberAccessExpressionSyntax mae && expr.ArgumentList.Arguments.Count == 1)
+			var mae = expr.Expression as MemberAccessExpressionSyntax;
+			if (mae != null && expr.ArgumentList.Arguments.Count == 1)
 			{
 				if (TagComparisonAnalyzer.IsReportableExpression(model, mae.Expression))
 				{
@@ -239,7 +249,8 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var CompareTagIdentifier = SyntaxFactory.IdentifierName("CompareTag");
 			ExpressionSyntax invocation = CompareTagIdentifier;
-			if (tagExpression is MemberAccessExpressionSyntax mae)
+			var mae = tagExpression as MemberAccessExpressionSyntax;
+			if (mae != null)
 			{
 				invocation = SyntaxFactory.MemberAccessExpression(
 					SyntaxKind.SimpleMemberAccessExpression,

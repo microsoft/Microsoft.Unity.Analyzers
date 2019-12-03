@@ -21,7 +21,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string Id = "UNT0001";
 
-		public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			Id,
 			title: Strings.EmptyUnityMessageDiagnosticTitle,
 			messageFormat: Strings.EmptyUnityMessageDiagnosticMessageFormat,
@@ -79,7 +79,8 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root.FindNode(context.Span) is MethodDeclarationSyntax declaration))
+			var declaration = root.FindNode(context.Span) as MethodDeclarationSyntax;
+			if (declaration == null)
 				return;
 
 			context.RegisterCodeFix(

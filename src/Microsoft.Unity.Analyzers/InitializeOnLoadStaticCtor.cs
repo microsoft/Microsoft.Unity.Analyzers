@@ -22,7 +22,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string Id = "UNT0009";
 
-		public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			Id,
 			title: Strings.InitializeOnLoadStaticCtorDiagnosticTitle,
 			messageFormat: Strings.InitializeOnLoadStaticCtorDiagnosticMessageFormat,
