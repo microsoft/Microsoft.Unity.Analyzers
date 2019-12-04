@@ -1,4 +1,4 @@
-# Analyzers for Unity
+# Analyzers for Unity ![](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI/badge.svg)
 
 This project is intended to provide to Visual Studio a better understanding of Unity projects by adding new Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
 
