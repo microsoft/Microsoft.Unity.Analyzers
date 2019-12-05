@@ -2,6 +2,8 @@
 
 This project is intended to provide to Visual Studio a better understanding of Unity projects by adding new Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
 
+Check out our [exhaustive list of analyzers and suppressors](doc/index.md) defined in this project.
+
 If you have an idea for a rule that would constitute a best practice for extension authors to follow, please open an issue with the description.
 
 # Contributing
