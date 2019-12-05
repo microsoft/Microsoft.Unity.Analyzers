@@ -47,12 +47,13 @@ So to disable the project-local analyzer, and keeping a workflow compatible with
 
 ```csharp
 using UnityEditor;
+using System.Text.RegularExpressions;
 
 public class DisableLocalAnalyzersPostProcessor : AssetPostprocessor
 {
 	public static string OnGeneratedCSProject(string path, string content)
 	{
-		return content.Replace("<Analyzer Include=", "<Analyzer Condition=\"false\" Include=");
+		return Regex.Replace(content, "(\\<Analyzer)\\s+(Include=\".*Microsoft\\.Unity\\.Analyzers\\.dll\")", "$1 Condition=\"false\" $2");
 	}
 }
 ```
