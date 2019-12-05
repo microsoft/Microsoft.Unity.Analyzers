@@ -13,6 +13,9 @@ This project is using the `DiagnosticSuppressor` API to conditionally suppress r
 
 For building and testing, you'll need .NET SDK. We recommend using SDK Version 3.0.100 or later.
 
+For unit-testing, we require Unity to be installed (because test snippets are compiled and reference both UnityEngine.dll and UnityEngine.dll). We 
+recommend using the latest LTS version for that.
+
 # Building and testing
 
 Everything can be compiled and deployed using the command line:
