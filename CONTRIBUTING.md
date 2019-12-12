@@ -15,7 +15,7 @@ and link to it from the Issue you file.
 
 ## Guidelines for contributing a new analyzer or suppressor
 
-File an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new) describing your proposed rule prior to working on a pull request. This will ensure that the rule gets triaged and there is no duplicate work involved from an existing rule or another contributor working on a similar rule.
+File an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) describing your proposed rule prior to working on a pull request. This will ensure that the rule gets triaged and there is no duplicate work involved from an existing rule or another contributor working on a similar rule.
 
 ## Pull Requests
 
