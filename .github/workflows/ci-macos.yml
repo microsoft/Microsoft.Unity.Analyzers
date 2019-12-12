@@ -1,0 +1,26 @@
+name: CI-macOS
+
+on:
+  push:
+    branches:
+    - master
+    - release/*
+  pull_request:
+    branches:
+    - master
+    - release/*
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download Unity 2018 LTS
+      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/05119b33d0b7/MacEditorInstaller/Unity.pkg
+    - name: Install Unity
+      run: sudo installer -package unity.pkg -target /
+    - name: Test
+      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
+      env:
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: true

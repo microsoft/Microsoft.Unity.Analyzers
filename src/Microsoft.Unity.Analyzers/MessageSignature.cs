@@ -55,18 +55,20 @@ namespace Microsoft.Unity.Analyzers
 			var methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
 			var messages = scriptInfo
 				.GetMessages()
-				.ToDictionary(m => m.Name);
+				.ToLookup(m => m.Name);
 
 			foreach (var method in methods)
 			{
-				if (!messages.TryGetValue(method.Identifier.Text, out var message))
+				var methodName = method.Identifier.Text;
+
+				if (!messages.Contains(methodName))
 					continue;
 
 				var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
 				if (scriptInfo.IsMessage(methodSymbol))
 					continue;
 
-				context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), message.Name));
+				context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), methodName));
 			}
 		}
 	}

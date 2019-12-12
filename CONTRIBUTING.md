@@ -7,30 +7,18 @@ FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
 with any additional questions or comments.
 
-## Prerequisites
-
-The only prerequisite for building, testing, and deploying from this repository
-is the [.NET SDK](https://get.dot.net/).
-You should install at least version 3.0 (compatible with C# 8.0).
-
-This repository can be built on Windows, Linux, and OSX.
-
-## Package restore
-
-To restore packages use `dotnet restore`.
-
-## Building
-
-Building, testing, and packing this repository can be done by using the standard dotnet CLI commands (e.g. `dotnet build`, `dotnet test`, `dotnet pack`, etc.).
-
 ## Bug reports
 
 If you have a bug report, please file an issue. 
 If you can send a pull request with a repro of the bug in the form of a unit test, please do submit that PR
 and link to it from the Issue you file.
 
+## Guidelines for contributing a new analyzer or suppressor
+
+File an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) describing your proposed rule prior to working on a pull request. This will ensure that the rule gets triaged and there is no duplicate work involved from an existing rule or another contributor working on a similar rule.
+
 ## Pull Requests
 
-We love to get pull requests. If you have a bug fix to offer or a new analyzer, please send us a pull request.
-
-Every new feature or bug fix should be accompanied by unit tests to cover your change.
+We love to get pull requests. If you have a bug fix to offer or a new analyzer/suppressor (see guidelines above), please send us a pull request.
+Prior to submitting a pull request, ensure the build and all tests pass.
+Every new feature or bug fix should be accompanied by unit tests to cover your change and proper documentation.
