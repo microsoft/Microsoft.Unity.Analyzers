@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Download Unity 2018 LTS
-      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/497f083a43af/Windows64EditorInstaller/UnitySetup64-2018.4.13f1.exe" %CD%\unitysetup.exe
+      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/05119b33d0b7/Windows64EditorInstaller/UnitySetup64-2018.4.14f1.exe" %CD%\unitysetup.exe
       shell: cmd
     - name: Install Unity
       run: unitysetup.exe /UI=reduced /S
@@ -27,3 +27,16 @@ jobs:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         DOTNET_CLI_TELEMETRY_OPTOUT: true
       shell: cmd
+  macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download Unity 2018 LTS
+      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/05119b33d0b7/MacEditorInstaller/Unity.pkg
+    - name: Install Unity
+      run: sudo installer -package unity.pkg -target /
+    - name: Test
+      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
+      env:
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: true
