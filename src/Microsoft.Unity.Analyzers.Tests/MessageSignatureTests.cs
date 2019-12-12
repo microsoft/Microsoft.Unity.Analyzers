@@ -40,5 +40,36 @@ class Camera : MonoBehaviour
 ";
 			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
 		}
+
+		[Fact]
+		public async Task MessageSignatureWithInheritance()
+		{
+			// two declarations for OnDestroy (one in EditorWindow and one in ScriptableObject) 
+			const string test = @"
+using UnityEditor;
+
+class TestWindow : EditorWindow
+{
+    private void OnDestroy(int foo)
+    {
+    }
+}
+";
+
+			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("OnDestroy");
+
+			const string fixedTest = @"
+using UnityEditor;
+
+class TestWindow : EditorWindow
+{
+    private void OnDestroy()
+    {
+    }
+}
+";
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+
 	}
 }
