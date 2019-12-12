@@ -7,7 +7,7 @@ This project is intended to provide to Visual Studio a better understanding of U
 
 Check out the [list of analyzers and suppressors](doc/index.md) defined in this project.
 
-If you have an idea for a best practice for Unity developers to follow, please open an issue with the description.
+If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
 
 # Prerequisites
 For building and testing, you'll need the .NET Core SDK. We recommend using the **.NET Core SDK Version 3.1.100 (LTS)** or later.
@@ -60,7 +60,7 @@ public class DisableLocalAnalyzersPostProcessor : AssetPostprocessor
 }
 ```
 
-# Create a new analyzer 
+# Creating a new analyzer 
 
 To easily create a new analyzer, you can use the following command:
 
