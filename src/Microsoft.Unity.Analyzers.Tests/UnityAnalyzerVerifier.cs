@@ -34,16 +34,19 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return test.RunAsync();
 		}
 
+		protected static IEnumerable<string> UnityAssemblies()
+		{
+			var installation = UnityPath.FirstInstallation();
+			if (UnityPath.OnWindows())
+				installation = Path.Combine(installation, "Editor", "Data");
+
+			var managed = Path.Combine(installation, "Managed");
+			yield return Path.Combine(managed, "UnityEditor.dll");
+			yield return Path.Combine(managed, "UnityEngine.dll");
+		}		
+
 		public class UnityAnalyzerTest : CSharpAnalyzerTest<TAnalyzer, XUnitVerifier>
 		{
-			private static IEnumerable<string> UnityAssemblies()
-			{
-				var installation = UnityPath.FirstInstallation();
-				var managed = Path.Combine(installation, "Editor", "Data", "Managed");
-				yield return Path.Combine(managed, "UnityEditor.dll");
-				yield return Path.Combine(managed, "UnityEngine.dll");
-			}
-
 			public UnityAnalyzerTest()
 			{
 				this.SolutionTransforms.Add((s, pid) =>
@@ -73,28 +76,12 @@ namespace Microsoft.Unity.Analyzers.Tests
 		{
 			var test = new UnityCodeFixTest { TestCode = source, FixedCode = fixedSource, };
 
-			//if (fixedSource == source)
-			//{
-			//    test.FixedState.InheritanceMode = StateInheritanceMode.AutoInheritAll;
-			//    test.FixedState.MarkupHandling = MarkupMode.Allow;
-			//    test.BatchFixedState.InheritanceMode = StateInheritanceMode.AutoInheritAll;
-			//    test.BatchFixedState.MarkupHandling = MarkupMode.Allow;
-			//}
-
 			test.ExpectedDiagnostics.AddRange(expected);
 			return test.RunAsync();
 		}
 
 		public class UnityCodeFixTest : CSharpCodeFixTest<TAnalyzer, TCodeFix, XUnitVerifier>
 		{
-			private static IEnumerable<string> UnityAssemblies()
-			{
-				var installation = UnityPath.FirstInstallation();
-				var managed = Path.Combine(installation, "Editor", "Data", "Managed");
-				yield return Path.Combine(managed, "UnityEditor.dll");
-				yield return Path.Combine(managed, "UnityEngine.dll");
-			}
-
 			public UnityCodeFixTest()
 			{
 				this.SolutionTransforms.Add((s, pid) =>

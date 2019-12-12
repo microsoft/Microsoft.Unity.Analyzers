@@ -34,15 +34,20 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		private static void RegisterApplicationsInstallations()
 		{
-			var directories = Directory.EnumerateDirectories("/Applications/Unity/Hub/Editor")
-				.OrderByDescending(n => n)
-				.Select(n => Path.Combine(n, "Unity.app"))
-				.Concat(new[] {"/Applications/Unity.app"});
-
-			foreach (var name in directories)
+			var hub = "/Applications/Unity/Hub/Editor";
+			if (Directory.Exists(hub))
 			{
-				RegisterUnityInstallation(Path.Combine(name, "Contents"));
+				var directories = Directory.EnumerateDirectories(hub)
+					.OrderByDescending(n => n)
+					.Select(n => Path.Combine(n, "Unity.app"));
+
+				foreach (var name in directories)
+				{
+					RegisterUnityInstallation(Path.Combine(name, "Contents"));
+				}
 			}
+
+			RegisterUnityInstallation("/Applications/Unity/Unity.app/Contents");
 		}
 
 		private static void RegisterRegistryInstallations()
@@ -80,7 +85,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				UnityInstallations.Add(path);
 		}
 
-		private static bool OnWindows()
+		internal static bool OnWindows()
 		{
 			switch (Environment.OSVersion.Platform)
 			{
