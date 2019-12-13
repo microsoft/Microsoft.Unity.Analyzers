@@ -43,7 +43,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			var managed = Path.Combine(installation, "Managed");
 			yield return Path.Combine(managed, "UnityEditor.dll");
 			yield return Path.Combine(managed, "UnityEngine.dll");
-		}		
+		}
 
 		public class UnityAnalyzerTest : CSharpAnalyzerTest<TAnalyzer, XUnitVerifier>
 		{
