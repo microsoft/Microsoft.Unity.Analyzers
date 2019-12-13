@@ -77,6 +77,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 			catch
 			{
 			}
+			
+			// default fallback
+			RegisterUnityInstallation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Unity"));
 		}
 
 		private static void RegisterUnityInstallation(string path)
