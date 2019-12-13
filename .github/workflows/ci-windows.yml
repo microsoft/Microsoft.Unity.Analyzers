@@ -17,12 +17,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       
-    - name: Cache Unity
+    - name: Enable Unity Cache Support
       id: cache-unity
       uses: actions/cache@v1
       with:
         key: ${{ runner.os }}-unity
-        path: Unity/Editor/Data/Managed
+        path: Managed
       
     - name: Download Unity 2018 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
@@ -31,12 +31,18 @@ jobs:
       
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: unitysetup.exe /UI=reduced /S /D=%CD%\Unity
+      run: unitysetup.exe /UI=reduced /S
       shell: cmd
               
-    - name: Symbolink Unity
-      run: mklink /D "C:\Program Files\Unity" "%CD%\Unity"
-      shell: cmd  
+    - name: Prepare Cache
+      if: steps.cache-unity.outputs.cache-hit != 'true'
+      run: xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\Managed" Managed
+      shell: cmd
+      
+    - name: Restore Cache
+      if: steps.cache-unity.outputs.cache-hit == 'true'
+      run: xcopy /s /i /y /q Managed "C:\Program Files\Unity\Editor\Data\Managed"
+      shell: cmd
       
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
