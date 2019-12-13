@@ -13,14 +13,31 @@ on:
 jobs:
   windows:
     runs-on: windows-latest
+    
     steps:
     - uses: actions/checkout@v1
+      
+    - name: Cache Unity
+      id: cache-unity
+      uses: actions/cache@v1
+      with:
+        key: ${{ runner.os }}-unity
+        path: Unity/Editor/Data/Managed
+      
     - name: Download Unity 2018 LTS
+      if: steps.cache-unity.outputs.cache-hit != 'true'
       run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/05119b33d0b7/Windows64EditorInstaller/UnitySetup64-2018.4.14f1.exe" %CD%\unitysetup.exe
       shell: cmd
+      
     - name: Install Unity
-      run: unitysetup.exe /UI=reduced /S
+      if: steps.cache-unity.outputs.cache-hit != 'true'
+      run: unitysetup.exe /UI=reduced /S /D=Unity
       shell: cmd
+              
+    - name: Symbolink Unity
+      run: mklink /D "C:\Program Files\Unity" "%CD%\Unity"
+      shell: cmd  
+      
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
       env:
