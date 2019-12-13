@@ -77,9 +77,12 @@ namespace Microsoft.Unity.Analyzers.Tests
 			catch
 			{
 			}
-			
-			// default fallback
-			RegisterUnityInstallation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Unity"));
+			finally
+			{
+				// default fallback, newer Unity are all x64, so we always want the 'real' program files, even in x64 or AnyCPU targets
+				var programFiles = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
+				RegisterUnityInstallation(Path.Combine(programFiles, "Unity"));
+			}
 		}
 
 		private static void RegisterUnityInstallation(string path)
