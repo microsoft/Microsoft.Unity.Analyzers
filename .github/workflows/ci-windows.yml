@@ -26,12 +26,12 @@ jobs:
       
     - name: Download Unity 2018 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/05119b33d0b7/Windows64EditorInstaller/UnitySetup64-2018.4.14f1.exe" %CD%\unitysetup.exe
+      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/05119b33d0b7/Windows64EditorInstaller/UnitySetup64-2018.4.14f1.exe" "%CD%\unitysetup.exe"
       shell: cmd
       
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: unitysetup.exe /UI=reduced /S /D=Unity
+      run: unitysetup.exe /UI=reduced /S /D=%CD%\Unity
       shell: cmd
               
     - name: Symbolink Unity
