@@ -1,7 +1,7 @@
 # Analyzers for Unity
 
-![Build status on Windows](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-Windows/badge.svg)
-![Build status on macOS](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-macOS/badge.svg)
+[![Build status on Windows](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-Windows/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-Windows)
+[![Build status on macOS](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-macOS/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-macOS)
 
 This project is intended to provide to Visual Studio a better understanding of Unity projects by adding new Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
 
