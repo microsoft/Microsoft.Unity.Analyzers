@@ -25,3 +25,4 @@ USP0004 | IDE0044 | Don't set fields with a SerializeField attribute to read-onl
 USP0005 | IDE0060 | The Unity runtime invokes Unity messages
 USP0006 | IDE0051 | Don't flag private fields with a SerializeField attribute as unused
 USP0007 | CS0649 | Don't flag fields with a SerializeField attribute as never assigned
+USP0008 | IDE0051 | Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused
