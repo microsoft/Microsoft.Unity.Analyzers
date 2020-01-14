@@ -1,13 +1,13 @@
 # Analyzers for Unity
 
-![Build status on Windows](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-Windows/badge.svg)
-![Build status on macOS](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-macOS/badge.svg)
+[![Build status on Windows](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-Windows/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-Windows)
+[![Build status on macOS](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-macOS/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-macOS)
 
 This project is intended to provide to Visual Studio a better understanding of Unity projects by adding new Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
 
 Check out the [list of analyzers and suppressors](doc/index.md) defined in this project.
 
-If you have an idea for a best practice for Unity developers to follow, please open an issue with the description.
+If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
 
 # Prerequisites
 For building and testing, you'll need the .NET Core SDK. We recommend using the **.NET Core SDK Version 3.1.100 (LTS)** or later.
@@ -60,7 +60,7 @@ public class DisableLocalAnalyzersPostProcessor : AssetPostprocessor
 }
 ```
 
-# Create a new analyzer 
+# Creating a new analyzer 
 
 To easily create a new analyzer, you can use the following command:
 
@@ -70,14 +70,5 @@ This will automatically create source files for the analyzer, associated tests a
 
 # Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
-
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+This project welcomes contributions and suggestions.
+Please have a look at our [Guidelines](CONTRIBUTING.md) for contributing.
