@@ -493,6 +493,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused..
+        /// </summary>
+        internal static string UnusedMethodSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnusedMethodSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t flag private fields with a SerializeField attribute as unused..
         /// </summary>
         internal static string UnusedSerializeFieldSuppressorJustification {
