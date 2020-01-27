@@ -238,7 +238,7 @@ class Camera : MonoBehaviour
 				}
 			}
 
-			return identifier != 1;
+			return identifier != -1;
 		}
 
 		private static bool TryExtractIdentifier(string line, out int identifier)
