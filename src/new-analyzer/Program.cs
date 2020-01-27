@@ -230,13 +230,15 @@ class Camera : MonoBehaviour
 					string line;
 					while ((line = reader.ReadLine()) != null)
 					{
-						if (TryExtractIdentifier(line, out identifier))
+						if (TryExtractIdentifier(line, out int id))
 						{
-							return true;
+							identifier = Math.Max(identifier, id);
 						}
 					}
 				}
 			}
+
+			if (identifier != -1) return true;
 
 			return false;
 		}
