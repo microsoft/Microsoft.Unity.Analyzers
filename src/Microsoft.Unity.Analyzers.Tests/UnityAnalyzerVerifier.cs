@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -37,12 +38,32 @@ namespace Microsoft.Unity.Analyzers.Tests
 		protected static IEnumerable<string> UnityAssemblies()
 		{
 			var installation = UnityPath.FirstInstallation();
-			if (UnityPath.OnWindows())
-				installation = Path.Combine(installation, "Editor", "Data");
+			string installationFullPath = null;
 
-			var managed = Path.Combine(installation, "Managed");
-			yield return Path.Combine(managed, "UnityEditor.dll");
-			yield return Path.Combine(managed, "UnityEngine.dll");
+			if (UnityPath.OnWindows())
+				installationFullPath = Path.Combine(installation, "Editor", "Data");
+
+			// Unity installation might be within the Hub directory for Unity Hub installations
+			if (!Directory.Exists(installationFullPath))
+			{
+				string installationHubDirectory = Path.Combine(installation, "Hub", "Editor");
+				string editorVersion;
+				if (Directory.Exists(installationHubDirectory))
+				{
+					editorVersion = Directory.GetDirectories(installationHubDirectory).FirstOrDefault();
+					if (editorVersion != null)
+					{
+						installationFullPath = Path.Combine(installationHubDirectory, editorVersion, "Editor", "Data");
+					}
+				}
+			}
+
+			if (Directory.Exists(installationFullPath))
+			{
+				var managed = Path.Combine(installationFullPath, "Managed");
+				yield return Path.Combine(managed, "UnityEditor.dll");
+				yield return Path.Combine(managed, "UnityEngine.dll");
+			}
 		}
 
 		public class UnityAnalyzerTest : CSharpAnalyzerTest<TAnalyzer, XUnitVerifier>
