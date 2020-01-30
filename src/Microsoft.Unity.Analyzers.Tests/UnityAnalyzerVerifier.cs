@@ -37,23 +37,25 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected static IEnumerable<string> UnityAssemblies()
 		{
-			var installation = UnityPath.FirstInstallation();
-			string installationFullPath = null;
+			var firstInstallationPath = UnityPath.FirstInstallation();
+			string installationFullPath = firstInstallationPath;
 
 			if (UnityPath.OnWindows())
-				installationFullPath = Path.Combine(installation, "Editor", "Data");
-
-			// Unity installation might be within the Hub directory for Unity Hub installations
-			if (!Directory.Exists(installationFullPath))
 			{
-				string installationHubDirectory = Path.Combine(installation, "Hub", "Editor");
-				string editorVersion;
-				if (Directory.Exists(installationHubDirectory))
+				installationFullPath = Path.Combine(firstInstallationPath, "Editor", "Data");
+
+				// Unity installation might be within the Hub directory for Unity Hub installations
+				if (!Directory.Exists(installationFullPath))
 				{
-					editorVersion = Directory.GetDirectories(installationHubDirectory).FirstOrDefault();
-					if (editorVersion != null)
+					string installationHubDirectory = Path.Combine(firstInstallationPath, "Hub", "Editor");
+					string editorVersion;
+					if (Directory.Exists(installationHubDirectory))
 					{
-						installationFullPath = Path.Combine(installationHubDirectory, editorVersion, "Editor", "Data");
+						editorVersion = Directory.GetDirectories(installationHubDirectory).FirstOrDefault();
+						if (editorVersion != null)
+						{
+							installationFullPath = Path.Combine(installationHubDirectory, editorVersion, "Editor", "Data");
+						}
 					}
 				}
 			}
