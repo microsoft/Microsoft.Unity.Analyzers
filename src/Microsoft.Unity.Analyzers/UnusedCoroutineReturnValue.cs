@@ -109,7 +109,6 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
-			// Expression Statement -> InvocationExpression -> ArgumentList -> Argument -> old InvocationExpression
 			var newExpressionStatement = ExpressionStatement(
 				InvocationExpression(
 					IdentifierName("StartCoroutine"), 
