@@ -21,8 +21,8 @@ ID | Suppressed ID | Justification
 USP0001 | IDE0029 | Unity objects should not use null coalescing
 USP0002 | IDE0031 | Unity objects should not use null propagation
 USP0003 | IDE0051 | The Unity runtime invokes Unity messages
-USP0004 | IDE0044 | Don't set fields with a SerializeField attribute to read-only
+USP0004 | IDE0044 | Don't set fields with a SerializeField or SerializeReference attributes to read-only
 USP0005 | IDE0060 | The Unity runtime invokes Unity messages
-USP0006 | IDE0051 | Don't flag private fields with a SerializeField attribute as unused
-USP0007 | CS0649 | Don't flag fields with a SerializeField attribute as never assigned
+USP0006 | IDE0051 | Don't flag private fields with a SerializeField or SerializeReference attributes as unused
+USP0007 | CS0649 | Don't flag fields with a SerializeField or SerializeReference attributes as never assigned
 USP0008 | IDE0051 | Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused

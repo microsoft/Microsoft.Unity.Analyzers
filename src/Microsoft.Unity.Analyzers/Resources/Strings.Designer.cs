@@ -304,7 +304,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag fields with a SerializeField attribute as never assigned..
+        ///   Looks up a localized string similar to Don&apos;t flag fields with a SerializeField or SerializeReference attribute as never assigned..
         /// </summary>
         internal static string NeverAssignedSerializeFieldSuppressorJustification {
             get {
@@ -349,7 +349,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t set fields with a SerializeField attribute to read-only..
+        ///   Looks up a localized string similar to Don&apos;t set fields with a SerializeField or SerializeReference attributes to read-only..
         /// </summary>
         internal static string ReadonlySerializeFieldSuppressorJustification {
             get {
@@ -502,7 +502,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag private fields with a SerializeField attribute as unused..
+        ///   Looks up a localized string similar to Don&apos;t flag private fields with a SerializeField or SerializeReference attribute as unused..
         /// </summary>
         internal static string UnusedSerializeFieldSuppressorJustification {
             get {

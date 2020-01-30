@@ -268,13 +268,13 @@
     <value>The Unity runtime invokes Unity messages.</value>
   </data>
   <data name="ReadonlySerializeFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't set fields with a SerializeField attribute to read-only.</value>
+    <value>Don't set fields with a SerializeField or SerializeReference attributes to read-only.</value>
   </data>
   <data name="UnusedSerializeFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't flag private fields with a SerializeField attribute as unused.</value>
+    <value>Don't flag private fields with a SerializeField or SerializeReference attribute as unused.</value>
   </data>
   <data name="NeverAssignedSerializeFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't flag fields with a SerializeField attribute as never assigned.</value>
+    <value>Don't flag fields with a SerializeField or SerializeReference attribute as never assigned.</value>
   </data>
   <data name="UnusedMethodSuppressorJustification" xml:space="preserve">
     <value>Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused.</value>

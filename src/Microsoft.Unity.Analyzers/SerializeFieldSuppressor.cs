@@ -51,7 +51,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!(model.GetDeclaredSymbol(node) is IFieldSymbol fieldSymbol))
 				return;
 
-			if (!fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
+			if (!fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField)) || a.AttributeClass.Matches(typeof(UnityEngine.SerializeReference))))
 				return;
 
 			foreach (var descriptor in SupportedSuppressions.Where(d => d.SuppressedDiagnosticId == diagnostic.Id))
