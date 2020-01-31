@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,8 +30,6 @@ namespace Microsoft.Unity.Analyzers
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-		private static readonly Type coroutineReturnValue = typeof(System.Collections.IEnumerable);
-
 		public override void Initialize(AnalysisContext context)
 		{
 			context.EnableConcurrentExecution();
@@ -42,14 +39,12 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 		{
-			var typeInfo = context.Compilation.GetTypeByMetadataName("System.Collections.IEnumerator");
-			
 			var invocation = (InvocationExpressionSyntax)context.Node;
 			var symbol = context.SemanticModel.GetSymbolInfo(invocation);
 			if (symbol.Symbol == null)
 				return;
 
-			if (!IsValidCoroutine(symbol.Symbol, typeInfo, out var methodName))
+			if (!IsValidCoroutine(symbol.Symbol, out var methodName))
 				return;
 
 			if (!invocation.Parent.IsKind(SyntaxKind.ExpressionStatement))
@@ -58,7 +53,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), methodName));
 		}
 
-		private static bool IsValidCoroutine(ISymbol symbol, INamedTypeSymbol typeInfo, out string methodName)
+		private static bool IsValidCoroutine(ISymbol symbol, out string methodName)
 		{
 			methodName = null;
 			if (!(symbol is IMethodSymbol method))
@@ -68,7 +63,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!containingType.Extends(typeof(UnityEngine.MonoBehaviour)))
 				return false;
 
-			if (!Equals(method.ReturnType, typeInfo))
+			if (!method.ReturnType.Matches(typeof(System.Collections.IEnumerator)))
 				return false;
 
 			methodName = method.Name;
@@ -113,7 +108,7 @@ namespace Microsoft.Unity.Analyzers
 				InvocationExpression(
 					IdentifierName("StartCoroutine"), 
 					ArgumentList(
-						SingletonSeparatedList<ArgumentSyntax>(
+						SingletonSeparatedList(
 							Argument(invocation)))));
 
 			var newRoot = root.ReplaceNode(parent, newExpressionStatement);
