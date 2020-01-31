@@ -13,6 +13,7 @@ ID | Title | Category
 [UNT0009](UNT0009.md) | Missing static constructor with InitializeOnLoad | Correctness
 [UNT0010](UNT0010.md) | MonoBehaviour instance creation | Type Safety
 [UNT0011](UNT0011.md) | ScriptableObject instance creation | Type Safety
+[UNT0012](UNT0012.md) | Unused coroutine return value | Correctness
 
 # Diagnostic Suppressors
 

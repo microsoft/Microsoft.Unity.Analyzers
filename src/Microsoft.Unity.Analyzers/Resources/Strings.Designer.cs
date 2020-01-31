@@ -484,6 +484,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use StartCoroutine().
+        /// </summary>
+        internal static string UnusedCoroutineReturnValueCodeFixTitle {
+            get {
+                return ResourceManager.GetString("UnusedCoroutineReturnValueCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use StartCoroutine() to start a coroutine. Calling the coroutine method directly will result in the coroutine never being executed..
+        /// </summary>
+        internal static string UnusedCoroutineReturnValueDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("UnusedCoroutineReturnValueDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coroutine {0} should be called using StartCoroutine()..
+        /// </summary>
+        internal static string UnusedCoroutineReturnValueDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("UnusedCoroutineReturnValueDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unused Unity Coroutine.
+        /// </summary>
+        internal static string UnusedCoroutineReturnValueDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("UnusedCoroutineReturnValueDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Unity runtime invokes Unity messages..
         /// </summary>
         internal static string UnusedMessageSuppressorJustification {

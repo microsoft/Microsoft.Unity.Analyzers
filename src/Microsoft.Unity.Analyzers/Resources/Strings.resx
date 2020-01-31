@@ -279,4 +279,16 @@
   <data name="UnusedMethodSuppressorJustification" xml:space="preserve">
     <value>Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused.</value>
   </data>
+  <data name="UnusedCoroutineReturnValueCodeFixTitle" xml:space="preserve">
+    <value>Use StartCoroutine()</value>
+  </data>
+  <data name="UnusedCoroutineReturnValueDiagnosticDescription" xml:space="preserve">
+    <value>Use StartCoroutine() to start a coroutine. Calling the coroutine method directly will result in the coroutine never being executed.</value>
+  </data>
+  <data name="UnusedCoroutineReturnValueDiagnosticMessageFormat" xml:space="preserve">
+    <value>Coroutine {0} should be called using StartCoroutine().</value>
+  </data>
+  <data name="UnusedCoroutineReturnValueDiagnosticTitle" xml:space="preserve">
+    <value>Unused Unity Coroutine</value>
+  </data>
 </root>
