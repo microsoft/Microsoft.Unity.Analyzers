@@ -186,6 +186,10 @@ namespace UnityEngine
 	class SerializeField : System.Attribute
 	{
 	}
+
+	class SerializeReference : System.Attribute
+	{
+	}
 }
 
 namespace UnityEngine.EventSystems
