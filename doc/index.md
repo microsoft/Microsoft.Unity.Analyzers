@@ -19,11 +19,11 @@ ID | Title | Category
 
 ID | Suppressed ID | Justification
 ---- | --- | --- |
-USP0001 | IDE0029 | Unity objects should not use null coalescing
-USP0002 | IDE0031 | Unity objects should not use null propagation
-USP0003 | IDE0051 | The Unity runtime invokes Unity messages
-USP0004 | IDE0044 | Don't set fields with a SerializeField or SerializeReference attributes to read-only
-USP0005 | IDE0060 | The Unity runtime invokes Unity messages
-USP0006 | IDE0051 | Don't flag private fields with a SerializeField or SerializeReference attributes as unused
-USP0007 | CS0649 | Don't flag fields with a SerializeField or SerializeReference attributes as never assigned
-USP0008 | IDE0051 | Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused
+[USP0001](USP0001.md) | IDE0029 | Unity objects should not use null coalescing
+[USP0002](USP0002.md) | IDE0031 | Unity objects should not use null propagation
+[USP0003](USP0003.md) | IDE0051 | The Unity runtime invokes Unity messages
+[USP0004](USP0004.md) | IDE0044 | Don't set fields with SerializeField or SerializeReference attributes to read-only
+[USP0005](USP0005.md) | IDE0060 | The Unity runtime invokes Unity messages
+[USP0006](USP0006.md) | IDE0051 | Don't flag private fields with SerializeField or SerializeReference attributes as unused
+[USP0007](USP0007.md) | CS0649 | Don't flag fields with SerializeField or SerializeReference attributes as never assigned
+[USP0008](USP0008.md) | IDE0051 | Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused
