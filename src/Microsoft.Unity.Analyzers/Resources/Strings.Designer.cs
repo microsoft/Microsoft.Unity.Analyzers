@@ -232,6 +232,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TODO: Add code fix title.
+        /// </summary>
+        internal static string ImproperSerializeFieldCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO: Add description..
+        /// </summary>
+        internal static string ImproperSerializeFieldDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO: Add Message format.
+        /// </summary>
+        internal static string ImproperSerializeFieldDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO: Add title.
+        /// </summary>
+        internal static string ImproperSerializeFieldDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add static constructor.
         /// </summary>
         internal static string InitializeOnLoadStaticCtorCodeFixTitle {

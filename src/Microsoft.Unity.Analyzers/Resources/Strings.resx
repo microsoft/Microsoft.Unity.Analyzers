@@ -291,4 +291,16 @@
   <data name="UnusedCoroutineReturnValueDiagnosticTitle" xml:space="preserve">
     <value>Unused Unity Coroutine</value>
   </data>
+  <data name="ImproperSerializeFieldCodeFixTitle" xml:space="preserve">
+    <value>TODO: Add code fix title</value>
+  </data>
+  <data name="ImproperSerializeFieldDiagnosticDescription" xml:space="preserve">
+    <value>TODO: Add description.</value>
+  </data>
+  <data name="ImproperSerializeFieldDiagnosticMessageFormat" xml:space="preserve">
+    <value>TODO: Add Message format</value>
+  </data>
+  <data name="ImproperSerializeFieldDiagnosticTitle" xml:space="preserve">
+    <value>TODO: Add title</value>
+  </data>
 </root>
