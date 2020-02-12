@@ -3,7 +3,7 @@
 [![Build status on Windows](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-Windows/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-Windows)
 [![Build status on macOS](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-macOS/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-macOS)
 
-This project is intended to provide to Visual Studio a better understanding of Unity projects by adding new Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
+This project provides Visual Studio with a better understanding of Unity projects by adding Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
 
 Check out the [list of analyzers and suppressors](doc/index.md) defined in this project.
 
@@ -12,30 +12,39 @@ If you have an idea for a best practice for Unity developers to follow, please o
 # Prerequisites
 For building and testing, you'll need the .NET Core SDK. We recommend using the **.NET Core SDK Version 3.1.100 (LTS)** or later.
 
-This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics. This API is available starting with **Visual Studio 2019 16.3** or **Visual Studio for Mac 8.3**. On Windows, you'll need the _Visual Studio extension development_ workload installed to build a VSIX to use and debug the project in Visual Studio.
+This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics. This API is available starting with **Visual Studio 2019 16.3** or **Visual Studio for Mac 8.3**.
+
+On Windows, you'll need the _Visual Studio extension development_ workload installed to build a VSIX to use and debug the project in Visual Studio.
 
 For unit-testing, we require Unity to be installed. We recommend using the latest LTS version for that.
 
 # Building and testing
 
-Everything can be compiled and deployed using the command line:
+Compiling the solution:
+`dotnet build .\src\Microsoft.Unity.Analyzers.sln`
 
-Compiling the main project only:
-`dotnet build .\src\Microsoft.Unity.Analyzers`
+Running the unit tests:
+`dotnet test .\src\Microsoft.Unity.Analyzers.sln`
 
-Unit-Testing:
-`dotnet test .\src\Microsoft.Unity.Analyzers.Tests`
+You can open `.\src\Microsoft.Unity.Analyzers.sln` in your favorite IDE to work on the analyzers and run/debug the tests.
 
-Compiling all projects and deploying analyzers/suppressors as a VSIX extension into the Visual Studio Experimental Instance:
-`msbuild .\src\Microsoft.Unity.Analyzers.sln`
+# Debugging the analyzers on a Unity project
 
-# Debugging
+Running and debugging the tests is the easiest way to get started but sometimes you want to work on a real-life Unity project.
 
-The easiest way to compile and debug interactively is to use Visual Studio 2019 :
-- Load the `Microsoft.Unity.Analyzers.sln` solution.
-- Set `Microsoft.Unity.Analyzers.Vsix` as your startup project.
+## On Windows
+
+- Open the `Microsoft.Unity.Analyzers.Vsix.sln` solution.
+- Make sure `Microsoft.Unity.Analyzers.Vsix` is set as the startup project.
 - Hit play (Current Instance) to start debugging an experimental instance of Visual Studio 2019.
-- Load any Unity project in the VS experimental instance then put breakpoints in the Analyzer project using the VS main instance.
+- Load any Unity project in the Visual Studio experimental instance then put breakpoints in the `Microsoft.Unity.Analyzers` project.
+
+## On macOS
+
+- Open the `Microsoft.Unity.Analyzers.Mpack.sln` solution.
+- Make sure `Microsoft.Unity.Analyzers.Mpack` is set as the startup project.
+- Hit play to start debugging an experimental instance of Visual Studio for Mac.
+- Load any Unity project in the Visual Studio for Mac experimental instance then put breakpoints in the `Microsoft.Unity.Analyzers` project.
 
 # Handling duplicate diagnostics 
 
