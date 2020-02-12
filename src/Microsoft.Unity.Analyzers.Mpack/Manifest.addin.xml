@@ -1,16 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ExtensionModel>
-
-	<Extension path="/MonoDevelop/Refactoring/AnalyzerAssemblies">
-		<Assembly file="Microsoft.Unity.Analyzers.dll" />
-	</Extension>
 	
   <Extension path="/MonoDevelop/Ide/Composition">
     <Assembly file="Microsoft.Unity.Analyzers.dll" />
   </Extension>
- 
-  <Runtime>
-    <Import assembly="Microsoft.Unity.Analyzers.dll" />
-  </Runtime>>
   
 </ExtensionModel>
