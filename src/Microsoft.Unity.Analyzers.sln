@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Unity.Analyzers.V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "new-analyzer", "new-analyzer\new-analyzer.csproj", "{671EB45F-5783-41EF-831C-25EED97670C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Unity.Analyzers.Mpack", "Microsoft.Unity.Analyzers.Mpack\Microsoft.Unity.Analyzers.Mpack.csproj", "{75C9E697-F3D8-438A-9C31-802DF27867B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{671EB45F-5783-41EF-831C-25EED97670C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{671EB45F-5783-41EF-831C-25EED97670C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{671EB45F-5783-41EF-831C-25EED97670C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75C9E697-F3D8-438A-9C31-802DF27867B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C9E697-F3D8-438A-9C31-802DF27867B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C9E697-F3D8-438A-9C31-802DF27867B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C9E697-F3D8-438A-9C31-802DF27867B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
