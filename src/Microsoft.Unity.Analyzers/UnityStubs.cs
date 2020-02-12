@@ -270,7 +270,7 @@ namespace UnityEditor
 
 	class Editor : ScriptableObject
 	{
-		protected virtual VisualElement CreateInspectorGUI() { return null; }
+		public virtual VisualElement CreateInspectorGUI() { return null; }
 		protected virtual bool ShouldHideOpenButton() { return false; }
 		void OnSceneGUI() { }
 	}
