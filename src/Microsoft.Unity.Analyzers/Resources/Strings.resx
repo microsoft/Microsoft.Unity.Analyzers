@@ -292,15 +292,15 @@
     <value>Unused Unity Coroutine</value>
   </data>
   <data name="ImproperSerializeFieldCodeFixTitle" xml:space="preserve">
-    <value>TODO: Add code fix title</value>
+    <value>Remove SerializeField attribute</value>
   </data>
   <data name="ImproperSerializeFieldDiagnosticDescription" xml:space="preserve">
-    <value>TODO: Add description.</value>
+    <value>SerializeField attribute does not work on properties, and are unnecessary for public fields</value>
   </data>
   <data name="ImproperSerializeFieldDiagnosticMessageFormat" xml:space="preserve">
-    <value>TODO: Add Message format</value>
+    <value>SerializeField attribute is invalid or redundant here</value>
   </data>
   <data name="ImproperSerializeFieldDiagnosticTitle" xml:space="preserve">
-    <value>TODO: Add title</value>
+    <value>Remove invalid SerializeField attribute</value>
   </data>
 </root>

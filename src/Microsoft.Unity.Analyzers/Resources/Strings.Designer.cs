@@ -232,7 +232,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO: Add code fix title.
+        ///   Looks up a localized string similar to Remove SerializeField attribute.
         /// </summary>
         internal static string ImproperSerializeFieldCodeFixTitle {
             get {
@@ -241,7 +241,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO: Add description..
+        ///   Looks up a localized string similar to SerializeField attribute does not work on properties, and are unnecessary for public fields.
         /// </summary>
         internal static string ImproperSerializeFieldDiagnosticDescription {
             get {
@@ -250,7 +250,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO: Add Message format.
+        ///   Looks up a localized string similar to SerializeField attribute is invalid or redundant here.
         /// </summary>
         internal static string ImproperSerializeFieldDiagnosticMessageFormat {
             get {
@@ -259,7 +259,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO: Add title.
+        ///   Looks up a localized string similar to Remove invalid SerializeField attribute.
         /// </summary>
         internal static string ImproperSerializeFieldDiagnosticTitle {
             get {
