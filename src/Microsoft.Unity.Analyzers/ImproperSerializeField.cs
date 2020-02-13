@@ -70,10 +70,10 @@ namespace Microsoft.Unity.Analyzers
 			if (symbols.FirstOrDefault() == null)
 				return;
 
-			if (!FieldHasInvalidSerializeField(symbols, out var fieldName))
+			if (!FieldHasInvalidSerializeField(symbols, out var fields))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, field.GetLocation(), fieldName));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, field.GetLocation(), fields));
 		}
 
 		private static bool PropertyHasInvalidSerializeField(ISymbol symbol, out string propertyName)
@@ -97,13 +97,16 @@ namespace Microsoft.Unity.Analyzers
 			return true;
 		}
 
-		private static bool FieldHasInvalidSerializeField(List<ISymbol> symbols, out string fieldName)
+		private static bool FieldHasInvalidSerializeField(List<ISymbol> symbols, out string fields)
 		{
-			fieldName = null;
+			fields = null;
+			List<string> fieldNames = new List<string>();
 
 			bool foundMatchingSymbol = false;
 			foreach (var symbol in symbols)
 			{
+				fieldNames.Add(symbol.Name);
+
 				if (!(symbol is IFieldSymbol && symbol.DeclaredAccessibility == Accessibility.Public))
 					continue;
 
@@ -114,11 +117,10 @@ namespace Microsoft.Unity.Analyzers
 				if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
 					continue;
 
-				fieldName = symbol.Name;
 				foundMatchingSymbol = true;
-				break;
 			}
 
+			fields = string.Join(", ", fieldNames.ToArray());
 			return foundMatchingSymbol;
 		}
 	}
@@ -144,22 +146,27 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					Strings.ImproperSerializeFieldCodeFixTitle,
-					ct => RemoveSerializeFieldAttribute(context.Document, declaration, ct),
+					ct => RemoveSerializeFieldAttribute(context.Document, context, declaration, ct),
 					declaration.ToFullString()),
 				context.Diagnostics);
 		}
 
-		private static async Task<Document> RemoveSerializeFieldAttribute(Document document, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
+		private static async Task<Document> RemoveSerializeFieldAttribute(Document document, CodeFixContext context, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+			var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
 			var attributes = new SyntaxList<AttributeListSyntax>();
 
 			foreach (var attributeList in declaration.AttributeLists)
 			{
-				var nodes = attributeList
-					.Attributes
-					.Where(a => a.Name.ToString() == "SerializeField");
+				List<AttributeSyntax> nodes = new List<AttributeSyntax>();
+				foreach (var node in attributeList.Attributes)
+				{
+					var attributeType = model.GetTypeInfo(node);
+					if (attributeType.Type.Matches(typeof(UnityEngine.SerializeField)))
+						nodes.Add(node);
+				}
 
 				if (nodes.Count() > 0)
 				{

@@ -298,7 +298,8 @@
     <value>SerializeField attribute does not work on properties, and are unnecessary for public fields</value>
   </data>
   <data name="ImproperSerializeFieldDiagnosticMessageFormat" xml:space="preserve">
-    <value>SerializeField attribute is invalid or redundant here</value>
+    <value>SerializeField attribute is invalid or redundant for property or field(s): {0}</value>
+    <comment>{0} is a list of identifiers declared with a SerializeField attribute</comment>
   </data>
   <data name="ImproperSerializeFieldDiagnosticTitle" xml:space="preserve">
     <value>Remove invalid SerializeField attribute</value>
