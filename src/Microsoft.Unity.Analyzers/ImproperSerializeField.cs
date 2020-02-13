@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -32,45 +33,93 @@ namespace Microsoft.Unity.Analyzers
 		{
 			context.EnableConcurrentExecution();
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.RegisterSyntaxNodeAction(AnalyzeDeclaration, SyntaxKind.PropertyDeclaration);
-			context.RegisterSyntaxNodeAction(AnalyzeDeclaration, SyntaxKind.FieldDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzePropertyDeclaration, SyntaxKind.PropertyDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeFieldDeclaration, SyntaxKind.FieldDeclaration);
 		}
 
-		private static void AnalyzeDeclaration(SyntaxNodeAnalysisContext context)
+		private static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			var member = (MemberDeclarationSyntax)context.Node;
-			if (!(member is PropertyDeclarationSyntax || member is FieldDeclarationSyntax))
+			var property = (MemberDeclarationSyntax)context.Node;
+			if (!(property is PropertyDeclarationSyntax))
 				return;
 
-			var symbol = context.SemanticModel.GetSymbolInfo(member);
-			if (symbol.Symbol != null)
+			var symbol = context.SemanticModel.GetDeclaredSymbol(property);
+			if (symbol == null)
 				return;
 
-			if (!HasInvalidSerializeFieldAttribute(symbol.Symbol, out var memberName))
+			if (!PropertyHasInvalidSerializeField(symbol, out var propertyName))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, member.GetLocation(), memberName));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, property.GetLocation(), propertyName));
 		}
 
-		private static bool HasInvalidSerializeFieldAttribute(ISymbol symbol, out string memberName)
+		private static void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			memberName = null;
-			if (!(symbol is IPropertySymbol || (symbol is IFieldSymbol && symbol.DeclaredAccessibility == Accessibility.Public)))
+			var field = (FieldDeclarationSyntax)context.Node;
+			if (!(field is FieldDeclarationSyntax))
+				return;
+
+			List<ISymbol> symbols = new List<ISymbol>();
+			foreach (var variable in field.Declaration.Variables)
+			{
+				var symbol = context.SemanticModel.GetDeclaredSymbol(variable);
+				if (symbol != null)
+					symbols.Add(symbol);
+			}
+
+			if (symbols.FirstOrDefault() == null)
+				return;
+
+			if (!FieldHasInvalidSerializeField(symbols, out var fieldName))
+				return;
+
+			context.ReportDiagnostic(Diagnostic.Create(Rule, field.GetLocation(), fieldName));
+		}
+
+		private static bool PropertyHasInvalidSerializeField(ISymbol symbol, out string propertyName)
+		{
+			propertyName = null;
+			if (!(symbol is IPropertySymbol))
 				return false;
 
 			var containingType = symbol.ContainingType;
 			if (!containingType.Extends(typeof(UnityEngine.Object)))
 				return false;
 
-			var hasSerializeFieldAttribute = symbol
+			bool hasSerializeFieldAttribute = symbol
 				.GetAttributes()
 				.Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField)));
 
 			if (!hasSerializeFieldAttribute)
 				return false;
 
-			memberName = symbol.Name;
+			propertyName = symbol.Name;
 			return true;
+		}
+
+		private static bool FieldHasInvalidSerializeField(List<ISymbol> symbols, out string fieldName)
+		{
+			fieldName = null;
+
+			bool foundMatchingSymbol = false;
+			foreach (var symbol in symbols)
+			{
+				if (!(symbol is IFieldSymbol))
+					continue;
+
+				var containingType = symbol.ContainingType;
+				if (!containingType.Extends(typeof(UnityEngine.Object)))
+					continue;
+
+				if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
+					continue;
+
+				fieldName = symbol.Name;
+				foundMatchingSymbol = true;
+				break;
+			}
+
+			return foundMatchingSymbol;
 		}
 	}
 
