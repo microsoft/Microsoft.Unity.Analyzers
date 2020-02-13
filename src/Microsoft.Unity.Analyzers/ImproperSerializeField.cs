@@ -104,7 +104,7 @@ namespace Microsoft.Unity.Analyzers
 			bool foundMatchingSymbol = false;
 			foreach (var symbol in symbols)
 			{
-				if (!(symbol is IFieldSymbol))
+				if (!(symbol is IFieldSymbol && symbol.DeclaredAccessibility == Accessibility.Public))
 					continue;
 
 				var containingType = symbol.ContainingType;
