@@ -45,7 +45,7 @@ namespace Microsoft.Unity.Analyzers
 			if (method?.Body == null)
 				return;
 
-			if (method.Modifiers.Any(SyntaxKind.AbstractKeyword) || method.Modifiers.Any(SyntaxKind.VirtualKeyword))
+			if (HasPolymorphicModifier(method))
 				return;
 
 			if (method.Body.Statements.Count > 0)
@@ -65,6 +65,22 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), symbol.Name));
+		}
+
+		private static bool HasPolymorphicModifier(MethodDeclarationSyntax method)
+		{
+			foreach (var modifier in method.Modifiers)
+			{
+				switch (modifier.Kind())
+				{
+					case SyntaxKind.AbstractKeyword:
+					case SyntaxKind.VirtualKeyword:
+					case SyntaxKind.OverrideKeyword:
+						return true;
+				}
+			}
+
+			return false;
 		}
 	}
 
