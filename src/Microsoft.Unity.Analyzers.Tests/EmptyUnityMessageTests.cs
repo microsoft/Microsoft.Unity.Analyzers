@@ -66,5 +66,65 @@ class Camera : MonoBehaviour
 ";
 			await Verify.VerifyAnalyzerAsync(test);
 		}
+
+		[Fact]
+		public async Task VirtualFixedUpdate()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public virtual void FixedUpdate()
+    {
+    }
+}
+";
+			await Verify.VerifyAnalyzerAsync(test);
+		}
+
+		[Fact]
+		public async Task VirtualOverrideFixedUpdate()
+		{
+			const string test = @"
+using UnityEngine;
+
+class BaseBehaviour : MonoBehaviour
+{
+	public virtual void FixedUpdate()
+	{
+	}
+}
+
+class Camera : BaseBehaviour
+{
+    public override void FixedUpdate()
+    {
+    }
+}
+";
+			await Verify.VerifyAnalyzerAsync(test);
+		}
+
+		[Fact]
+		public async Task AbstractOverrideFixedUpdate()
+		{
+			const string test = @"
+using UnityEngine;
+
+abstract class BaseBehaviour : MonoBehaviour
+{
+	public abstract void FixedUpdate();
+}
+
+class Camera : BaseBehaviour
+{
+    public override void FixedUpdate()
+    {
+    }
+}
+";
+			await Verify.VerifyAnalyzerAsync(test);
+		}
 	}
 }
