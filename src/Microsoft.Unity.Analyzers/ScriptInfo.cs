@@ -93,10 +93,10 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var parameters = method.GetParameters();
-			if (parameters.Length != symbol.Parameters.Length)
+			if (parameters.Length < symbol.Parameters.Length)
 				return false;
 
-			for (var i = 0; i < parameters.Length; i++)
+			for (var i = 0; i < symbol.Parameters.Length; i++)
 			{
 				if (!symbol.Parameters[i].Type.Matches(parameters[i].ParameterType))
 					return false;
