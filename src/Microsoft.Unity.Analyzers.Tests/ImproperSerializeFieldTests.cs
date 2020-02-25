@@ -82,6 +82,7 @@ class Camera : MonoBehaviour
 		{
 			const string test = @"
 using UnityEngine;
+using UnityEngine.Serialization;
 
 class Camera : MonoBehaviour
 {
@@ -98,6 +99,7 @@ class Camera : MonoBehaviour
 		{
 			const string test = @"
 using UnityEngine;
+using UnityEngine.Serialization;
 
 class Camera : MonoBehaviour
 {
@@ -106,14 +108,112 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(ImproperSerializeFieldAnalyzer.Id).WithLocation(6, 5).WithArguments("publicField1, publicField2, publicField3");
+			var diagnostic = Verify.Diagnostic(ImproperSerializeFieldAnalyzer.Id).WithLocation(7, 5).WithArguments("publicField1, publicField2, publicField3");
 
 			const string fixedTest = @"
 using UnityEngine;
+using UnityEngine.Serialization;
 
 class Camera : MonoBehaviour
 {
     public string publicField1, publicField2, publicField3;
+}
+";
+
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+
+		[Fact]
+		public async Task ValidSerializeFieldMultipleAttributesTest()
+		{
+			const string test = @"
+using UnityEngine;
+using UnityEngine.Serialization;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField]
+    [FormerlySerializedAs(""somethingElse"")]
+    private string privateField;
+}
+";
+
+			await Verify.VerifyAnalyzerAsync(test);
+		}
+
+		[Fact]
+		public async Task RedundantSerializeFieldMultipleAttributeTest()
+		{
+			const string test = @"
+using UnityEngine;
+using UnityEngine.Serialization;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField]
+    [FormerlySerializedAs(""somethingElse"")]
+    public string publicField;
+}
+";
+
+			var diagnostic = Verify.Diagnostic(ImproperSerializeFieldAnalyzer.Id).WithLocation(7, 5).WithArguments("publicField");
+
+			const string fixedTest = @"
+using UnityEngine;
+using UnityEngine.Serialization;
+
+class Camera : MonoBehaviour
+{
+    [FormerlySerializedAs(""somethingElse"")]
+    public string publicField;
+}
+";
+
+
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+
+		[Fact]
+		public async Task ValidSerializeFieldMultipleAttributeInlineTest()
+		{
+			const string test = @"
+using UnityEngine;
+using UnityEngine.Serialization;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField, FormerlySerializedAs(""somethingElse"")]
+    private string privateField;
+}
+";
+
+			await Verify.VerifyAnalyzerAsync(test);
+		}
+
+		[Fact]
+		public async Task RedundantSerializeFieldMultipleAttributeInlineTest()
+		{
+			const string test = @"
+using UnityEngine;
+using UnityEngine.Serialization;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField, FormerlySerializedAs(""somethingElse"")]
+    public string publicField;
+}
+";
+
+			var diagnostic = Verify.Diagnostic(ImproperSerializeFieldAnalyzer.Id).WithLocation(7, 5).WithArguments("publicField");
+
+			const string fixedTest = @"
+using UnityEngine;
+using UnityEngine.Serialization;
+
+class Camera : MonoBehaviour
+{
+    [FormerlySerializedAs(""somethingElse"")]
+    public string publicField;
 }
 ";
 

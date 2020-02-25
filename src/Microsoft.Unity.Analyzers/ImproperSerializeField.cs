@@ -39,8 +39,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			var property = (MemberDeclarationSyntax)context.Node;
-			if (!(property is PropertyDeclarationSyntax))
+			if (!(context.Node is PropertyDeclarationSyntax property))
 				return;
 
 			var symbol = context.SemanticModel.GetDeclaredSymbol(property);
@@ -55,11 +54,10 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			var field = (FieldDeclarationSyntax)context.Node;
-			if (!(field is FieldDeclarationSyntax))
+			if (!(context.Node is FieldDeclarationSyntax field))
 				return;
 
-			List<ISymbol> symbols = new List<ISymbol>();
+			var symbols = new List<ISymbol>();
 			foreach (var variable in field.Declaration.Variables)
 			{
 				var symbol = context.SemanticModel.GetDeclaredSymbol(variable);
@@ -67,7 +65,7 @@ namespace Microsoft.Unity.Analyzers
 					symbols.Add(symbol);
 			}
 
-			if (symbols.FirstOrDefault() == null)
+			if (!symbols.Any())
 				return;
 
 			if (!FieldHasInvalidSerializeField(symbols, out var fields))
@@ -100,7 +98,7 @@ namespace Microsoft.Unity.Analyzers
 		private static bool FieldHasInvalidSerializeField(List<ISymbol> symbols, out string fields)
 		{
 			fields = null;
-			List<string> fieldNames = new List<string>();
+			var fieldNames = new List<string>();
 
 			bool foundMatchingSymbol = false;
 			foreach (var symbol in symbols)
@@ -136,8 +134,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			var declaration = root.FindNode(context.Span) as MemberDeclarationSyntax;
-			if (declaration == null)
+			if (!(root.FindNode(context.Span) is MemberDeclarationSyntax declaration))
 				return;
 
 			if (!(declaration is PropertyDeclarationSyntax || declaration is FieldDeclarationSyntax))
@@ -146,12 +143,12 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					Strings.ImproperSerializeFieldCodeFixTitle,
-					ct => RemoveSerializeFieldAttribute(context.Document, context, declaration, ct),
+					ct => RemoveSerializeFieldAttribute(context.Document, declaration, ct),
 					declaration.ToFullString()),
 				context.Diagnostics);
 		}
 
-		private static async Task<Document> RemoveSerializeFieldAttribute(Document document, CodeFixContext context, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
+		private static async Task<Document> RemoveSerializeFieldAttribute(Document document, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
@@ -160,7 +157,7 @@ namespace Microsoft.Unity.Analyzers
 
 			foreach (var attributeList in declaration.AttributeLists)
 			{
-				List<AttributeSyntax> nodes = new List<AttributeSyntax>();
+				var nodes = new List<AttributeSyntax>();
 				foreach (var node in attributeList.Attributes)
 				{
 					var attributeType = model.GetTypeInfo(node);
@@ -168,11 +165,14 @@ namespace Microsoft.Unity.Analyzers
 						nodes.Add(node);
 				}
 
-				if (nodes.Count() > 0)
+				if (nodes.Any())
 				{
 					var newAttributes = attributeList.RemoveNodes(nodes, SyntaxRemoveOptions.KeepNoTrivia);
-					attributes.Add(newAttributes);
+					if (newAttributes.Attributes.Any())
+						attributes = attributes.Add(newAttributes);
 				}
+				else
+					attributes = attributes.Add(attributeList);
 			}
 
 			var newDeclaration = declaration.WithAttributeLists(attributes);
