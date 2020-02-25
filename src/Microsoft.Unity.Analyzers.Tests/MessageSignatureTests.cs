@@ -42,6 +42,84 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task MessageSignatureUnityLogic()
+		{
+			// Unity allows to specify less parameters if you don't need them
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void OnAnimatorIK()
+    {
+    }
+}
+";
+
+			await Verify.VerifyAnalyzerAsync(test);
+		}
+
+		[Fact]
+		public async Task MessageSignatureUnityLogicBadType()
+		{
+			// But we enforce proper type
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void OnAnimatorIK(string bad)
+    {
+    }
+}
+";
+
+			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("OnAnimatorIK");
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void OnAnimatorIK(int layerIndex)
+    {
+    }
+}
+";
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+
+		[Fact]
+		public async Task MessageSignatureUnityLogicExtraParameters()
+		{
+			// And we prevent extra parameters
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void OnAnimatorIK(int layerIndex, int extra)
+    {
+    }
+}
+";
+
+			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("OnAnimatorIK");
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void OnAnimatorIK(int layerIndex)
+    {
+    }
+}
+";
+			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+		}
+
+		[Fact]
 		public async Task MessageSignatureWithInheritance()
 		{
 			// two declarations for OnDestroy (one in EditorWindow and one in ScriptableObject) 
