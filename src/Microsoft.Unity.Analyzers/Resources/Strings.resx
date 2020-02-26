@@ -299,6 +299,7 @@
   </data>
   <data name="UnusedContextMenuItemJustification" xml:space="preserve">
     <value>Don't flag fields with a ContextMenuItem attribute as unused.</value>
+  </data>
   <data name="ImproperSerializeFieldCodeFixTitle" xml:space="preserve">
     <value>Remove SerializeField attribute</value>
   </data>
