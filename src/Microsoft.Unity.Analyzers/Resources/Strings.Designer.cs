@@ -349,6 +349,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t set fields with a ContextMenuItem attribute as readonly..
+        /// </summary>
+        internal static string ReadonlyContextMenuItemJustification {
+            get {
+                return ResourceManager.GetString("ReadonlyContextMenuItemJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t set fields with a SerializeField or SerializeReference attributes to read-only..
         /// </summary>
         internal static string ReadonlySerializeFieldSuppressorJustification {
@@ -484,6 +493,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag fields with a ContextMenuItem attribute as unused..
+        /// </summary>
+        internal static string UnusedContextMenuItemJustification {
+            get {
+                return ResourceManager.GetString("UnusedContextMenuItemJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use StartCoroutine().
         /// </summary>
         internal static string UnusedCoroutineReturnValueCodeFixTitle {
@@ -525,6 +543,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string UnusedMessageSuppressorJustification {
             get {
                 return ResourceManager.GetString("UnusedMessageSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag methods with a ContextMenu attribute as unused..
+        /// </summary>
+        internal static string UnusedMethodContextMenuSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnusedMethodContextMenuSuppressorJustification", resourceCulture);
             }
         }
         

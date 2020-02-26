@@ -190,6 +190,14 @@ namespace UnityEngine
 	class SerializeReference : System.Attribute
 	{
 	}
+
+	class ContextMenu : System.Attribute
+	{
+	}
+
+	class ContextMenuItemAttribute : System.Attribute
+	{
+	}
 }
 
 namespace UnityEngine.EventSystems

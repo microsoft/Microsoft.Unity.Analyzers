@@ -291,4 +291,13 @@
   <data name="UnusedCoroutineReturnValueDiagnosticTitle" xml:space="preserve">
     <value>Unused Unity Coroutine</value>
   </data>
+  <data name="UnusedMethodContextMenuSuppressorJustification" xml:space="preserve">
+    <value>Don't flag methods with a ContextMenu attribute as unused.</value>
+  </data>
+  <data name="ReadonlyContextMenuItemJustification" xml:space="preserve">
+    <value>Don't set fields with a ContextMenuItem attribute as readonly.</value>
+  </data>
+  <data name="UnusedContextMenuItemJustification" xml:space="preserve">
+    <value>Don't flag fields with a ContextMenuItem attribute as unused.</value>
+  </data>
 </root>
