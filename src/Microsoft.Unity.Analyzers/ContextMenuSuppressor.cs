@@ -91,11 +91,33 @@ namespace Microsoft.Unity.Analyzers
 				case IMethodSymbol methodSymbol:
 					if (methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu))))
 						return true;
+					if (MethodIsContextMenuCommand(methodSymbol, containingType))
+						return true;
 					break;
 				case IFieldSymbol fieldSymbol:
 					if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute))))
 						return true;
 					break;
+			}
+
+			return false;
+		}
+
+		private static bool MethodIsContextMenuCommand(IMethodSymbol symbol, INamedTypeSymbol containingType)
+		{
+			foreach (var member in containingType.GetMembers())
+			{
+				if (!(member is IFieldSymbol fieldSymbol))
+					continue;
+
+				var attributes = fieldSymbol.GetAttributes().Where(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute)));
+
+				if (!attributes.Any())
+					continue;
+
+				foreach (var attribute in attributes)
+					if (symbol.Name == attribute.ConstructorArguments[1].Value.ToString())
+						return true;
 			}
 
 			return false;
