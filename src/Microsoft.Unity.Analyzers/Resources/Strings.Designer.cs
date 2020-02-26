@@ -232,6 +232,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove SerializeField attribute.
+        /// </summary>
+        internal static string ImproperSerializeFieldCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SerializeField attribute does not work on properties, and are unnecessary for public fields.
+        /// </summary>
+        internal static string ImproperSerializeFieldDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SerializeField attribute is invalid or redundant for property or field(s): {0}.
+        /// </summary>
+        internal static string ImproperSerializeFieldDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove invalid SerializeField attribute.
+        /// </summary>
+        internal static string ImproperSerializeFieldDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ImproperSerializeFieldDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add static constructor.
         /// </summary>
         internal static string InitializeOnLoadStaticCtorCodeFixTitle {
