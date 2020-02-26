@@ -33,93 +33,62 @@ namespace Microsoft.Unity.Analyzers
 		{
 			context.EnableConcurrentExecution();
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.RegisterSyntaxNodeAction(AnalyzePropertyDeclaration, SyntaxKind.PropertyDeclaration);
-			context.RegisterSyntaxNodeAction(AnalyzeFieldDeclaration, SyntaxKind.FieldDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeMemberDeclaration, SyntaxKind.PropertyDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeMemberDeclaration, SyntaxKind.FieldDeclaration);
 		}
 
-		private static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeMemberDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is PropertyDeclarationSyntax property))
-				return;
-
-			var symbol = context.SemanticModel.GetDeclaredSymbol(property);
-			if (symbol == null)
-				return;
-
-			if (!PropertyHasInvalidSerializeField(symbol, out var propertyName))
-				return;
-
-			context.ReportDiagnostic(Diagnostic.Create(Rule, property.GetLocation(), propertyName));
-		}
-
-		private static void AnalyzeFieldDeclaration(SyntaxNodeAnalysisContext context)
-		{
-			if (!(context.Node is FieldDeclarationSyntax field))
-				return;
-
 			var symbols = new List<ISymbol>();
-			foreach (var variable in field.Declaration.Variables)
+			var model = context.SemanticModel;
+
+			switch (context.Node)
 			{
-				var symbol = context.SemanticModel.GetDeclaredSymbol(variable);
-				if (symbol != null)
-					symbols.Add(symbol);
+				case PropertyDeclarationSyntax pdec:
+					symbols.Add(model.GetDeclaredSymbol(pdec));
+					break;
+				case FieldDeclarationSyntax fdec:
+					symbols.AddRange(fdec.Declaration.Variables.Select(v => model.GetDeclaredSymbol(v)));
+					break;
+				default:
+					// we only support field/property analysis
+					return;
 			}
 
-			if (!symbols.Any())
+			var reportableSymbols = symbols
+				.Where(IsReportable)
+				.ToList();
+
+			if (!reportableSymbols.Any())
 				return;
 
-			if (!FieldHasInvalidSerializeField(symbols, out var fields))
-				return;
-
-			context.ReportDiagnostic(Diagnostic.Create(Rule, field.GetLocation(), fields));
+			var name = string.Join(", ", reportableSymbols.Select(s => s.Name));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), name));
 		}
 
-		private static bool PropertyHasInvalidSerializeField(ISymbol symbol, out string propertyName)
+		private static bool IsReportable(ISymbol symbol)
 		{
-			propertyName = null;
-			if (!(symbol is IPropertySymbol))
+			if (symbol == null)
 				return false;
 
 			var containingType = symbol.ContainingType;
 			if (!containingType.Extends(typeof(UnityEngine.Object)))
 				return false;
 
-			bool hasSerializeFieldAttribute = symbol
+			if (!symbol
 				.GetAttributes()
-				.Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField)));
-
-			if (!hasSerializeFieldAttribute)
+				.Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
 				return false;
 
-			propertyName = symbol.Name;
-			return true;
-		}
-
-		private static bool FieldHasInvalidSerializeField(List<ISymbol> symbols, out string fields)
-		{
-			fields = null;
-			var fieldNames = new List<string>();
-
-			bool foundMatchingSymbol = false;
-			foreach (var symbol in symbols)
+			switch (symbol)
 			{
-				fieldNames.Add(symbol.Name);
-
-				if (!(symbol is IFieldSymbol && symbol.DeclaredAccessibility == Accessibility.Public))
-					continue;
-
-				var containingType = symbol.ContainingType;
-				if (!containingType.Extends(typeof(UnityEngine.Object)))
-					continue;
-
-				if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
-					continue;
-
-				foundMatchingSymbol = true;
+				case IFieldSymbol fieldSymbol:
+					return symbol.DeclaredAccessibility == Accessibility.Public;
+				case IPropertySymbol propertySymbol:
+					return true;
+				default:
+					return false;
 			}
-
-			fields = string.Join(", ", fieldNames.ToArray());
-			return foundMatchingSymbol;
 		}
 	}
 
