@@ -8,12 +8,10 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>;
-
-	public class EmptyUnityMessageTests : BaseTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
+	public class EmptyUnityMessageTests : BaseTestCodeFixVerifier<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
 	{
 		[Fact]
-		public async Task EmptyFixedUpdate()
+		public void EmptyFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;
@@ -30,7 +28,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("FixedUpdate");
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(6, 18)
+				.WithArguments("FixedUpdate");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -43,11 +45,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task FixedUpdateWithBody()
+		public void FixedUpdateWithBody()
 		{
 			const string test = @"
 using UnityEngine;
@@ -124,7 +126,7 @@ class Camera : BaseBehaviour
     }
 }
 ";
-			await Verify.VerifyAnalyzerAsync(test);
+			VerifyCSharpDiagnostic(test);
 		}
 	}
 }

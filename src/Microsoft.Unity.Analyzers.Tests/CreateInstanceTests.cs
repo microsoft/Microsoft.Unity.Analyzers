@@ -3,17 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<CreateInstanceAnalyzer, CreateInstanceCodeFix>;
-
-	public class CreateInstanceTests : BaseTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
+	public class CreateInstanceTests : BaseTestCodeFixVerifier<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 	{
 		[Fact]
-		public async Task CreateMonoBehaviourInstance()
+		public void CreateMonoBehaviourInstance()
 		{
 			const string test = @"
 using UnityEngine;
@@ -28,7 +25,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(CreateInstanceAnalyzer.MonoBehaviourId).WithLocation(9, 19).WithArguments("Foo");
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.MonoBehaviourId)
+				.WithLocation(9, 19)
+				.WithArguments("Foo");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -42,11 +43,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task CreateMonoBehaviourInstanceFromNonComponent()
+		public void CreateMonoBehaviourInstanceFromNonComponent()
 		{
 			const string test = @"
 using UnityEngine;
@@ -60,28 +61,12 @@ class Program
     }
 }
 ";
-			var diagnostic = Verify.Diagnostic(CreateInstanceAnalyzer.MonoBehaviourId).WithLocation(9, 19).WithArguments("Foo");
-
-			// We report the diagnostic but can not offer a codefix
-
-			const string fixedTest = @"
-using UnityEngine;
-
-class Foo : MonoBehaviour { }
-
-class Program
-{
-    public void Main() {
-        Foo foo = new Foo();
-    }
-}
-";
-
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.MonoBehaviourId).WithLocation(9, 19).WithArguments("Foo");
+			VerifyCSharpDiagnostic(test, diagnostic);
 		}
 
 		[Fact]
-		public async Task CreateScriptableObjectInstance()
+		public void CreateScriptableObjectInstance()
 		{
 			const string test = @"
 using UnityEngine;
@@ -96,7 +81,8 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(CreateInstanceAnalyzer.ScriptableObjectId).WithLocation(9, 19).WithArguments("Foo");
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ScriptableObjectId).WithLocation(9, 19).WithArguments("Foo");
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -110,7 +96,7 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 	}
 }

@@ -1,14 +1,16 @@
-using System.Threading.Tasks;
+/*--------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *-------------------------------------------------------------------------------------------*/
+
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>;
-
-	public class UnusedCoroutineReturnValueTests
+	public class UnusedCoroutineReturnValueTests : BaseTestCodeFixVerifier<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>
 	{
 		[Fact]
-		public async Task UnusedCoroutineReturnValueTest()
+		public void UnusedCoroutineReturnValueTest()
 		{
 			const string test = @"
 using System.Collections;
@@ -31,7 +33,11 @@ public class UnusedCoroutineScript : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(UnusedCoroutineReturnValueAnalyzer.Id).WithLocation(9, 9).WithArguments("UnusedCoroutine");
+			var diagnostic = ExpectDiagnostic(UnusedCoroutineReturnValueAnalyzer.Id)
+				.WithLocation(9, 9)
+				.WithArguments("UnusedCoroutine");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using System.Collections;
@@ -53,7 +59,7 @@ public class UnusedCoroutineScript : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 	}
 }

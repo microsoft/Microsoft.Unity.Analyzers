@@ -3,17 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>;
-
-	public class UpdateWithoutDeltaTimeTests : BaseTest<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
+	public class UpdateWithoutDeltaTimeTests : BaseTestCodeFixVerifier<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
 	{
 		[Fact]
-		public async Task FixedUpdateWithDeltaTime()
+		public void FixedUpdateWithDeltaTime()
 		{
 			const string test = @"
 using UnityEngine;
@@ -27,7 +24,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId).WithLocation(8, 25);
+			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
+				.WithLocation(8, 25);
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -40,11 +40,11 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task UpdateWithFixedDeltaTime()
+		public void UpdateWithFixedDeltaTime()
 		{
 			const string test = @"
 using UnityEngine;
@@ -58,7 +58,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(UpdateDeltaTimeAnalyzer.UpdateId).WithLocation(8, 25);
+			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.UpdateId)
+				.WithLocation(8, 25);
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -71,7 +74,7 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 	}
 }
