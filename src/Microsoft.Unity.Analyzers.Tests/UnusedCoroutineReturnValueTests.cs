@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class UnusedCoroutineReturnValueTests : BaseTestCodeFixVerifier<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>
+	public class UnusedCoroutineReturnValueTests : BaseCodeFixVerifierTest<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>
 	{
 		[Fact]
 		public void UnusedCoroutineReturnValueTest()

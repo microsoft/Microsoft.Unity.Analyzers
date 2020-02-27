@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class MessageSignatureTests : BaseTestCodeFixVerifier<MessageSignatureAnalyzer, MessageSignatureCodeFix>
+	public class MessageSignatureTests : BaseCodeFixVerifierTest<MessageSignatureAnalyzer, MessageSignatureCodeFix>
 	{
 		[Fact]
 		public void MessageSignature()

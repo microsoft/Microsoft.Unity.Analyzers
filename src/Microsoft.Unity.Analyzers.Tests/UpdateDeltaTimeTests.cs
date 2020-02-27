@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class UpdateWithoutDeltaTimeTests : BaseTestCodeFixVerifier<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
+	public class UpdateWithoutDeltaTimeTests : BaseCodeFixVerifierTest<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
 	{
 		[Fact]
 		public void FixedUpdateWithDeltaTime()

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class InitializeOnLoadStaticCtorTests : BaseTestCodeFixVerifier<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
+	public class InitializeOnLoadStaticCtorTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
 	{
 		[Fact]
 		public void InitializeOnLoadWithoutStaticCtor()

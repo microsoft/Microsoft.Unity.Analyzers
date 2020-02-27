@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class CreateInstanceTests : BaseTestCodeFixVerifier<CreateInstanceAnalyzer, CreateInstanceCodeFix>
+	public class CreateInstanceTests : BaseCodeFixVerifierTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 	{
 		[Fact]
 		public void CreateMonoBehaviourInstance()

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class UnityObjectNullHandlingTests : BaseTestCodeFixVerifier<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>
+	public class UnityObjectNullHandlingTests : BaseCodeFixVerifierTest<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>
 	{
 		[Fact]
 		public void FixIdentifierCoalescing()

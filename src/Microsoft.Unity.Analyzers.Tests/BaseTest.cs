@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public abstract class BaseTestDiagnosticVerifier<TAnalyzer> : DiagnosticVerifier
+	public abstract class BaseDiagnosticVerifierTest<TAnalyzer> : DiagnosticVerifier
 		where TAnalyzer : DiagnosticAnalyzer, new() 
 	{
 		[Fact]
@@ -33,7 +33,7 @@ interface IFailure
 		}
 	}
 
-	public abstract class BaseTestSuppressorVerifier<TAnalyzer> : SuppressorVerifier
+	public abstract class BaseSuppressorVerifierTest<TAnalyzer> : SuppressorVerifier
 		where TAnalyzer : DiagnosticSuppressor, new() 
 	{
 		[Fact]
@@ -57,7 +57,7 @@ interface IFailure
 		}
 	}
 
-	public abstract class BaseTestCodeFixVerifier<TAnalyzer, TCodeFix> : CodeFixVerifier
+	public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVerifier
 		where TAnalyzer : DiagnosticAnalyzer, new() 
 		where TCodeFix : CodeFixProvider, new() 
 	{

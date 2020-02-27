@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class NonGenericGetComponentTests : BaseTestCodeFixVerifier<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>
+	public class NonGenericGetComponentTests : BaseCodeFixVerifierTest<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>
 	{
 		[Fact]
 		public void GetComponentAs()

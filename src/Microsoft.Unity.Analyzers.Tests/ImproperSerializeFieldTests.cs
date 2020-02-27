@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class ImproperSerializeFieldTests : BaseTestCodeFixVerifier<ImproperSerializeFieldAnalyzer, ImproperSerializeFieldCodeFix>
+	public class ImproperSerializeFieldTests : BaseCodeFixVerifierTest<ImproperSerializeFieldAnalyzer, ImproperSerializeFieldCodeFix>
 	{
 		[Fact]
 		public void ValidSerializeFieldTest()

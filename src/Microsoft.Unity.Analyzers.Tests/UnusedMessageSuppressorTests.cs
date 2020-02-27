@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class UnusedMessageSuppressorTests : BaseTestSuppressorVerifier<UnusedMessageSuppressor>
+	public class UnusedMessageSuppressorTests : BaseSuppressorVerifierTest<UnusedMessageSuppressor>
 	{
 		[Fact]
 		public void UnusedMethodSuppressed()

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class TagComparisonTests : BaseTestCodeFixVerifier<TagComparisonAnalyzer, TagComparisonCodeFix>
+	public class TagComparisonTests : BaseCodeFixVerifierTest<TagComparisonAnalyzer, TagComparisonCodeFix>
 	{
 		[Fact]
 		public void TagAsIdentifier()

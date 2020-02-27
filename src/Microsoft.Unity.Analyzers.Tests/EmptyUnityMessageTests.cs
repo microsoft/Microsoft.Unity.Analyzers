@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class EmptyUnityMessageTests : BaseTestCodeFixVerifier<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
+	public class EmptyUnityMessageTests : BaseCodeFixVerifierTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
 	{
 		[Fact]
 		public void EmptyFixedUpdate()
