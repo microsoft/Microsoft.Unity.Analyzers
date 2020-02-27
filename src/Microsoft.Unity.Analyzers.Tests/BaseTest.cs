@@ -12,10 +12,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public abstract class BaseDiagnosticVerifierTest<TAnalyzer> : DiagnosticVerifier
 		where TAnalyzer : DiagnosticAnalyzer, new() 
 	{
-		[Fact]
-		public void DoNotFailWithInterfaceMembers()
-		{
-			const string test = @"
+
+		internal const string InterfaceTest = @"
 using UnityEngine;
 
 interface IFailure
@@ -23,8 +21,11 @@ interface IFailure
 	void FixedUpdate();
 }
 ";
-			
-			VerifyCSharpDiagnostic(test);
+
+		[Fact]
+		public void DoNotFailWithInterfaceMembers()
+		{
+			VerifyCSharpDiagnostic(InterfaceTest);
 		}
 
 		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
@@ -39,16 +40,7 @@ interface IFailure
 		[Fact]
 		public void DoNotFailWithInterfaceMembers()
 		{
-			const string test = @"
-using UnityEngine;
-
-interface IFailure
-{
-	void FixedUpdate();
-}
-";
-			
-			VerifyCSharpDiagnostic(test);
+			VerifyCSharpDiagnostic(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 		}
 
 		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
@@ -64,16 +56,7 @@ interface IFailure
 		[Fact]
 		public void DoNotFailWithInterfaceMembers()
 		{
-			const string test = @"
-using UnityEngine;
-
-interface IFailure
-{
-	void FixedUpdate();
-}
-";
-			
-			VerifyCSharpDiagnostic(test);
+			VerifyCSharpDiagnostic(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 		}
 
 		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
