@@ -40,11 +40,15 @@ jobs:
 
     - name: Prepare Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: sudo ditto /Applications/Unity/Unity.app/Contents/Managed/ Managed
+      run: 
+        sudo ditto /Applications/Unity/Unity.app/Contents/Managed/ Managed
+        sudo ditto /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/ MonoBleedingEdge
             
     - name: Restore Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: sudo ditto Managed/ /Applications/Unity/Unity.app/Contents/Managed/
+      run: 
+        sudo ditto Managed/ /Applications/Unity/Unity.app/Contents/Managed/
+        sudo ditto MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
