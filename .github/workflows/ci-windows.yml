@@ -42,14 +42,14 @@ jobs:
               
     - name: Prepare Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: 
+      run: | 
         xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\Managed" Managed
         xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge" MonoBleedingEdge
       shell: cmd
       
     - name: Restore Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: 
+      run: | 
         xcopy /s /i /y /q Managed "C:\Program Files\Unity\Editor\Data\Managed"
         xcopy /s /i /y /q MonoBleedingEdge "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge"
       shell: cmd
