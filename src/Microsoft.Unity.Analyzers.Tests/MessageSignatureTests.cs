@@ -39,11 +39,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task MessageSignatureUnityLogic()
+		public void MessageSignatureUnityLogic()
 		{
 			// Unity allows to specify less parameters if you don't need them
 			const string test = @"
@@ -57,11 +57,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			await Verify.VerifyAnalyzerAsync(test);
+			VerifyCSharpDiagnostic(test);
 		}
 
 		[Fact]
-		public async Task MessageSignatureUnityLogicBadType()
+		public void MessageSignatureUnityLogicBadType()
 		{
 			// But we enforce proper type
 			const string test = @"
@@ -75,7 +75,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("OnAnimatorIK");
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(6, 18)
+				.WithArguments("OnAnimatorIK");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -87,11 +91,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task MessageSignatureUnityLogicExtraParameters()
+		public void MessageSignatureUnityLogicExtraParameters()
 		{
 			// And we prevent extra parameters
 			const string test = @"
@@ -105,7 +109,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(6, 18).WithArguments("OnAnimatorIK");
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(6, 18)
+				.WithArguments("OnAnimatorIK");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;

@@ -66,11 +66,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyAnalyzerAsync(test);
+			VerifyCSharpDiagnostic(test);
 		}
 
 		[Fact]
-		public async Task VirtualFixedUpdate()
+		public void VirtualFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;
@@ -82,11 +82,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyAnalyzerAsync(test);
+			VerifyCSharpDiagnostic(test);
 		}
 
 		[Fact]
-		public async Task VirtualOverrideFixedUpdate()
+		public void VirtualOverrideFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;
@@ -105,11 +105,11 @@ class Camera : BaseBehaviour
     }
 }
 ";
-			await Verify.VerifyAnalyzerAsync(test);
+			VerifyCSharpDiagnostic(test);
 		}
 
 		[Fact]
-		public async Task AbstractOverrideFixedUpdate()
+		public void AbstractOverrideFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;
