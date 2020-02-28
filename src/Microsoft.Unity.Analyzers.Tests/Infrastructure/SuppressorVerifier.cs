@@ -4,7 +4,9 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
@@ -13,7 +15,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	public abstract class SuppressorVerifier : DiagnosticVerifier
 	{
-		protected DiagnosticResult ExpectSuppressor(SuppressionDescriptor descriptor)
+		protected static DiagnosticResult ExpectSuppressor(SuppressionDescriptor descriptor)
 		{
 			var result = new DiagnosticResult(descriptor.Id, DiagnosticSeverity.Hidden)
 				.WithMessageFormat(descriptor.Justification)
@@ -35,20 +37,53 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return reference.GetAnalyzers(LanguageNames.CSharp);
 		}
 
+		private static bool IsSuppressedBy(Diagnostic diagnostic, DiagnosticResult suppressor)
+		{
+			if (!diagnostic.IsSuppressed)
+				return false;
+
+			if (string.IsNullOrEmpty(suppressor.SuppressedId))
+				return false;
+
+			if (diagnostic.Id != suppressor.SuppressedId)
+				return false;
+
+			// Internal Roslyn info
+			var psiProperty = diagnostic.GetType().GetProperty("ProgrammaticSuppressionInfo", BindingFlags.Instance | BindingFlags.NonPublic);
+			if (psiProperty == null)
+				return false;
+
+			var psi = psiProperty.GetValue(diagnostic);
+			if (psi == null)
+				return false;
+
+			var spProperty = psi.GetType().GetProperty("Suppressions");
+			if (spProperty == null)
+				return false;
+
+			var suppressions = (ImmutableHashSet<(string Id, LocalizableString Justification)>)spProperty.GetValue(psi);
+			if (!suppressions.Any(t => t.Id == suppressor.Id && t.Justification.Equals(suppressor.MessageFormat)))
+				return false;
+
+			return suppressor.Spans.Any(sp => sp.Span.StartLinePosition == diagnostic.Location.GetLineSpan().StartLinePosition);
+		}
+
 		protected override void VerifyDiagnosticResults(Diagnostic[] actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
 		{
-			// Ignore external diagnostics failures, check for matching suppressions
 			var suppressed = actualResults
-				.Where(d => d.IsSuppressed)
+				.Where(d => expectedResults.Any(s => IsSuppressedBy(d, s)))
 				.ToArray();
 
 			actualResults = actualResults
-				.Where(d => d.Id != "AD0001")
-				.Where(d => !(d.IsSuppressed && expectedResults.Any(s => s.SuppressedId == d.Id && s.Spans.Any(sp => sp.Span.StartLinePosition == d.Location.GetLineSpan().StartLinePosition) )))
+				// Filter analyzer failures not related to us.
+				.Where(d => !(d.Id == "AD0001" && !d.Descriptor.Description.ToString().Contains(typeof(CreateInstanceAnalyzer).Namespace)))
+				// Filter diagnostic with an effective suppression
+				.Where(d => !suppressed.Contains(d))
 				.ToArray();
 
 			expectedResults = expectedResults
-				.Where(s => string.IsNullOrEmpty(s.SuppressedId) || suppressed.All(d => d.Id != s.SuppressedId) )
+				// Filter suppressors effectively suppressing diagnostic
+				.Where(s => !suppressed.Any(d => IsSuppressedBy(d, s)))
 				.ToArray();
 
 			base.VerifyDiagnosticResults(actualResults, analyzer, expectedResults);

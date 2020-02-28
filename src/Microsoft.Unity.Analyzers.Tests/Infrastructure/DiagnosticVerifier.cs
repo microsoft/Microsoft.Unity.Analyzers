@@ -30,7 +30,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return Enumerable.Empty<DiagnosticAnalyzer>();
 		}
 
-		protected DiagnosticResult ExpectDiagnostic(DiagnosticDescriptor descriptor)
+		protected static DiagnosticResult ExpectDiagnostic(DiagnosticDescriptor descriptor)
 		{
 			return new DiagnosticResult(descriptor);
 		}
