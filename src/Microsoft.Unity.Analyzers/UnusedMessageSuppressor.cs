@@ -15,12 +15,12 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnusedMessageSuppressor : DiagnosticSuppressor
 	{
-		public static readonly SuppressionDescriptor MethodRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor MethodRule = new SuppressionDescriptor(
 			id: "USP0003",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedMessageSuppressorJustification);
 
-		public static readonly SuppressionDescriptor ParameterRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ParameterRule = new SuppressionDescriptor(
 			id: "USP0005",
 			suppressedDiagnosticId: "IDE0060",
 			justification: Strings.UnusedMessageSuppressorJustification);
