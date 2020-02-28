@@ -21,8 +21,8 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unityfull
-        path: Unity
+        key: ${{ runner.os }}-unitycache
+        path: UnityCache
 
     - name: Download Unity 2018 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
@@ -32,13 +32,21 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit != 'true'
       run: sudo installer -package unity.pkg -target /
 
-    - name: Prepare Cache
+    - name: Prepare Managed Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: sudo ditto /Applications/Unity/ Unity
-            
-    - name: Restore Cache
+      run: sudo ditto /Applications/Unity/Unity.app/Contents/Managed/ UnityCache/Managed
+
+    - name: Prepare MonoBleedingEdge Cache
+      if: steps.cache-unity.outputs.cache-hit != 'true'
+      run: sudo ditto /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/ UnityCache/MonoBleedingEdge
+
+    - name: Restore Managed Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: sudo ditto Unity/ /Applications/Unity/
+      run: sudo ditto UnityCache/Managed/ /Applications/Unity/Unity.app/Contents/Managed/
+
+    - name: Restore MonoBleedingEdge Cache
+      if: steps.cache-unity.outputs.cache-hit == 'true'
+      run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
