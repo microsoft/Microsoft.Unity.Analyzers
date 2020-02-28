@@ -139,7 +139,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			{
 				if (actualLinePosition.Line != expected.Span.StartLinePosition.Line)
 				{
-					Assert.True(false, $"Expected diagnostic to be on line \"{expected.Span.StartLinePosition.Line}\" was actually on line \"{actualLinePosition.Line}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
+					Assert.True(false, $"Expected diagnostic to be on line \"{expected.Span.StartLinePosition.Line + 1}\" was actually on line \"{actualLinePosition.Line + 1}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
 				}
 			}
 
@@ -148,7 +148,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			{
 				if (actualLinePosition.Character != expected.Span.StartLinePosition.Character)
 				{
-					Assert.True(false, $"Expected diagnostic to start at column \"{expected.Span.StartLinePosition.Character}\" was actually at column \"{actualLinePosition.Character}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
+					Assert.True(false, $"Expected diagnostic to start at column \"{expected.Span.StartLinePosition.Character + 1}\" was actually at column \"{actualLinePosition.Character + 1}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
 				}
 			}
 		}
