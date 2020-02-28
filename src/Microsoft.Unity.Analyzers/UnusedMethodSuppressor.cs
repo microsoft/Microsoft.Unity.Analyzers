@@ -16,7 +16,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnusedMethodSuppressor : DiagnosticSuppressor
 	{
-		private static readonly SuppressionDescriptor Rule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor Rule = new SuppressionDescriptor(
 			id: "USP0008",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedMethodSuppressorJustification);

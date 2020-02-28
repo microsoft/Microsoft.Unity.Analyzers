@@ -24,17 +24,19 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return result;
 		}
 
+		private IEnumerable<DiagnosticAnalyzer> GetExternalAnalyzers(string assembly)
+		{
+			var reference = new AnalyzerFileReference(assembly, new AnalyzerAssemblyLoader());
+			reference.AnalyzerLoadFailed += (s, e) => { Assert.True(false, e.Message); };
+			return reference.GetAnalyzers(LanguageNames.CSharp);
+		}
+
 		protected override IEnumerable<DiagnosticAnalyzer> GetExternalAnalyzers()
 		{
-			// Add IDExxxx diags that we want to check against our suppressors
-			const string analyzerSet = @"Microsoft.CodeAnalysis.Csharp.Features.dll";
-			var reference = new AnalyzerFileReference(analyzerSet, new AnalyzerAssemblyLoader());
-			reference.AnalyzerLoadFailed += (s, e) =>
-			{
-				Assert.True(false, e.Message);
-			};
-
-			return reference.GetAnalyzers(LanguageNames.CSharp);
+			var analyzers = new List<DiagnosticAnalyzer>();
+			analyzers.AddRange(GetExternalAnalyzers("Microsoft.CodeAnalysis.Features.dll"));
+			analyzers.AddRange(GetExternalAnalyzers("Microsoft.CodeAnalysis.Csharp.Features.dll"));
+			return analyzers;
 		}
 
 		private static bool IsSuppressedBy(Diagnostic diagnostic, DiagnosticResult suppressor)
