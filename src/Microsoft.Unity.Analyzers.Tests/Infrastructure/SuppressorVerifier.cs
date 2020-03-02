@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
@@ -24,19 +25,24 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return result;
 		}
 
-		private IEnumerable<DiagnosticAnalyzer> GetExternalAnalyzers(string assembly)
+		private IEnumerable<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
 		{
 			var reference = new AnalyzerFileReference(assembly, new AnalyzerAssemblyLoader());
 			reference.AnalyzerLoadFailed += (s, e) => { Assert.True(false, e.Message); };
 			return reference.GetAnalyzers(LanguageNames.CSharp);
 		}
 
-		protected override IEnumerable<DiagnosticAnalyzer> GetExternalAnalyzers()
+		protected override IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
 		{
+			var suppressor = (DiagnosticSuppressor)analyzer;
+
 			var analyzers = new List<DiagnosticAnalyzer>();
-			analyzers.AddRange(GetExternalAnalyzers("Microsoft.CodeAnalysis.Features.dll"));
-			analyzers.AddRange(GetExternalAnalyzers("Microsoft.CodeAnalysis.Csharp.Features.dll"));
-			return analyzers;
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.Features.dll"));
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.Csharp.Features.dll"));
+
+			return analyzers.Where(a => a.SupportedDiagnostics
+				.Any(s => suppressor.SupportedSuppressions
+					.Any(sp => sp.SuppressedDiagnosticId == s.Id)));
 		}
 
 		private static bool IsSuppressedBy(Diagnostic diagnostic, DiagnosticResult suppressor)
@@ -77,8 +83,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 				.ToArray();
 
 			actualResults = actualResults
-				// Filter analyzer failures not related to us.
-				.Where(d => !(d.Id == "AD0001" && !d.Descriptor.Description.ToString().Contains(typeof(CreateInstanceAnalyzer).Namespace)))
 				// Filter diagnostic with an effective suppression
 				.Where(d => !suppressed.Contains(d))
 				.ToArray();

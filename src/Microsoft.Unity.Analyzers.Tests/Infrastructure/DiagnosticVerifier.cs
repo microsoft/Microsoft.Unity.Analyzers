@@ -25,7 +25,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected abstract DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer();
 
-		protected virtual IEnumerable<DiagnosticAnalyzer> GetExternalAnalyzers()
+		protected virtual IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
 		{
 			return Enumerable.Empty<DiagnosticAnalyzer>();
 		}
@@ -217,12 +217,16 @@ namespace Microsoft.Unity.Analyzers.Tests
 			foreach (var project in projects)
 			{
 				var analyzers = ImmutableArray.Create(analyzer);
-				analyzers = analyzers.AddRange(GetExternalAnalyzers());
-					
-				var compilationWithAnalyzers = project
+				analyzers = analyzers.AddRange(GetRelatedAnalyzers(analyzer));
+
+				var compilation = project
 					.GetCompilationAsync().Result
-					.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-					.WithAnalyzers(analyzers);
+					.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true));
+
+				var analyzerOptions = new CompilationWithAnalyzersOptions(default(AnalyzerOptions), null, true, true, true);
+
+				var compilationWithAnalyzers = compilation
+					.WithAnalyzers(analyzers, analyzerOptions);
 
 				var errors = compilationWithAnalyzers.GetAllDiagnosticsAsync().Result.Where(d => d.Severity == DiagnosticSeverity.Error);
 				foreach (var error in errors)
