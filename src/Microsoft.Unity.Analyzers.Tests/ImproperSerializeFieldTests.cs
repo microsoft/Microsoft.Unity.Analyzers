@@ -38,7 +38,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Id)
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
 				.WithLocation(6, 5)
 				.WithArguments("publicField");
 
@@ -69,7 +69,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Id)
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
 				.WithLocation(6, 5)
 				.WithArguments("privateProperty");
 
@@ -118,7 +118,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Id)
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
 				.WithLocation(7, 5)
 				.WithArguments("publicField1, publicField2, publicField3");
 
@@ -170,7 +170,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Id)
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
 				.WithLocation(7, 5)
 				.WithArguments("publicField");
 
@@ -222,7 +222,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Id)
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
 				.WithLocation(7, 5)
 				.WithArguments("publicField");
 

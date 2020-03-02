@@ -33,7 +33,7 @@ public class UnusedCoroutineScript : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UnusedCoroutineReturnValueAnalyzer.Id)
+			var diagnostic = ExpectDiagnostic(UnusedCoroutineReturnValueAnalyzer.Rule.Id)
 				.WithLocation(9, 9)
 				.WithArguments("UnusedCoroutine");
 

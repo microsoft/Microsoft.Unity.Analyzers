@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 	{
-		public static readonly DiagnosticDescriptor NullCoalescingRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor NullCoalescingRule = new DiagnosticDescriptor(
 			id: "UNT0007",
 			title: Strings.UnityObjectNullCoalescingDiagnosticTitle,
 			messageFormat: Strings.UnityObjectNullCoalescingDiagnosticMessageFormat,
@@ -28,7 +28,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullCoalescingDiagnosticDescription);
 
-		public static readonly DiagnosticDescriptor NullPropagationRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor NullPropagationRule = new DiagnosticDescriptor(
 			id: "UNT0008",
 			title: Strings.UnityObjectNullPropagationDiagnosticTitle,
 			messageFormat: Strings.UnityObjectNullPropagationDiagnosticMessageFormat,
