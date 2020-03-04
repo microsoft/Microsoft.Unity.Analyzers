@@ -16,17 +16,17 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class ContextMenuSuppressor : DiagnosticSuppressor
 	{
-		private static readonly SuppressionDescriptor ContextMenuRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ContextMenuRule = new SuppressionDescriptor(
 			id: "USP0009",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedMethodContextMenuSuppressorJustification);
 
-		private static readonly SuppressionDescriptor ContextMenuItemUnusedRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ContextMenuItemUnusedRule = new SuppressionDescriptor(
 			id: "USP0010",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedContextMenuItemJustification);
 
-		private static readonly SuppressionDescriptor ContextMenuItemReadonlyRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ContextMenuItemReadonlyRule = new SuppressionDescriptor(
 			id: "USP0011",
 			suppressedDiagnosticId: "IDE0044",
 			justification: Strings.ReadonlyContextMenuItemJustification);
