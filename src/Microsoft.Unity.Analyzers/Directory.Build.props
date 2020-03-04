@@ -21,8 +21,8 @@
   
   <ItemGroup>  
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-    <_Parameter1 Condition="'$(PublicKey)' != ''">$(AssemblyName).Tests, PublicKey=$(PublicKey)</_Parameter1>
-    <_Parameter1 Condition="'$(PublicKey)' == ''">$(AssemblyName).Tests</_Parameter1>
+      <_Parameter1 Condition="'$(PublicKey)' != ''">$(AssemblyName).Tests, PublicKey=$(PublicKey)</_Parameter1>
+      <_Parameter1 Condition="'$(PublicKey)' == ''">$(AssemblyName).Tests</_Parameter1>
     </AssemblyAttribute>  
   </ItemGroup>
 
