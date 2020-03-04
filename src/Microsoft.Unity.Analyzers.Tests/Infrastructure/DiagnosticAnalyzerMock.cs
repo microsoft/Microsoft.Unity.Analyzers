@@ -45,13 +45,17 @@ namespace Microsoft.Unity.Analyzers.Tests
 		private static Location GetLocation(SyntaxNode node)
 		{
 			// special case to mimic IDE analyzers
-			return node switch
+			switch (node)
 			{
-				MethodDeclarationSyntax mds => mds.Identifier.GetLocation(),
-				FieldDeclarationSyntax fds => fds.Declaration.Variables.First().Identifier.GetLocation(),
-				ParameterSyntax ps => ps.Identifier.GetLocation(),
-				_ => node.GetLocation(),
-			};
+				case MethodDeclarationSyntax mds:
+					return mds.Identifier.GetLocation();
+				case FieldDeclarationSyntax fds:
+					return fds.Declaration.Variables.First().Identifier.GetLocation();
+				case ParameterSyntax ps:
+					return ps.Identifier.GetLocation();
+				default:
+					return node.GetLocation();
+			}
 		}
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
