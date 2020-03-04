@@ -11,6 +11,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public enum DiagnosticLocationOptions
 	{
 		None = 0,
-		IgnoreLength = 1,
+		IgnoreLength = 1
 	}
 }

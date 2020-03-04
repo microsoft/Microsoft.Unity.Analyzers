@@ -77,7 +77,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		private void VerifyDiagnostics(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			var diagnostics = GetSortedDiagnostics(sources, analyzer);
+			var diagnostics = GetSortedDiagnostics(sources, analyzer, expected);
 			VerifyDiagnosticResults(diagnostics, analyzer, expected);
 		}
 
@@ -200,12 +200,12 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return builder.ToString();
 		}
 
-		private Diagnostic[] GetSortedDiagnostics(string[] sources, DiagnosticAnalyzer analyzer)
+		private Diagnostic[] GetSortedDiagnostics(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			return GetSortedDiagnosticsFromDocuments(analyzer, GetDocuments(sources));
+			return GetSortedDiagnosticsFromDocuments(analyzer, GetDocuments(sources), expected);
 		}
 
-		protected Diagnostic[] GetSortedDiagnosticsFromDocuments(DiagnosticAnalyzer analyzer, Document[] documents)
+		protected Diagnostic[] GetSortedDiagnosticsFromDocuments(DiagnosticAnalyzer analyzer, Document[] documents, params DiagnosticResult[] expected)
 		{
 			var projects = new HashSet<Project>();
 			foreach (var document in documents)
@@ -217,7 +217,13 @@ namespace Microsoft.Unity.Analyzers.Tests
 			foreach (var project in projects)
 			{
 				var analyzers = ImmutableArray.Create(analyzer);
-				analyzers = analyzers.AddRange(GetRelatedAnalyzers(analyzer));
+				var mocks = expected
+					.Select(e => e.DiagnosticAnalyzerMock)
+					.Where(m => m != null);
+
+				analyzers = analyzers
+					.AddRange(GetRelatedAnalyzers(analyzer))
+					.AddRange(mocks);
 
 				var compilation = project
 					.GetCompilationAsync().Result

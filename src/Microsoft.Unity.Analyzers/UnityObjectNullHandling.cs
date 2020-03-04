@@ -126,14 +126,14 @@ namespace Microsoft.Unity.Analyzers
 	}
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	internal class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
+	public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 	{
-		private static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
 			id: "USP0001",
 			suppressedDiagnosticId: "IDE0029",
 			justification: Strings.UnityObjectNullCoalescingSuppressorJustification);
 
-		private static readonly SuppressionDescriptor NullPropagationRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NullPropagationRule = new SuppressionDescriptor(
 			id: "USP0002",
 			suppressedDiagnosticId: "IDE0031",
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);
