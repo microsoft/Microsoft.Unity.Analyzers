@@ -21,7 +21,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UpdateDeltaTimeAnalyzer : DiagnosticAnalyzer
 	{
-		public const string UpdateId = "UNT0004";
+		internal const string UpdateId = "UNT0004";
 
 		private static readonly DiagnosticDescriptor UpdateRule = new DiagnosticDescriptor(
 			UpdateId,
@@ -32,7 +32,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UpdateWithoutFixedDeltaTimeDiagnosticDescription);
 
-		public const string FixedUpdateId = "UNT0005";
+		internal const string FixedUpdateId = "UNT0005";
 
 		private static readonly DiagnosticDescriptor FixedUpdateRule = new DiagnosticDescriptor(
 			FixedUpdateId,

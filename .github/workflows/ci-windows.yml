@@ -17,18 +17,18 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       
-    # So far we only need managed assemblies for testing
+    # So far we need Unity assemblies (Managed) and framework 4.7.1 reference assemblies (MonoBleedingEdge\lib\mono\4.7.1-api) for testing
     # We don't need to download/install Unity every run, we just need to cache those managed assemblies
     # But we have to deal with the following:
     # - the cache only works under the GITHUB_WORKSPACE folder (so we cannot cache C:\Program Files\Unity)
     # - the cache is linited to 400M per run (so we cannot cache the full Unity installation)
-    # - When Unity is not installed, our detection logic will fallback to C:\Program Files\Unity given we miss registry keys
+    # - When Unity is not installed, our detection logic will fallback to C:\Program Files\Unity given we miss registry keys      
     - name: Enable Unity Cache Support
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unity
-        path: Managed
+        key: ${{ runner.os }}-unitycache
+        path: UnityCache
       
     - name: Download Unity 2018 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
@@ -40,16 +40,26 @@ jobs:
       run: unitysetup.exe /UI=reduced /S
       shell: cmd
               
-    - name: Prepare Cache
+    - name: Prepare Managed Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\Managed" Managed
+      run: xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\Managed" "UnityCache\Managed"
       shell: cmd
       
-    - name: Restore Cache
+    - name: Prepare MonoBleedingEdge Cache
+      if: steps.cache-unity.outputs.cache-hit != 'true'
+      run: xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge" "UnityCache\MonoBleedingEdge"
+      shell: cmd
+      
+    - name: Restore Managed Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: xcopy /s /i /y /q Managed "C:\Program Files\Unity\Editor\Data\Managed"
+      run: xcopy /s /i /y /q "UnityCache\Managed" "C:\Program Files\Unity\Editor\Data\Managed"
       shell: cmd
-      
+
+    - name: Restore MonoBleedingEdge Cache
+      if: steps.cache-unity.outputs.cache-hit == 'true'
+      run: xcopy /s /i /y /q "UnityCache\MonoBleedingEdge" "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge"
+      shell: cmd
+
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
       env:

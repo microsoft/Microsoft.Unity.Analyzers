@@ -21,10 +21,8 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class TagComparisonAnalyzer : DiagnosticAnalyzer
 	{
-		public const string Id = "UNT0002";
-
-		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			Id,
+		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+			id: "UNT0002",
 			title: Strings.TagComparisonDiagnosticTitle,
 			messageFormat: Strings.TagComparisonDiagnosticMessageFormat,
 			category: DiagnosticCategory.Performance,
@@ -133,7 +131,7 @@ namespace Microsoft.Unity.Analyzers
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class TagComparisonCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(TagComparisonAnalyzer.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(TagComparisonAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

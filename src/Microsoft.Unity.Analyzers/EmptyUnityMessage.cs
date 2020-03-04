@@ -19,10 +19,8 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class EmptyUnityMessageAnalyzer : DiagnosticAnalyzer
 	{
-		public const string Id = "UNT0001";
-
-		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			Id,
+		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+			id: "UNT0001",
 			title: Strings.EmptyUnityMessageDiagnosticTitle,
 			messageFormat: Strings.EmptyUnityMessageDiagnosticMessageFormat,
 			category: DiagnosticCategory.Performance,
@@ -87,7 +85,7 @@ namespace Microsoft.Unity.Analyzers
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class EmptyUnityMessageCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(EmptyUnityMessageAnalyzer.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(EmptyUnityMessageAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

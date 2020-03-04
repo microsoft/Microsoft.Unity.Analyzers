@@ -1,0 +1,5 @@
+<Project>
+  <!-- This file is only used when building Analyzers from VSTU solution -->
+
+  <Import Project="$(VstuDirectory)build\UnityVS.Signing.targets" Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.targets')" />
+</Project>

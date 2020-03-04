@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    # So far we only need managed assemblies for testing
+    # So far we need Unity assemblies (Managed) and framework 4.7.1 reference assemblies (MonoBleedingEdge/lib/mono/4.7.1-api) for testing
     # We don't need to download/install Unity every run, we just need to cache those managed assemblies
     # But we have to deal with the following:
     # - the cache only works under the GITHUB_WORKSPACE folder (so we cannot cache /Applications/Unity/Unity.app/Contents)
@@ -27,8 +27,8 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unity
-        path: Managed
+        key: ${{ runner.os }}-unitycache
+        path: UnityCache
 
     - name: Download Unity 2018 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
@@ -38,13 +38,21 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit != 'true'
       run: sudo installer -package unity.pkg -target /
 
-    - name: Prepare Cache
+    - name: Prepare Managed Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: sudo ditto /Applications/Unity/Unity.app/Contents/Managed/ Managed
-            
-    - name: Restore Cache
+      run: sudo ditto /Applications/Unity/Unity.app/Contents/Managed/ UnityCache/Managed
+
+    - name: Prepare MonoBleedingEdge Cache
+      if: steps.cache-unity.outputs.cache-hit != 'true'
+      run: sudo ditto /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/ UnityCache/MonoBleedingEdge
+
+    - name: Restore Managed Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: sudo ditto Managed/ /Applications/Unity/Unity.app/Contents/Managed/
+      run: sudo ditto UnityCache/Managed/ /Applications/Unity/Unity.app/Contents/Managed/
+
+    - name: Restore MonoBleedingEdge Cache
+      if: steps.cache-unity.outputs.cache-hit == 'true'
+      run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests

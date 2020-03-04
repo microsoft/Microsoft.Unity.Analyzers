@@ -3,17 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>;
-
-	public class UnityObjectNullHandlingTests : BaseTest<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>
+	public class UnityObjectNullHandlingTests : BaseCodeFixVerifierTest<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>
 	{
 		[Fact]
-		public async Task FixIdentifierCoalescing()
+		public void FixIdentifierCoalescing()
 		{
 			const string test = @"
 using UnityEngine;
@@ -30,7 +27,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
+				.WithLocation(11, 10);
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -46,11 +46,11 @@ class Camera : MonoBehaviour
 	}
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task FixMemberCoalescing()
+		public void FixMemberCoalescing()
 		{
 			const string test = @"
 using UnityEngine;
@@ -67,7 +67,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
+				.WithLocation(11, 10);
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -83,12 +86,12 @@ class Camera : MonoBehaviour
 	}
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 
 		[Fact]
-		public async Task CantFixSideEffect()
+		public void CantFixSideEffect()
 		{
 			const string test = @"
 using UnityEngine;
@@ -105,7 +108,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule).WithLocation(11, 10);
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
+				.WithLocation(11, 10);
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -121,11 +127,11 @@ class Camera : MonoBehaviour
 	}
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task DetectNullPropagation()
+		public void DetectNullPropagation()
 		{
 			const string test = @"
 using UnityEngine;
@@ -139,9 +145,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule).WithLocation(8, 10);
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+				.WithLocation(8, 10);
 
-			await Verify.VerifyAnalyzerAsync(test, diagnostic);
+			VerifyCSharpDiagnostic(test, diagnostic);
 		}
 	}
 }

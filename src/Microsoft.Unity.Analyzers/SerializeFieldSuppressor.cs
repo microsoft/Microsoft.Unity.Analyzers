@@ -15,18 +15,18 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class SerializeFieldSuppressor : DiagnosticSuppressor
 	{
-		private static readonly SuppressionDescriptor ReadonlyRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ReadonlyRule = new SuppressionDescriptor(
 			id: "USP0004",
 			suppressedDiagnosticId: "IDE0044",
 			justification: Strings.ReadonlySerializeFieldSuppressorJustification);
 
-		private static readonly SuppressionDescriptor UnusedRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor UnusedRule = new SuppressionDescriptor(
 			id: "USP0006",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedSerializeFieldSuppressorJustification);
 
 		// Note that this one, is only used for full builds in VS
-		private static readonly SuppressionDescriptor NeverAssignedRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NeverAssignedRule = new SuppressionDescriptor(
 			id: "USP0007",
 			suppressedDiagnosticId: "CS0649",
 			justification: Strings.NeverAssignedSerializeFieldSuppressorJustification);
