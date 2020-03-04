@@ -3,17 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>;
-
-	public class InitializeOnLoadStaticCtorTests : BaseTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
+	public class InitializeOnLoadStaticCtorTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
 	{
 		[Fact]
-		public async Task InitializeOnLoadWithoutStaticCtor()
+		public void InitializeOnLoadWithoutStaticCtor()
 		{
 			const string test = @"
 using UnityEngine;
@@ -25,7 +22,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(6, 7).WithArguments("Camera");
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(6, 7)
+				.WithArguments("Camera");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -39,11 +40,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task InitializeOnLoadWithImplicitStaticCtor()
+		public void InitializeOnLoadWithImplicitStaticCtor()
 		{
 			const string test = @"
 using UnityEngine;
@@ -56,7 +57,11 @@ public sealed class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = Verify.Diagnostic().WithLocation(6, 21).WithArguments("Camera");
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(6, 21)
+				.WithArguments("Camera");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -72,7 +77,7 @@ public sealed class Camera : MonoBehaviour
     public static readonly int willGenerateImplicitStaticCtor = 666;
 }
 ";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+			VerifyCSharpFix(test, fixedTest);
 		}
 
 	}

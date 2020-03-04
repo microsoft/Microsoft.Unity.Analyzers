@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 	{
-		public static readonly DiagnosticDescriptor NullCoalescingRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor NullCoalescingRule = new DiagnosticDescriptor(
 			id: "UNT0007",
 			title: Strings.UnityObjectNullCoalescingDiagnosticTitle,
 			messageFormat: Strings.UnityObjectNullCoalescingDiagnosticMessageFormat,
@@ -28,7 +28,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullCoalescingDiagnosticDescription);
 
-		public static readonly DiagnosticDescriptor NullPropagationRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor NullPropagationRule = new DiagnosticDescriptor(
 			id: "UNT0008",
 			title: Strings.UnityObjectNullPropagationDiagnosticTitle,
 			messageFormat: Strings.UnityObjectNullPropagationDiagnosticMessageFormat,
@@ -126,14 +126,14 @@ namespace Microsoft.Unity.Analyzers
 	}
 
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	internal class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
+	public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 	{
-		private static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
 			id: "USP0001",
 			suppressedDiagnosticId: "IDE0029",
 			justification: Strings.UnityObjectNullCoalescingSuppressorJustification);
 
-		private static readonly SuppressionDescriptor NullPropagationRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NullPropagationRule = new SuppressionDescriptor(
 			id: "USP0002",
 			suppressedDiagnosticId: "IDE0031",
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);

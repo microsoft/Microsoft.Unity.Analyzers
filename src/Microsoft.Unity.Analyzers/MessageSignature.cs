@@ -22,10 +22,8 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 	{
-		public const string Id = "UNT0006";
-
-		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			Id,
+		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+			id: "UNT0006",
 			title: Strings.MessageSignatureDiagnosticTitle,
 			messageFormat: Strings.MessageSignatureDiagnosticMessageFormat,
 			category: DiagnosticCategory.TypeSafety,
@@ -76,7 +74,7 @@ namespace Microsoft.Unity.Analyzers
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class MessageSignatureCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageSignatureAnalyzer.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageSignatureAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

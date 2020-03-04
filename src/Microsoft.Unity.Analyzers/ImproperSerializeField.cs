@@ -16,10 +16,8 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 	{
-		public const string Id = "UNT0013";
-
-		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			Id,
+		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+			id: "UNT0013",
 			title: Strings.ImproperSerializeFieldDiagnosticTitle,
 			messageFormat: Strings.ImproperSerializeFieldDiagnosticMessageFormat,
 			category: DiagnosticCategory.Correctness,
@@ -95,7 +93,7 @@ namespace Microsoft.Unity.Analyzers
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class ImproperSerializeFieldCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ImproperSerializeFieldAnalyzer.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ImproperSerializeFieldAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

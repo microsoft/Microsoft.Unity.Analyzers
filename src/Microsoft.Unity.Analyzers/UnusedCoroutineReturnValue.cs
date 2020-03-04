@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,10 +16,8 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnusedCoroutineReturnValueAnalyzer : DiagnosticAnalyzer
 	{
-		public const string Id = "UNT0012";
-
-		private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			Id,
+		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+			id: "UNT0012",
 			title: Strings.UnusedCoroutineReturnValueDiagnosticTitle,
 			messageFormat: Strings.UnusedCoroutineReturnValueDiagnosticMessageFormat,
 			category: DiagnosticCategory.Correctness,
@@ -74,7 +71,7 @@ namespace Microsoft.Unity.Analyzers
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class UnusedCoroutineReturnValueCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnusedCoroutineReturnValueAnalyzer.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnusedCoroutineReturnValueAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
