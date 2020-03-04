@@ -44,10 +44,11 @@ namespace Microsoft.Unity.Analyzers
 
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var sourceTree = diagnostic.Location.SourceTree;
+			var location = diagnostic.Location;
+			var sourceTree = location.SourceTree;
 			var root = sourceTree.GetRoot(context.CancellationToken);
-			var node = root.FindNode(diagnostic.Location.SourceSpan);
-			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+			var node = root.FindNode(location.SourceSpan);
+			var model = context.GetSemanticModel(location.SourceTree);
 			var symbols = new List<ISymbol>();
 
 			switch (node)
@@ -91,7 +92,7 @@ namespace Microsoft.Unity.Analyzers
 				case IMethodSymbol methodSymbol:
 					if (methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu))))
 						return true;
-					if (MethodIsContextMenuCommand(methodSymbol, containingType))
+					if (IsReferencedByContextMenuItem(methodSymbol, containingType))
 						return true;
 					break;
 				case IFieldSymbol fieldSymbol:
@@ -103,21 +104,26 @@ namespace Microsoft.Unity.Analyzers
 			return false;
 		}
 
-		private static bool MethodIsContextMenuCommand(IMethodSymbol symbol, INamedTypeSymbol containingType)
+		private static bool IsReferencedByContextMenuItem(IMethodSymbol symbol, INamedTypeSymbol containingType)
 		{
 			foreach (var member in containingType.GetMembers())
 			{
 				if (!(member is IFieldSymbol fieldSymbol))
 					continue;
 
-				var attributes = fieldSymbol.GetAttributes().Where(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute)));
+				var attributes = fieldSymbol
+					.GetAttributes()
+					.Where(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute)))
+					.ToArray();
 
 				if (!attributes.Any())
 					continue;
 
-				foreach (var attribute in attributes)
-					if (symbol.Name == attribute.ConstructorArguments[1].Value.ToString())
-						return true;
+				// public ContextMenuItemAttribute(string name, string >>function<<)
+				const int methodNameIndex = 1;
+				return attributes
+					.Select(a => a.ConstructorArguments)
+					.Any(ca => ca.Length > methodNameIndex && symbol.Name == ca[methodNameIndex].Value.ToString());
 			}
 
 			return false;
