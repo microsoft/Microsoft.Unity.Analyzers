@@ -40,7 +40,7 @@ namespace Microsoft.Unity.Analyzers
 			messageFormat: Strings.FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat,
 			category: DiagnosticCategory.Correctness,
 			defaultSeverity: DiagnosticSeverity.Info,
-			isEnabledByDefault: true,
+			isEnabledByDefault: false, // see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
 			description: Strings.FixedUpdateWithoutDeltaTimeDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(UpdateRule, FixedUpdateRule);

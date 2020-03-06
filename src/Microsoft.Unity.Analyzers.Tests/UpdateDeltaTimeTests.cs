@@ -23,8 +23,14 @@ class Camera : MonoBehaviour
      }
 }
 ";
+			// see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
+			// this rule is now disabled by default
+			VerifyCSharpDiagnostic(test);
 
-			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
+			// but can be re-enabled using ruleset or editorconfig:
+			// dotnet_diagnostic.UNT0005.severity = suggestion
+			
+			/*var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
 				.WithLocation(8, 25);
 
 			VerifyCSharpDiagnostic(test, diagnostic);
@@ -40,7 +46,7 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			VerifyCSharpFix(test, fixedTest);*/
 		}
 
 		[Fact]
