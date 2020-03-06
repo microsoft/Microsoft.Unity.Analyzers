@@ -6,7 +6,7 @@ ID | Title | Category
 [UNT0002](UNT0002.md) | Inefficient tag comparison | Performance
 [UNT0003](UNT0003.md) | Usage of non generic GetComponent | Type Safety
 [UNT0004](UNT0004.md) | Time.fixedDeltaTime used with Update | Correctness
-[UNT0005](UNT0005.md) | Time.deltaTime used with FixedUpdate | Correctness
+[UNT0005](UNT0005.md) | Time.deltaTime used with FixedUpdate `[retired]` | Correctness
 [UNT0006](UNT0006.md) | Incorrect message signature | Type Safety
 [UNT0007](UNT0007.md) | Null coalescing on Unity objects | Correctness
 [UNT0008](UNT0008.md) | Null propagation on Unity objects | Correctness
