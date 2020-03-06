@@ -70,7 +70,12 @@ namespace NewAnalyzer
 		private static void CreateCodeFile(Diagnostic diagnostic)
 		{
 			string template =
-				@"using System.Collections.Immutable;
+				@"/*--------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *-------------------------------------------------------------------------------------------*/
+
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -139,17 +144,19 @@ namespace Microsoft.Unity.Analyzers
 		private static void CreateTestFile(Diagnostic diagnostic)
 		{
 			string template =
-				@"using System.Threading.Tasks;
+				@"/*--------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *-------------------------------------------------------------------------------------------*/
+
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	using Verify = UnityCodeFixVerifier<$(DiagnosticName)Analyzer, $(DiagnosticName)CodeFix>;
-
-	public class $(DiagnosticName)Tests
+	public class $(DiagnosticName)Tests : BaseCodeFixVerifierTest<$(DiagnosticName)Analyzer, $(DiagnosticName)CodeFix>
 	{
 		[Fact]
-		public async Task Test ()
+		public void Test ()
 		{
 			const string test = @""
 using UnityEngine;
@@ -159,7 +166,10 @@ class Camera : MonoBehaviour
 }
 "";
 
-			var diagnostic = Verify.Diagnostic();
+
+			var diagnostic = ExpectDiagnostic();
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @""
 using UnityEngine;
@@ -168,7 +178,8 @@ class Camera : MonoBehaviour
 {
 }
 "";
-			await Verify.VerifyCodeFixAsync(test, diagnostic, fixedTest);
+
+			VerifyCSharpFix(test, fixedTest);
 		}
 	}
 }
