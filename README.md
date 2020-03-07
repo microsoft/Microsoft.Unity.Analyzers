@@ -75,7 +75,15 @@ To easily create a new analyzer, you can use the following command:
 
 `dotnet run --project .\src\new-analyzer`
 
-This will automatically create source files for the analyzer, associated tests and add resource entries.
+This will automatically create source files for the analyzer, associated tests and add resource entries. If your new analyzer's name contains the word `suppressor`, the tool will create a new suppressor. By default the tool will create a regular analyzer and codefix.
+
+Example for creating `CustomAnalyzer`, `CustomCodeFix` and `CustomTests` classes :
+
+`dotnet run --project .\src\new-analyzer Custom`
+
+Example for creating `CustomSuppressor` and `CustomSuppressorTests` classes :
+
+`dotnet run --project .\src\new-analyzer CustomSuppressor`
 
 # Contributing
 
