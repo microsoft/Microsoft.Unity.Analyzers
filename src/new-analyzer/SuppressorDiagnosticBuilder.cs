@@ -55,7 +55,7 @@ namespace Microsoft.Unity.Analyzers
 			// var root = sourceTree.GetRoot(context.CancellationToken);
 			// var node = root.FindNode(diagnostic.Location.SourceSpan);
 
-            // TODO: context.ReportSuppression
+			// TODO: context.ReportSuppression
 			// example: context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 	}
