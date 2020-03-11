@@ -313,4 +313,17 @@
   <data name="ImproperSerializeFieldDiagnosticTitle" xml:space="preserve">
     <value>Remove invalid SerializeField attribute</value>
   </data>
+  <data name="CacheExpensiveCallsAnalyzerCodeFixTitle" xml:space="preserve">
+    <value>Cache expensive call in Awake</value>
+  </data>
+  <data name="CacheExpensiveCallsAnalyzerDiagnosticDescription" xml:space="preserve">
+    <value>Cache the result of expensive calls in Awake instead of calling in Update or FixedUpdate</value>
+  </data>
+  <data name="CacheExpensiveCallsAnalyzerDiagnosticMessageFormat" xml:space="preserve">
+    <value>{0} is expensive and should not be called in Update or FixedUpdate</value>
+    <comment>{0} is the name of the member access or method invocation that is expensive</comment>
+  </data>
+  <data name="CacheExpensiveCallsAnalyzerDiagnosticTitle" xml:space="preserve">
+    <value>Expensive call in Update and FixedUpdate</value>
+  </data>
 </root>

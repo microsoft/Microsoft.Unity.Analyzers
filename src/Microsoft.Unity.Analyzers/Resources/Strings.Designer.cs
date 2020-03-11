@@ -61,6 +61,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cache expensive call in Awake.
+        /// </summary>
+        internal static string CacheExpensiveCallsAnalyzerCodeFixTitle {
+            get {
+                return ResourceManager.GetString("CacheExpensiveCallsAnalyzerCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cache the result of expensive calls in Awake instead of calling in Update or FixedUpdate.
+        /// </summary>
+        internal static string CacheExpensiveCallsAnalyzerDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("CacheExpensiveCallsAnalyzerDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is expensive and should not be called in Update or FixedUpdate.
+        /// </summary>
+        internal static string CacheExpensiveCallsAnalyzerDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("CacheExpensiveCallsAnalyzerDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expensive call in Update and FixedUpdate.
+        /// </summary>
+        internal static string CacheExpensiveCallsAnalyzerDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("CacheExpensiveCallsAnalyzerDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correctness.
         /// </summary>
         internal static string CategoryCorrectness {
