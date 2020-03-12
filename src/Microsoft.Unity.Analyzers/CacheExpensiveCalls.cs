@@ -21,7 +21,7 @@ namespace Microsoft.Unity.Analyzers
 	public class CacheExpensiveCallsAnalyzer : DiagnosticAnalyzer
 	{
 		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			id: "UNT0014",
+			id: "UNT0015",
 			title: Strings.CacheExpensiveCallsAnalyzerDiagnosticTitle,
 			messageFormat: Strings.CacheExpensiveCallsAnalyzerDiagnosticMessageFormat,
 			category: DiagnosticCategory.Performance,
