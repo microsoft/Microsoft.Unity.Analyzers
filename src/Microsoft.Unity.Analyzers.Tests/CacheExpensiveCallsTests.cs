@@ -15,19 +15,23 @@ namespace Microsoft.Unity.Analyzers.Tests
 			const string test = @"
 using UnityEngine;
 
-class Camera : MonoBehaviour
+class NewBehaviour : MonoBehaviour
 {
-    private void Update()
+    private Camera camera;
+
+	private void Update()
     {
-        GetComponent<Rigidbody>();
+        camera = Camera.main;
     }
 }
 ";
 
 
-			var diagnostic = ExpectDiagnostic().WithLocation(8, 9);
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(10, 18)
+				.WithArguments("Camera.main");
 
-			//VerifyCSharpDiagnostic(test, diagnostic);
+			VerifyCSharpDiagnostic(test, diagnostic);
 
 //			const string fixedTest = @"
 //using UnityEngine;

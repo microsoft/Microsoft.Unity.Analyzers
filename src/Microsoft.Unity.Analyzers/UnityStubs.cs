@@ -13,6 +13,10 @@ namespace UnityEngine
 	{
 	}
 
+	class Camera
+	{
+	}
+
 	class Collision
 	{
 	}

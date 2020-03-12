@@ -57,9 +57,7 @@ namespace Microsoft.Unity.Analyzers
 				IsMessage(context, method, typeof(UnityEngine.MonoBehaviour), "FixedUpdate"))
 			{
 				AnalyzeInvocations(context, method);
-
-				// TODO: Analyze member access in child nodes to find calls to Camera.main in Update or FixedUpdate
-				//AnalyzeMemberAccess(context, method);
+				AnalyzeMemberAccesses(context, method);
 			}
 		}
 
@@ -79,15 +77,37 @@ namespace Microsoft.Unity.Analyzers
 			if (symbol.Symbol == null)
 				return;
 
-			if (!IsExpensiveCall(symbol.Symbol, out var methodName))
+			if (!IsExpensiveInvocation(symbol.Symbol, out var methodName))
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, ies.GetLocation(), methodName));
 		}
 
-		private static bool IsExpensiveCall(ISymbol symbol, out string expensiveCall)
+		private static void AnalyzeMemberAccesses(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method)
 		{
-			expensiveCall = null;
+			var memberAccessExpressions = method
+				.DescendantNodes()
+				.OfType<MemberAccessExpressionSyntax>();
+
+			foreach (var maes in memberAccessExpressions)
+				AnalyzeMemberAccess(context, maes);
+		}
+
+		private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context, MemberAccessExpressionSyntax maes)
+		{
+			var symbol = context.SemanticModel.GetSymbolInfo(maes);
+			if (symbol.Symbol == null)
+				return;
+
+			if (!IsExpensiveMemberAccess(symbol.Symbol, maes, out var expression))
+				return;
+
+			context.ReportDiagnostic(Diagnostic.Create(Rule, maes.GetLocation(), expression));
+		}
+
+		private static bool IsExpensiveInvocation(ISymbol symbol, out string methodName)
+		{
+			methodName = null;
 			if (!(symbol is IMethodSymbol method))
 				return false;
 
@@ -98,7 +118,24 @@ namespace Microsoft.Unity.Analyzers
 			if (!MethodNames.Contains(method.Name))
 				return false;
 
-			expensiveCall = method.Name;
+			methodName = method.Name;
+			return true;
+		}
+
+		private static bool IsExpensiveMemberAccess(ISymbol symbol, MemberAccessExpressionSyntax maes, out string expression)
+		{
+			expression = null;
+			var containingType = symbol.ContainingType;
+			if (!containingType.Matches(typeof(UnityEngine.Camera)))
+				return false;
+
+			if (!(maes.Expression is IdentifierNameSyntax))
+				return false;
+
+			if (!(symbol.Name == "main"))
+				return false;
+
+			expression = containingType.Name + '.' + symbol.Name;
 			return true;
 		}
 
