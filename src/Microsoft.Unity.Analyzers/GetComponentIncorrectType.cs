@@ -79,7 +79,10 @@ namespace Microsoft.Unity.Analyzers
 		private static bool HasInvalidTypeArgument(IMethodSymbol method, out string identifier)
 		{
 			identifier = null;
-			var argumentType = method.TypeArguments.First();
+			var argumentType = method.TypeArguments.FirstOrDefault();
+			if (argumentType == null)
+				return false;
+			
 			if (argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface)
 				return false;
 

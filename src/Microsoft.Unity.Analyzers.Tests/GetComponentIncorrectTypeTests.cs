@@ -73,5 +73,23 @@ class Camera : MonoBehaviour
 
 			VerifyCSharpDiagnostic(test, diagnostic);
 		}
+
+		[Fact]
+		public void GetComponentLegacyTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Start()
+    {
+        var hello = GetComponent(""Hello"");
+    }
+}
+";
+
+			VerifyCSharpDiagnostic(test);
+		}
 	}
 }
