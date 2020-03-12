@@ -57,7 +57,6 @@ namespace Microsoft.Unity.Analyzers
 				IsMessage(context, method, typeof(UnityEngine.MonoBehaviour), "FixedUpdate"))
 			{
 				AnalyzeInvocations(context, method);
-				AnalyzeMemberAccesses(context, method);
 			}
 		}
 
@@ -67,30 +66,35 @@ namespace Microsoft.Unity.Analyzers
 				.DescendantNodes()
 				.OfType<InvocationExpressionSyntax>();
 
-			foreach (var invocation in invocations)
-				AnalyzeInvocation(context, invocation);
-		}
-
-		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context, InvocationExpressionSyntax ies)
-		{
-			var symbol = context.SemanticModel.GetSymbolInfo(ies);
-			if (symbol.Symbol == null)
-				return;
-
-			if (!IsExpensiveInvocation(symbol.Symbol, out var methodName))
-				return;
-
-			context.ReportDiagnostic(Diagnostic.Create(Rule, ies.GetLocation(), methodName));
-		}
-
-		private static void AnalyzeMemberAccesses(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method)
-		{
 			var memberAccessExpressions = method
 				.DescendantNodes()
 				.OfType<MemberAccessExpressionSyntax>();
 
+			foreach (var invocation in invocations)
+				AnalyzeInvocation(context, invocation);
+
 			foreach (var maes in memberAccessExpressions)
 				AnalyzeMemberAccess(context, maes);
+		}
+
+		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context, SyntaxNode node)
+		{
+			string expensiveCall = null;
+			var symbol = context.SemanticModel.GetSymbolInfo(node);
+			if (symbol.Symbol == null)
+				return;
+
+			switch (node)
+			{
+				case InvocationExpressionSyntax ies:
+					if (IsExpensiveInvocation(symbol.Symbol, out expensiveCall))
+						context.ReportDiagnostic(Diagnostic.Create(Rule, node.GetLocation(), expensiveCall));
+					break;
+				case MemberAccessExpressionSyntax maes:
+					if (IsExpensiveMemberAccess(symbol.Symbol, maes, out expensiveCall))
+						context.ReportDiagnostic(Diagnostic.Create(Rule, node.GetLocation(), expensiveCall));
+					break;
+			}
 		}
 
 		private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context, MemberAccessExpressionSyntax maes)
