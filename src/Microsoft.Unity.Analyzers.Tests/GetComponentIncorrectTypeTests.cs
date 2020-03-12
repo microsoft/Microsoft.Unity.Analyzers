@@ -34,7 +34,6 @@ class Camera : MonoBehaviour
 		public void GetComponentCorrectTypeTest()
 		{
 			const string test = @"
-using System.Collections;
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -55,7 +54,6 @@ class Camera : MonoBehaviour
 		public void GetComponentIncorrectTypeTest()
 		{
 			const string test = @"
-using System.Collections;
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -70,7 +68,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(11, 13)
+				.WithLocation(10, 13)
 				.WithArguments("Int32");
 
 			VerifyCSharpDiagnostic(test, diagnostic);
