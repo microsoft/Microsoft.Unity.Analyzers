@@ -52,18 +52,20 @@ namespace Microsoft.Unity.Analyzers
 			if (symbol.Symbol == null)
 				return;
 
-			if (!IsGetComponent(symbol.Symbol, out var identifier))
+			if (!(symbol.Symbol is IMethodSymbol method))
+				return;
+
+			if (!IsGetComponent(method))
+				return;
+
+			if (!HasInvalidTypeArgument(method, out var identifier))
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), identifier));
 		}
 
-		private static bool IsGetComponent(ISymbol symbol, out string identifier)
+		private static bool IsGetComponent(IMethodSymbol method)
 		{
-			identifier = null;
-			if (!(symbol is IMethodSymbol method))
-				return false;
-
 			var containingType = method.ContainingType;
 			if (!containingType.Matches(typeof(UnityEngine.Component)) && !containingType.Matches(typeof(UnityEngine.GameObject)))
 				return false;
@@ -71,6 +73,12 @@ namespace Microsoft.Unity.Analyzers
 			if (!MethodNames.Contains(method.Name))
 				return false;
 
+			return true;
+		}
+
+		private static bool HasInvalidTypeArgument(IMethodSymbol method, out string identifier)
+		{
+			identifier = null;
 			var argumentType = method.TypeArguments.First();
 			if (argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface)
 				return false;
