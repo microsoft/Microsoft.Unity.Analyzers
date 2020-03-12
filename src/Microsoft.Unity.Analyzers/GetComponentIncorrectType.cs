@@ -18,7 +18,7 @@ namespace Microsoft.Unity.Analyzers
 	public class GetComponentIncorrectTypeAnalyzer : DiagnosticAnalyzer
 	{
 		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			id: "UNT0015",
+			id: "UNT0014",
 			title: Strings.GetComponentIncorrectTypeDiagnosticTitle,
 			messageFormat: Strings.GetComponentIncorrectTypeDiagnosticMessageFormat,
 			category: DiagnosticCategory.TypeSafety,
