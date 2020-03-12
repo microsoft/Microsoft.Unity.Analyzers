@@ -232,6 +232,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GetComponent only supports arguments that are a Unity Component or an interface type..
+        /// </summary>
+        internal static string GetComponentIncorrectTypeDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("GetComponentIncorrectTypeDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is not a Unity Component.
+        /// </summary>
+        internal static string GetComponentIncorrectTypeDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("GetComponentIncorrectTypeDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid type for call to GetComponent.
+        /// </summary>
+        internal static string GetComponentIncorrectTypeDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("GetComponentIncorrectTypeDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove SerializeField attribute.
         /// </summary>
         internal static string ImproperSerializeFieldCodeFixTitle {

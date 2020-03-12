@@ -313,4 +313,14 @@
   <data name="ImproperSerializeFieldDiagnosticTitle" xml:space="preserve">
     <value>Remove invalid SerializeField attribute</value>
   </data>
+  <data name="GetComponentIncorrectTypeDiagnosticDescription" xml:space="preserve">
+    <value>GetComponent only supports arguments that are a Unity Component or an interface type.</value>
+  </data>
+  <data name="GetComponentIncorrectTypeDiagnosticMessageFormat" xml:space="preserve">
+    <value>{0} is not a Unity Component</value>
+    <comment>{0} is the type passed as an argument to GetComponent</comment>
+  </data>
+  <data name="GetComponentIncorrectTypeDiagnosticTitle" xml:space="preserve">
+    <value>Invalid type for call to GetComponent</value>
+  </data>
 </root>
