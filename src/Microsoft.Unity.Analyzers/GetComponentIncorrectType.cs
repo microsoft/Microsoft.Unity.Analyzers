@@ -52,15 +52,15 @@ namespace Microsoft.Unity.Analyzers
 			if (symbol.Symbol == null)
 				return;
 
-			if (!IsGetComponent(symbol.Symbol, out var methodName))
+			if (!IsGetComponent(symbol.Symbol, out var identifier))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), methodName));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), identifier));
 		}
 
-		private static bool IsGetComponent(ISymbol symbol, out string methodName)
+		private static bool IsGetComponent(ISymbol symbol, out string identifier)
 		{
-			methodName = null;
+			identifier = null;
 			if (!(symbol is IMethodSymbol method))
 				return false;
 
@@ -71,10 +71,11 @@ namespace Microsoft.Unity.Analyzers
 			if (!MethodNames.Contains(method.Name))
 				return false;
 
-			if (method.TypeArguments.First().Matches(typeof(UnityEngine.Component)) || method.TypeArguments.First().TypeKind == TypeKind.Interface)
+			var argumentType = method.TypeArguments.First();
+			if (argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface)
 				return false;
 
-			methodName = method.Name;
+			identifier = argumentType.Name;
 			return true;
 		}
 	}

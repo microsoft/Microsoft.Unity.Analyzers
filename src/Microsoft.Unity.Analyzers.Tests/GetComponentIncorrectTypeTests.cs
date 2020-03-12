@@ -10,7 +10,28 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class GetComponentIncorrectTypeTests : BaseDiagnosticVerifierTest<GetComponentIncorrectTypeAnalyzer>
 	{
 		[Fact]
-		public void TestTest()
+		public void GetComponentInterfaceTypeTest()
+		{
+			const string test = @"
+using System;
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private IDisposable disp;
+
+    private void Start()
+    {
+        disp = GetComponent<IDisposable>();
+    }
+}
+";
+
+			VerifyCSharpDiagnostic(test);
+		}
+
+		[Fact]
+		public void GetComponentCorrectTypeTest()
 		{
 			const string test = @"
 using System.Collections;
@@ -18,16 +39,41 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	private Rigidbody rb;
+    private Rigidbody rb;
 
     private void Start()
     {
-        GetComponent<IEnumerable>();
+        rb = GetComponent<Rigidbody>();
     }
 }
 ";
 
 			VerifyCSharpDiagnostic(test);
+		}
+
+		[Fact]
+		public void GetComponentIncorrectTypeTest()
+		{
+			const string test = @"
+using System.Collections;
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private int i;
+
+    private void Start()
+    {
+        i = GetComponent<int>();
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(11, 13)
+				.WithArguments("Int32");
+
+			VerifyCSharpDiagnostic(test, diagnostic);
 		}
 	}
 }
