@@ -3,8 +3,9 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-// Stubs to represent Unity messages
+// Stubs to represent Unity API and messages
 
+using System;
 using System.Collections.Generic;
 
 namespace UnityEngine
@@ -23,6 +24,22 @@ namespace UnityEngine
 
 	class Component
 	{
+		public string tag { get; }
+
+		public bool CompareTag(string tag) { return false; }
+
+		public Component GetComponent(Type type) { return null; }
+		public Component GetComponent<T>() { return null; }
+		public Component GetComponentInChildren(Type type) { return null; }
+		public Component GetComponentInChildren<T>() { return null; }
+		public Component GetComponentInParent(Type type) { return null; }
+		public Component GetComponentInParent<T>() { return null; }
+		public Component[] GetComponents(Type type) { return null; }
+		public Component[] GetComponents<T>() { return null; }
+		public Component[] GetComponentsInChildren(Type type, bool includeInactive = false) { return null; }
+		public Component[] GetComponentsInChildren<T>(bool includeInactive = false) { return null; }
+		public Component[] GetComponentsInParent(Type type, bool includeInactive = false) { return null; }
+		public Component[] GetComponentsInParent<T>(bool includeInactive = false) { return null; }
 	}
 
 	class ControllerColliderHit

@@ -124,7 +124,8 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var containingType = propertySymbol.ContainingType;
-			return propertySymbol.Name == "tag" && (containingType.Matches(typeof(UnityEngine.GameObject)) || containingType.Matches(typeof(UnityEngine.Component)));
+			return propertySymbol.Name == nameof(UnityEngine.Component.tag)
+				&& (containingType.Matches(typeof(UnityEngine.GameObject)) || containingType.Matches(typeof(UnityEngine.Component)));
 		}
 	}
 
@@ -240,7 +241,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static ExpressionSyntax BuildReplacementNode(ExpressionSyntax tagExpression, ExpressionSyntax otherExpression)
 		{
-			var CompareTagIdentifier = SyntaxFactory.IdentifierName("CompareTag");
+			var CompareTagIdentifier = SyntaxFactory.IdentifierName(nameof(UnityEngine.Component.CompareTag));
 			ExpressionSyntax invocation = CompareTagIdentifier;
 			if (tagExpression is MemberAccessExpressionSyntax mae)
 			{
