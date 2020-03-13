@@ -15,6 +15,7 @@ ID | Title | Category
 [UNT0011](UNT0011.md) | ScriptableObject instance creation | Type Safety
 [UNT0012](UNT0012.md) | Unused coroutine return value | Correctness
 [UNT0013](UNT0013.md) | Invalid or redundant SerializeField attribute | Correctness
+[UNT0014](UNT0014.md) | GetComponent called with non-Component or non-Interface type | Type Safety
 
 # Diagnostic Suppressors
 
