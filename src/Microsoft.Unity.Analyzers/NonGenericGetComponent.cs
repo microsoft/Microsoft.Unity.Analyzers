@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,16 +33,6 @@ namespace Microsoft.Unity.Analyzers
 			description: Strings.NonGenericGetComponentDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
-
-		private static readonly HashSet<string> MethodNames = new HashSet<string>(new[]
-		{
-			"GetComponent",
-			"GetComponents",
-			"GetComponentInChildren",
-			"GetComponentsInChildren",
-			"GetComponentInParent",
-			"GetComponentsInParent",
-		});
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -77,11 +66,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!(symbol is IMethodSymbol method))
 				return false;
 
-			var containingType = method.ContainingType;
-			if (!containingType.Matches(typeof(UnityEngine.Component)) && !containingType.Matches(typeof(UnityEngine.GameObject)))
-				return false;
-
-			if (!MethodNames.Contains(method.Name))
+			if (!KnownMethods.IsGetComponent(method))
 				return false;
 
 			if (method.Parameters.Length == 0 || !method.Parameters[0].Type.Matches(typeof(Type)))

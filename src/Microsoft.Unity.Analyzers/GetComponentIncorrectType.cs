@@ -28,16 +28,6 @@ namespace Microsoft.Unity.Analyzers
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-		private static readonly HashSet<string> MethodNames = new HashSet<string>(new[]
-		{
-			"GetComponent",
-			"GetComponents",
-			"GetComponentInChildren",
-			"GetComponentsInChildren",
-			"GetComponentInParent",
-			"GetComponentsInParent",
-		});
-
 		public override void Initialize(AnalysisContext context)
 		{
 			context.EnableConcurrentExecution();
@@ -55,25 +45,13 @@ namespace Microsoft.Unity.Analyzers
 			if (!(symbol.Symbol is IMethodSymbol method))
 				return;
 
-			if (!IsGetComponent(method))
+			if (!KnownMethods.IsGetComponent(method))
 				return;
 
 			if (!HasInvalidTypeArgument(method, out var identifier))
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), identifier));
-		}
-
-		private static bool IsGetComponent(IMethodSymbol method)
-		{
-			var containingType = method.ContainingType;
-			if (!containingType.Matches(typeof(UnityEngine.Component)) && !containingType.Matches(typeof(UnityEngine.GameObject)))
-				return false;
-
-			if (!MethodNames.Contains(method.Name))
-				return false;
-
-			return true;
 		}
 
 		private static bool HasInvalidTypeArgument(IMethodSymbol method, out string identifier)
