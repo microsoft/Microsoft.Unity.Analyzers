@@ -36,8 +36,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 			var suppressor = (DiagnosticSuppressor)analyzer;
 
 			var analyzers = new List<DiagnosticAnalyzer>();
-			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.Features.dll"));
-			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.Csharp.Features.dll"));
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CodeStyle.dll"));
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
 
 			return analyzers.Where(a => a.SupportedDiagnostics
 				.Any(s => suppressor.SupportedSuppressions

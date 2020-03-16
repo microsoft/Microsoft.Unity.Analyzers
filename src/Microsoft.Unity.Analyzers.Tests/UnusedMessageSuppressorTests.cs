@@ -46,7 +46,6 @@ public class TestScript : MonoBehaviour
 ";
 
 			var suppressor = ExpectSuppressor(UnusedMessageSuppressor.ParameterRule)
-				.WithSuppressedDiagnosticMock(SyntaxKind.Parameter) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(6, 35);
 
 			VerifyCSharpDiagnostic(test, suppressor);
