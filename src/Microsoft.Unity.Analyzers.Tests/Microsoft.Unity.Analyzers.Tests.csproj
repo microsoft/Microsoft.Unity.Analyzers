@@ -8,7 +8,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.3.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.6.0-2.20164.4" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.6.0-2.20164.4" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.3.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -21,12 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.CodeAnalysis.CodeStyle">
-      <HintPath>$(NugetPackageRoot)microsoft.codeanalysis.csharp.codestyle\3.6.0-2.20164.4\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CodeStyle.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle">
-      <HintPath>$(NugetPackageRoot)microsoft.codeanalysis.csharp.codestyle\3.6.0-2.20164.4\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.CodeStyle.dll</HintPath>
-    </Reference>
+    <None Include="$(PkgMicrosoft_CodeAnalysis_CSharp_CodeStyle)\analyzers\dotnet\cs\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>  
   </ItemGroup>
 
 </Project>
