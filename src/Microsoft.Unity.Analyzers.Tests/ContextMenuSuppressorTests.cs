@@ -15,7 +15,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 		{
 			const string test = @"
 using UnityEngine;
-using UnityEditor;
 
 class Menu : MonoBehaviour
 {
@@ -26,7 +25,7 @@ class Menu : MonoBehaviour
 }";
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
-				.WithLocation(8, 18);
+				.WithLocation(7, 18);
 
 			VerifyCSharpDiagnostic(test, suppressor);
 		}
@@ -36,7 +35,6 @@ class Menu : MonoBehaviour
 		{
 			const string test = @"
 using UnityEngine;
-using UnityEditor;
 
 class Menu : MonoBehaviour
 {
@@ -51,7 +49,7 @@ class Menu : MonoBehaviour
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemReadonlyRule)
 				.WithSuppressedDiagnosticMock(SyntaxKind.FieldDeclaration) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
-				.WithLocation(8, 20);
+				.WithLocation(7, 20);
 
 			VerifyCSharpDiagnostic(test, suppressor);
 		}
@@ -61,7 +59,6 @@ class Menu : MonoBehaviour
 		{
 			const string test = @"
 using UnityEngine;
-using UnityEditor;
 
 class Menu : MonoBehaviour
 {
@@ -70,7 +67,7 @@ class Menu : MonoBehaviour
 }";
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
-				.WithLocation(8, 20);
+				.WithLocation(7, 20);
 
 			VerifyCSharpDiagnostic(test, suppressor);
 		}
@@ -80,7 +77,6 @@ class Menu : MonoBehaviour
 		{
 			const string test = @"
 using UnityEngine;
-using UnityEditor;
 
 class Menu : MonoBehaviour
 {
@@ -94,7 +90,7 @@ class Menu : MonoBehaviour
 }";
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
-				.WithLocation(10, 18);
+				.WithLocation(9, 18);
 
 			VerifyCSharpDiagnostic(test, suppressor);
 		}

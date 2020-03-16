@@ -23,6 +23,12 @@ namespace Microsoft.Unity.Analyzers.Tests
 		private static string CSharpDefaultFileExt = "cs";
 		private static string TestProjectName = "TestProject";
 
+		protected static HashSet<string> NoWarn = new HashSet<string>
+		{
+			"CS0414", // cf. IDE0051
+			"CS1701", // Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
+		};
+
 		protected abstract DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer();
 
 		protected virtual IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
@@ -234,13 +240,17 @@ namespace Microsoft.Unity.Analyzers.Tests
 				var compilationWithAnalyzers = compilation
 					.WithAnalyzers(analyzers, analyzerOptions);
 
-				var errors = compilationWithAnalyzers.GetAllDiagnosticsAsync().Result.Where(d => d.Severity == DiagnosticSeverity.Error);
+				var allDiagnostics = compilationWithAnalyzers.GetAllDiagnosticsAsync().Result;
+				var errors = allDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
 				foreach (var error in errors)
 				{
 					Assert.True(false, $"Line {error.Location.GetLineSpan().StartLinePosition.Line}: {error.GetMessage()}");
 				}
 
-				var diags = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
+				var diags = allDiagnostics
+					.Except(errors)
+					.Except(allDiagnostics.Where(d => NoWarn.Contains(d.Id)));
+
 				foreach (var diag in diags)
 				{
 					if (diag.Location == Location.None || diag.Location.IsInMetadata)

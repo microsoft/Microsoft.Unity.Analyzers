@@ -17,8 +17,8 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a;
-	public Transform b;
+	public Transform a = null;
+	public Transform b = null;
 
 	public Transform NC()
 	{
@@ -37,8 +37,8 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a;
-	public Transform b;
+	public Transform a = null;
+	public Transform b = null;
 
 	public Transform NC()
 	{
@@ -57,8 +57,8 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a;
-	public Transform b;
+	public Transform a = null;
+	public Transform b = null;
 
 	public Transform NC()
 	{
@@ -77,8 +77,8 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a;
-	public Transform b;
+	public Transform a = null;
+	public Transform b = null;
 
 	public Transform NC()
 	{

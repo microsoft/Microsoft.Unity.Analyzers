@@ -187,8 +187,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         Debug.Log(transform.tag == ""tag2"");
@@ -197,7 +195,7 @@ public class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 19);
+				.WithLocation(8, 19);
 
 			VerifyCSharpDiagnostic(test, diagnostic);
 
@@ -206,8 +204,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         Debug.Log(transform.CompareTag(""tag2""));
@@ -327,8 +323,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         Debug.Log(""tag4"" == transform.tag);
@@ -337,7 +331,7 @@ public class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 19);
+				.WithLocation(8, 19);
 
 			VerifyCSharpDiagnostic(test, diagnostic);
 
@@ -346,8 +340,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         Debug.Log(transform.CompareTag(""tag4""));
@@ -365,8 +357,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         Debug.Log(null != transform.tag);
@@ -375,7 +365,7 @@ public class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 19);
+				.WithLocation(8, 19);
 
 			VerifyCSharpDiagnostic(test, diagnostic);
 
@@ -384,8 +374,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         Debug.Log(!transform.CompareTag(null));
@@ -403,8 +391,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         if (object.Equals(transform.tag, null))
@@ -414,7 +400,7 @@ public class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 13);
+				.WithLocation(8, 13);
 
 			VerifyCSharpDiagnostic(test, diagnostic);
 
@@ -423,8 +409,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         if (transform.CompareTag(null))
@@ -443,8 +427,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         if (Equals(null, transform.tag))
@@ -454,7 +436,7 @@ public class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 13);
+				.WithLocation(8, 13);
 
 			VerifyCSharpDiagnostic(test, diagnostic);
 
@@ -463,8 +445,6 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    public Transform transform;
-
     private void Update()
     {
         if (transform.CompareTag(null))

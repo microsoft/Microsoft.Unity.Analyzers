@@ -18,7 +18,7 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    private string privateField;
+    private string privateField = null;
 }
 ";
 
@@ -34,7 +34,7 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    public string publicField;
+    public string publicField = null;
 }
 ";
 
@@ -49,7 +49,7 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-    public string publicField;
+    public string publicField = null;
 }
 ";
 
@@ -92,12 +92,16 @@ class Camera : MonoBehaviour
 		{
 			const string test = @"
 using UnityEngine;
-using UnityEngine.Serialization;
 
 class Camera : MonoBehaviour
 {
     [SerializeField]
     private string privateField1, privateField2, privateField3;
+
+    private void _ ()
+    {
+        privateField1 = privateField2 = privateField3 = privateField1;
+    }
 }
 ";
 
@@ -109,28 +113,26 @@ class Camera : MonoBehaviour
 		{
 			const string test = @"
 using UnityEngine;
-using UnityEngine.Serialization;
 
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    public string publicField1, publicField2, publicField3;
+    public string publicField1 = null, publicField2 = null, publicField3 = null;
 }
 ";
 
 			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
-				.WithLocation(7, 5)
+				.WithLocation(6, 5)
 				.WithArguments("publicField1, publicField2, publicField3");
 
 			VerifyCSharpDiagnostic(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
-using UnityEngine.Serialization;
 
 class Camera : MonoBehaviour
 {
-    public string publicField1, publicField2, publicField3;
+    public string publicField1 = null, publicField2 = null, publicField3 = null;
 }
 ";
 
@@ -148,7 +150,7 @@ class Camera : MonoBehaviour
 {
     [SerializeField]
     [FormerlySerializedAs(""somethingElse"")]
-    private string privateField;
+    private string privateField = null;
 }
 ";
 
@@ -166,7 +168,7 @@ class Camera : MonoBehaviour
 {
     [SerializeField]
     [FormerlySerializedAs(""somethingElse"")]
-    public string publicField;
+    public string publicField = null;
 }
 ";
 
@@ -183,7 +185,7 @@ using UnityEngine.Serialization;
 class Camera : MonoBehaviour
 {
     [FormerlySerializedAs(""somethingElse"")]
-    public string publicField;
+    public string publicField = null;
 }
 ";
 
@@ -201,7 +203,7 @@ using UnityEngine.Serialization;
 class Camera : MonoBehaviour
 {
     [SerializeField, FormerlySerializedAs(""somethingElse"")]
-    private string privateField;
+    private string privateField = null;
 }
 ";
 
@@ -218,7 +220,7 @@ using UnityEngine.Serialization;
 class Camera : MonoBehaviour
 {
     [SerializeField, FormerlySerializedAs(""somethingElse"")]
-    public string publicField;
+    public string publicField = null;
 }
 ";
 
@@ -235,7 +237,7 @@ using UnityEngine.Serialization;
 class Camera : MonoBehaviour
 {
     [FormerlySerializedAs(""somethingElse"")]
-    public string publicField;
+    public string publicField = null;
 }
 ";
 
