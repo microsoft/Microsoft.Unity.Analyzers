@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class InitializeOnLoadStaticCtorTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
+	public class InitializeOnLoadStaticTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticAnalyzer, InitializeOnLoadStaticCodeFix>
 	{
 		[Fact]
 		public void InitializeOnLoadWithoutStaticCtor()
@@ -22,7 +22,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
+			var diagnostic = ExpectDiagnostic(InitializeOnLoadStaticAnalyzer.StaticCtorRule)
 				.WithLocation(6, 7)
 				.WithArguments("Camera");
 
@@ -57,7 +57,7 @@ public sealed class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
+			var diagnostic = ExpectDiagnostic(InitializeOnLoadStaticAnalyzer.StaticCtorRule)
 				.WithLocation(6, 21)
 				.WithArguments("Camera");
 

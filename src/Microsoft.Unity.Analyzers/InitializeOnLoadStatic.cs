@@ -18,9 +18,9 @@ using Microsoft.Unity.Analyzers.Resources;
 namespace Microsoft.Unity.Analyzers
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class InitializeOnLoadStaticCtorAnalyzer : DiagnosticAnalyzer
+	public class InitializeOnLoadStaticAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor StaticCtorRule = new DiagnosticDescriptor(
 			id: "UNT0009",
 			title: Strings.InitializeOnLoadStaticCtorDiagnosticTitle,
 			messageFormat: Strings.InitializeOnLoadStaticCtorDiagnosticMessageFormat,
@@ -29,41 +29,69 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.InitializeOnLoadStaticCtorDiagnosticDescription);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+		internal static readonly DiagnosticDescriptor StaticMethodRule = new DiagnosticDescriptor(
+			id: "UNT0015",
+			title: Strings.InitializeOnLoadStaticCtorDiagnosticTitle,
+			messageFormat: Strings.InitializeOnLoadStaticCtorDiagnosticMessageFormat,
+			category: DiagnosticCategory.Correctness,
+			defaultSeverity: DiagnosticSeverity.Info,
+			isEnabledByDefault: true,
+			description: Strings.InitializeOnLoadStaticCtorDiagnosticDescription);
+
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(StaticCtorRule, StaticMethodRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
 			context.EnableConcurrentExecution();
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeDeclaration, SyntaxKind.ClassDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeDeclaration, SyntaxKind.MethodDeclaration);
 		}
 
-		private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is ClassDeclarationSyntax classDeclaration))
-				return;
+			ISymbol symbol = null;
 
-			var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+			switch (context.Node)
+			{
+				case ClassDeclarationSyntax classDeclaration:
+					symbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+					break;
+				case MethodDeclarationSyntax methodDeclaration:
+					symbol = context.SemanticModel.GetDeclaredSymbol(methodDeclaration);
+					break;
+				case null:
+					return;
+			}
 
-			var isInitOnLoad = typeSymbol
+			var isInitOnLoad = symbol
 				.GetAttributes()
-				.Any(a => a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadAttribute)));
+				.Any(a => 
+					 a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadAttribute)) ||
+					 a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute)) ||
+					 a.AttributeClass.Matches(typeof(UnityEditor.RuntimeInitializeOnLoadStaticMethodAttribute)));
 
 			if (!isInitOnLoad)
 				return;
 
-			// Beware of compiler-generated ctor with static field initializers
-			if (typeSymbol.StaticConstructors.Any(c => !c.IsImplicitlyDeclared))
-				return;
-
-			context.ReportDiagnostic(Diagnostic.Create(Rule, classDeclaration.Identifier.GetLocation(), typeSymbol.Name));
+			switch (symbol)
+			{
+				case INamedTypeSymbol typeSymbol:
+					if (!typeSymbol.StaticConstructors.Any(c => !c.IsImplicitlyDeclared))
+						context.ReportDiagnostic(Diagnostic.Create(StaticCtorRule, ((ClassDeclarationSyntax)context.Node).Identifier.GetLocation(), typeSymbol.Name));
+					break;
+				case IMethodSymbol methodSymbol:
+					if (!methodSymbol.IsStatic)
+						context.ReportDiagnostic(Diagnostic.Create(StaticMethodRule, ((MethodDeclarationSyntax)context.Node).Identifier.GetLocation(), methodSymbol.Name));
+					break;
+			}
 		}
 	}
 
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
-	public class InitializeOnLoadStaticCtorCodeFix : CodeFixProvider
+	public class InitializeOnLoadStaticCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(InitializeOnLoadStaticCtorAnalyzer.Rule.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(InitializeOnLoadStaticAnalyzer.StaticCtorRule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

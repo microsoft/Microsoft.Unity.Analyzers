@@ -306,4 +306,12 @@ namespace UnityEditor
 	class InitializeOnLoadAttribute : System.Attribute
 	{
 	}
+
+	class InitializeOnLoadMethodAttribute : System.Attribute
+	{
+	}
+
+	class RuntimeInitializeOnLoadStaticMethodAttribute : System.Attribute
+	{
+	}
 }
