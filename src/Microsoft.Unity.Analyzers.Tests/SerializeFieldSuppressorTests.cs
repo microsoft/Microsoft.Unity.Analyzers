@@ -21,13 +21,15 @@ class Camera : MonoBehaviour
     [SerializeField]
     private string someField;
 
-    private void _ () {
+    private void RemoveIDE0051() {
         var _ = someField;
+        RemoveIDE0051();
     }
 }
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
+				.WithSuppressedDiagnosticMock(SyntaxKind.FieldDeclaration) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(7, 20);
 
 			VerifyCSharpDiagnostic(test, suppressor);
@@ -44,8 +46,9 @@ class Camera : MonoBehaviour
     [SerializeField]
     private string someField = ""default"";
 
-    private void _ () {
+    private void RemoveIDE0051() {
         var _ = someField;
+        RemoveIDE0051();
     }
 }
 ";
