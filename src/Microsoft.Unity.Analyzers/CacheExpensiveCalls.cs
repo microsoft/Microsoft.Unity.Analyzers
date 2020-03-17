@@ -53,8 +53,8 @@ namespace Microsoft.Unity.Analyzers
 			if (!(context.Node is MethodDeclarationSyntax method))
 				return;
 
-			if (IsMessage(context, method, typeof(UnityEngine.MonoBehaviour), "Update") ||
-				IsMessage(context, method, typeof(UnityEngine.MonoBehaviour), "FixedUpdate"))
+			if (method.IsMessage(context, typeof(UnityEngine.MonoBehaviour), "Update") ||
+				method.IsMessage(context, typeof(UnityEngine.MonoBehaviour), "FixedUpdate"))
 			{
 				AnalyzeInvocations(context, method);
 			}
@@ -79,7 +79,6 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context, SyntaxNode node)
 		{
-			string expensiveCall = null;
 			var symbol = context.SemanticModel.GetSymbolInfo(node);
 			if (symbol.Symbol == null)
 				return;
@@ -87,12 +86,12 @@ namespace Microsoft.Unity.Analyzers
 			switch (node)
 			{
 				case InvocationExpressionSyntax ies:
-					if (IsExpensiveInvocation(symbol.Symbol, out expensiveCall))
-						context.ReportDiagnostic(Diagnostic.Create(Rule, node.GetLocation(), expensiveCall));
+					if (IsExpensiveInvocation(symbol.Symbol, out var expensiveInvocation))
+						context.ReportDiagnostic(Diagnostic.Create(Rule, node.GetLocation(), expensiveInvocation));
 					break;
 				case MemberAccessExpressionSyntax maes:
-					if (IsExpensiveMemberAccess(symbol.Symbol, maes, out expensiveCall))
-						context.ReportDiagnostic(Diagnostic.Create(Rule, node.GetLocation(), expensiveCall));
+					if (IsExpensiveMemberAccess(symbol.Symbol, maes, out var expensiveMemberAccess))
+						context.ReportDiagnostic(Diagnostic.Create(Rule, node.GetLocation(), expensiveMemberAccess));
 					break;
 			}
 		}
@@ -141,26 +140,6 @@ namespace Microsoft.Unity.Analyzers
 
 			expression = containingType.Name + '.' + symbol.Name;
 			return true;
-		}
-
-		// TODO Copied from UpdateDeltaTimeAnalyzer. Make this a helper method somewhere for both
-		private static bool IsMessage(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method, Type metadata, string methodName)
-		{
-			var classDeclaration = method?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-			if (classDeclaration == null)
-				return false;
-
-			var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
-
-			var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-			var scriptInfo = new ScriptInfo(typeSymbol);
-			if (!scriptInfo.HasMessages)
-				return false;
-
-			if (!scriptInfo.IsMessage(methodSymbol))
-				return false;
-
-			return scriptInfo.Metadata == metadata && methodSymbol.Name == methodName;
 		}
 	}
 

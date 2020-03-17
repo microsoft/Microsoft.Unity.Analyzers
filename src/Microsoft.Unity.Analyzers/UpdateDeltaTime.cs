@@ -76,10 +76,10 @@ namespace Microsoft.Unity.Analyzers
 			if (!(context.Node is MethodDeclarationSyntax method))
 				return;
 
-			if (IsMessage(context, method, typeof(UnityEngine.MonoBehaviour), "Update"))
+			if (method.IsMessage(context, typeof(UnityEngine.MonoBehaviour), "Update"))
 				AnalyzeMemberAccess(context, method, "Time.fixedDeltaTime", UpdateRule);
 
-			if (IsMessage(context, method, typeof(UnityEngine.MonoBehaviour), "FixedUpdate"))
+			if (method.IsMessage(context, typeof(UnityEngine.MonoBehaviour), "FixedUpdate"))
 				AnalyzeMemberAccess(context, method, "Time.deltaTime", FixedUpdateRule);
 		}
 
