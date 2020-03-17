@@ -29,7 +29,6 @@ class Camera : MonoBehaviour
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
-				.WithSuppressedDiagnosticMock(SyntaxKind.FieldDeclaration) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(7, 20);
 
 			VerifyCSharpDiagnostic(test, suppressor);
