@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class ImproperSerializeFieldTests : BaseCodeFixVerifierTest<ImproperSerializeFieldAnalyzer, ImproperSerializeFieldCodeFix>
 	{
 		[Fact]
-		public void ValidSerializeFieldTest()
+		public async Task ValidSerializeFieldTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -22,11 +23,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void RedundantSerializeFieldTest()
+		public async Task RedundantSerializeFieldTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -42,7 +43,7 @@ class Camera : MonoBehaviour
 				.WithLocation(6, 5)
 				.WithArguments("publicField");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -53,11 +54,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void InvalidSerializeFieldTest()
+		public async Task InvalidSerializeFieldTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -73,7 +74,7 @@ class Camera : MonoBehaviour
 				.WithLocation(6, 5)
 				.WithArguments("privateProperty");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -84,11 +85,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void ValidSerializeMultipleFieldsTest()
+		public async Task ValidSerializeMultipleFieldsTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -105,11 +106,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void RedundantSerializeMultipleFieldsTest()
+		public async Task RedundantSerializeMultipleFieldsTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -125,7 +126,7 @@ class Camera : MonoBehaviour
 				.WithLocation(6, 5)
 				.WithArguments("publicField1, publicField2, publicField3");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -136,11 +137,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void ValidSerializeFieldMultipleAttributesTest()
+		public async Task ValidSerializeFieldMultipleAttributesTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -154,11 +155,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void RedundantSerializeFieldMultipleAttributeTest()
+		public async Task RedundantSerializeFieldMultipleAttributeTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -176,7 +177,7 @@ class Camera : MonoBehaviour
 				.WithLocation(7, 5)
 				.WithArguments("publicField");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -190,11 +191,11 @@ class Camera : MonoBehaviour
 ";
 
 
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void ValidSerializeFieldMultipleAttributeInlineTest()
+		public async Task ValidSerializeFieldMultipleAttributeInlineTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -207,11 +208,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void RedundantSerializeFieldMultipleAttributeInlineTest()
+		public async Task RedundantSerializeFieldMultipleAttributeInlineTestAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -228,7 +229,7 @@ class Camera : MonoBehaviour
 				.WithLocation(7, 5)
 				.WithArguments("publicField");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -241,7 +242,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 	}
 }

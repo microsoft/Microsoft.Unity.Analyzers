@@ -80,9 +80,9 @@ namespace Microsoft.Unity.Analyzers
 
 			switch (symbol)
 			{
-				case IFieldSymbol fieldSymbol:
+				case IFieldSymbol _:
 					return symbol.DeclaredAccessibility == Accessibility.Public;
-				case IPropertySymbol propertySymbol:
+				case IPropertySymbol _:
 					return true;
 				default:
 					return false;
@@ -110,12 +110,12 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					Strings.ImproperSerializeFieldCodeFixTitle,
-					ct => RemoveSerializeFieldAttribute(context.Document, declaration, ct),
+					ct => RemoveSerializeFieldAttributeAsync(context.Document, declaration, ct),
 					declaration.ToFullString()),
 				context.Diagnostics);
 		}
 
-		private static async Task<Document> RemoveSerializeFieldAttribute(Document document, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
+		private static async Task<Document> RemoveSerializeFieldAttributeAsync(Document document, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class EmptyUnityMessageTests : BaseCodeFixVerifierTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
 	{
 		[Fact]
-		public void EmptyFixedUpdate()
+		public async Task EmptyFixedUpdateAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -31,7 +32,7 @@ class Camera : MonoBehaviour
 				.WithLocation(6, 18)
 				.WithArguments("FixedUpdate");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -44,11 +45,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void FixedUpdateWithBody()
+		public async Task FixedUpdateWithBodyAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -65,11 +66,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void VirtualFixedUpdate()
+		public async Task VirtualFixedUpdateAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -81,11 +82,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void VirtualOverrideFixedUpdate()
+		public async Task VirtualOverrideFixedUpdateAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -104,11 +105,11 @@ class Camera : BaseBehaviour
     }
 }
 ";
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void AbstractOverrideFixedUpdate()
+		public async Task AbstractOverrideFixedUpdateAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -125,7 +126,7 @@ class Camera : BaseBehaviour
     }
 }
 ";
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}
 }

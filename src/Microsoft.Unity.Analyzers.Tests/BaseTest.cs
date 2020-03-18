@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
@@ -21,9 +22,9 @@ interface IFailure
 ";
 
 		[Fact]
-		public void DoNotFailWithInterfaceMembers()
+		public async Task DoNotFailWithInterfaceMembersAsync()
 		{
-			VerifyCSharpDiagnostic(InterfaceTest);
+			await VerifyCSharpDiagnosticAsync(InterfaceTest);
 		}
 
 		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
@@ -36,9 +37,9 @@ interface IFailure
 		where TAnalyzer : DiagnosticSuppressor, new() 
 	{
 		[Fact]
-		public void DoNotFailWithInterfaceMembers()
+		public async Task DoNotFailWithInterfaceMembersAsync()
 		{
-			VerifyCSharpDiagnostic(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
+			await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 		}
 
 		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
@@ -52,9 +53,9 @@ interface IFailure
 		where TCodeFix : CodeFixProvider, new() 
 	{
 		[Fact]
-		public void DoNotFailWithInterfaceMembers()
+		public async Task DoNotFailWithInterfaceMembersAsync()
 		{
-			VerifyCSharpDiagnostic(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
+			await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 		}
 
 		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()

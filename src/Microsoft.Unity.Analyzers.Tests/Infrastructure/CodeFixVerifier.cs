@@ -4,10 +4,9 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
-
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -22,23 +21,23 @@ namespace Microsoft.Unity.Analyzers.Tests
 	{
 		protected abstract CodeFixProvider GetCSharpCodeFixProvider();
 
-		protected void VerifyCSharpFix(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
+		protected Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
 		{
-			VerifyFix(GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+			return VerifyFixAsync(GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
 		}
 
-		private void VerifyFix(DiagnosticAnalyzer analyzer, CodeFixProvider codeFixProvider, string oldSource, string newSource, int? codeFixIndex, bool allowNewCompilerDiagnostics)
+		private async Task VerifyFixAsync(DiagnosticAnalyzer analyzer, CodeFixProvider codeFixProvider, string oldSource, string newSource, int? codeFixIndex, bool allowNewCompilerDiagnostics)
 		{
 			var document = CreateDocument(oldSource);
-			var analyzerDiagnostics = GetSortedDiagnosticsFromDocuments(analyzer, new[] { document });
-			var compilerDiagnostics = GetCompilerDiagnostics(document);
+			var analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] { document });
+			var compilerDiagnostics = (await GetCompilerDiagnosticsAsync(document)).ToList();
 			var attempts = analyzerDiagnostics.Length;
 
 			for (var i = 0; i < attempts; ++i)
 			{
 				var actions = new List<CodeAction>();
 				var context = new CodeFixContext(document, analyzerDiagnostics[0], (a, d) => actions.Add(a), CancellationToken.None);
-				codeFixProvider.RegisterCodeFixesAsync(context).Wait();
+				await codeFixProvider.RegisterCodeFixesAsync(context);
 
 				if (!actions.Any())
 				{
@@ -47,24 +46,24 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 				if (codeFixIndex != null)
 				{
-					document = ApplyFix(document, actions.ElementAt((int)codeFixIndex));
+					document = await ApplyFixAsync(document, actions.ElementAt((int)codeFixIndex));
 					break;
 				}
 
-				document = ApplyFix(document, actions.ElementAt(0));
-				analyzerDiagnostics = GetSortedDiagnosticsFromDocuments(analyzer, new[] { document });
+				document = await ApplyFixAsync(document, actions.ElementAt(0));
+				analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] { document });
 
-				var newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
+				var newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
 				//check if applying the code fix introduced any new compiler diagnostics
 				if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
 				{
 					// Format and get the compiler diagnostics again so that the locations make sense in the output
-					document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
-					newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
+					document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(), Formatter.Annotation, document.Project.Solution.Workspace));
+					newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
 					var diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
-					var newDoc = document.GetSyntaxRootAsync().Result.ToFullString();
+					var newDoc = (await document.GetSyntaxRootAsync()).ToFullString();
 					Assert.True(false, $"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{newDoc}\r\n");
 				}
 
@@ -76,13 +75,13 @@ namespace Microsoft.Unity.Analyzers.Tests
 			}
 
 			//after applying all of the code fixes, compare the resulting string to the inputted one
-			var actual = GetStringFromDocument(document);
+			var actual = await GetStringFromDocumentAsync(document);
 			Assert.Equal(newSource, actual);
 		}
 
-		private static Document ApplyFix(Document document, CodeAction codeAction)
+		private static async Task<Document> ApplyFixAsync(Document document, CodeAction codeAction)
 		{
-			var operations = codeAction.GetOperationsAsync(CancellationToken.None).Result;
+			var operations = await codeAction.GetOperationsAsync(CancellationToken.None);
 			var solution = operations.OfType<ApplyChangesOperation>().Single().ChangedSolution;
 			return solution.GetDocument(document.Id);
 		}
@@ -109,19 +108,19 @@ namespace Microsoft.Unity.Analyzers.Tests
 			}
 		}
 
-		private static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document)
+		private static async Task<IEnumerable<Diagnostic>> GetCompilerDiagnosticsAsync(Document document)
 		{
-			return document
-				.GetSemanticModelAsync()
-				.Result
+			var model = await document.GetSemanticModelAsync();
+
+			return model
 				.GetDiagnostics()
 				.Where(d => !NoWarn.Contains(d.Id));
 		}
 
-		private static string GetStringFromDocument(Document document)
+		private static async Task<string> GetStringFromDocumentAsync(Document document)
 		{
-			var simplifiedDoc = Simplifier.ReduceAsync(document, Simplifier.Annotation).Result;
-			var root = simplifiedDoc.GetSyntaxRootAsync().Result;
+			var simplifiedDoc = await Simplifier.ReduceAsync(document, Simplifier.Annotation);
+			var root = await simplifiedDoc.GetSyntaxRootAsync();
 			root = Formatter.Format(root, Formatter.Annotation, simplifiedDoc.Project.Solution.Workspace);
 			return root.GetText().ToString();
 		}

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class TagComparisonTests : BaseCodeFixVerifierTest<TagComparisonAnalyzer, TagComparisonCodeFix>
 	{
 		[Fact]
-		public void TagAsIdentifier()
+		public async Task TagAsIdentifierAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -27,7 +28,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -40,11 +41,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagAsIdentifierInvoke()
+		public async Task TagAsIdentifierInvokeAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -61,7 +62,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -74,11 +75,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagAsIdentifierNeqInvoke()
+		public async Task TagAsIdentifierNeqInvokeAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -95,7 +96,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 20);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -108,11 +109,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagAsIdentifierThisPrefix()
+		public async Task TagAsIdentifierThisPrefixAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -129,7 +130,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -142,11 +143,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagAsIdentifierNeqNullRhs()
+		public async Task TagAsIdentifierNeqNullRhsAsyncAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -163,7 +164,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -176,11 +177,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagProperty()
+		public async Task TagPropertyAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -197,7 +198,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -210,11 +211,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagPropertyForGameObject()
+		public async Task TagPropertyForGameObjectAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -231,7 +232,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -244,11 +245,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagAsIdentifierRhs()
+		public async Task TagAsIdentifierRhsAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -265,7 +266,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -278,11 +279,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagAsIdentifierRhsInvoke()
+		public async Task TagAsIdentifierRhsInvokeAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -299,7 +300,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -312,11 +313,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagPropertyRhs()
+		public async Task TagPropertyRhsAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -333,7 +334,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -346,11 +347,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void TagPropertyNeqNullRhs()
+		public async Task TagPropertyNeqNullRhsAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -367,7 +368,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 19);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -380,11 +381,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void ObjectEqualsExplicit()
+		public async Task ObjectEqualsExplicitAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -402,7 +403,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 13);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -416,11 +417,11 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void ObjectEqualsImplicit()
+		public async Task ObjectEqualsImplicitAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -438,7 +439,7 @@ public class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic()
 				.WithLocation(8, 13);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -452,7 +453,7 @@ public class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 	}

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class CreateInstanceTests : BaseCodeFixVerifierTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 	{
 		[Fact]
-		public void CreateMonoBehaviourInstance()
+		public async Task CreateMonoBehaviourInstanceAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -29,7 +30,7 @@ class Camera : MonoBehaviour
 				.WithLocation(9, 19)
 				.WithArguments("Foo");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -43,11 +44,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void CreateMonoBehaviourInstanceFromNonComponent()
+		public async Task CreateMonoBehaviourInstanceFromNonComponentAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -62,11 +63,11 @@ class Program
 }
 ";
 			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.MonoBehaviourId).WithLocation(9, 19).WithArguments("Foo");
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 
 		[Fact]
-		public void CreateScriptableObjectInstance()
+		public async Task CreateScriptableObjectInstanceAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -82,7 +83,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ScriptableObjectId).WithLocation(9, 19).WithArguments("Foo");
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -96,7 +97,7 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 	}
 }

@@ -89,12 +89,12 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterCodeFix(
 				CodeAction.Create(
 					Strings.UnusedCoroutineReturnValueCodeFixTitle,
-					ct => WrapWithStartCoroutine(context.Document, parent, invocation, ct),
+					ct => WrapWithStartCoroutineAsync(context.Document, parent, invocation, ct),
 					invocation.ToFullString()),
 				context.Diagnostics);
 		}
 
-		private static async Task<Document> WrapWithStartCoroutine(Document document, 
+		private static async Task<Document> WrapWithStartCoroutineAsync(Document document, 
 			SyntaxNode parent, 
 			InvocationExpressionSyntax invocation, 
 			CancellationToken cancellationToken)

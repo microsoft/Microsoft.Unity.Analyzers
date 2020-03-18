@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnusedMethodSuppressorTests : BaseSuppressorVerifierTest<UnusedMethodSuppressor>
 	{
 		[Fact]
-		public void UnusedMethodSuppressed()
+		public async Task UnusedMethodSuppressedAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -31,7 +32,7 @@ class Camera : MonoBehaviour
 			var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
 				.WithLocation(11, 18);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 	}
 }

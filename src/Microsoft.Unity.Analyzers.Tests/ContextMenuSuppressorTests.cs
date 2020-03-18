@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class ContextMenuSuppressorTests : BaseSuppressorVerifierTest<ContextMenuSuppressor>
 	{
 		[Fact]
-		public void ContextMenuSuppressed()
+		public async Task ContextMenuSuppressedAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -27,11 +28,11 @@ class Menu : MonoBehaviour
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
 				.WithLocation(7, 18);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 		[Fact]
-		public void ContextMenuItemReadonlySuppressed()
+		public async Task ContextMenuItemReadonlySuppressedAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -51,11 +52,11 @@ class Menu : MonoBehaviour
 				.WithSuppressedDiagnosticMock(SyntaxKind.FieldDeclaration) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(7, 20);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 		[Fact]
-		public void ContextMenuItemUnusedSuppressed()
+		public async Task ContextMenuItemUnusedSuppressedAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -69,11 +70,11 @@ class Menu : MonoBehaviour
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
 				.WithLocation(7, 20);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 		[Fact]
-		public void ContextMenuItemReferenceUnusedSuppressed()
+		public async Task ContextMenuItemReferenceUnusedSuppressedAsync()
 		{
 			const string test = @"
 using UnityEngine;
@@ -92,7 +93,7 @@ class Menu : MonoBehaviour
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
 				.WithLocation(9, 18);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 	}

@@ -74,11 +74,11 @@ namespace Microsoft.Unity.Analyzers.Tests
 			}
 		}
 
-		private readonly ITestOutputHelper output;
+		private readonly ITestOutputHelper _output;
 
 		public ConsistencyTests(ITestOutputHelper output)
 		{
-			this.output = output;
+			_output = output;
 		}
 
 		[Fact]
@@ -86,7 +86,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		{
 			CheckLookup(CollectIds<DiagnosticDescriptor>(d =>
 			{
-				output.WriteLine($"Scanning diagnostic {d.Id}: {d.Description}");
+				_output.WriteLine($"Scanning diagnostic {d.Id}: {d.Description}");
 				return d.Id;
 			}));
 		}
@@ -96,7 +96,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		{
 			CheckLookup(CollectIds<SuppressionDescriptor>(d =>
 			{
-				output.WriteLine($"Scanning suppressor {d.Id} for {d.SuppressedDiagnosticId}: {d.Justification}");
+				_output.WriteLine($"Scanning suppressor {d.Id} for {d.SuppressedDiagnosticId}: {d.Justification}");
 				return d.Id;
 			}));
 		}
