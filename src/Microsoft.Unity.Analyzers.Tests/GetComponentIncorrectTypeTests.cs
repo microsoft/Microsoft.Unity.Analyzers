@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class GetComponentIncorrectTypeTests : BaseDiagnosticVerifierTest<GetComponentIncorrectTypeAnalyzer>
 	{
 		[Fact]
-		public async Task GetComponentInterfaceTypeTestAsync()
+		public async Task GetComponentInterfaceTypeTest()
 		{
 			const string test = @"
 using System;
@@ -32,7 +32,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task GetComponentCorrectTypeTestAsync()
+		public async Task GetComponentCorrectTypeTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -52,7 +52,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task GetComponentIncorrectTypeTestAsync()
+		public async Task GetComponentIncorrectTypeTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -76,7 +76,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task GetComponentLegacyTestAsync()
+		public async Task GetComponentLegacyTest()
 		{
 			const string test = @"
 using UnityEngine;

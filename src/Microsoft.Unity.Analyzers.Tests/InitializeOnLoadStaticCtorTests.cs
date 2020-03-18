@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class InitializeOnLoadStaticCtorTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
 	{
 		[Fact]
-		public async Task InitializeOnLoadWithoutStaticCtorAsync()
+		public async Task InitializeOnLoadWithoutStaticCtor()
 		{
 			const string test = @"
 using UnityEngine;
@@ -45,7 +45,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task InitializeOnLoadWithImplicitStaticCtorAsync()
+		public async Task InitializeOnLoadWithImplicitStaticCtor()
 		{
 			const string test = @"
 using UnityEngine;

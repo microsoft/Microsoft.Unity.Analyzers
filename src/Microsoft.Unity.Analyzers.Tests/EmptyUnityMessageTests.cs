@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class EmptyUnityMessageTests : BaseCodeFixVerifierTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
 	{
 		[Fact]
-		public async Task EmptyFixedUpdateAsync()
+		public async Task EmptyFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;
@@ -49,7 +49,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task FixedUpdateWithBodyAsync()
+		public async Task FixedUpdateWithBody()
 		{
 			const string test = @"
 using UnityEngine;
@@ -70,7 +70,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task VirtualFixedUpdateAsync()
+		public async Task VirtualFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;
@@ -86,7 +86,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task VirtualOverrideFixedUpdateAsync()
+		public async Task VirtualOverrideFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;
@@ -109,7 +109,7 @@ class Camera : BaseBehaviour
 		}
 
 		[Fact]
-		public async Task AbstractOverrideFixedUpdateAsync()
+		public async Task AbstractOverrideFixedUpdate()
 		{
 			const string test = @"
 using UnityEngine;

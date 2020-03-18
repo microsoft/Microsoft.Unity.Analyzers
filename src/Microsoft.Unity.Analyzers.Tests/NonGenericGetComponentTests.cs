@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class NonGenericGetComponentTests : BaseCodeFixVerifierTest<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>
 	{
 		[Fact]
-		public async Task GetComponentAsAsync()
+		public async Task GetComponentAs()
 		{
 			const string test = @"
 using UnityEngine;
@@ -50,7 +50,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task CastGetComponentAsync()
+		public async Task CastGetComponent()
 		{
 			const string test = @"
 using UnityEngine;
@@ -89,7 +89,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task GetComponentsInChildrenBooleanAsync()
+		public async Task GetComponentsInChildrenBoolean()
 		{
 			const string test = @"
 using UnityEngine;
@@ -124,7 +124,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task GetComponentTypeVariableAsync()
+		public async Task GetComponentTypeVariable()
 		{
 			const string test = @"
 using UnityEngine;
@@ -145,7 +145,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task GetComponentGenericAsync()
+		public async Task GetComponentGeneric()
 		{
 			const string test = @"
 using UnityEngine;

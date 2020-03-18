@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class MessageSignatureTests : BaseCodeFixVerifierTest<MessageSignatureAnalyzer, MessageSignatureCodeFix>
 	{
 		[Fact]
-		public async Task MessageSignatureAsync()
+		public async Task MessageSignature()
 		{
 			const string test = @"
 using UnityEngine;
@@ -44,7 +44,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task MessageSignatureUnityLogicAsync()
+		public async Task MessageSignatureUnityLogic()
 		{
 			// Unity allows to specify less parameters if you don't need them
 			const string test = @"
@@ -62,7 +62,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task MessageSignatureUnityLogicBadTypeAsync()
+		public async Task MessageSignatureUnityLogicBadType()
 		{
 			// But we enforce proper type
 			const string test = @"
@@ -96,7 +96,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task MessageSignatureUnityLogicExtraParametersAsync()
+		public async Task MessageSignatureUnityLogicExtraParameters()
 		{
 			// And we prevent extra parameters
 			const string test = @"
@@ -130,7 +130,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task MessageSignatureWithInheritanceAsync()
+		public async Task MessageSignatureWithInheritance()
 		{
 			// two declarations for OnDestroy (one in EditorWindow and one in ScriptableObject) 
 			const string test = @"

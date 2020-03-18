@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnusedMethodSuppressorTests : BaseSuppressorVerifierTest<UnusedMethodSuppressor>
 	{
 		[Fact]
-		public async Task UnusedMethodSuppressedAsync()
+		public async Task UnusedMethodSuppressed()
 		{
 			const string test = @"
 using UnityEngine;

@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class CreateInstanceTests : BaseCodeFixVerifierTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 	{
 		[Fact]
-		public async Task CreateMonoBehaviourInstanceAsync()
+		public async Task CreateMonoBehaviourInstance()
 		{
 			const string test = @"
 using UnityEngine;
@@ -48,7 +48,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task CreateMonoBehaviourInstanceFromNonComponentAsync()
+		public async Task CreateMonoBehaviourInstanceFromNonComponent()
 		{
 			const string test = @"
 using UnityEngine;
@@ -67,7 +67,7 @@ class Program
 		}
 
 		[Fact]
-		public async Task CreateScriptableObjectInstanceAsync()
+		public async Task CreateScriptableObjectInstance()
 		{
 			const string test = @"
 using UnityEngine;

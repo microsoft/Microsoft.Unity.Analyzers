@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class ImproperSerializeFieldTests : BaseCodeFixVerifierTest<ImproperSerializeFieldAnalyzer, ImproperSerializeFieldCodeFix>
 	{
 		[Fact]
-		public async Task ValidSerializeFieldTestAsync()
+		public async Task ValidSerializeFieldTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -27,7 +27,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task RedundantSerializeFieldTestAsync()
+		public async Task RedundantSerializeFieldTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -58,7 +58,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task InvalidSerializeFieldTestAsync()
+		public async Task InvalidSerializeFieldTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -89,7 +89,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ValidSerializeMultipleFieldsTestAsync()
+		public async Task ValidSerializeMultipleFieldsTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -110,7 +110,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task RedundantSerializeMultipleFieldsTestAsync()
+		public async Task RedundantSerializeMultipleFieldsTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -141,7 +141,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ValidSerializeFieldMultipleAttributesTestAsync()
+		public async Task ValidSerializeFieldMultipleAttributesTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -159,7 +159,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task RedundantSerializeFieldMultipleAttributeTestAsync()
+		public async Task RedundantSerializeFieldMultipleAttributeTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -195,7 +195,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ValidSerializeFieldMultipleAttributeInlineTestAsync()
+		public async Task ValidSerializeFieldMultipleAttributeInlineTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -212,7 +212,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task RedundantSerializeFieldMultipleAttributeInlineTestAsync()
+		public async Task RedundantSerializeFieldMultipleAttributeInlineTest()
 		{
 			const string test = @"
 using UnityEngine;

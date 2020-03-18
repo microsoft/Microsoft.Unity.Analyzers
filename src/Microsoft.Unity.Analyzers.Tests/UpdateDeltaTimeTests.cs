@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UpdateWithoutDeltaTimeTests : BaseCodeFixVerifierTest<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
 	{
 		[Fact]
-		public async Task FixedUpdateWithDeltaTimeAsync()
+		public async Task FixedUpdateWithDeltaTime()
 		{
 			const string test = @"
 using UnityEngine;
@@ -51,7 +51,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task UpdateWithFixedDeltaTimeAsync()
+		public async Task UpdateWithFixedDeltaTime()
 		{
 			const string test = @"
 using UnityEngine;

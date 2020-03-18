@@ -12,7 +12,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class ContextMenuSuppressorTests : BaseSuppressorVerifierTest<ContextMenuSuppressor>
 	{
 		[Fact]
-		public async Task ContextMenuSuppressedAsync()
+		public async Task ContextMenuSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -32,7 +32,7 @@ class Menu : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ContextMenuItemReadonlySuppressedAsync()
+		public async Task ContextMenuItemReadonlySuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -56,7 +56,7 @@ class Menu : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ContextMenuItemUnusedSuppressedAsync()
+		public async Task ContextMenuItemUnusedSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -74,7 +74,7 @@ class Menu : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ContextMenuItemReferenceUnusedSuppressedAsync()
+		public async Task ContextMenuItemReferenceUnusedSuppressed()
 		{
 			const string test = @"
 using UnityEngine;

@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnityObjectNullHandlingTests : BaseCodeFixVerifierTest<UnityObjectNullHandlingAnalyzer, UnityObjectNullHandlingCodeFix>
 	{
 		[Fact]
-		public async Task FixIdentifierCoalescingAsync()
+		public async Task FixIdentifierCoalescing()
 		{
 			const string test = @"
 using UnityEngine;
@@ -51,7 +51,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task FixMemberCoalescingAsync()
+		public async Task FixMemberCoalescing()
 		{
 			const string test = @"
 using UnityEngine;
@@ -92,7 +92,7 @@ class Camera : MonoBehaviour
 
 
 		[Fact]
-		public async Task CantFixSideEffectAsync()
+		public async Task CantFixSideEffect()
 		{
 			const string test = @"
 using UnityEngine;
@@ -132,7 +132,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task DetectNullPropagationAsync()
+		public async Task DetectNullPropagation()
 		{
 			const string test = @"
 using UnityEngine;

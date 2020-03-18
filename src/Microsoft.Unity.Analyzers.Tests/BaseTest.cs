@@ -8,6 +8,11 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
+[module: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods",
+	Justification = "Tests",
+	Scope = "namespaceanddescendants",
+	Target = "Microsoft.Unity.Analyzers.Tests")]
+
 namespace Microsoft.Unity.Analyzers.Tests
 {
 	public abstract class BaseDiagnosticVerifierTest<TAnalyzer> : DiagnosticVerifier
@@ -22,7 +27,7 @@ interface IFailure
 ";
 
 		[Fact]
-		public async Task DoNotFailWithInterfaceMembersAsync()
+		public async Task DoNotFailWithInterfaceMembers()
 		{
 			await VerifyCSharpDiagnosticAsync(InterfaceTest);
 		}
@@ -37,7 +42,7 @@ interface IFailure
 		where TAnalyzer : DiagnosticSuppressor, new() 
 	{
 		[Fact]
-		public async Task DoNotFailWithInterfaceMembersAsync()
+		public async Task DoNotFailWithInterfaceMembers()
 		{
 			await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 		}
@@ -53,7 +58,7 @@ interface IFailure
 		where TCodeFix : CodeFixProvider, new() 
 	{
 		[Fact]
-		public async Task DoNotFailWithInterfaceMembersAsync()
+		public async Task DoNotFailWithInterfaceMembers()
 		{
 			await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 		}

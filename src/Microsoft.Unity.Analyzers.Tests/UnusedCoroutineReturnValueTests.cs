@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnusedCoroutineReturnValueTests : BaseCodeFixVerifierTest<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>
 	{
 		[Fact]
-		public async Task UnusedCoroutineReturnValueTestAsync()
+		public async Task UnusedCoroutineReturnValueTest()
 		{
 			const string test = @"
 using System.Collections;

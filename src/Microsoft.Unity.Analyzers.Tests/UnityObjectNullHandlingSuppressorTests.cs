@@ -12,7 +12,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnityObjectNullHandlingSuppressorTests : BaseSuppressorVerifierTest<UnityObjectNullHandlingSuppressor>
 	{
 		[Fact]
-		public async Task NullCoalescingSuppressedAsync()
+		public async Task NullCoalescingSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -36,7 +36,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task NullPropagationSuppressedAsync()
+		public async Task NullPropagationSuppressed()
 		{
 			const string test = @"
 using UnityEngine;

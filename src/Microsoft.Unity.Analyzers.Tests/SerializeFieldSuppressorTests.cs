@@ -12,7 +12,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class SerializeFieldSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
 	{
 		[Fact]
-		public async Task NeverAssignedSuppressedAsync()
+		public async Task NeverAssignedSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -36,7 +36,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ReadonlySuppressedAsync()
+		public async Task ReadonlySuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -61,7 +61,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task UnusedSuppressedAsync()
+		public async Task UnusedSuppressed()
 		{
 			const string test = @"
 using UnityEngine;

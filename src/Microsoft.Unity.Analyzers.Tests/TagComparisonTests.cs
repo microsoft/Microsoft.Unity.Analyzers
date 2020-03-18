@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class TagComparisonTests : BaseCodeFixVerifierTest<TagComparisonAnalyzer, TagComparisonCodeFix>
 	{
 		[Fact]
-		public async Task TagAsIdentifierAsync()
+		public async Task TagAsIdentifier()
 		{
 			const string test = @"
 using UnityEngine;
@@ -45,7 +45,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagAsIdentifierInvokeAsync()
+		public async Task TagAsIdentifierInvoke()
 		{
 			const string test = @"
 using UnityEngine;
@@ -79,7 +79,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagAsIdentifierNeqInvokeAsync()
+		public async Task TagAsIdentifierNeqInvoke()
 		{
 			const string test = @"
 using UnityEngine;
@@ -113,7 +113,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagAsIdentifierThisPrefixAsync()
+		public async Task TagAsIdentifierThisPrefix()
 		{
 			const string test = @"
 using UnityEngine;
@@ -147,7 +147,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagAsIdentifierNeqNullRhsAsyncAsync()
+		public async Task TagAsIdentifierNeqNullRhs()
 		{
 			const string test = @"
 using UnityEngine;
@@ -181,7 +181,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagPropertyAsync()
+		public async Task TagProperty()
 		{
 			const string test = @"
 using UnityEngine;
@@ -215,7 +215,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagPropertyForGameObjectAsync()
+		public async Task TagPropertyForGameObject()
 		{
 			const string test = @"
 using UnityEngine;
@@ -249,7 +249,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagAsIdentifierRhsAsync()
+		public async Task TagAsIdentifierRhs()
 		{
 			const string test = @"
 using UnityEngine;
@@ -283,7 +283,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagAsIdentifierRhsInvokeAsync()
+		public async Task TagAsIdentifierRhsInvoke()
 		{
 			const string test = @"
 using UnityEngine;
@@ -317,7 +317,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagPropertyRhsAsync()
+		public async Task TagPropertyRhs()
 		{
 			const string test = @"
 using UnityEngine;
@@ -351,7 +351,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task TagPropertyNeqNullRhsAsync()
+		public async Task TagPropertyNeqNullRhs()
 		{
 			const string test = @"
 using UnityEngine;
@@ -385,7 +385,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ObjectEqualsExplicitAsync()
+		public async Task ObjectEqualsExplicit()
 		{
 			const string test = @"
 using UnityEngine;
@@ -421,7 +421,7 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task ObjectEqualsImplicitAsync()
+		public async Task ObjectEqualsImplicit()
 		{
 			const string test = @"
 using UnityEngine;
