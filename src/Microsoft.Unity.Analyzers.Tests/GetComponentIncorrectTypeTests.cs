@@ -89,8 +89,7 @@ class Camera : MonoBehaviour
     }
 }
 ";
-await 
-			VerifyCSharpDiagnosticAsync(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}
 }
