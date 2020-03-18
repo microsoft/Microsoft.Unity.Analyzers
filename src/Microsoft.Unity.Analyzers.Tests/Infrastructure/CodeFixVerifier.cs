@@ -57,7 +57,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				var newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
 
 				//check if applying the code fix introduced any new compiler diagnostics
-				if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any(d => d.Id != "CS1701"))
+				if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
 				{
 					// Format and get the compiler diagnostics again so that the locations make sense in the output
 					document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
@@ -109,9 +109,13 @@ namespace Microsoft.Unity.Analyzers.Tests
 			}
 		}
 
-		private static ImmutableArray<Diagnostic> GetCompilerDiagnostics(Document document)
+		private static IEnumerable<Diagnostic> GetCompilerDiagnostics(Document document)
 		{
-			return document.GetSemanticModelAsync().Result.GetDiagnostics();
+			return document
+				.GetSemanticModelAsync()
+				.Result
+				.GetDiagnostics()
+				.Where(d => !NoWarn.Contains(d.Id));
 		}
 
 		private static string GetStringFromDocument(Document document)
