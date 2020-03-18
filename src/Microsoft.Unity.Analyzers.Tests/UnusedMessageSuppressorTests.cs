@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using Microsoft.CodeAnalysis.CSharp;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnusedMessageSuppressorTests : BaseSuppressorVerifierTest<UnusedMessageSuppressor>
 	{
 		[Fact]
-		public void UnusedMethodSuppressed()
+		public async Task UnusedMethodSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -27,11 +27,11 @@ public class TestScript : MonoBehaviour
 			var suppressor = ExpectSuppressor(UnusedMessageSuppressor.MethodRule)
 				.WithLocation(6, 18);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 		[Fact]
-		public void UnusedParameterSuppressed()
+		public async Task UnusedParameterSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -48,7 +48,7 @@ public class TestScript : MonoBehaviour
 			var suppressor = ExpectSuppressor(UnusedMessageSuppressor.ParameterRule)
 				.WithLocation(6, 35);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 	}
 }

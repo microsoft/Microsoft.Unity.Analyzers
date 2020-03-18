@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UpdateWithoutDeltaTimeTests : BaseCodeFixVerifierTest<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
 	{
 		[Fact]
-		public void FixedUpdateWithDeltaTime()
+		public async Task FixedUpdateWithDeltaTime()
 		{
 			const string test = @"
 using UnityEngine;
@@ -25,15 +26,15 @@ class Camera : MonoBehaviour
 ";
 			// see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
 			// this rule is now disabled by default
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 
 			// but can be re-enabled using ruleset or editorconfig:
 			// dotnet_diagnostic.UNT0005.severity = suggestion
-			
+
 			/*var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
 				.WithLocation(8, 25);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -46,11 +47,11 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);*/
+			await VerifyCSharpFixAsync(test, fixedTest);*/
 		}
 
 		[Fact]
-		public void UpdateWithFixedDeltaTime()
+		public async Task UpdateWithFixedDeltaTime()
 		{
 			const string test = @"
 using UnityEngine;
@@ -67,7 +68,7 @@ class Camera : MonoBehaviour
 			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.UpdateId)
 				.WithLocation(8, 25);
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -80,7 +81,7 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 	}
 }

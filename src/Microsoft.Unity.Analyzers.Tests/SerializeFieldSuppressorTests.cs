@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class SerializeFieldSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
 	{
 		[Fact]
-		public void NeverAssignedSuppressed()
+		public async Task NeverAssignedSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -31,11 +32,11 @@ class Camera : MonoBehaviour
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
 				.WithLocation(7, 20);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 		[Fact]
-		public void ReadonlySuppressed()
+		public async Task ReadonlySuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -56,11 +57,11 @@ class Camera : MonoBehaviour
 				.WithSuppressedDiagnosticMock(SyntaxKind.FieldDeclaration) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(7, 20);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 		[Fact]
-		public void UnusedSuppressed()
+		public async Task UnusedSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -75,7 +76,7 @@ class Camera : MonoBehaviour
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
 				.WithLocation(7, 20);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 	}
 }

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnityObjectNullHandlingSuppressorTests : BaseSuppressorVerifierTest<UnityObjectNullHandlingSuppressor>
 	{
 		[Fact]
-		public void NullCoalescingSuppressed()
+		public async Task NullCoalescingSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -31,11 +32,11 @@ class Camera : MonoBehaviour
 				.WithSuppressedDiagnosticMock(SyntaxKind.ConditionalExpression) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(11, 16);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 		[Fact]
-		public void NullPropagationSuppressed()
+		public async Task NullPropagationSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -52,7 +53,7 @@ class Camera : MonoBehaviour
 				.WithSuppressedDiagnosticMock(SyntaxKind.ConditionalExpression) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(8, 16);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
 	}

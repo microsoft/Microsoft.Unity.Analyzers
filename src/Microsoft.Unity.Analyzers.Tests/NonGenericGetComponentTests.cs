@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class NonGenericGetComponentTests : BaseCodeFixVerifierTest<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>
 	{
 		[Fact]
-		public void GetComponentAs()
+		public async Task GetComponentAs()
 		{
 			const string test = @"
 using UnityEngine;
@@ -30,7 +31,7 @@ class Camera : MonoBehaviour
 				.WithLocation(10, 14)
 				.WithArguments("GetComponent");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -45,11 +46,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void CastGetComponent()
+		public async Task CastGetComponent()
 		{
 			const string test = @"
 using UnityEngine;
@@ -69,7 +70,7 @@ class Camera : MonoBehaviour
 				.WithLocation(10, 25)
 				.WithArguments("GetComponent");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -84,11 +85,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void GetComponentsInChildrenBoolean()
+		public async Task GetComponentsInChildrenBoolean()
 		{
 			const string test = @"
 using UnityEngine;
@@ -106,7 +107,7 @@ class Camera : MonoBehaviour
 				.WithLocation(8, 9)
 				.WithArguments("GetComponentsInChildren");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -119,11 +120,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void GetComponentTypeVariable()
+		public async Task GetComponentTypeVariable()
 		{
 			const string test = @"
 using UnityEngine;
@@ -140,11 +141,11 @@ class Camera : MonoBehaviour
 
 			// We're assuming that using GetComponent with anything else than a typeof
 			// argument is from a computation that makes it impossible to use the generic form
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void GetComponentGeneric()
+		public async Task GetComponentGeneric()
 		{
 			const string test = @"
 using UnityEngine;
@@ -159,7 +160,7 @@ class Camera : MonoBehaviour
 ";
 
 			// Verify we're not misreporting an already generic usage
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}
 }

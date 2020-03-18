@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class InitializeOnLoadStaticCtorTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
 	{
 		[Fact]
-		public void InitializeOnLoadWithoutStaticCtor()
+		public async Task InitializeOnLoadWithoutStaticCtor()
 		{
 			const string test = @"
 using UnityEngine;
@@ -26,7 +27,7 @@ class Camera : MonoBehaviour
 				.WithLocation(6, 7)
 				.WithArguments("Camera");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -40,11 +41,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public void InitializeOnLoadWithImplicitStaticCtor()
+		public async Task InitializeOnLoadWithImplicitStaticCtor()
 		{
 			const string test = @"
 using UnityEngine;
@@ -61,7 +62,7 @@ public sealed class Camera : MonoBehaviour
 				.WithLocation(6, 21)
 				.WithArguments("Camera");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
@@ -77,7 +78,7 @@ public sealed class Camera : MonoBehaviour
     public static readonly int willGenerateImplicitStaticCtor = 666;
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 	}

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class GetComponentIncorrectTypeTests : BaseDiagnosticVerifierTest<GetComponentIncorrectTypeAnalyzer>
 	{
 		[Fact]
-		public void GetComponentInterfaceTypeTest()
+		public async Task GetComponentInterfaceTypeTest()
 		{
 			const string test = @"
 using System;
@@ -27,11 +28,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void GetComponentCorrectTypeTest()
+		public async Task GetComponentCorrectTypeTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -47,11 +48,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 
 		[Fact]
-		public void GetComponentIncorrectTypeTest()
+		public async Task GetComponentIncorrectTypeTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -71,11 +72,11 @@ class Camera : MonoBehaviour
 				.WithLocation(10, 13)
 				.WithArguments("Int32");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 
 		[Fact]
-		public void GetComponentLegacyTest()
+		public async Task GetComponentLegacyTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -88,8 +89,7 @@ class Camera : MonoBehaviour
     }
 }
 ";
-
-			VerifyCSharpDiagnostic(test);
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}
 }

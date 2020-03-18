@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -19,9 +20,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	public abstract class DiagnosticVerifier
 	{
-		private static string DefaultFilePathPrefix = "Test";
-		private static string CSharpDefaultFileExt = "cs";
-		private static string TestProjectName = "TestProject";
+		private const string DefaultFilePathPrefix = "Test";
+		private const string CSharpDefaultFileExt = "cs";
+		private const string TestProjectName = "TestProject";
 
 		protected static HashSet<string> NoWarn = new HashSet<string>
 		{
@@ -71,19 +72,19 @@ namespace Microsoft.Unity.Analyzers.Tests
 			}
 		}
 
-		protected void VerifyCSharpDiagnostic(string source, params DiagnosticResult[] expected)
+		protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
 		{
-			VerifyDiagnostics(new[] { source }, GetCSharpDiagnosticAnalyzer(), expected);
+			return VerifyDiagnosticsAsync(new[] { source }, GetCSharpDiagnosticAnalyzer(), expected);
 		}
 
-		protected void VerifyCSharpDiagnostic(string[] sources, params DiagnosticResult[] expected)
+		protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
 		{
-			VerifyDiagnostics(sources, GetCSharpDiagnosticAnalyzer(), expected);
+			return VerifyDiagnosticsAsync(sources, GetCSharpDiagnosticAnalyzer(), expected);
 		}
 
-		private void VerifyDiagnostics(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+		private async Task VerifyDiagnosticsAsync(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			var diagnostics = GetSortedDiagnostics(sources, analyzer, expected);
+			var diagnostics = await GetSortedDiagnosticsAsync(sources, analyzer, expected);
 			VerifyDiagnosticResults(diagnostics, analyzer, expected);
 		}
 
@@ -206,12 +207,12 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return builder.ToString();
 		}
 
-		private Diagnostic[] GetSortedDiagnostics(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+		private Task<Diagnostic[]> GetSortedDiagnosticsAsync(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			return GetSortedDiagnosticsFromDocuments(analyzer, GetDocuments(sources), expected);
+			return GetSortedDiagnosticsFromDocumentsAsync(analyzer, GetDocuments(sources), expected);
 		}
 
-		protected Diagnostic[] GetSortedDiagnosticsFromDocuments(DiagnosticAnalyzer analyzer, Document[] documents, params DiagnosticResult[] expected)
+		protected async Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents, params DiagnosticResult[] expected)
 		{
 			var projects = new HashSet<Project>();
 			foreach (var document in documents)
@@ -231,16 +232,14 @@ namespace Microsoft.Unity.Analyzers.Tests
 					.AddRange(GetRelatedAnalyzers(analyzer))
 					.AddRange(mocks);
 
-				var compilation = project
-					.GetCompilationAsync().Result
-					.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true));
-
-				var analyzerOptions = new CompilationWithAnalyzersOptions(default(AnalyzerOptions), null, true, true, true);
+				var compilation = await project.GetCompilationAsync();
+				var analyzerOptions = new CompilationWithAnalyzersOptions(default, null, true, true, true);
 
 				var compilationWithAnalyzers = compilation
+					.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true))
 					.WithAnalyzers(analyzers, analyzerOptions);
 
-				var allDiagnostics = compilationWithAnalyzers.GetAllDiagnosticsAsync().Result;
+				var allDiagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync();
 				var errors = allDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
 				foreach (var error in errors)
 				{
@@ -261,7 +260,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 					{
 						foreach (var document in documents)
 						{
-							var tree = document.GetSyntaxTreeAsync().Result;
+							var tree = await document.GetSyntaxTreeAsync();
 							if (tree == diag.Location.SourceTree)
 							{
 								diagnostics.Add(diag);

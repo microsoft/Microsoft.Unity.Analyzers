@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -10,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class UnusedCoroutineReturnValueTests : BaseCodeFixVerifierTest<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>
 	{
 		[Fact]
-		public void UnusedCoroutineReturnValueTest()
+		public async Task UnusedCoroutineReturnValueTest()
 		{
 			const string test = @"
 using System.Collections;
@@ -37,7 +38,7 @@ public class UnusedCoroutineScript : MonoBehaviour
 				.WithLocation(9, 9)
 				.WithArguments("UnusedCoroutine");
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
 using System.Collections;
@@ -59,7 +60,7 @@ public class UnusedCoroutineScript : MonoBehaviour
     }
 }
 ";
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 	}
 }
