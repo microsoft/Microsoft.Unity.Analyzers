@@ -10,7 +10,6 @@
   <PropertyGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">  
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Configurations>Debug;Release;DebugRelease</Configurations>
-    <LangVersion>7</LangVersion>
   </PropertyGroup>
 
 </Project>
