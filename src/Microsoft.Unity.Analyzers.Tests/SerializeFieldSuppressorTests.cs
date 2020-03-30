@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
