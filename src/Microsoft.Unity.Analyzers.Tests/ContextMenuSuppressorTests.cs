@@ -63,7 +63,7 @@ using UnityEngine;
 class Menu : MonoBehaviour
 {
     [ContextMenuItem(""Foo"", ""Bar"")]
-    readonly string contextMenuString = """"; // we only use readonly here for testing purposes, suppressor are tested unitarily (so ContextMenuSuppressor.ContextMenuItemReadonlyRule [IDE0044] cannot be suppressed here)
+    readonly string contextMenuString = """"; // we only use readonly here for testing purposes, suppressor is tested unitarily (so ContextMenuSuppressor.ContextMenuItemReadonlyRule [IDE0044] cannot be suppressed here)
 }";
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
