@@ -49,7 +49,6 @@ class Menu : MonoBehaviour
 }";
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemReadonlyRule)
-				.WithSuppressedDiagnosticMock(SyntaxKind.FieldDeclaration) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(7, 20);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -64,11 +63,11 @@ using UnityEngine;
 class Menu : MonoBehaviour
 {
     [ContextMenuItem(""Foo"", ""Bar"")]
-    private string contextMenuString = """";
+    readonly string contextMenuString = """"; // we only use readonly here for testing purposes, suppressor are tested unitarily
 }";
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
-				.WithLocation(7, 20);
+				.WithLocation(7, 21);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}

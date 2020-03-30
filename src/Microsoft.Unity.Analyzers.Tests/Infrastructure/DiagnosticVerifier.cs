@@ -223,14 +223,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 			var diagnostics = new List<Diagnostic>();
 			foreach (var project in projects)
 			{
-				var analyzers = ImmutableArray.Create(analyzer);
-				var mocks = expected
-					.Select(e => e.DiagnosticAnalyzerMock)
-					.Where(m => m != null);
-
-				analyzers = analyzers
-					.AddRange(GetRelatedAnalyzers(analyzer))
-					.AddRange(mocks);
+				var analyzers = ImmutableArray.Create(analyzer)
+					.AddRange(GetRelatedAnalyzers(analyzer));
 
 				var compilation = await project.GetCompilationAsync();
 				var analyzerOptions = new CompilationWithAnalyzersOptions(default, null, true, true, true);

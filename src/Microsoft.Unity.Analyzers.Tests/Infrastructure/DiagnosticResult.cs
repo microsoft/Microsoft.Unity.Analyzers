@@ -8,7 +8,6 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -49,8 +48,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			string id,
 			LocalizableString messageFormat,
 			object[] messageArguments,
-			string suppressedId,
-			DiagnosticAnalyzerMock diagnosticAnalyzerMock)
+			string suppressedId)
 		{
 			_spans = spans;
 			_suppressMessage = suppressMessage;
@@ -60,7 +58,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 			MessageFormat = messageFormat;
 			MessageArguments = messageArguments;
 			SuppressedId = suppressedId;
-			DiagnosticAnalyzerMock = diagnosticAnalyzerMock;
 		}
 
 		public ImmutableArray<DiagnosticLocation> Spans => _spans.IsDefault ? ImmutableArray<DiagnosticLocation>.Empty : _spans;
@@ -69,7 +66,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public string Id { get; }
 		public string SuppressedId { get; }
-		public DiagnosticAnalyzerMock DiagnosticAnalyzerMock { get; }
 
 		public string Message
 		{
@@ -107,8 +103,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		public DiagnosticResult WithArguments(params object[] arguments)
@@ -121,8 +116,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				arguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		public DiagnosticResult WithMessage(string message)
@@ -135,8 +129,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		public DiagnosticResult WithMessageFormat(LocalizableString messageFormat)
@@ -149,8 +142,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				messageFormat,
 				MessageArguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		public DiagnosticResult WithNoLocation()
@@ -163,8 +155,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		public DiagnosticResult WithSuppressedId(string suppressedId)
@@ -177,36 +168,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				suppressedId,
-				DiagnosticAnalyzerMock);
-		}
-
-		public DiagnosticResult WithSuppressedDiagnosticMock(string id, SyntaxKind syntaxKind, Predicate<SyntaxNode> filter = null)
-		{
-			return new DiagnosticResult(
-				_spans,
-				_suppressMessage,
-				_message,
-				Severity,
-				Id,
-				MessageFormat,
-				MessageArguments,
-				SuppressedId,
-				new DiagnosticAnalyzerMock(id, syntaxKind, filter));
-		}
-
-		public DiagnosticResult WithSuppressedDiagnosticMock(SyntaxKind syntaxKind, Predicate<SyntaxNode> filter = null)
-		{
-			return new DiagnosticResult(
-				_spans,
-				_suppressMessage,
-				_message,
-				Severity,
-				Id,
-				MessageFormat,
-				MessageArguments,
-				SuppressedId,
-				new DiagnosticAnalyzerMock(SuppressedId ?? throw new ArgumentNullException(), syntaxKind, filter));
+				suppressedId);
 		}
 
 		public DiagnosticResult WithLocation(int line, int column)
@@ -253,8 +215,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		public DiagnosticResult WithLineOffset(int offset)
@@ -279,8 +240,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		private DiagnosticResult AppendSpan(FileLinePositionSpan span, DiagnosticLocationOptions options)
@@ -293,8 +253,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId,
-				DiagnosticAnalyzerMock);
+				SuppressedId);
 		}
 
 		public override string ToString()

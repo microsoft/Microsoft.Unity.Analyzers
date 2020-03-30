@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
@@ -29,7 +30,6 @@ class Camera : MonoBehaviour
 }";
 
 			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.NullCoalescingRule)
-				.WithSuppressedDiagnosticMock(SyntaxKind.ConditionalExpression) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(11, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -43,18 +43,16 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-    public Transform NP()
+    public void NP(Transform o)
     {
-        return transform != null ? transform : null;
+        var v = o == null ? null : o.ToString();
     }
 }";
 
 			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.NullPropagationRule)
-				.WithSuppressedDiagnosticMock(SyntaxKind.ConditionalExpression) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
-				.WithLocation(8, 16);
+				.WithLocation(8, 17);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
-
 	}
 }

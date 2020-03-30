@@ -39,9 +39,10 @@ namespace Microsoft.Unity.Analyzers.Tests
 			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CodeStyle.dll"));
 			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
 
-			return analyzers.Where(a => a.SupportedDiagnostics
-				.Any(s => suppressor.SupportedSuppressions
-					.Any(sp => sp.SuppressedDiagnosticId == s.Id)));
+			return analyzers
+				.Where(a => a.SupportedDiagnostics
+					.Any(s => suppressor.SupportedSuppressions
+						.Any(sp => sp.SuppressedDiagnosticId == s.Id)));
 		}
 
 		private static bool IsSuppressedBy(Diagnostic diagnostic, DiagnosticResult suppressor)
