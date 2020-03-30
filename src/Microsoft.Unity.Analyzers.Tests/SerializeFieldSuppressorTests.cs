@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -20,7 +19,7 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    private string someField;
+    readonly string someField; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
 
     private void RemoveIDE0051() {
         var _ = someField;
@@ -30,7 +29,7 @@ class Camera : MonoBehaviour
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
-				.WithLocation(7, 20);
+				.WithLocation(7, 21);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
@@ -54,7 +53,6 @@ class Camera : MonoBehaviour
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
-				.WithSuppressedDiagnosticMock(SyntaxKind.FieldDeclaration) // Use a mock while IDE analyzers have strong dependencies on Visual Studio components
 				.WithLocation(7, 20);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -69,12 +67,12 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    private string someField = ""default"";
+    readonly string someField = ""default""; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
 }
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
-				.WithLocation(7, 20);
+				.WithLocation(7, 21);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
