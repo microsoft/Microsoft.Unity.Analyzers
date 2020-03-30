@@ -68,7 +68,7 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    readonly string someField = ""default""; // we only use readonly here for testing purposes, suppressor are tested unitarily
+    private  string someField = ""default""; // we only use readonly here for testing purposes, suppressor are tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
 }
 ";
 
