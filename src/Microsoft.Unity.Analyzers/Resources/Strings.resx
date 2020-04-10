@@ -354,4 +354,14 @@
   <data name="InitializeOnLoadMethodDiagnosticTitle" xml:space="preserve">
     <value>Use a static and parameterless method</value>
   </data>
+  <data name="SetPixelsAuditDiagnosticDescription" xml:space="preserve">
+    <value>Compared to SetPixels, SetPixels32 is much faster and uses less memory</value>
+  </data>
+  <data name="SetPixelsAuditDiagnosticMessageFormat" xml:space="preserve">
+    <value>{0} is slower than SetPixels32</value>
+    <comment>{0} is a method name</comment>
+  </data>
+  <data name="SetPixelsAuditDiagnosticTitle" xml:space="preserve">
+    <value>SetPixels invocation is slow</value>
+  </data>
 </root>

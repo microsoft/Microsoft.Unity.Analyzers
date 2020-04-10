@@ -520,6 +520,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Compared to SetPixels, SetPixels32 is much faster and uses less memory.
+        /// </summary>
+        internal static string SetPixelsAuditDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("SetPixelsAuditDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is slower than SetPixels32.
+        /// </summary>
+        internal static string SetPixelsAuditDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("SetPixelsAuditDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetPixels invocation is slow.
+        /// </summary>
+        internal static string SetPixelsAuditDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("SetPixelsAuditDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use CompareTag method.
         /// </summary>
         internal static string TagComparisonCodeFixTitle {
