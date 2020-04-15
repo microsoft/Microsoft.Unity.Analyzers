@@ -24,7 +24,6 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedSerializeFieldSuppressorJustification);
 
-		// Note that this one, is only used for full builds in VS
 		internal static readonly SuppressionDescriptor NeverAssignedRule = new SuppressionDescriptor(
 			id: "USP0007",
 			suppressedDiagnosticId: "CS0649",
