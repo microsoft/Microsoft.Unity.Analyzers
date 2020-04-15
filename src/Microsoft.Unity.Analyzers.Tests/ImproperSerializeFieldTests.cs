@@ -124,7 +124,7 @@ class Camera : MonoBehaviour
 
 			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
 				.WithLocation(6, 5)
-				.WithArguments("publicField1, publicField2, publicField3");
+				.WithArguments("publicField1");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
