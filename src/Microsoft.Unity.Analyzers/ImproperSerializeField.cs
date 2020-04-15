@@ -37,31 +37,31 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeMemberDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			var symbols = new List<ISymbol>();
 			var model = context.SemanticModel;
+			ISymbol symbol;
 
 			switch (context.Node)
 			{
 				case PropertyDeclarationSyntax pdec:
-					symbols.Add(model.GetDeclaredSymbol(pdec));
+					symbol = model.GetDeclaredSymbol(pdec);
 					break;
 				case FieldDeclarationSyntax fdec:
-					symbols.AddRange(fdec.Declaration.Variables.Select(v => model.GetDeclaredSymbol(v)));
+					if (fdec?.Declaration.Variables.Count == 0)
+						return;
+
+					// attributes are applied to all fields declaration symbols
+					// just get the first one
+					symbol = model.GetDeclaredSymbol(fdec.Declaration.Variables[0]);
 					break;
 				default:
 					// we only support field/property analysis
 					return;
 			}
 
-			var reportableSymbols = symbols
-				.Where(IsReportable)
-				.ToList();
-
-			if (!reportableSymbols.Any())
+			if (!IsReportable(symbol))
 				return;
 
-			var name = string.Join(", ", reportableSymbols.Select(s => s.Name));
-			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), name));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), symbol.Name));
 		}
 
 		private static bool IsReportable(ISymbol symbol)
@@ -69,20 +69,19 @@ namespace Microsoft.Unity.Analyzers
 			if (symbol == null)
 				return false;
 
-			var containingType = symbol.ContainingType;
-			if (!containingType.Extends(typeof(UnityEngine.Object)))
+			if (!symbol.ContainingType.Extends(typeof(UnityEngine.Object)))
 				return false;
 
-			if (!symbol
-				.GetAttributes()
-				.Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
+			if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
 				return false;
 
 			switch (symbol)
 			{
 				case IFieldSymbol _:
+					// Only invalid on public fields
 					return symbol.DeclaredAccessibility == Accessibility.Public;
 				case IPropertySymbol _:
+					// Should never be on a property
 					return true;
 				default:
 					return false;
