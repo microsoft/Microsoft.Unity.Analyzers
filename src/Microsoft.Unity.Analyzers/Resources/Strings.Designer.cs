@@ -277,7 +277,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SerializeField attribute is invalid or redundant for property or field(s): {0}.
+        ///   Looks up a localized string similar to SerializeField attribute is invalid or redundant for property or field: {0}.
         /// </summary>
         internal static string ImproperSerializeFieldDiagnosticMessageFormat {
             get {
