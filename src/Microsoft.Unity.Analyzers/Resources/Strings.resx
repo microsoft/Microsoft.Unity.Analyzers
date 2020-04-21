@@ -323,4 +323,7 @@
   <data name="GetComponentIncorrectTypeDiagnosticTitle" xml:space="preserve">
     <value>Invalid type for call to GetComponent</value>
   </data>
+  <data name="InitializeOnLoadMethodSuppressorJustification" xml:space="preserve">
+    <value>Don't flag private methods decorated with InitializeOnLoadMethodAttribute as unused.</value>
+  </data>
 </root>

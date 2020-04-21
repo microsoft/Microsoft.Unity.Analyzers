@@ -295,6 +295,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with InitializeOnLoadMethodAttribute as unused..
+        /// </summary>
+        internal static string InitializeOnLoadMethodSuppressorJustification {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadMethodSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add static constructor.
         /// </summary>
         internal static string InitializeOnLoadStaticCtorCodeFixTitle {

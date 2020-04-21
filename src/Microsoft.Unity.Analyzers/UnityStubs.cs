@@ -215,6 +215,10 @@ namespace UnityEngine
 	class ContextMenuItemAttribute : System.Attribute
 	{
 	}
+
+	class RuntimeInitializeOnLoadMethodAttribute : System.Attribute
+	{
+	}
 }
 
 namespace UnityEngine.EventSystems
@@ -321,6 +325,10 @@ namespace UnityEditor
 	}
 
 	class InitializeOnLoadAttribute : System.Attribute
+	{
+	}
+
+	class InitializeOnLoadMethodAttribute : System.Attribute
 	{
 	}
 }
