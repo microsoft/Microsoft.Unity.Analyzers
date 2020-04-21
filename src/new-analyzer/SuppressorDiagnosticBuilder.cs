@@ -77,7 +77,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class $(DiagnosticName)Tests : BaseSuppressorVerifierTest<UnusedMethodSuppressor>
 	{
 		[Fact]
-		public void Test()
+		public async void Test()
 		{
 			const string test = @""
 using UnityEngine;
@@ -89,7 +89,7 @@ class Camera : MonoBehaviour
 
 			var suppressor = ExpectSuppressor($(DiagnosticName).Rule);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 	}
 }

@@ -107,7 +107,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class $(DiagnosticName)Tests : BaseCodeFixVerifierTest<$(DiagnosticName)Analyzer, $(DiagnosticName)CodeFix>
 	{
 		[Fact]
-		public void Test()
+		public async void Test()
 		{
 			const string test = @""
 using UnityEngine;
@@ -119,7 +119,7 @@ class Camera : MonoBehaviour
 
 			var diagnostic = ExpectDiagnostic();
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @""
 using UnityEngine;
@@ -129,7 +129,7 @@ class Camera : MonoBehaviour
 }
 "";
 
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 	}
 }
