@@ -16,7 +16,7 @@ ID | Title | Category
 [UNT0012](UNT0012.md) | Unused coroutine return value | Correctness
 [UNT0013](UNT0013.md) | Invalid or redundant SerializeField attribute | Correctness
 [UNT0014](UNT0014.md) | GetComponent called with non-Component or non-Interface type | Type Safety
-[UNT0015](UNT0015.md) | Incorrect message signature with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute | Type Safety
+[UNT0015](UNT0015.md) | Incorrect method signature with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute | Type Safety
 
 # Diagnostic Suppressors
 
