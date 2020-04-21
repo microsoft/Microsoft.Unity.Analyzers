@@ -70,6 +70,7 @@ namespace Microsoft.Unity.Analyzers
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -77,7 +78,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class $(DiagnosticName)Tests : BaseSuppressorVerifierTest<UnusedMethodSuppressor>
 	{
 		[Fact]
-		public void Test()
+		public async Task Test()
 		{
 			const string test = @""
 using UnityEngine;
@@ -89,7 +90,7 @@ class Camera : MonoBehaviour
 
 			var suppressor = ExpectSuppressor($(DiagnosticName).Rule);
 
-			VerifyCSharpDiagnostic(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 	}
 }

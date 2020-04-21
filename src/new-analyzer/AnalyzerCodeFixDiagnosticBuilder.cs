@@ -100,6 +100,7 @@ namespace Microsoft.Unity.Analyzers
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -107,7 +108,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class $(DiagnosticName)Tests : BaseCodeFixVerifierTest<$(DiagnosticName)Analyzer, $(DiagnosticName)CodeFix>
 	{
 		[Fact]
-		public void Test()
+		public async Task Test()
 		{
 			const string test = @""
 using UnityEngine;
@@ -119,7 +120,7 @@ class Camera : MonoBehaviour
 
 			var diagnostic = ExpectDiagnostic();
 
-			VerifyCSharpDiagnostic(test, diagnostic);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @""
 using UnityEngine;
@@ -129,7 +130,7 @@ class Camera : MonoBehaviour
 }
 "";
 
-			VerifyCSharpFix(test, fixedTest);
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 	}
 }
