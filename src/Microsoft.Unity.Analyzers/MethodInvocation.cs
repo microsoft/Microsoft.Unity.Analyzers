@@ -13,7 +13,6 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.Unity.Analyzers.Resources;
 
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -24,7 +23,7 @@ namespace Microsoft.Unity.Analyzers
 	public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 	{
 		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			id: "UNT0015",
+			id: "UNT0016",
 			title: Strings.MethodInvocationDiagnosticTitle,
 			messageFormat: Strings.MethodInvocationDiagnosticMessageFormat,
 			category: DiagnosticCategory.TypeSafety,
@@ -42,7 +41,8 @@ namespace Microsoft.Unity.Analyzers
 		}
 
 		// TODO we cannot add this to our stubs/KnownMethods so far (else they will be matched as Unity messages)
-		private static readonly HashSet<string> MethodNames = new HashSet<string>(new[] {"Invoke", "InvokeRepeating", "StartCoroutine", "StopCoroutine"});
+		internal static readonly HashSet<string> InvokeMethodNames = new HashSet<string>(new[] {"Invoke", "InvokeRepeating"});
+		internal static readonly HashSet<string> CoroutineMethodNames = new HashSet<string>(new[] {"StartCoroutine", "StopCoroutine"});
 
 		private static bool InvocationMatches(SyntaxNode node)
 		{
@@ -53,7 +53,8 @@ namespace Microsoft.Unity.Analyzers
 				case MemberAccessExpressionSyntax maes:
 					return InvocationMatches(maes.Name);
 				case IdentifierNameSyntax ins:
-					return MethodNames.Contains(ins.Identifier.Text);
+					var text = ins.Identifier.Text;
+					return InvokeMethodNames.Contains(text) || CoroutineMethodNames.Contains(text);
 				default:
 					return false;
 			}
@@ -79,7 +80,7 @@ namespace Microsoft.Unity.Analyzers
 			return true;
 		}
 
-		private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 		{
 			if (!(context.Node is InvocationExpressionSyntax invocation))
 				return;
@@ -88,7 +89,7 @@ namespace Microsoft.Unity.Analyzers
 			if (options == null || options.LanguageVersion < LanguageVersion.CSharp6) // we want nameof support
 				return;
 
-			if (!InvocationMatches(invocation, out _))
+			if (!InvocationMatches(invocation, out string argument))
 				return;
 
 			var model = context.SemanticModel;
@@ -99,13 +100,19 @@ namespace Microsoft.Unity.Analyzers
 			if (!typeSymbol.Extends(typeof(UnityEngine.MonoBehaviour)))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), argument));
 		}
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp)]
-	public class MethodInvocationCodeFix : CodeFixProvider
+	public abstract class BaseMethodInvocationCodeFix : CodeFixProvider
 	{
+		public string Title { get; }
+
+		protected BaseMethodInvocationCodeFix(string title)
+		{
+			Title = title;
+		}
+
 		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MethodInvocationAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
@@ -117,15 +124,25 @@ namespace Microsoft.Unity.Analyzers
 			if (!(root.FindNode(context.Span) is InvocationExpressionSyntax invocation))
 				return;
 
+			if (! await IsRegistrableAsync(context, invocation))
+				return;
+
 			context.RegisterCodeFix(
 				CodeAction.Create(
-					Strings.MethodInvocationCodeFixTitle,
-					ct => UseNameOfAsync(context.Document, invocation, ct),
+					Title,
+					ct => ChangeArgumentAsync(context.Document, invocation, ct),
 					invocation.ToFullString()),
 				context.Diagnostics);
 		}
 
-		private async Task<Document> UseNameOfAsync(Document document, InvocationExpressionSyntax invocation, CancellationToken cancellationToken)
+		protected virtual Task<bool> IsRegistrableAsync(CodeFixContext context, InvocationExpressionSyntax invocation)
+		{
+			return Task.FromResult(true);
+		}
+
+		protected abstract ArgumentSyntax GetArgument(string name);
+
+		private async Task<Document> ChangeArgumentAsync(Document document, InvocationExpressionSyntax invocation, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
@@ -133,6 +150,23 @@ namespace Microsoft.Unity.Analyzers
 			var les = (LiteralExpressionSyntax)invocation.ArgumentList.Arguments[0].Expression;
 			var name = les.Token.ValueText;
 
+			var newInvocation = invocation
+				.WithArgumentList(invocation.ArgumentList.ReplaceNode(invocation.ArgumentList.Arguments[0], GetArgument(name)));
+
+			var newRoot = root.ReplaceNode(invocation, newInvocation);
+			return document.WithSyntaxRoot(newRoot);
+		}
+	}
+
+	[ExportCodeFixProvider(LanguageNames.CSharp)]
+	public class MethodInvocationNameOfCodeFix : BaseMethodInvocationCodeFix
+	{
+		public MethodInvocationNameOfCodeFix() : base(Strings.MethodInvocationNameOfCodeFixTitle)
+		{
+		}
+
+		protected override ArgumentSyntax GetArgument(string name)
+		{
 			var nameof = IdentifierName(
 				Identifier(
 					TriviaList(),
@@ -141,20 +175,38 @@ namespace Microsoft.Unity.Analyzers
 					"nameof",
 					TriviaList()));
 
-			var newArgument = Argument(
+			return Argument(
 				InvocationExpression(nameof)
 					.WithArgumentList(
 						ArgumentList(
 							SingletonSeparatedList(
 								Argument(
 									IdentifierName(name))))));
+		}
+	}
 
-			var newInvocation = invocation
-				.WithAdditionalAnnotations(Formatter.Annotation)
-				.WithArgumentList(invocation.ArgumentList.ReplaceNode(invocation.ArgumentList.Arguments[0], newArgument));
+	[ExportCodeFixProvider(LanguageNames.CSharp)]
+	public class MethodInvocationDirectCallCodeFix : BaseMethodInvocationCodeFix
+	{
+		public MethodInvocationDirectCallCodeFix() : base(Strings.MethodInvocationDirectCallCodeFixTitle)
+		{
+		}
 
-			var newRoot = root.ReplaceNode(invocation, newInvocation);
-			return document.WithSyntaxRoot(newRoot);
+		protected override async Task<bool> IsRegistrableAsync(CodeFixContext context, InvocationExpressionSyntax invocation)
+		{
+			if (invocation.ArgumentList.Arguments.Count != 1)
+				return false;
+
+			var model = await context.Document.GetSemanticModelAsync();
+			if (!(model.GetSymbolInfo(invocation.Expression).Symbol is IMethodSymbol methodSymbol))
+				return false;
+
+			return MethodInvocationAnalyzer.CoroutineMethodNames.Contains(methodSymbol.Name);
+		}
+
+		protected override ArgumentSyntax GetArgument(string name)
+		{
+			return Argument(InvocationExpression(IdentifierName(name)));
 		}
 	}
 }

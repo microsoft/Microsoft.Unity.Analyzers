@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class MethodInvocationTests : BaseCodeFixVerifierTest<MethodInvocationAnalyzer, MethodInvocationCodeFix>
+	public class MethodInvocationNameOfTests : BaseCodeFixVerifierTest<MethodInvocationAnalyzer, MethodInvocationNameOfCodeFix>
 	{
 		[Fact]
 		public async Task TestInvoke()
@@ -29,7 +29,8 @@ class Camera : MonoBehaviour
 }";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9);
+				.WithLocation(8, 9)
+				.WithArguments("InvokeMe");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -70,7 +71,8 @@ class Camera : MonoBehaviour
 }";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9);
+				.WithLocation(8, 9)
+				.WithArguments("InvokeMe");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -115,5 +117,96 @@ class Foo
 			await VerifyCSharpDiagnosticAsync(test);
 		}
 
+		[Fact]
+		public async Task TestStartCoroutine()
+		{
+			const string test = @"
+using UnityEngine;
+using System.Collections;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        StartCoroutine(""InvokeMe"");
+    }
+
+    private IEnumerator InvokeMe()
+    {
+		return null;
+    }
+}";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(9, 9)
+				.WithArguments("InvokeMe");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+using System.Collections;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        StartCoroutine(nameof(InvokeMe));
+    }
+
+    private IEnumerator InvokeMe()
+    {
+		return null;
+    }
+}";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task TestStopCoroutine()
+		{
+			const string test = @"
+using UnityEngine;
+using System.Collections;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        StopCoroutine(""InvokeMe"");
+    }
+
+    private IEnumerator InvokeMe()
+    {
+		return null;
+    }
+}";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(9, 9)
+				.WithArguments("InvokeMe");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+using System.Collections;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        StopCoroutine(nameof(InvokeMe));
+    }
+
+    private IEnumerator InvokeMe()
+    {
+		return null;
+    }
+}";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
 	}
 }

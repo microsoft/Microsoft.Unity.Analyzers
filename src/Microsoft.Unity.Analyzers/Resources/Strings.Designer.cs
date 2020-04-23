@@ -376,16 +376,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use nameof operator instead of a string literal.
-        /// </summary>
-        internal static string MethodInvocationCodeFixTitle {
-            get {
-                return ResourceManager.GetString("MethodInvocationCodeFixTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to TODO: Add description..
+        ///   Looks up a localized string similar to Usage of nameof or direct call is preferred for type safety..
         /// </summary>
         internal static string MethodInvocationDiagnosticDescription {
             get {
@@ -394,7 +385,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO: Add Message format.
+        ///   Looks up a localized string similar to Method &quot;{0}&quot; is invoked using a string literal..
         /// </summary>
         internal static string MethodInvocationDiagnosticMessageFormat {
             get {
@@ -403,11 +394,29 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO: Add title.
+        ///   Looks up a localized string similar to Unsafe way to get the method name.
         /// </summary>
         internal static string MethodInvocationDiagnosticTitle {
             get {
                 return ResourceManager.GetString("MethodInvocationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use direct call.
+        /// </summary>
+        internal static string MethodInvocationDirectCallCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MethodInvocationDirectCallCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use nameof operator.
+        /// </summary>
+        internal static string MethodInvocationNameOfCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MethodInvocationNameOfCodeFixTitle", resourceCulture);
             }
         }
         

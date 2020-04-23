@@ -16,6 +16,7 @@ ID | Title | Category
 [UNT0012](UNT0012.md) | Unused coroutine return value | Correctness
 [UNT0013](UNT0013.md) | Invalid or redundant SerializeField attribute | Correctness
 [UNT0014](UNT0014.md) | GetComponent called with non-Component or non-Interface type | Type Safety
+[UNT0016](UNT0016.md) | Unsafe way to get the method name | Type Safety
 
 # Diagnostic Suppressors
 
