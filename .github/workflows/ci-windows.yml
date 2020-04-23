@@ -62,15 +62,11 @@ jobs:
       
     - name: Test context (master)
       if: github.ref == 'refs/heads/master'
-      env: 
-        TEST_FILTER: .
-      run: echo enabling consistency tests
-
+      run: echo "::set-env name=TEST_FILTER::."
+    
     - name: Test context (feature)    
       if: github.ref != 'refs/heads/master'
-      env: 
-        TEST_FILTER: FullyQualifiedName!~ConsistencyTests
-      run: echo disabling consistency tests
+      run: echo "::set-env name=TEST_FILTER::FullyQualifiedName!~ConsistencyTests"
 
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
