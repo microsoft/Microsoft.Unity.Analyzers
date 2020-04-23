@@ -327,7 +327,7 @@
     <value>Don't flag private methods decorated with InitializeOnLoadMethodAttribute as unused.</value>
   </data>
   <data name="InitializeOnLoadMethodCodeFixTitle" xml:space="preserve">
-    <value>Use a static and parameterless method</value>
+    <value>Fix method signature</value>
   </data>
   <data name="InitializeOnLoadMethodDiagnosticDescription" xml:space="preserve">
     <value>Unity needs a method decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute to be static and parameterless. Else either Unity won't call it or will throw NullReferenceException.</value>
@@ -337,6 +337,6 @@
     <comment>{0} is an identifier declared with a *InitializeOnLoadMethod attribute</comment>
   </data>
   <data name="InitializeOnLoadMethodDiagnosticTitle" xml:space="preserve">
-    <value>Fix method signature</value>
+    <value>Use a static and parameterless method</value>
   </data>
 </root>

@@ -295,7 +295,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use a static and parameterless method.
+        ///   Looks up a localized string similar to Fix method signature.
         /// </summary>
         internal static string InitializeOnLoadMethodCodeFixTitle {
             get {
@@ -322,7 +322,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fix method signature.
+        ///   Looks up a localized string similar to Use a static and parameterless method.
         /// </summary>
         internal static string InitializeOnLoadMethodDiagnosticTitle {
             get {

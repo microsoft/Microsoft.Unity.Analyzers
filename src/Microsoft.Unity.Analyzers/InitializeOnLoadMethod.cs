@@ -100,7 +100,7 @@ namespace Microsoft.Unity.Analyzers
 
 			context.RegisterCodeFix(
 				CodeAction.Create(
-					Strings.InitializeOnLoadStaticCtorCodeFixTitle,
+					Strings.InitializeOnLoadMethodCodeFixTitle,
 					ct => FixMethodAsync(context.Document, methodDeclaration, ct),
 					methodDeclaration.ToFullString()),
 				context.Diagnostics);
