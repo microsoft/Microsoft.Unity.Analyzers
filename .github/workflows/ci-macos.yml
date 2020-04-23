@@ -56,12 +56,14 @@ jobs:
 
     - name: Test context (master)
       if: github.ref == 'refs/heads/master'
-      env: TEST_FILTER: .
+      env: 
+        TEST_FILTER: .
       run: echo enabling consistency tests
     
     - name: Test context (feature)    
       if: github.ref != 'refs/heads/master'
-      env: TEST_FILTER: FullyQualifiedName!~ConsistencyTests
+      env: 
+        TEST_FILTER: FullyQualifiedName!~ConsistencyTests
       run: echo disabling consistency tests
       
     - name: Test
