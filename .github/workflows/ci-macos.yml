@@ -67,7 +67,7 @@ jobs:
       run: echo disabling consistency tests
       
     - name: Test
-      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{TEST_FILTER}}
+      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         DOTNET_CLI_TELEMETRY_OPTOUT: true
