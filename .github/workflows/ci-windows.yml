@@ -59,9 +59,19 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit == 'true'
       run: xcopy /s /i /y /q "UnityCache\MonoBleedingEdge" "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge"
       shell: cmd
+      
+    - name: Test context (master)
+      if: github.ref == 'refs/heads/master'
+      env: 
+        TEST_FILTER: .
+    
+    - name: Test context (feature)    
+      if: github.ref != 'refs/heads/master'
+      env: 
+        TEST_FILTER: FullyQualifiedName!~ConsistencyTests
 
     - name: Test
-      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
+      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter $TEST_FILTER
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         DOTNET_CLI_TELEMETRY_OPTOUT: true
