@@ -326,4 +326,16 @@
   <data name="InitializeOnLoadMethodSuppressorJustification" xml:space="preserve">
     <value>Don't flag private methods decorated with InitializeOnLoadMethodAttribute as unused.</value>
   </data>
+  <data name="MethodInvocationCodeFixTitle" xml:space="preserve">
+    <value>Use nameof operator instead of a string literal</value>
+  </data>
+  <data name="MethodInvocationDiagnosticDescription" xml:space="preserve">
+    <value>TODO: Add description.</value>
+  </data>
+  <data name="MethodInvocationDiagnosticMessageFormat" xml:space="preserve">
+    <value>TODO: Add Message format</value>
+  </data>
+  <data name="MethodInvocationDiagnosticTitle" xml:space="preserve">
+    <value>TODO: Add title</value>
+  </data>
 </root>

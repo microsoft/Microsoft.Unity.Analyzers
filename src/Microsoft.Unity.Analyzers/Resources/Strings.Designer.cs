@@ -376,6 +376,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use nameof operator instead of a string literal.
+        /// </summary>
+        internal static string MethodInvocationCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MethodInvocationCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO: Add description..
+        /// </summary>
+        internal static string MethodInvocationDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("MethodInvocationDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO: Add Message format.
+        /// </summary>
+        internal static string MethodInvocationDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("MethodInvocationDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO: Add title.
+        /// </summary>
+        internal static string MethodInvocationDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("MethodInvocationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t flag fields with a SerializeField or SerializeReference attribute as never assigned..
         /// </summary>
         internal static string NeverAssignedSerializeFieldSuppressorJustification {
