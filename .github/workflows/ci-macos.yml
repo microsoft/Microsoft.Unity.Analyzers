@@ -54,8 +54,16 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit == 'true'
       run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
+    - name: Test context (master)
+      if: github.ref == 'refs/heads/master'
+      run: echo "::set-env name=TEST_FILTER::."
+    
+    - name: Test context (feature)    
+      if: github.ref != 'refs/heads/master'
+      run: echo "::set-env name=TEST_FILTER::FullyQualifiedName!~ConsistencyTests"
+      
     - name: Test
-      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests
+      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         DOTNET_CLI_TELEMETRY_OPTOUT: true
