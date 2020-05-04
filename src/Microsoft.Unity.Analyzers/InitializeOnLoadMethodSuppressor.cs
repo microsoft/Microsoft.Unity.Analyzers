@@ -4,9 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
@@ -33,29 +31,11 @@ namespace Microsoft.Unity.Analyzers
 			var sourceTree = diagnostic.Location.SourceTree;
 			var root = sourceTree.GetRoot(context.CancellationToken);
 			var node = root.FindNode(diagnostic.Location.SourceSpan);
-
-			if (!(node is MethodDeclarationSyntax method))
-				return;
-
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (!(model.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
-				return;
 
-			if (IsSuppressable(methodSymbol))
+			// Reuse the same detection logic regarding decorated methods with *InitializeOnLoadMethodAttribute
+			if (InitializeOnLoadMethodAnalyzer.MethodMatches(node, model, out _, out _))
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
-		}
-
-		private static bool IsSuppressable(ISymbol symbol)
-		{
-			return symbol
-				.GetAttributes()
-				.Any(a => IsInitializeOnLoadMethodAttributeType(a.AttributeClass));
-		}
-
-		private static bool IsInitializeOnLoadMethodAttributeType(ITypeSymbol type)
-		{
-			return type.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute))
-				|| type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute));
 		}
 	}
 }
