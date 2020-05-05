@@ -34,5 +34,34 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
+
+		[Fact]
+		public async Task UnusedMethodMixedTypes()
+		{
+			const string test = @"
+using UnityEngine;
+
+class A : MonoBehaviour
+{
+    private B b = null;
+
+    public void Update()
+    {
+        b.InvokeRepeating(""Foo"", 1.0f, 1.0f);
+    }
+
+    class B : MonoBehaviour
+    {
+        void Foo()
+        {
+        }
+    }
+}";
+
+			var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
+				.WithLocation(15, 14);
+
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
 	}
 }

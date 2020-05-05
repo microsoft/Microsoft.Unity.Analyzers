@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -135,9 +136,28 @@ namespace Microsoft.Unity.Analyzers
 				context.Diagnostics);
 		}
 
-		protected virtual Task<bool> IsRegistrableAsync(CodeFixContext context, InvocationExpressionSyntax invocation)
+		protected virtual async Task<bool> IsRegistrableAsync(CodeFixContext context, InvocationExpressionSyntax invocation)
 		{
-			return Task.FromResult(true);
+			// for now we do not offer codefixes for mixed types
+			var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+
+			if (!(invocation.Expression is MemberAccessExpressionSyntax maes))
+				return true;
+
+			var typeInvocationContext = model.GetTypeInfo(maes.ChildNodes().FirstOrDefault()).Type as INamedTypeSymbol;
+
+			var mdec = invocation
+				.Ancestors()
+				.OfType<MethodDeclarationSyntax>()
+				.FirstOrDefault();
+
+			if (mdec == null)
+				return false;
+
+			var symbol = model.GetDeclaredSymbol(mdec);
+			var typeContext = symbol.ContainingType;
+
+			return typeContext.Equals(typeInvocationContext);
 		}
 
 		protected abstract ArgumentSyntax GetArgument(string name);
@@ -194,6 +214,9 @@ namespace Microsoft.Unity.Analyzers
 
 		protected override async Task<bool> IsRegistrableAsync(CodeFixContext context, InvocationExpressionSyntax invocation)
 		{
+			if (!await base.IsRegistrableAsync(context, invocation))
+				return false;
+
 			if (invocation.ArgumentList.Arguments.Count != 1)
 				return false;
 

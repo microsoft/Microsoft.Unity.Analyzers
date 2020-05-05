@@ -95,6 +95,81 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task TestInvokeRepeatingThis()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        this.InvokeRepeating(""InvokeMe"", 10.0f, 10.0f);
+    }
+
+    private void InvokeMe()
+    {
+    }
+}";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(8, 9)
+				.WithArguments("InvokeMe");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        this.InvokeRepeating(nameof(InvokeMe), 10.0f, 10.0f);
+    }
+
+    private void InvokeMe()
+    {
+    }
+}";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task TestInvokeRepeatingMixedTypes()
+		{
+			const string test = @"
+using UnityEngine;
+
+class A : MonoBehaviour
+{
+    private B b = null;
+
+    void Update()
+    {
+        b.InvokeRepeating(""Foo"", 1.0f, 1.0f);
+	}
+
+    class B : MonoBehaviour
+    {
+        void Foo()
+        {
+        }
+    }
+}";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(10, 9)
+				.WithArguments("Foo");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			// we do not offer codefix in this case
+			await VerifyCSharpFixAsync(test, test);
+		}
+
+		[Fact]
 		public async Task TestInvokeNoMonoBehaviour()
 		{
 			const string test = @"

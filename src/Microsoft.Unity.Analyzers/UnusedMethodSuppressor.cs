@@ -48,6 +48,9 @@ namespace Microsoft.Unity.Analyzers
 			if (!typeSymbol.Extends(typeof(UnityEngine.MonoBehaviour)))
 				return;
 
+			while (typeSymbol.ContainingType != null && typeSymbol.ContainingType.Extends(typeof(UnityEngine.MonoBehaviour)))
+				typeSymbol = typeSymbol.ContainingType;
+
 			var references = new List<InvocationExpressionSyntax>();
 			foreach (var typeNode in typeSymbol.Locations.Select(location => root.FindNode(location.SourceSpan)))
 			{
