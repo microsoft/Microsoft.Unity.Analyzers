@@ -12,7 +12,9 @@ If you have an idea for a best practice for Unity developers to follow, please o
 # Prerequisites
 For building and testing, you'll need the **.NET Core SDK Version 3.1.100 (LTS)**.
 
-This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics. This API is available starting with **Visual Studio 2019 16.3** or **Visual Studio for Mac 8.3**.
+This project is targeting **Visual Studio 2019 16.4** and **Visual Studio for Mac 8.4**.
+
+This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics. 
 
 On Windows, you'll need the _Visual Studio extension development_ workload installed to build a VSIX to use and debug the project in Visual Studio.
 

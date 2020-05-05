@@ -295,6 +295,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fix method signature.
+        /// </summary>
+        internal static string InitializeOnLoadMethodCodeFixTitle {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadMethodCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity needs a method decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute to be static and parameterless. Else either Unity won&apos;t call it or will throw NullReferenceException..
+        /// </summary>
+        internal static string InitializeOnLoadMethodDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadMethodDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method &quot;{0}&quot; decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute must be static and parameterless..
+        /// </summary>
+        internal static string InitializeOnLoadMethodDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadMethodDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use a static and parameterless method.
+        /// </summary>
+        internal static string InitializeOnLoadMethodDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("InitializeOnLoadMethodDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with InitializeOnLoadMethodAttribute as unused..
         /// </summary>
         internal static string InitializeOnLoadMethodSuppressorJustification {
@@ -322,7 +358,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The class &quot;{0}&quot; tagged with the InitializeOnLoad attribute is missing a static conductor..
+        ///   Looks up a localized string similar to Class &quot;{0}&quot; decorated with the InitializeOnLoad attribute is missing a static conductor..
         /// </summary>
         internal static string InitializeOnLoadStaticCtorDiagnosticMessageFormat {
             get {
