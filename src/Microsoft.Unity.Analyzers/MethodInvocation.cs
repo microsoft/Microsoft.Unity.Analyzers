@@ -145,6 +145,8 @@ namespace Microsoft.Unity.Analyzers
 				return true;
 
 			var typeInvocationContext = model.GetTypeInfo(maes.ChildNodes().FirstOrDefault()).Type as INamedTypeSymbol;
+			if (typeInvocationContext == null)
+				return false;
 
 			var mdec = invocation
 				.Ancestors()
@@ -155,9 +157,9 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var symbol = model.GetDeclaredSymbol(mdec);
-			var typeContext = symbol.ContainingType;
+			var typeContext = symbol?.ContainingType;
 
-			return typeContext.Equals(typeInvocationContext);
+			return typeContext != null && typeContext.Equals(typeInvocationContext);
 		}
 
 		protected abstract ArgumentSyntax GetArgument(string name);
