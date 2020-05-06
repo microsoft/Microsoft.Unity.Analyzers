@@ -159,7 +159,7 @@ namespace Microsoft.Unity.Analyzers
 			var symbol = model.GetDeclaredSymbol(mdec);
 			var typeContext = symbol?.ContainingType;
 
-			return typeContext != null && typeContext.Equals(typeInvocationContext);
+			return typeContext != null && SymbolEqualityComparer.Default.Equals(typeContext, typeInvocationContext);
 		}
 
 		protected abstract ArgumentSyntax GetArgument(string name);
