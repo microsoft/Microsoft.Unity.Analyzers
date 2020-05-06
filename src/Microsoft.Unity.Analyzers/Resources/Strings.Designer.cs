@@ -412,6 +412,51 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Usage of nameof or direct call is preferred for type safety..
+        /// </summary>
+        internal static string MethodInvocationDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("MethodInvocationDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method &quot;{0}&quot; is invoked using a string literal..
+        /// </summary>
+        internal static string MethodInvocationDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("MethodInvocationDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsafe way to get the method name.
+        /// </summary>
+        internal static string MethodInvocationDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("MethodInvocationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use direct call.
+        /// </summary>
+        internal static string MethodInvocationDirectCallCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MethodInvocationDirectCallCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use nameof operator.
+        /// </summary>
+        internal static string MethodInvocationNameOfCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MethodInvocationNameOfCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t flag fields with a SerializeField or SerializeReference attribute as never assigned..
         /// </summary>
         internal static string NeverAssignedSerializeFieldSuppressorJustification {

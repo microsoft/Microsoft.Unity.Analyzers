@@ -31,8 +31,6 @@ namespace Microsoft.Unity.Analyzers
 
 		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
 
-		private static readonly HashSet<string> MethodNames = new HashSet<string>(new[] {"Invoke", "InvokeRepeating", "StartCoroutine", "StopCoroutine"});
-
 		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var sourceTree = diagnostic.Location.SourceTree;
@@ -50,40 +48,19 @@ namespace Microsoft.Unity.Analyzers
 			if (!typeSymbol.Extends(typeof(UnityEngine.MonoBehaviour)))
 				return;
 
-			var references = root
-				.DescendantNodes()
-				.OfType<InvocationExpressionSyntax>()
-				.Where(e => IsMatchingArgument(e, methodSymbol.Name))
-				.Where(e => IsMatchingIdentifier(e.Expression));
+			while (typeSymbol.ContainingType != null && typeSymbol.ContainingType.Extends(typeof(UnityEngine.MonoBehaviour)))
+				typeSymbol = typeSymbol.ContainingType;
+
+			var references = new List<InvocationExpressionSyntax>();
+			foreach (var typeNode in typeSymbol.Locations.Select(location => root.FindNode(location.SourceSpan)))
+			{
+				references.AddRange(typeNode.DescendantNodes()
+					.OfType<InvocationExpressionSyntax>()
+					.Where(e => MethodInvocationAnalyzer.InvocationMatches(e, out string argument) && argument == methodSymbol.Name));
+			}
 
 			if (references.Any())
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
-		}
-
-		private static bool IsMatchingIdentifier(SyntaxNode sn)
-		{
-			switch (sn)
-			{
-				case MemberAccessExpressionSyntax maes:
-					return IsMatchingIdentifier(maes.Name);
-				case IdentifierNameSyntax ins:
-					return MethodNames.Contains(ins.Identifier.Text);
-				default:
-					return false;
-			}
-		}
-
-		private static bool IsMatchingArgument(InvocationExpressionSyntax ies, string name)
-		{
-			var args = ies.ArgumentList.Arguments;
-
-			if (args.Count <= 0)
-				return false;
-
-			if (!(args.First().Expression is LiteralExpressionSyntax les))
-				return false;
-
-			return name == les.Token.ValueText;
 		}
 	}
 }

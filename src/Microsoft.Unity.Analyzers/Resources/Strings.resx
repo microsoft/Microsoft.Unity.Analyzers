@@ -326,6 +326,21 @@
   <data name="InitializeOnLoadMethodSuppressorJustification" xml:space="preserve">
     <value>Don't flag private methods decorated with InitializeOnLoadMethodAttribute as unused.</value>
   </data>
+  <data name="MethodInvocationNameOfCodeFixTitle" xml:space="preserve">
+    <value>Use nameof operator</value>
+  </data>
+  <data name="MethodInvocationDiagnosticDescription" xml:space="preserve">
+    <value>Usage of nameof or direct call is preferred for type safety.</value>
+  </data>
+  <data name="MethodInvocationDiagnosticMessageFormat" xml:space="preserve">
+    <value>Method "{0}" is invoked using a string literal.</value>
+  </data>
+  <data name="MethodInvocationDiagnosticTitle" xml:space="preserve">
+    <value>Unsafe way to get the method name</value>
+  </data>
+  <data name="MethodInvocationDirectCallCodeFixTitle" xml:space="preserve">
+    <value>Use direct call</value>
+  </data>
   <data name="InitializeOnLoadMethodCodeFixTitle" xml:space="preserve">
     <value>Fix method signature</value>
   </data>
