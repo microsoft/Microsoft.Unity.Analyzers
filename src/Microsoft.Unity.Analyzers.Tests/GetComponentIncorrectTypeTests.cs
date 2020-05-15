@@ -91,5 +91,81 @@ class Camera : MonoBehaviour
 ";
 			await VerifyCSharpDiagnosticAsync(test);
 		}
+
+		[Fact]
+		public async Task GetGenericMethodComponentCorrectTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Method<T>() where T : Component
+    {
+        var hello = GetComponent<T>();
+    }
+}
+";
+			await VerifyCSharpDiagnosticAsync(test);
+		}
+
+		[Fact]
+		public async Task GetGenericMethodComponentIncorrectTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Method<T>()
+    {
+        GetComponent<T>();
+    }
+}
+";
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(8, 9)
+				.WithArguments("T");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		}
+
+		[Fact]
+		public async Task GetGenericClassComponentCorrectTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera<T> : MonoBehaviour where T : Component
+{
+    private void Method()
+    {
+        var hello = GetComponent<T>();
+    }
+}
+";
+			await VerifyCSharpDiagnosticAsync(test);
+		}
+
+		[Fact]
+		public async Task GetGenericClassComponentIncorrectTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera<T> : MonoBehaviour
+{
+    private void Method()
+    {
+        GetComponent<T>();
+    }
+}
+";
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(8, 9)
+				.WithArguments("T");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		}
 	}
 }

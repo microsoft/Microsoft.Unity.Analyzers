@@ -63,6 +63,12 @@ namespace Microsoft.Unity.Analyzers
 			if (argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface)
 				return false;
 
+			if (argumentType.TypeKind == TypeKind.TypeParameter && argumentType is ITypeParameterSymbol typeParameter)
+			{
+				if (typeParameter.ConstraintTypes.Any(t => t.Extends(typeof(UnityEngine.Component))))
+					return false;
+			}
+
 			identifier = argumentType.Name;
 			return true;
 		}
