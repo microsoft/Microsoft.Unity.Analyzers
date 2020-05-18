@@ -13,7 +13,7 @@ using UnityEngine;
 namespace Microsoft.Unity.Analyzers
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class SerializedFieldSuppressor : DiagnosticSuppressor
+	public class SerializeFieldSuppressor : DiagnosticSuppressor
 	{
 		internal static readonly SuppressionDescriptor ReadonlyRule = new SuppressionDescriptor(
 			id: "USP0004",

@@ -9,7 +9,7 @@ using Xunit.Sdk;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class SerializedFieldSuppressorTests : BaseSuppressorVerifierTest<SerializedFieldSuppressor>
+	public class SerializeFieldSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
 	{
 		[Fact]
 		public async Task PrivateFieldWithAttributeNeverAssignedSuppressed()
@@ -20,7 +20,7 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    readonly string someField; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializedFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
+    readonly string someField; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
 
     private void RemoveIDE0051() {
         var _ = someField;
@@ -29,7 +29,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(SerializedFieldSuppressor.NeverAssignedRule)
+			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
 				.WithLocation(7, 21);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -53,7 +53,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(SerializedFieldSuppressor.ReadonlyRule)
+			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
 				.WithLocation(7, 20);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -71,7 +71,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(SerializedFieldSuppressor.NeverAssignedRule)
+			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
 				.WithLocation(6, 19);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -90,13 +90,13 @@ class Test : System.Object
 			// We don't want to suppress 'never assigned' for standard types
 			var exception = await Assert.ThrowsAsync<TrueException>(async () =>
 			{
-				var suppressor = ExpectSuppressor(SerializedFieldSuppressor.NeverAssignedRule)
+				var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
 					.WithLocation(4, 19);
 
 				await VerifyCSharpDiagnosticAsync(test, suppressor);
 			});
 
-			Assert.Contains(SerializedFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, exception.Message);
+			Assert.Contains(SerializeFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, exception.Message);
 		}
 
 
@@ -109,11 +109,11 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    readonly string someField = ""default""; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializedFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
+    readonly string someField = ""default""; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
 }
 ";
 
-			var suppressor = ExpectSuppressor(SerializedFieldSuppressor.UnusedRule)
+			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
 				.WithLocation(7, 21);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
