@@ -88,15 +88,17 @@ class Test : System.Object
 ";
 
 			// We don't want to suppress 'never assigned' for standard types
+			var rule = SerializeFieldSuppressor.NeverAssignedRule;
 			var exception = await Assert.ThrowsAsync<TrueException>(async () =>
 			{
-				var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
+				var suppressor = ExpectSuppressor(rule)
 					.WithLocation(4, 19);
 
 				await VerifyCSharpDiagnosticAsync(test, suppressor);
 			});
 
-			Assert.Contains(SerializeFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, exception.Message);
+			var message = $"Expected diagnostic id to be \"{rule.Id}\" was \"{rule.SuppressedDiagnosticId}\"";
+			Assert.Contains(message, exception.Message);
 		}
 
 
