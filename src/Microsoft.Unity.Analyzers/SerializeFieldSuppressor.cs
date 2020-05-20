@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
+using UnityEngine;
 
 namespace Microsoft.Unity.Analyzers
 {
@@ -39,6 +40,17 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
+		private static bool IsSuppressable(IFieldSymbol fieldSymbol)
+		{
+			if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(SerializeField)) || a.AttributeClass.Matches(typeof(SerializeReference))))
+				return true;
+
+			if (fieldSymbol.DeclaredAccessibility == Accessibility.Public && fieldSymbol.ContainingType.Extends(typeof(Object)))
+				return true;
+
+			return false;
+		}
+
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var node = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken).FindNode(diagnostic.Location.SourceSpan);
@@ -49,7 +61,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!(model.GetDeclaredSymbol(node) is IFieldSymbol fieldSymbol))
 				return;
 
-			if (!fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField)) || a.AttributeClass.Matches(typeof(UnityEngine.SerializeReference))))
+			if (!IsSuppressable(fieldSymbol))
 				return;
 
 			foreach (var descriptor in SupportedSuppressions.Where(d => d.SuppressedDiagnosticId == diagnostic.Id))
