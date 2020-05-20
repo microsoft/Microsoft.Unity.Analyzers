@@ -15,12 +15,11 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Microsoft.Unity.Analyzers
 {
 	[AttributeUsage(AttributeTargets.Method)]
-	public class AuditAttribute : Attribute
+	public class MethodUsageAttribute : Attribute
 	{
 	}
 
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public abstract class BaseAuditAnalyzer<T> : DiagnosticAnalyzer where T : AuditAttribute
+	public abstract class BaseMethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : MethodUsageAttribute
 	{
 		private static ILookup<string, MethodInfo> _lookup;
 

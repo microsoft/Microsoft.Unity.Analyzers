@@ -232,28 +232,28 @@ namespace UnityEngine
 
 	class Texture2D
 	{
-		[SetPixelsAudit] void SetPixels(int x, int y, int blockWidth, int blockHeight, Color[] colors, int miplevel) { }
-		[SetPixelsAudit] void SetPixels(int x, int y, int blockWidth, int blockHeight, Color[] colors) { }
-		[SetPixelsAudit] void SetPixels(Color[] colors, int miplevel) { }
-		[SetPixelsAudit] void SetPixels(Color[] colors) { }
+		[SetPixelsMethodUsage] void SetPixels(int x, int y, int blockWidth, int blockHeight, Color[] colors, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(int x, int y, int blockWidth, int blockHeight, Color[] colors) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors) { }
 	}
 
 	class Texture3D
 	{
-		[SetPixelsAudit] void SetPixels(Color[] colors, int miplevel) { }
-		[SetPixelsAudit] void SetPixels(Color[] colors) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors) { }
 	}
 
 	class Texture2DArray
 	{
-		[SetPixelsAudit] void SetPixels(Color[] colors, int arrayElement) { }
-		[SetPixelsAudit] void SetPixels(Color[] colors, int arrayElement, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int arrayElement) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int arrayElement, int miplevel) { }
 	}
 
 	class CubemapArray
 	{
-		[SetPixelsAudit] void SetPixels(Color[] colors, CubemapFace face, int arrayElement, int miplevel) { }
-		[SetPixelsAudit] void SetPixels(Color[] colors, CubemapFace face, int arrayElement) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement) { }
 	}
 }
 

@@ -5,18 +5,20 @@
 
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers
 {
-	public class SetPixelsAuditAttribute : AuditAttribute
+	public class SetPixelsMethodUsageAttribute : MethodUsageAttribute
 	{
 	}
 
-	public class SetPixelsAuditAnalyzer : BaseAuditAnalyzer<SetPixelsAuditAttribute> 
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	public class SetPixelsMethodUsageAnalyzer : BaseMethodUsageAnalyzer<SetPixelsMethodUsageAttribute> 
 	{
 		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			id: "UNT0015",
+			id: "UNT0017",
 			title: Strings.SetPixelsAuditDiagnosticTitle,
 			messageFormat: Strings.SetPixelsAuditDiagnosticMessageFormat,
 			category: DiagnosticCategory.Performance,

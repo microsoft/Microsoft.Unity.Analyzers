@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class SetPixelsTests : BaseDiagnosticVerifierTest<SetPixelsAuditAnalyzer>
+	public class SetPixelsTests : BaseDiagnosticVerifierTest<SetPixelsMethodUsageAnalyzer>
 	{
 		[Fact]
 		public async Task Texture2DTest()
