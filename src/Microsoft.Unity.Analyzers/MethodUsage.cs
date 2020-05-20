@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 	}
 
-	public abstract class BaseMethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : MethodUsageAttribute
+	public abstract class MethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : MethodUsageAttribute
 	{
 		private static ILookup<string, MethodInfo> _lookup;
 
@@ -34,7 +34,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			if (_lookup == null)
 			{
-				_lookup = CollectMethods(GetType().Assembly)
+				_lookup = CollectMethods()
 					.Where(m => m.DeclaringType != null)
 					.ToLookup(m => m.DeclaringType.FullName);
 			}
@@ -44,12 +44,21 @@ namespace Microsoft.Unity.Analyzers
 			return _lookup[typename].Any(method.Matches);
 		}
 
-		private static IEnumerable<MethodInfo> CollectMethods(Assembly assembly)
+		protected virtual IEnumerable<MethodInfo> CollectMethods()
 		{
-			return assembly
-				.GetTypes()
+			return CollectMethods(GetType().Assembly);
+		}
+
+		protected static IEnumerable<MethodInfo> CollectMethods(params Type[] types)
+		{
+			return types
 				.SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
 				.Where(m => m.GetCustomAttributes(typeof(T), true).Length > 0);
+		}
+
+		protected static IEnumerable<MethodInfo> CollectMethods(Assembly assembly)
+		{
+			return CollectMethods(assembly.GetTypes());
 		}
 
 		private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
