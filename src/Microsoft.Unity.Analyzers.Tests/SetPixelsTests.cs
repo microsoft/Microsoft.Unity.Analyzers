@@ -26,7 +26,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9)
+				.WithLocation(8, 14)
 				.WithArguments("SetPixels");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -48,7 +48,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9)
+				.WithLocation(8, 14)
 				.WithArguments("SetPixels");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -70,7 +70,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9)
+				.WithLocation(8, 14)
 				.WithArguments("SetPixels");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -92,7 +92,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9)
+				.WithLocation(8, 14)
 				.WithArguments("SetPixels");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);

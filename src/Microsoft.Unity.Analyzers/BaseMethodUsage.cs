@@ -55,7 +55,11 @@ namespace Microsoft.Unity.Analyzers
 		private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
-			var symbol = context.SemanticModel.GetSymbolInfo(invocation);
+
+			if (!(invocation.Expression is MemberAccessExpressionSyntax member))
+				return;
+
+			var symbol = context.SemanticModel.GetSymbolInfo(member);
 			if (symbol.Symbol == null)
 				return;
 
@@ -65,7 +69,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!IsReportable(method))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(SupportedDiagnostics.First(), invocation.GetLocation(), method.Name));
+			context.ReportDiagnostic(Diagnostic.Create(SupportedDiagnostics.First(), member.Name.GetLocation(), method.Name));
 		}
 	}
 }
