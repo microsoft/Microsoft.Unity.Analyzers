@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Unity.Analyzers;
+using Microsoft.Unity.Analyzers.Resources;
 
 namespace UnityEngine
 {
@@ -218,6 +220,40 @@ namespace UnityEngine
 
 	class RuntimeInitializeOnLoadMethodAttribute : System.Attribute
 	{
+	}
+
+	struct Color
+	{
+	}
+
+	enum CubemapFace
+	{
+	}
+
+	class Texture2D
+	{
+		[SetPixelsMethodUsage] void SetPixels(int x, int y, int blockWidth, int blockHeight, Color[] colors, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(int x, int y, int blockWidth, int blockHeight, Color[] colors) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors) { }
+	}
+
+	class Texture3D
+	{
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors) { }
+	}
+
+	class Texture2DArray
+	{
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int arrayElement) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, int arrayElement, int miplevel) { }
+	}
+
+	class CubemapArray
+	{
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement, int miplevel) { }
+		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement) { }
 	}
 }
 

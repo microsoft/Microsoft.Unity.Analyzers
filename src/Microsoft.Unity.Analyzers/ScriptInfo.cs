@@ -77,37 +77,16 @@ namespace Microsoft.Unity.Analyzers
 				if (!(member is IMethodSymbol methodSymbol))
 					continue;
 
-				if (MethodMatch(method, methodSymbol))
+				if (methodSymbol.Matches(method))
 					return true;
 			}
 
 			return false;
 		}
 
-		private static bool MethodMatch(MethodInfo method, IMethodSymbol symbol)
-		{
-			if (method.Name != symbol.Name)
-				return false;
-
-			if (!symbol.ReturnType.Matches(method.ReturnType))
-				return false;
-
-			var parameters = method.GetParameters();
-			if (parameters.Length < symbol.Parameters.Length)
-				return false;
-
-			for (var i = 0; i < symbol.Parameters.Length; i++)
-			{
-				if (!symbol.Parameters[i].Type.Matches(parameters[i].ParameterType))
-					return false;
-			}
-
-			return true;
-		}
-
 		public bool IsMessage(IMethodSymbol method)
 		{
-			return GetMessages().Any(message => MethodMatch(message, method));
+			return GetMessages().Any(method.Matches);
 		}
 
 		private static Type GetMatchingMetadata(ITypeSymbol symbol)

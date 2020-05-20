@@ -18,6 +18,7 @@ ID | Title | Category
 [UNT0014](UNT0014.md) | GetComponent called with non-Component or non-Interface type | Type Safety
 [UNT0015](UNT0015.md) | Incorrect method signature with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute | Type Safety
 [UNT0016](UNT0016.md) | Unsafe way to get the method name | Type Safety
+[UNT0017](UNT0017.md) | SetPixels invocation is slow | Performance
 
 # Diagnostic Suppressors
 
