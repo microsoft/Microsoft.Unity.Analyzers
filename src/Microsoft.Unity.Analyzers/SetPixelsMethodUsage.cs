@@ -19,12 +19,12 @@ namespace Microsoft.Unity.Analyzers
 	{
 		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
 			id: "UNT0017",
-			title: Strings.SetPixelsAuditDiagnosticTitle,
-			messageFormat: Strings.SetPixelsAuditDiagnosticMessageFormat,
+			title: Strings.SetPixelsMethodUsageDiagnosticTitle,
+			messageFormat: Strings.SetPixelsMethodUsageDiagnosticMessageFormat,
 			category: DiagnosticCategory.Performance,
 			defaultSeverity: DiagnosticSeverity.Info,
 			isEnabledByDefault: true,
-			description: Strings.SetPixelsAuditDiagnosticDescription);
+			description: Strings.SetPixelsMethodUsageDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 	}
