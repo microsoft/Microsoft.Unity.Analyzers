@@ -7,6 +7,7 @@ This project provides Visual Studio with a better understanding of Unity project
 
 Check out the [list of analyzers and suppressors](doc/index.md) defined in this project.
 
+# Suggesting a new Analyzer
 If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
 
 # Prerequisites
