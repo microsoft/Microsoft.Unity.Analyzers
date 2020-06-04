@@ -1,0 +1,3 @@
+[submodule "external/VSTUAnalyzers"]
+	path = external/VSTUAnalyzers
+	url = https://github.com/microsoft/Microsoft.Unity.Analyzers

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Authors>Microsoft Corporation</Authors>
+    <RepositoryUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</RepositoryUrl>
+    <VersionPrefix>1.7.0</VersionPrefix>
+    <PackageTags>Unity3d analyzers csharp</PackageTags>
+    <Description>Roslyn analyzers for Unity game developers</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</PackageProjectUrl>	
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="MicroBuild.Core" Version="0.3.0" PrivateAssets="All"/>
+  </ItemGroup>  
+  
+</Project>
