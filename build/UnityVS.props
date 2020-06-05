@@ -5,12 +5,12 @@
     <Deterministic>true</Deterministic>
     <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+	<NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
-
+  
   <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Authors>Microsoft Corporation</Authors>
     <RepositoryUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</RepositoryUrl>
     <VersionPrefix>1.7.0</VersionPrefix>
@@ -21,9 +21,14 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)..\tools\*install.ps1" PackagePath="tools" />
+    <Content Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>  
+  
+  <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.0.0" PrivateAssets="All"/>
     <PackageReference Include="MicroBuild.Core" Version="0.3.0" PrivateAssets="All"/>
-  </ItemGroup>  
-  
+  </ItemGroup>    
+ 
 </Project>
