@@ -11,17 +11,20 @@
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Authors>Microsoft Corporation</Authors>
+    <Authors>Microsoft</Authors>
+    <Owners></Owners> <!-- Do not populate this field in the package nuspec file. This should be managed on nuget.org -->
     <RepositoryUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</RepositoryUrl>
     <VersionPrefix>1.7.0</VersionPrefix>
     <PackageTags>Unity3d analyzers csharp</PackageTags>
     <Description>Roslyn analyzers for Unity game developers</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</PackageProjectUrl>	
   </PropertyGroup>
   
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)..\tools\*install.ps1" PackagePath="tools" />
+    <None Include="$(MSBuildThisFileDirectory)..\tools\*install.ps1" CopyToOutputDirectory="Always" />
+    <Content Include="$(OutputPath)\*install.ps1" CopyToOutputDirectory="Always" PackagePath="tools" />
     <Content Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>  
   
