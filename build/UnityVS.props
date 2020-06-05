@@ -13,7 +13,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Authors>Microsoft Corporation</Authors>
     <RepositoryUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</RepositoryUrl>
-    <VersionPrefix>1.6.0</VersionPrefix>
+    <VersionPrefix>1.7.0</VersionPrefix>
     <PackageTags>Unity3d analyzers csharp</PackageTags>
     <Description>Roslyn analyzers for Unity game developers</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
