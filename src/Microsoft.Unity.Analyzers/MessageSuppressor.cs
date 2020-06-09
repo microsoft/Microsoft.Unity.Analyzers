@@ -13,19 +13,29 @@ using Microsoft.Unity.Analyzers.Resources;
 namespace Microsoft.Unity.Analyzers
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class UnusedMessageSuppressor : DiagnosticSuppressor
+	public class MessageSuppressor : DiagnosticSuppressor
 	{
 		internal static readonly SuppressionDescriptor MethodRule = new SuppressionDescriptor(
 			id: "USP0003",
 			suppressedDiagnosticId: "IDE0051",
-			justification: Strings.UnusedMessageSuppressorJustification);
+			justification: Strings.MessageSuppressorJustification);
+
+		internal static readonly SuppressionDescriptor MethodFxCopRule = new SuppressionDescriptor(
+			id: "USP0014",
+			suppressedDiagnosticId: "CA1822",
+			justification: Strings.MessageSuppressorJustification);
 
 		internal static readonly SuppressionDescriptor ParameterRule = new SuppressionDescriptor(
 			id: "USP0005",
 			suppressedDiagnosticId: "IDE0060",
-			justification: Strings.UnusedMessageSuppressorJustification);
+			justification: Strings.MessageSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, ParameterRule);
+		internal static readonly SuppressionDescriptor ParameterFxCopRule = new SuppressionDescriptor(
+			id: "USP0015",
+			suppressedDiagnosticId: "CA1801",
+			justification: Strings.MessageSuppressorJustification);
+
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodFxCopRule, ParameterRule, ParameterFxCopRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{

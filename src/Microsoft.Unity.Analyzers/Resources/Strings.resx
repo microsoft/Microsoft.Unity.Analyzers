@@ -264,7 +264,7 @@
   <data name="CreateScriptableObjectInstanceDiagnosticTitle" xml:space="preserve">
     <value>ScriptableObject instance creation</value>
   </data>
-  <data name="UnusedMessageSuppressorJustification" xml:space="preserve">
+  <data name="MessageSuppressorJustification" xml:space="preserve">
     <value>The Unity runtime invokes Unity messages.</value>
   </data>
   <data name="ReadonlySerializeFieldSuppressorJustification" xml:space="preserve">

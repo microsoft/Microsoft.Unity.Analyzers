@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class UnusedMessageSuppressorTests : BaseSuppressorVerifierTest<UnusedMessageSuppressor>
+	public class MessageSuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
 	{
 		[Fact]
 		public async Task UnusedMethodSuppressed()
@@ -24,7 +24,7 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(UnusedMessageSuppressor.MethodRule)
+			var suppressor = ExpectSuppressor(MessageSuppressor.MethodRule)
 				.WithLocation(6, 18);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -45,7 +45,7 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(UnusedMessageSuppressor.ParameterRule)
+			var suppressor = ExpectSuppressor(MessageSuppressor.ParameterRule)
 				.WithLocation(6, 35);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
