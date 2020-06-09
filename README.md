@@ -2,10 +2,17 @@
 
 [![Build status on Windows](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-Windows/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-Windows)
 [![Build status on macOS](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-macOS/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-macOS)
+[![NuGet](https://img.shields.io/nuget/v/Microsoft.Unity.Analyzers.svg)](https://nuget.org/packages/Microsoft.Unity.Analyzers)
 
 This project provides Visual Studio with a better understanding of Unity projects by adding Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
 
 Check out the [list of analyzers and suppressors](doc/index.md) defined in this project.
+
+# Releases
+
+We are focusing our efforts on the experience brought by our IDEs (Visual Studio and Visual Studio for Mac) with Unity where these analyzers **ship in the box**.
+
+We also ship them on [NuGet](https://nuget.org/packages/Microsoft.Unity.Analyzers) as for people building class librairies for Unity and for other advanced usages.
 
 # Suggesting a new Analyzer
 If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
