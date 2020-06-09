@@ -36,3 +36,6 @@ ID | Suppressed ID | Justification
 [USP0010](USP0010.md) | IDE0051 | Don't flag fields with the ContextMenuItem attribute as unused
 [USP0011](USP0011.md) | IDE0044 | Don't make fields with the ContextMenuItem attribute read-only
 [USP0012](USP0012.md) | IDE0051 | Don't flag private methods with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute as unused.
+[USP0013](USP0013.md) | CA1823 | Don't flag private fields with SerializeField or SerializeReference attributes as unused
+[USP0014](USP0014.md) | CA1822 | The Unity runtime invokes Unity messages
+[USP0015](USP0015.md) | CA1801 | The Unity runtime invokes Unity messages
