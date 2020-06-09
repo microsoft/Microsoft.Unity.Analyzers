@@ -15,4 +15,3 @@ if ($BUILDINFOS -eq "//") {
 }
 
 Process ("libs/ProductInfo.cs") ("AssemblyInformationalVersion\(.*\)") ("AssemblyInformationalVersion(""$BUILDINFOS"")")
-Process ("libs/ProductInfo.cs") ("AssemblyCopyright\(.*\)") ("AssemblyCopyright(""Copyright $([char]0x00A9) Microsoft Corporation $YEAR"")")
