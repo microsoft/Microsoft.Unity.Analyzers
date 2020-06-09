@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.6.0-3.20177.13" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.0.0" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.4.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -23,6 +24,9 @@
 
   <ItemGroup>
     <None Include="$(PkgMicrosoft_CodeAnalysis_CSharp_CodeStyle)\analyzers\dotnet\cs\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>  
+    <None Include="$(PkgMicrosoft_CodeQuality_Analyzers)\analyzers\dotnet\cs\*.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>  
   </ItemGroup>
