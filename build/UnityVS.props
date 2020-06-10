@@ -9,6 +9,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Authors>Microsoft</Authors>
