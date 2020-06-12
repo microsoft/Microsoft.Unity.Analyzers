@@ -144,8 +144,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!(invocation.Expression is MemberAccessExpressionSyntax maes))
 				return true;
 
-			var typeInvocationContext = model.GetTypeInfo(maes.ChildNodes().FirstOrDefault()).Type as INamedTypeSymbol;
-			if (typeInvocationContext == null)
+			if (!(model.GetTypeInfo(maes.ChildNodes().FirstOrDefault()).Type is INamedTypeSymbol typeInvocationContext))
 				return false;
 
 			var mdec = invocation

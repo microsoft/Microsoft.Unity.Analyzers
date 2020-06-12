@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -13,8 +14,17 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
+	[Flags]
+	public enum SuppressorVerifierAnalyzers
+	{
+		CodeStyle = 1,
+		FxCop = 2
+	}
+
 	public abstract class SuppressorVerifier : DiagnosticVerifier
 	{
+		protected virtual SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeStyle;
+
 		protected static DiagnosticResult ExpectSuppressor(SuppressionDescriptor descriptor)
 		{
 			var result = new DiagnosticResult(descriptor.Id, DiagnosticSeverity.Hidden)
@@ -24,7 +34,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return result;
 		}
 
-		private IEnumerable<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
+		private static IEnumerable<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
 		{
 			var reference = new AnalyzerFileReference(assembly, new AnalyzerAssemblyLoader());
 			reference.AnalyzerLoadFailed += (s, e) => { Assert.True(false, e.Message); };
@@ -36,8 +46,16 @@ namespace Microsoft.Unity.Analyzers.Tests
 			var suppressor = (DiagnosticSuppressor)analyzer;
 
 			var analyzers = new List<DiagnosticAnalyzer>();
-			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CodeStyle.dll"));
-			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
+			if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.CodeStyle))
+			{
+				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CodeStyle.dll"));
+				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
+			}
+			if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.FxCop))
+			{
+				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.Analyzers.dll"));
+				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.CSharp.Analyzers.dll"));
+			}
 
 			return analyzers
 				.Where(a => a.SupportedDiagnostics

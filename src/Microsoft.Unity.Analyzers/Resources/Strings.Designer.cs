@@ -412,6 +412,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Unity runtime invokes Unity messages..
+        /// </summary>
+        internal static string MessageSuppressorJustification {
+            get {
+                return ResourceManager.GetString("MessageSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usage of nameof or direct call is preferred for type safety..
         /// </summary>
         internal static string MethodInvocationDiagnosticDescription {
@@ -714,15 +723,6 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string UnusedCoroutineReturnValueDiagnosticTitle {
             get {
                 return ResourceManager.GetString("UnusedCoroutineReturnValueDiagnosticTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Unity runtime invokes Unity messages..
-        /// </summary>
-        internal static string UnusedMessageSuppressorJustification {
-            get {
-                return ResourceManager.GetString("UnusedMessageSuppressorJustification", resourceCulture);
             }
         }
         
