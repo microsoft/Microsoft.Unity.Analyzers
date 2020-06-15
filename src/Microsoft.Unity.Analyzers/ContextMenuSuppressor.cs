@@ -123,7 +123,7 @@ namespace Microsoft.Unity.Analyzers
 				const int methodNameIndex = 1;
 				return attributes
 					.Select(a => a.ConstructorArguments)
-					.Any(ca => ca.Length > methodNameIndex && symbol.Name == ca[methodNameIndex].Value.ToString());
+					.Any(ca => ca.Length > methodNameIndex && symbol.Name == ca[methodNameIndex].Value?.ToString());
 			}
 
 			return false;
