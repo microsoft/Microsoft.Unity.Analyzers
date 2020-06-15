@@ -727,7 +727,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag methods with the ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused..
+        ///   Looks up a localized string similar to Don&apos;t flag methods with MenuItem/ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused..
         /// </summary>
         internal static string UnusedMethodContextMenuSuppressorJustification {
             get {
