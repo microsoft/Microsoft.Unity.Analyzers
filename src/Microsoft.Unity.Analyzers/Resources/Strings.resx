@@ -292,7 +292,7 @@
     <value>Unused Unity Coroutine</value>
   </data>
   <data name="UnusedMethodContextMenuSuppressorJustification" xml:space="preserve">
-    <value>Don't flag methods with the ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused.</value>
+    <value>Don't flag methods with MenuItem/ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused.</value>
   </data>
   <data name="ReadonlyContextMenuItemJustification" xml:space="preserve">
     <value>Don't set fields with a ContextMenuItem attribute as readonly.</value>

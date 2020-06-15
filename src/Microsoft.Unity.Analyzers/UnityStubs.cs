@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Unity.Analyzers;
-using Microsoft.Unity.Analyzers.Resources;
 
 namespace UnityEngine
 {
@@ -365,6 +364,10 @@ namespace UnityEditor
 	}
 
 	class InitializeOnLoadMethodAttribute : System.Attribute
+	{
+	}
+
+	class MenuItem : System.Attribute
 	{
 	}
 }

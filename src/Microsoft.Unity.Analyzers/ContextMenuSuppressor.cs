@@ -90,7 +90,7 @@ namespace Microsoft.Unity.Analyzers
 			switch (symbol)
 			{
 				case IMethodSymbol methodSymbol:
-					if (methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu))))
+					if (methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu)) || a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
 						return true;
 					if (IsReferencedByContextMenuItem(methodSymbol, containingType))
 						return true;

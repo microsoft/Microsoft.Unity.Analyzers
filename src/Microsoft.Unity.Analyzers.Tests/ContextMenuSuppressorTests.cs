@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -27,6 +26,27 @@ class Menu : MonoBehaviour
 
 			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
 				.WithLocation(7, 18);
+
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
+
+		[Fact]
+		public async Task MenuItemSuppressed()
+		{
+			const string test = @"
+using UnityEditor;
+using UnityEngine;
+
+class Menu : MonoBehaviour
+{
+    [MenuItem(""Tools/Project Reference Generator"")]
+    private static void MenuItemMethod()
+    {
+    }
+}";
+
+			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
+				.WithLocation(8, 25);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
