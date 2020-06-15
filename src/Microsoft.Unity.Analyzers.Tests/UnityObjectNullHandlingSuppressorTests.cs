@@ -57,6 +57,35 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task NullCoalescingMethodArgumentSuppressed()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+	public Transform Method(Transform o)
+    {
+        return o;
+    }
+
+    public Transform NC()
+    {
+        return Method((a != null) ? a : b);
+    }
+}";
+
+			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.NullCoalescingRule)
+				.WithLocation(16, 23);
+
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
+
+
+		[Fact]
 		public async Task NullPropagationSuppressed()
 		{
 			const string test = @"
@@ -95,6 +124,30 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
+
+		[Fact]
+		public async Task NullPropagationMethodArgumentSuppressed()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Method(object o) {
+    }
+
+    public void NP(Transform o)
+    {
+        Method(((o == null)) ? null : o.ToString());
+    }
+}";
+
+			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.NullPropagationRule)
+				.WithLocation(11, 16);
+
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
+
 
 	}
 }

@@ -154,18 +154,21 @@ namespace Microsoft.Unity.Analyzers
 			if (node == null)
 				return;
 
-			if (!(node is ConditionalExpressionSyntax cex))
-				return;
-
-			AnalyzeConditionExpression(diagnostic, context, cex.Condition);
+			AnalyzeNode(diagnostic, context, node);
 		}
 
-		private static void AnalyzeConditionExpression(Diagnostic diagnostic, SuppressionAnalysisContext context, ExpressionSyntax expression)
+		private static void AnalyzeNode(Diagnostic diagnostic, SuppressionAnalysisContext context, SyntaxNode node)
 		{
-			switch (expression.Kind())
+			switch (node.Kind())
 			{
+				case SyntaxKind.Argument:
+					AnalyzeNode(diagnostic, context, ((ArgumentSyntax)node).Expression);
+					return;
 				case SyntaxKind.ParenthesizedExpression:
-					AnalyzeConditionExpression(diagnostic, context, ((ParenthesizedExpressionSyntax)expression).Expression);
+					AnalyzeNode(diagnostic, context, ((ParenthesizedExpressionSyntax)node).Expression);
+					return;
+				case SyntaxKind.ConditionalExpression:
+					AnalyzeNode(diagnostic, context, ((ConditionalExpressionSyntax)node).Condition);
 					return;
 				case SyntaxKind.EqualsExpression:
 				case SyntaxKind.NotEqualsExpression:
@@ -174,11 +177,11 @@ namespace Microsoft.Unity.Analyzers
 					return;
 			}
 
-			var binary = (BinaryExpressionSyntax)expression;
+			var binary = (BinaryExpressionSyntax)node;
 			if (!binary.Right.IsKind(SyntaxKind.NullLiteralExpression))
 				return;
 
-			var model = context.GetSemanticModel(expression.SyntaxTree);
+			var model = context.GetSemanticModel(node.SyntaxTree);
 			if (model == null)
 				return;
 
