@@ -67,7 +67,7 @@ class Camera : MonoBehaviour
     public Transform a = null;
     public Transform b = null;
 
-	public Transform Method(Transform o)
+    public Transform Method(Transform o)
     {
         return o;
     }
