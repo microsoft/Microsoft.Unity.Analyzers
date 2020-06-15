@@ -83,7 +83,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root.FindNode(context.Span) is BinaryExpressionSyntax coalescing))
+			if (!(root?.FindNode(context.Span) is BinaryExpressionSyntax coalescing))
 				return;
 
 			// We do not want to fix expressions with possible side effects such as `Foo() ?? bar`
