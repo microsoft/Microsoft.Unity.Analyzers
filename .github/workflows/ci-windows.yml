@@ -27,7 +27,7 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unitycache-2018.4.19f1
+        key: ${{ runner.os }}-unitycache-2019.4.0f1
         path: UnityCache
       
     - name: Download Unity 2019.4.0f1 LTS
