@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -150,15 +151,30 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var node = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken).FindNode(diagnostic.Location.SourceSpan);
-			if (node == null)
+			var root = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken);
+
+			// We can be called in the context of a method argument or a regular expression
+			if (!(root
+				.FindNode(diagnostic.Location.SourceSpan)
+				.DescendantNodesAndSelf()
+				.OfType<ConditionalExpressionSyntax>()
+				.FirstOrDefault() is ConditionalExpressionSyntax expressionSyntax))
 				return;
 
-			if (!node.IsKind(SyntaxKind.ConditionalExpression))
+			// We can be tricked by extra parentheses for the condition, so go to the first concrete binary expression
+			if (!(expressionSyntax
+				.Condition
+				.DescendantNodesAndSelf()
+				.OfType<BinaryExpressionSyntax>()
+				.FirstOrDefault() is BinaryExpressionSyntax binaryExpression))
 				return;
 
-			var cond = (ConditionalExpressionSyntax)node;
-			switch (cond.Condition.Kind())
+			AnalyzeBinaryExpression(diagnostic, context, binaryExpression);
+		}
+
+		private static void AnalyzeBinaryExpression(Diagnostic diagnostic, SuppressionAnalysisContext context, BinaryExpressionSyntax binaryExpression)
+		{
+			switch (binaryExpression.Kind())
 			{
 				case SyntaxKind.EqualsExpression:
 				case SyntaxKind.NotEqualsExpression:
@@ -167,15 +183,14 @@ namespace Microsoft.Unity.Analyzers
 					return;
 			}
 
-			var binary = (BinaryExpressionSyntax)cond.Condition;
-			if (!binary.Right.IsKind(SyntaxKind.NullLiteralExpression))
+			if (!binaryExpression.Right.IsKind(SyntaxKind.NullLiteralExpression))
 				return;
 
-			var model = context.GetSemanticModel(node.SyntaxTree);
+			var model = context.GetSemanticModel(binaryExpression.SyntaxTree);
 			if (model == null)
 				return;
 
-			var type = model.GetTypeInfo(binary.Left);
+			var type = model.GetTypeInfo(binaryExpression.Left);
 			if (type.Type == null)
 				return;
 
