@@ -46,7 +46,7 @@ namespace Microsoft.Unity.Analyzers
 					symbol = model.GetDeclaredSymbol(pdec);
 					break;
 				case FieldDeclarationSyntax fdec:
-					if (fdec?.Declaration.Variables.Count == 0)
+					if (fdec.Declaration.Variables.Count == 0)
 						return;
 
 					// attributes are applied to all fields declaration symbols
@@ -100,7 +100,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root.FindNode(context.Span) is MemberDeclarationSyntax declaration))
+			if (!(root?.FindNode(context.Span) is MemberDeclarationSyntax declaration))
 				return;
 
 			if (!(declaration is PropertyDeclarationSyntax || declaration is FieldDeclarationSyntax))

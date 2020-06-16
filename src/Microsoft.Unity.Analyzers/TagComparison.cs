@@ -140,7 +140,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			var node = root
+			var node = root?
 				.FindNode(context.Span).DescendantNodesAndSelf()
 				.FirstOrDefault(n => n is BinaryExpressionSyntax || n is InvocationExpressionSyntax);
 

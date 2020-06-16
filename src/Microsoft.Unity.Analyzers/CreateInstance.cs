@@ -59,6 +59,9 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var typeInfo = context.SemanticModel.GetTypeInfo(creation);
+			if (typeInfo.Type == null)
+				return;
+
 			if (typeInfo.Type.Extends(typeof(UnityEngine.ScriptableObject)))
 			{
 				context.ReportDiagnostic(Diagnostic.Create(ScriptableObjectRule, creation.GetLocation(), typeInfo.Type.Name));
@@ -84,7 +87,7 @@ namespace Microsoft.Unity.Analyzers
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 			var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root.FindNode(context.Span) is ObjectCreationExpressionSyntax creation))
+			if (!(root?.FindNode(context.Span) is ObjectCreationExpressionSyntax creation))
 				return;
 
 			var diagnostic = context.Diagnostics.FirstOrDefault();
@@ -134,6 +137,8 @@ namespace Microsoft.Unity.Analyzers
 			var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
 			var typeInfo = semanticModel.GetTypeInfo(creation);
+			if (typeInfo.Type == null)
+				return document;
 
 			var invocation = InvocationExpression(
 				MemberAccessExpression(

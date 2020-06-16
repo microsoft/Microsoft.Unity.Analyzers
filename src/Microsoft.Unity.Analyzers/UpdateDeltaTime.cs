@@ -106,7 +106,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root.FindNode(context.Span) is IdentifierNameSyntax identifierName))
+			if (!(root?.FindNode(context.Span) is IdentifierNameSyntax identifierName))
 				return;
 
 			var diagnostic = context.Diagnostics.FirstOrDefault();
