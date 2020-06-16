@@ -180,6 +180,7 @@ namespace UnityEngine
 		void OnCanvasGroupChanged() { }
 		IEnumeratorOrVoid OnParticleTrigger() { return null; }
 		void OnParticleSystemStopped() { }
+		void OnParticleUpdateJobScheduled() { }
 	}
 
 	class Animator
