@@ -30,9 +30,9 @@ jobs:
         key: ${{ runner.os }}-unitycache-2018.4.19f1
         path: UnityCache
 
-    - name: Download Unity 2018.4.19f1 LTS
+    - name: Download Unity 2019.4.0f1 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/459f70f82ea4/MacEditorInstaller/Unity.pkg
+      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/0af376155913/MacEditorInstaller/Unity.pkg
 
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
