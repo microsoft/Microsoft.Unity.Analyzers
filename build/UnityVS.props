@@ -16,7 +16,7 @@
     <Owners></Owners> <!-- Do not populate this field in the package nuspec file. This should be managed on nuget.org -->
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright> <!-- Mandatory value for Nuget uploads -->
     <RepositoryUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</RepositoryUrl>
-    <VersionPrefix>1.7.0</VersionPrefix>
+    <VersionPrefix>1.7.1</VersionPrefix>
     <PackageTags>Unity3d analyzers csharp</PackageTags>
     <Description>Roslyn analyzers for Unity game developers</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
