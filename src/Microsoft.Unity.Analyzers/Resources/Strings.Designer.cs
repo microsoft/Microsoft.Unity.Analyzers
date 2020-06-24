@@ -358,7 +358,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Class &quot;{0}&quot; decorated with the InitializeOnLoad attribute is missing a static conductor..
+        ///   Looks up a localized string similar to Class &quot;{0}&quot; decorated with the InitializeOnLoad attribute is missing a static constructor..
         /// </summary>
         internal static string InitializeOnLoadStaticCtorDiagnosticMessageFormat {
             get {

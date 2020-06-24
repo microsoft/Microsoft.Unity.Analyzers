@@ -193,7 +193,7 @@
     <value>Provide a static constructor when applying the InitializeOnLoad attribute to a class. This will call it when the editor launches.</value>
   </data>
   <data name="InitializeOnLoadStaticCtorDiagnosticMessageFormat" xml:space="preserve">
-    <value>Class "{0}" decorated with the InitializeOnLoad attribute is missing a static conductor.</value>
+    <value>Class "{0}" decorated with the InitializeOnLoad attribute is missing a static constructor.</value>
   </data>
   <data name="InitializeOnLoadStaticCtorDiagnosticTitle" xml:space="preserve">
     <value>Missing static constructor with InitializeOnLoad</value>
