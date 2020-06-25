@@ -227,6 +227,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 					.AddRange(GetRelatedAnalyzers(analyzer));
 
 				var compilation = await project.GetCompilationAsync();
+				Assert.NotNull(compilation);
+
 				var analyzerOptions = new CompilationWithAnalyzersOptions(default, null, true, true, true);
 
 				var compilationWithAnalyzers = compilation

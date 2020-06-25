@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Win32;
+using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
@@ -34,7 +35,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		private static void RegisterApplicationsInstallations()
 		{
-			var hub = "/Applications/Unity/Hub/Editor";
+			const string hub = "/Applications/Unity/Hub/Editor";
 			if (Directory.Exists(hub))
 			{
 				var directories = Directory.EnumerateDirectories(hub)
@@ -74,8 +75,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 						RegisterUnityInstallation(unitypath);
 				}
 			}
-			catch
+			catch(Exception e)
 			{
+				Assert.True(false, e.ToString());
 			}
 			finally
 			{
