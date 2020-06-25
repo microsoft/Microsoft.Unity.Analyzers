@@ -63,7 +63,10 @@ namespace Microsoft.Unity.Analyzers.Tests
 					newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
 					var diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
-					var newDoc = (await document.GetSyntaxRootAsync()).ToFullString();
+					var root = await document.GetSyntaxRootAsync();
+					Assert.NotNull(root);
+
+					var newDoc = root.ToFullString();
 					Assert.True(false, $"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{newDoc}\r\n");
 				}
 
@@ -111,6 +114,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		private static async Task<IEnumerable<Diagnostic>> GetCompilerDiagnosticsAsync(Document document)
 		{
 			var model = await document.GetSemanticModelAsync();
+			Assert.NotNull(model);
 
 			return model
 				.GetDiagnostics()

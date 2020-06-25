@@ -15,10 +15,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 	/// <summary>
 	///     Structure that stores information about a <see cref="Diagnostic" /> appearing in a source.
 	/// </summary>
-	public struct DiagnosticResult
+	public readonly struct DiagnosticResult
 	{
-		public static readonly DiagnosticResult[] EmptyDiagnosticResults = { };
-
 		private static readonly object[] EmptyArguments = new object[0];
 
 		private readonly ImmutableArray<DiagnosticLocation> _spans;

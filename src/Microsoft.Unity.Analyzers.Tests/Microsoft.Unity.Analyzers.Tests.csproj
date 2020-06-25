@@ -24,9 +24,11 @@
 
   <ItemGroup>
     <None Include="$(PkgMicrosoft_CodeAnalysis_CSharp_CodeStyle)\analyzers\dotnet\cs\*.dll">
+      <Visible>False</Visible>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>  
     <None Include="$(PkgMicrosoft_CodeQuality_Analyzers)\analyzers\dotnet\cs\*.dll">
+      <Visible>False</Visible>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>  
   </ItemGroup>

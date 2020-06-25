@@ -88,6 +88,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 				return false;
 
 			var suppressions = (ImmutableHashSet<(string Id, LocalizableString Justification)>)spProperty.GetValue(psi);
+			Assert.NotNull(suppressions);
+
 			if (!suppressions.Any(t => t.Id == suppressor.Id && t.Justification.Equals(suppressor.MessageFormat)))
 				return false;
 

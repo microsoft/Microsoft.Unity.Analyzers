@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public struct DiagnosticLocation
+	public readonly struct DiagnosticLocation
 	{
 		public DiagnosticLocation(FileLinePositionSpan span, DiagnosticLocationOptions options)
 		{
