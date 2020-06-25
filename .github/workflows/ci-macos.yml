@@ -27,12 +27,12 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unitycache-2019.4.0f1
+        key: ${{ runner.os }}-unitycache-2019.4.1f1
         path: UnityCache
 
-    - name: Download Unity 2019.4.0f1 LTS
+    - name: Download Unity 2019.4.1f1 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/0af376155913/MacEditorInstaller/Unity.pkg
+      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/e6c045e14e4e/MacEditorInstaller/Unity.pkg
 
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
@@ -65,5 +65,6 @@ jobs:
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
       env:
-        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-        DOTNET_CLI_TELEMETRY_OPTOUT: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+        DOTNET_NOLOGO: 1
