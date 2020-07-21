@@ -116,9 +116,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			var model = await document.GetSemanticModelAsync();
 			Assert.NotNull(model);
 
-			return model
-				.GetDiagnostics()
-				.Where(d => !NoWarn.Contains(d.Id));
+			return model.GetDiagnostics();
 		}
 
 		private static async Task<string> GetStringFromDocumentAsync(Document document)
