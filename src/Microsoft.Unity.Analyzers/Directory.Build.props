@@ -4,6 +4,10 @@
     <VstuDirectory>$(MSBuildThisFileDirectory)..\..\..\..\</VstuDirectory>
   </PropertyGroup>
 
+  <ItemGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">
+    <PackageReference Include="MicroBuild.Core" Version="0.3.0" PrivateAssets="all" />
+  </ItemGroup>
+
   <Import Project="$(VstuDirectory)build\UnityVS.props" Condition="Exists('$(VstuDirectory)build\UnityVS.props')" />
   <Import Project="$(VstuDirectory)build\UnityVS.Signing.props" Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.props')" />
 
