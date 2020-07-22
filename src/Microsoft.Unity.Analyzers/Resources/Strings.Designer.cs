@@ -511,6 +511,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Objects deriving from &apos;UnityEngine.Object&apos; cannot be initialized..
+        /// </summary>
+        internal static string NullableReferenceTypesSuppressorJustification {
+            get {
+                return ResourceManager.GetString("NullableReferenceTypesSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t set fields with a ContextMenuItem attribute as readonly..
         /// </summary>
         internal static string ReadonlyContextMenuItemJustification {
