@@ -95,6 +95,30 @@ namespace UnityEngine
 	{
 	}
 
+	class Material
+	{
+	}
+
+	class Renderer
+	{
+	}
+
+	class AnimationClip
+	{
+	}
+
+	class AudioClip
+	{
+	}
+
+	class Cubemap
+	{
+	}
+
+	class Sprite
+	{
+	}
+
 	class ScriptableObject
 	{
 		void Awake() { }
@@ -328,10 +352,18 @@ namespace UnityEngine.UIElements
 	}
 }
 
+namespace UnityEditor.AssetImporters
+{
+	class MaterialDescription
+	{
+	}
+}
+
 namespace UnityEditor
 {
 	using UnityEngine;
 	using UnityEngine.UIElements;
+	using AssetImporters;
 
 	class Editor : ScriptableObject
 	{
@@ -371,4 +403,40 @@ namespace UnityEditor
 	class MenuItem : System.Attribute
 	{
 	}
+
+	class EditorCurveBinding
+	{
+	}
+
+	class AssetPostprocessor
+	{
+		void OnAssignMaterialModel(Material material, Renderer renderer) { }
+		void OnPostprocessAnimation(GameObject root, AnimationClip clip) { }
+		void OnPostprocessAssetbundleNameChanged(string assetPath, string previousAssetBundleName, string newAssetBundleName) { }
+		void OnPostprocessAudio(AudioClip clip) { }
+		void OnPostprocessCubemap(Cubemap texture) { }
+		void OnPostprocessGameObjectWithAnimatedUserProperties(GameObject gameObject, EditorCurveBinding[] bindings) { }
+		void OnPostprocessGameObjectWithUserProperties(GameObject gameObject, string[] propNames, System.Object[] values) { }
+		void OnPostprocessMaterial(Material material) { }
+		void OnPostprocessMeshHierarchy(GameObject root) { }
+		void OnPostprocessModel(GameObject gameObject) { }
+		void OnPostprocessSpeedTree(GameObject gameobject) { }
+		void OnPostProcessSprites(Texture2D texture, Sprite[] sprites) { }
+		void OnPostprocessTexture(Texture2D texture) { }
+
+		void OnPreprocessAnimation() { }
+		void OnPreprocessAsset() { }
+		void OnPreprocessAudio() { }
+		void OnPreprocessMaterialDescription(MaterialDescription description, Material material, AnimationClip[] materialAnimation) { }
+		void OnPreprocessModel() { }
+		void OnPreprocessSpeedTree() { }
+		void OnPreprocessTexture() { }
+
+        // undocumented static methods
+		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) { }
+		static bool OnPreGeneratingCSProjectFiles() { return false; }
+		static string OnGeneratedSlnSolution(string path, string content) { return null; }
+		static string OnGeneratedCSProject(string path, string content) { return null; }
+	}
+
 }
