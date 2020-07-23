@@ -65,7 +65,7 @@ namespace Microsoft.Unity.Analyzers
 			FieldDeclarationSyntax declarationSyntax = declarator.FirstAncestorOrSelf<FieldDeclarationSyntax>();
 
 			//suppress for fields that are not private and not static => statics cannot be set in editor and are not shown in the inspector and cannot be set there
-			if (!declarationSyntax.Modifiers.Any(modifier => modifier.Text == "private" || modifier.Text == "static")
+			if (!declarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.StaticKeyword))
 				&& !declarationSyntax.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == "HideInInspector")))
 			{
 					context.ReportSuppression(Suppression.Create(NullableRule, diagnostic));
