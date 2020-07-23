@@ -13,7 +13,7 @@ namespace Microsoft.Unity.Analyzers
 {
 	internal class ScriptInfo
 	{
-		private static readonly Type[] Types = { typeof(UnityEngine.Networking.NetworkBehaviour), typeof(UnityEngine.StateMachineBehaviour), typeof(UnityEngine.EventSystems.UIBehaviour), typeof(UnityEditor.ScriptableWizard), typeof(UnityEditor.EditorWindow), typeof(UnityEditor.Editor), typeof(UnityEngine.ScriptableObject), typeof(UnityEngine.MonoBehaviour), };
+		private static readonly Type[] Types = { typeof(UnityEngine.Networking.NetworkBehaviour), typeof(UnityEngine.StateMachineBehaviour), typeof(UnityEngine.EventSystems.UIBehaviour), typeof(UnityEditor.ScriptableWizard), typeof(UnityEditor.EditorWindow), typeof(UnityEditor.Editor), typeof(UnityEngine.ScriptableObject), typeof(UnityEngine.MonoBehaviour), typeof(UnityEditor.AssetPostprocessor) };
 
 		private readonly ITypeSymbol _symbol;
 		private readonly Type _metadata;
