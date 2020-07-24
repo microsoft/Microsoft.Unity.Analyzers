@@ -106,7 +106,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MonoBehaviour &quot;{0}&quot; should not be instantiated directly..
+        ///   Looks up a localized string similar to MonoBehaviour &apos;{0}&apos; should not be instantiated directly..
         /// </summary>
         internal static string CreateMonoBehaviourInstanceDiagnosticMessageFormat {
             get {
@@ -142,7 +142,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ScriptableObject &quot;{0}&quot; should not be instantiated directly..
+        ///   Looks up a localized string similar to ScriptableObject &apos;{0}&apos; should not be instantiated directly..
         /// </summary>
         internal static string CreateScriptableObjectInstanceDiagnosticMessageFormat {
             get {
@@ -178,7 +178,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Unity message &quot;{0}&quot; is empty..
+        ///   Looks up a localized string similar to The Unity message &apos;{0}&apos; is empty..
         /// </summary>
         internal static string EmptyUnityMessageDiagnosticMessageFormat {
             get {
@@ -241,7 +241,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is not a Unity Component.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not a Unity Component..
         /// </summary>
         internal static string GetComponentIncorrectTypeDiagnosticMessageFormat {
             get {
@@ -268,7 +268,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SerializeField attribute does not work on properties, and are unnecessary for public fields.
+        ///   Looks up a localized string similar to SerializeField attribute does not work on properties, and are unnecessary for public fields..
         /// </summary>
         internal static string ImproperSerializeFieldDiagnosticDescription {
             get {
@@ -277,7 +277,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SerializeField attribute is invalid or redundant for property or field: {0}.
+        ///   Looks up a localized string similar to SerializeField attribute is invalid or redundant for property or field: &apos;{0}&apos;..
         /// </summary>
         internal static string ImproperSerializeFieldDiagnosticMessageFormat {
             get {
@@ -313,7 +313,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Method &quot;{0}&quot; decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute must be static and parameterless..
+        ///   Looks up a localized string similar to Method &apos;{0}&apos; decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute must be static and parameterless..
         /// </summary>
         internal static string InitializeOnLoadMethodDiagnosticMessageFormat {
             get {
@@ -358,7 +358,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Class &quot;{0}&quot; decorated with the InitializeOnLoad attribute is missing a static constructor..
+        ///   Looks up a localized string similar to Class &apos;{0}&apos; decorated with the InitializeOnLoad attribute is missing a static constructor..
         /// </summary>
         internal static string InitializeOnLoadStaticCtorDiagnosticMessageFormat {
             get {
@@ -394,7 +394,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Unity message &quot;{0}&quot; has an incorrect signature..
+        ///   Looks up a localized string similar to The Unity message &apos;{0}&apos; has an incorrect signature..
         /// </summary>
         internal static string MessageSignatureDiagnosticMessageFormat {
             get {
@@ -430,7 +430,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Method &quot;{0}&quot; is invoked using a string literal..
+        ///   Looks up a localized string similar to Method &apos;{0}&apos; is invoked using a string literal..
         /// </summary>
         internal static string MethodInvocationDiagnosticMessageFormat {
             get {
@@ -493,7 +493,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Method &quot;{0}&quot; has a preferred generic overload..
+        ///   Looks up a localized string similar to Method &apos;{0}&apos; has a preferred generic overload..
         /// </summary>
         internal static string NonGenericGetComponentDiagnosticMessageFormat {
             get {
@@ -529,7 +529,34 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Compared to SetPixels, SetPixels32 is much faster and uses less memory.
+        ///   Looks up a localized string similar to You should not use System.Reflection features in performance critical messages..
+        /// </summary>
+        internal static string ReflectionDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ReflectionDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System.Reflection usage detected in performance critical message &apos;{0}&apos;..
+        /// </summary>
+        internal static string ReflectionDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ReflectionDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System.Reflection features in performance critical messages.
+        /// </summary>
+        internal static string ReflectionDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ReflectionDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compared to SetPixels, SetPixels32 is much faster and uses less memory..
         /// </summary>
         internal static string SetPixelsMethodUsageDiagnosticDescription {
             get {
@@ -538,7 +565,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is slower than SetPixels32.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is slower than SetPixels32..
         /// </summary>
         internal static string SetPixelsMethodUsageDiagnosticMessageFormat {
             get {
@@ -709,7 +736,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Coroutine {0} should be called using StartCoroutine()..
+        ///   Looks up a localized string similar to Coroutine &apos;{0}&apos; should be called using StartCoroutine()..
         /// </summary>
         internal static string UnusedCoroutineReturnValueDiagnosticMessageFormat {
             get {
