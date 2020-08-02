@@ -5,7 +5,6 @@
 
 //#nullable enable
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -34,14 +33,27 @@ namespace Microsoft.Unity.Analyzers
 				SyntaxNode root = diagnostic.Location.SourceTree.GetRoot();
 				SyntaxNode location = root.FindNode(diagnostic.Location.SourceSpan);
 
-				//does the inspected class inherit from Monobehaviour?
-				if (!location.FirstAncestorOrSelf<ClassDeclarationSyntax>()?.BaseList?.ChildNodes().Any(node => GetSymbol(diagnostic.Location.SourceTree, ((BaseTypeSyntax)node).Type, context.Compilation).Extends(typeof(UnityEngine.MonoBehaviour))) ?? true)
+				ClassDeclarationSyntax classDeclaration = location.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+
+				if (classDeclaration is null)
 				{
 					continue;
 				}
 
+				if (!new ScriptInfo(context.GetSemanticModel(diagnostic.Location.SourceTree).GetDeclaredSymbol(classDeclaration)).HasMessages)
+				{
+					continue;
+				}
+
+				//does the inspected class inherit from Monobehaviour?
+				//if (!location.FirstAncestorOrSelf<ClassDeclarationSyntax>().BaseList?.ChildNodes().Any(node => GetSymbol(diagnostic.Location.SourceTree, ((BaseTypeSyntax)node).Type, context.Compilation).Extends(typeof(UnityEngine.MonoBehaviour))) ?? true)
+				//{
+				//	continue;
+				//}
+
 				PropertyDeclarationSyntax propertyDeclaration = location.FirstAncestorOrSelf<PropertyDeclarationSyntax>();
 
+				//handle properties before fields to minimize double checking of potential backing fields
 				if (!(propertyDeclaration is null))
 				{
 					AnalyzeProperties(propertyDeclaration, diagnostic, context, root);
@@ -68,8 +80,8 @@ namespace Microsoft.Unity.Analyzers
 			if (!declarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.StaticKeyword))
 				&& !declarationSyntax.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == "HideInInspector")))
 			{
-					context.ReportSuppression(Suppression.Create(NullableRule, diagnostic));
-					return;
+				context.ReportSuppression(Suppression.Create(NullableRule, diagnostic));
+				return;
 			}
 
 			//check for serializefield attribute => variable could be set in editor
@@ -139,7 +151,8 @@ namespace Microsoft.Unity.Analyzers
 			IEnumerable<MethodDeclarationSyntax> methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
 			IEnumerable<SyntaxNode> methodBodies = Enumerable.Empty<SyntaxNode>();
 
-			foreach (MethodDeclarationSyntax methodSyntax in methods.Where(method => method.Identifier.Text == "Start" || method.Identifier.Text == "Awake" || method.Identifier.Text == "OnEnable"))
+			//get all unity messages usable as initialization messages
+			foreach (MethodDeclarationSyntax methodSyntax in methods.Where(method => (method.Identifier.Text == "Start" || method.Identifier.Text == "Awake" || method.Identifier.Text == "OnEnable" || method.Identifier.Text == "OnWizardCreate") && method.ReturnType.ChildTokens().Any(token => token.IsKind(SyntaxKind.VoidKeyword))))
 			{
 				methodBodies = methodBodies.Concat(methods
 					.Where(syntax => methodSyntax.DescendantNodes().OfType<InvocationExpressionSyntax>()
@@ -155,7 +168,7 @@ namespace Microsoft.Unity.Analyzers
 		private static IEnumerable<string> AssignedProperties(SyntaxNode root, IEnumerable<SyntaxNode> methodBodies)
 		{
 			return root.DescendantNodes().OfType<PropertyDeclarationSyntax>()
-				.Where(property => property.AccessorList.Accessors.Any(accessor => accessor.Keyword.Text == "set" && IsAssignedTo(property.Identifier.Text, methodBodies)))
+				.Where(property => property.AccessorList.Accessors.Any(accessor => accessor.Keyword.IsKind(SyntaxKind.SetKeyword) && IsAssignedTo(property.Identifier.Text, methodBodies)))
 				.SelectMany(syntax => syntax.AccessorList.Accessors
 					.Select(accessor => accessor.Body ?? (SyntaxNode)accessor.ExpressionBody))
 					.Where(node => !(node is null))
