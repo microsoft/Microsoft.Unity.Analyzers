@@ -11,6 +11,29 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public class MessageSuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
 	{
 		[Fact]
+		public async Task UnusedStaticMethodAndParametersSuppressed()
+		{
+			const string test = @"
+using UnityEditor;
+
+class Processor : AssetPostprocessor
+{
+    private static string OnGeneratedCSProject(string path, string content)
+    {
+        return null;
+    }
+}";
+
+			var suppressors = new [] {
+				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(6, 27),
+				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 55),
+				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 68),
+			};
+
+			await VerifyCSharpDiagnosticAsync(test, suppressors);
+		}
+
+		[Fact]
 		public async Task UnusedMethodSuppressed()
 		{
 			const string test = @"

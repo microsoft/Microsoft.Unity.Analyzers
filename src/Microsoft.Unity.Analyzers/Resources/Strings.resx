@@ -133,7 +133,8 @@
     <value>Unity messages are called by the runtime even if they're empty. Remove them to avoid unnecessary processing.</value>
   </data>
   <data name="EmptyUnityMessageDiagnosticMessageFormat" xml:space="preserve">
-    <value>The Unity message "{0}" is empty.</value>
+    <value>The Unity message '{0}' is empty.</value>
+    <comment>{0} is a method name</comment>
   </data>
   <data name="EmptyUnityMessageDiagnosticTitle" xml:space="preserve">
     <value>Empty Unity message</value>
@@ -157,7 +158,8 @@
     <value>Usage of the generic form of GetComponent is preferred for type safety.</value>
   </data>
   <data name="NonGenericGetComponentDiagnosticMessageFormat" xml:space="preserve">
-    <value>Method "{0}" has a preferred generic overload.</value>
+    <value>Method '{0}' has a preferred generic overload.</value>
+    <comment>{0} is a method name</comment>
   </data>
   <data name="NonGenericGetComponentDiagnosticTitle" xml:space="preserve">
     <value>Usage of non generic GetComponent</value>
@@ -193,7 +195,8 @@
     <value>Provide a static constructor when applying the InitializeOnLoad attribute to a class. This will call it when the editor launches.</value>
   </data>
   <data name="InitializeOnLoadStaticCtorDiagnosticMessageFormat" xml:space="preserve">
-    <value>Class "{0}" decorated with the InitializeOnLoad attribute is missing a static constructor.</value>
+    <value>Class '{0}' decorated with the InitializeOnLoad attribute is missing a static constructor.</value>
+    <comment>{0} is a type name</comment>
   </data>
   <data name="InitializeOnLoadStaticCtorDiagnosticTitle" xml:space="preserve">
     <value>Missing static constructor with InitializeOnLoad</value>
@@ -205,7 +208,7 @@
     <value>This Unity message uses an incorrect method signature.</value>
   </data>
   <data name="MessageSignatureDiagnosticMessageFormat" xml:space="preserve">
-    <value>The Unity message "{0}" has an incorrect signature.</value>
+    <value>The Unity message '{0}' has an incorrect signature.</value>
   </data>
   <data name="MessageSignatureDiagnosticTitle" xml:space="preserve">
     <value>Incorrect message signature</value>
@@ -247,7 +250,8 @@
     <value>Use AddComponent() to create MonoBehaviours. A MonoBehaviour component needs to be attached to a GameObject.</value>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticMessageFormat" xml:space="preserve">
-    <value>MonoBehaviour "{0}" should not be instantiated directly.</value>
+    <value>MonoBehaviour '{0}' should not be instantiated directly.</value>
+    <comment>{0} is a type name</comment>
   </data>
   <data name="CreateMonoBehaviourInstanceDiagnosticTitle" xml:space="preserve">
     <value>MonoBehaviour instance creation</value>
@@ -259,7 +263,8 @@
     <value>Use CreateInstance() to create a ScriptableObject. To handle Unity message methods, the Unity engine needs to create the ScriptableObject.</value>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticMessageFormat" xml:space="preserve">
-    <value>ScriptableObject "{0}" should not be instantiated directly.</value>
+    <value>ScriptableObject '{0}' should not be instantiated directly.</value>
+    <comment>{0} is a type name</comment>
   </data>
   <data name="CreateScriptableObjectInstanceDiagnosticTitle" xml:space="preserve">
     <value>ScriptableObject instance creation</value>
@@ -286,7 +291,8 @@
     <value>Use StartCoroutine() to start a coroutine. Calling the coroutine method directly will result in the coroutine never being executed.</value>
   </data>
   <data name="UnusedCoroutineReturnValueDiagnosticMessageFormat" xml:space="preserve">
-    <value>Coroutine {0} should be called using StartCoroutine().</value>
+    <value>Coroutine '{0}' should be called using StartCoroutine().</value>
+    <comment>{0} is a method name</comment>
   </data>
   <data name="UnusedCoroutineReturnValueDiagnosticTitle" xml:space="preserve">
     <value>Unused Unity Coroutine</value>
@@ -304,10 +310,10 @@
     <value>Remove SerializeField attribute</value>
   </data>
   <data name="ImproperSerializeFieldDiagnosticDescription" xml:space="preserve">
-    <value>SerializeField attribute does not work on properties, and are unnecessary for public fields</value>
+    <value>SerializeField attribute does not work on properties, and are unnecessary for public fields.</value>
   </data>
   <data name="ImproperSerializeFieldDiagnosticMessageFormat" xml:space="preserve">
-    <value>SerializeField attribute is invalid or redundant for property or field: {0}</value>
+    <value>SerializeField attribute is invalid or redundant for property or field: '{0}'.</value>
     <comment>{0} is an identifier declared with a SerializeField attribute</comment>
   </data>
   <data name="ImproperSerializeFieldDiagnosticTitle" xml:space="preserve">
@@ -317,7 +323,7 @@
     <value>GetComponent only supports arguments that are a Unity Component or an interface type.</value>
   </data>
   <data name="GetComponentIncorrectTypeDiagnosticMessageFormat" xml:space="preserve">
-    <value>{0} is not a Unity Component</value>
+    <value>'{0}' is not a Unity Component.</value>
     <comment>{0} is the type passed as an argument to GetComponent</comment>
   </data>
   <data name="GetComponentIncorrectTypeDiagnosticTitle" xml:space="preserve">
@@ -333,7 +339,8 @@
     <value>Usage of nameof or direct call is preferred for type safety.</value>
   </data>
   <data name="MethodInvocationDiagnosticMessageFormat" xml:space="preserve">
-    <value>Method "{0}" is invoked using a string literal.</value>
+    <value>Method '{0}' is invoked using a string literal.</value>
+    <comment>{0} is a method name</comment>
   </data>
   <data name="MethodInvocationDiagnosticTitle" xml:space="preserve">
     <value>Unsafe way to get the method name</value>
@@ -348,17 +355,17 @@
     <value>Unity needs a method decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute to be static and parameterless. Else either Unity won't call it or will throw NullReferenceException.</value>
   </data>
   <data name="InitializeOnLoadMethodDiagnosticMessageFormat" xml:space="preserve">
-    <value>Method "{0}" decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute must be static and parameterless.</value>
+    <value>Method '{0}' decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute must be static and parameterless.</value>
     <comment>{0} is an identifier declared with a *InitializeOnLoadMethod attribute</comment>
   </data>
   <data name="InitializeOnLoadMethodDiagnosticTitle" xml:space="preserve">
     <value>Use a static and parameterless method</value>
   </data>
   <data name="SetPixelsMethodUsageDiagnosticDescription" xml:space="preserve">
-    <value>Compared to SetPixels, SetPixels32 is much faster and uses less memory</value>
+    <value>Compared to SetPixels, SetPixels32 is much faster and uses less memory.</value>
   </data>
   <data name="SetPixelsMethodUsageDiagnosticMessageFormat" xml:space="preserve">
-    <value>{0} is slower than SetPixels32</value>
+    <value>'{0}' is slower than SetPixels32.</value>
     <comment>{0} is a method name</comment>
   </data>
   <data name="SetPixelsMethodUsageDiagnosticTitle" xml:space="preserve">
@@ -366,5 +373,15 @@
   </data>
   <data name="NullableReferenceTypesSuppressorJustification" xml:space="preserve">
     <value>Objects deriving from 'UnityEngine.Object' cannot be initialized.</value>
+  </data>
+  <data name="ReflectionDiagnosticDescription" xml:space="preserve">
+    <value>You should not use System.Reflection features in performance critical messages.</value>
+  </data>
+  <data name="ReflectionDiagnosticMessageFormat" xml:space="preserve">
+    <value>System.Reflection usage detected in performance critical message '{0}'.</value>
+    <comment>{0} is a method name</comment>
+  </data>
+  <data name="ReflectionDiagnosticTitle" xml:space="preserve">
+    <value>System.Reflection features in performance critical messages</value>
   </data>
 </root>
