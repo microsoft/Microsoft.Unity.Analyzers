@@ -115,7 +115,7 @@ namespace Microsoft.Unity.Analyzers
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 
-		private static ITypeSymbol GetSymbol(SyntaxTree tree, TypeSyntax type, Compilation compilation)
+		private static ITypeSymbol GetSymbol(CodeAnalysis.SyntaxTree tree, TypeSyntax type, Compilation compilation)
 		{
 			return (ITypeSymbol)compilation.GetSemanticModel(tree).GetSymbolInfo(type).Symbol;
 		}
