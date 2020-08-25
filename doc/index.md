@@ -33,10 +33,11 @@ ID | Suppressed ID | Justification
 [USP0006](USP0006.md) | IDE0051 | Don't flag private fields with SerializeField or SerializeReference attributes as unused
 [USP0007](USP0007.md) | CS0649 | Don't flag fields with SerializeField or SerializeReference attributes as never assigned
 [USP0008](USP0008.md) | IDE0051 | Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused
-[USP0009](USP0009.md) | IDE0051 | Don't flag methods with MenuItem/ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused.
+[USP0009](USP0009.md) | IDE0051 | Don't flag methods with MenuItem/ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused
 [USP0010](USP0010.md) | IDE0051 | Don't flag fields with the ContextMenuItem attribute as unused
 [USP0011](USP0011.md) | IDE0044 | Don't make fields with the ContextMenuItem attribute read-only
-[USP0012](USP0012.md) | IDE0051 | Don't flag private methods with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute as unused.
+[USP0012](USP0012.md) | IDE0051 | Don't flag private methods with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute as unused
 [USP0013](USP0013.md) | CA1823 | Don't flag private fields with SerializeField or SerializeReference attributes as unused
 [USP0014](USP0014.md) | CA1822 | The Unity runtime invokes Unity messages
 [USP0015](USP0015.md) | CA1801 | The Unity runtime invokes Unity messages
+[USP0016](USP0016.md) | CS8618 | Initialization detection of types inheriting from UnityEngine.Object
