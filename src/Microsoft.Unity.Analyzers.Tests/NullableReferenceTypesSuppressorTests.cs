@@ -13,8 +13,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		[Fact]
 		public async Task NullableReferenceTypesSuppressed()
 		{
-			const string test =
-@"
+			const string test = @"
 #nullable enable
 
 using UnityEngine;
@@ -58,19 +57,25 @@ public class TestScript : MonoBehaviour
 
 			DiagnosticResult[] suppressor =
 			{
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(8, 29), //field1
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(9, 21), //field2
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(10, 28), //field3
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(12, 28), //Property1
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(14, 29), //property2Field
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(16, 38), //serializedField
-				DiagnosticResult.CompilerWarning("CS0169").WithMessage("The field 'TestScript.serializedField' is never used").WithLocation(16, 38), //warning is not part of this analyzer
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(18, 27), //staticField
-				//ExpectDiagnostic().WithMessage("Non-nullable field 'hiddenField' is uninitialized. Consider declaring the field as nullable.").WithLocation(20, 38), //HOW TO WORK WITH SYSTEM DIAGNOSTICS?
-				DiagnosticResult.CompilerWarning("CS8618").WithMessage("Non-nullable field 'hiddenField' is uninitialized. Consider declaring the field as nullable.")
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(8, 29), //field1
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(9, 21), //field2
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(10, 28), //field3
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 28), //Property1
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(14, 29), //property2Field
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(16, 38), //serializedField
+
+				DiagnosticResult.CompilerWarning("CS0169")
+					.WithMessage("The field 'TestScript.serializedField' is never used")
+					.WithLocation(16, 38), //warning is not part of this analyzer
+
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
+
+				DiagnosticResult.CompilerWarning("CS8618")
+					.WithMessage("Non-nullable field 'hiddenField' is uninitialized. Consider declaring the field as nullable.")
 					.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
-				ExpectSuppressor(NullableReferenceTypesSuppressor.NullableRule).WithLocation(21, 38)
-		};
+				
+				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)
+			};
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}

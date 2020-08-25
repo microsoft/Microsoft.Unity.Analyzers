@@ -226,6 +226,10 @@ namespace UnityEngine
 		public virtual void OnStateMachineExit(Animator animator, int stateMachinePathHash) { }
 	}
 
+	class HideInInspector : System.Attribute
+	{
+	}
+
 	class SerializeField : System.Attribute
 	{
 	}
