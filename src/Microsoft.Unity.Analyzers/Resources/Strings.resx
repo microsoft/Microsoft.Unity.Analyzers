@@ -371,6 +371,9 @@
   <data name="SetPixelsMethodUsageDiagnosticTitle" xml:space="preserve">
     <value>SetPixels invocation is slow</value>
   </data>
+  <data name="NullableReferenceTypesSuppressorJustification" xml:space="preserve">
+    <value>Objects deriving from 'UnityEngine.Object' cannot be initialized.</value>
+  </data>
   <data name="ReflectionDiagnosticDescription" xml:space="preserve">
     <value>You should not use System.Reflection features in performance critical messages.</value>
   </data>
