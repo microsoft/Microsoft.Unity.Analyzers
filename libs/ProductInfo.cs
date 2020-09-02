@@ -23,7 +23,7 @@ namespace SyntaxTree.VisualStudio.Unity
 {
 	internal class ProductInfo
 	{
-		public const string Version = "1.8.0.0";
+		public const string Version = "1.8.1.0";
 		public const string ProductName = "Microsoft Unity Analyzers";
 	}
 }
