@@ -10,6 +10,44 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	public class CreateInstanceTests : BaseCodeFixVerifierTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 	{
+
+		[Fact]
+		public async Task CreateComponentInstance()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Foo : Component { }
+
+class Camera : MonoBehaviour
+{
+    public void Update() {
+        Foo foo = new Foo();
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+				.WithLocation(9, 19)
+				.WithArguments("Foo");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Foo : Component { }
+
+class Camera : MonoBehaviour
+{
+    public void Update() {
+        Foo foo = gameObject.AddComponent<Foo>();
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
 		[Fact]
 		public async Task CreateMonoBehaviourInstance()
 		{
@@ -26,7 +64,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.MonoBehaviourId)
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
 				.WithLocation(9, 19)
 				.WithArguments("Foo");
 
@@ -62,7 +100,7 @@ class Program
     }
 }
 ";
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.MonoBehaviourId).WithLocation(9, 19).WithArguments("Foo");
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId).WithLocation(9, 19).WithArguments("Foo");
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 

@@ -249,12 +249,12 @@
   <data name="CreateMonoBehaviourInstanceDiagnosticDescription" xml:space="preserve">
     <value>Use AddComponent() to create MonoBehaviours. A MonoBehaviour component needs to be attached to a GameObject.</value>
   </data>
-  <data name="CreateMonoBehaviourInstanceDiagnosticMessageFormat" xml:space="preserve">
-    <value>MonoBehaviour '{0}' should not be instantiated directly.</value>
+  <data name="CreateComponentInstanceDiagnosticMessageFormat" xml:space="preserve">
+    <value>Component '{0}' should not be instantiated directly.</value>
     <comment>{0} is a type name</comment>
   </data>
-  <data name="CreateMonoBehaviourInstanceDiagnosticTitle" xml:space="preserve">
-    <value>MonoBehaviour instance creation</value>
+  <data name="CreateComponentInstanceDiagnosticTitle" xml:space="preserve">
+    <value>Component instance creation</value>
   </data>
   <data name="CreateScriptableObjectInstanceCodeFixTitle" xml:space="preserve">
     <value>Use ScriptableObject.CreateInstance()</value>

@@ -88,6 +88,24 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Component &apos;{0}&apos; should not be instantiated directly..
+        /// </summary>
+        internal static string CreateComponentInstanceDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("CreateComponentInstanceDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Component instance creation.
+        /// </summary>
+        internal static string CreateComponentInstanceDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("CreateComponentInstanceDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use gameObject.AddComponent().
         /// </summary>
         internal static string CreateMonoBehaviourInstanceCodeFixTitle {
@@ -102,24 +120,6 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string CreateMonoBehaviourInstanceDiagnosticDescription {
             get {
                 return ResourceManager.GetString("CreateMonoBehaviourInstanceDiagnosticDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MonoBehaviour &apos;{0}&apos; should not be instantiated directly..
-        /// </summary>
-        internal static string CreateMonoBehaviourInstanceDiagnosticMessageFormat {
-            get {
-                return ResourceManager.GetString("CreateMonoBehaviourInstanceDiagnosticMessageFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MonoBehaviour instance creation.
-        /// </summary>
-        internal static string CreateMonoBehaviourInstanceDiagnosticTitle {
-            get {
-                return ResourceManager.GetString("CreateMonoBehaviourInstanceDiagnosticTitle", resourceCulture);
             }
         }
         

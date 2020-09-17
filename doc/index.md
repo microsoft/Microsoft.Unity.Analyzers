@@ -11,7 +11,7 @@ ID | Title | Category
 [UNT0007](UNT0007.md) | Null coalescing on Unity objects | Correctness
 [UNT0008](UNT0008.md) | Null propagation on Unity objects | Correctness
 [UNT0009](UNT0009.md) | Missing static constructor with InitializeOnLoad | Correctness
-[UNT0010](UNT0010.md) | MonoBehaviour instance creation | Type Safety
+[UNT0010](UNT0010.md) | Component instance creation | Type Safety
 [UNT0011](UNT0011.md) | ScriptableObject instance creation | Type Safety
 [UNT0012](UNT0012.md) | Unused coroutine return value | Correctness
 [UNT0013](UNT0013.md) | Invalid or redundant SerializeField attribute | Correctness
