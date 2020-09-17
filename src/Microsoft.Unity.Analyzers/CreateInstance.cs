@@ -22,12 +22,12 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class CreateInstanceAnalyzer : DiagnosticAnalyzer
 	{
-		public const string MonoBehaviourId = "UNT0010";
+		public const string ComponentId = "UNT0010";
 
-		private static readonly DiagnosticDescriptor MonoBehaviourIdRule = new DiagnosticDescriptor(
-			MonoBehaviourId,
-			title: Strings.CreateMonoBehaviourInstanceDiagnosticTitle,
-			messageFormat: Strings.CreateMonoBehaviourInstanceDiagnosticMessageFormat,
+		private static readonly DiagnosticDescriptor ComponentIdRule = new DiagnosticDescriptor(
+			ComponentId,
+			title: Strings.CreateComponentInstanceDiagnosticTitle,
+			messageFormat: Strings.CreateComponentInstanceDiagnosticMessageFormat,
 			category: DiagnosticCategory.TypeSafety,
 			defaultSeverity: DiagnosticSeverity.Info,
 			isEnabledByDefault: true,
@@ -44,7 +44,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.CreateScriptableObjectInstanceDiagnosticDescription);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(MonoBehaviourIdRule, ScriptableObjectRule);
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ComponentIdRule, ScriptableObjectRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -68,17 +68,17 @@ namespace Microsoft.Unity.Analyzers
 				return;
 			}
 
-			if (!typeInfo.Type.Extends(typeof(UnityEngine.MonoBehaviour)))
+			if (!typeInfo.Type.Extends(typeof(UnityEngine.Component)))
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(MonoBehaviourIdRule, creation.GetLocation(), typeInfo.Type.Name));
+			context.ReportDiagnostic(Diagnostic.Create(ComponentIdRule, creation.GetLocation(), typeInfo.Type.Name));
 		}
 	}
 
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class CreateInstanceCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CreateInstanceAnalyzer.MonoBehaviourId, CreateInstanceAnalyzer.ScriptableObjectId);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CreateInstanceAnalyzer.ComponentId, CreateInstanceAnalyzer.ScriptableObjectId);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -104,9 +104,9 @@ namespace Microsoft.Unity.Analyzers
 							creation.ToFullString()),
 						context.Diagnostics);
 					break;
-				case CreateInstanceAnalyzer.MonoBehaviourId when !IsInsideComponent(creation, model):
+				case CreateInstanceAnalyzer.ComponentId when !IsInsideComponent(creation, model):
 					return;
-				case CreateInstanceAnalyzer.MonoBehaviourId:
+				case CreateInstanceAnalyzer.ComponentId:
 					context.RegisterCodeFix(
 						CodeAction.Create(
 							Strings.CreateMonoBehaviourInstanceCodeFixTitle,
