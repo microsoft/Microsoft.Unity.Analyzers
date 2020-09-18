@@ -116,6 +116,9 @@ namespace Microsoft.Unity.Analyzers
 				.WithParameterList(CreateParameterList(builder, message));
 
 			var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 

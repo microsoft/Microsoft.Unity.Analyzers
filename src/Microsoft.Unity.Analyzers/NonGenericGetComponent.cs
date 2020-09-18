@@ -121,6 +121,9 @@ namespace Microsoft.Unity.Analyzers
 				: invocation;
 
 			var newRoot = root.ReplaceNode(target, newInvocation.WithAdditionalAnnotations(Formatter.Annotation));
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 

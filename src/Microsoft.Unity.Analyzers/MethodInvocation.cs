@@ -175,6 +175,9 @@ namespace Microsoft.Unity.Analyzers
 				.WithArgumentList(invocation.ArgumentList.ReplaceNode(invocation.ArgumentList.Arguments[0], GetArgument(name)));
 
 			var newRoot = root.ReplaceNode(invocation, newInvocation);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}

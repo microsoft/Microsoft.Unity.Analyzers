@@ -22,7 +22,7 @@ namespace NewAnalyzer
 				name = args[0];
 			}
 
-			var builder = name.Contains("suppressor", StringComparison.OrdinalIgnoreCase) ?
+			var builder = !string.IsNullOrEmpty(name) && name.Contains("suppressor", StringComparison.OrdinalIgnoreCase) ?
 				new SuppressorDiagnosticBuilder() as AbstractDiagnosticBuilder :
 				new AnalyzerCodeFixDiagnosticBuilder();
 

@@ -122,7 +122,11 @@ namespace Microsoft.Unity.Analyzers
 				whenTrue: coalescing.Left,
 				whenFalse: coalescing.Right);
 
-			return document.WithSyntaxRoot(root.ReplaceNode(coalescing, conditional));
+			var newRoot = root.ReplaceNode(coalescing, conditional);
+			if (newRoot == null)
+				return document;
+
+			return document.WithSyntaxRoot(newRoot);
 		}
 	}
 

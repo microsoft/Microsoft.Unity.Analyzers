@@ -122,6 +122,9 @@ namespace Microsoft.Unity.Analyzers
 			}
 
 			var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}

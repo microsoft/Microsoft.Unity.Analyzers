@@ -108,6 +108,9 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var newRoot = root.RemoveNode(declaration, SyntaxRemoveOptions.KeepNoTrivia);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}

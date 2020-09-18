@@ -174,7 +174,11 @@ namespace Microsoft.Unity.Analyzers
 			SortExpressions(model, expr, out var tagExpression, out var otherExpression);
 
 			var replacement = BuildReplacementNode(tagExpression, otherExpression);
-			return document.WithSyntaxRoot(root.ReplaceNode(expr, replacement));
+			var newRoot = root.ReplaceNode(expr, replacement);
+			if (newRoot == null)
+				return document;
+
+			return document.WithSyntaxRoot(newRoot);
 		}
 
 		private static async Task<Document> ReplaceBinaryExpressionAsync(Document document, BinaryExpressionSyntax expr, CancellationToken ct)
@@ -189,7 +193,11 @@ namespace Microsoft.Unity.Analyzers
 			if (expr.Kind() == SyntaxKind.NotEqualsExpression)
 				replacement = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, replacement);
 
-			return document.WithSyntaxRoot(root.ReplaceNode(expr, replacement));
+			var newRoot = root.ReplaceNode(expr, replacement);
+			if (newRoot == null)
+				return document;
+
+			return document.WithSyntaxRoot(newRoot);
 		}
 
 		private static void SortExpressions(SemanticModel model, BinaryExpressionSyntax expr, out ExpressionSyntax tagExpression, out ExpressionSyntax otherExpression)
@@ -241,14 +249,14 @@ namespace Microsoft.Unity.Analyzers
 
 		private static ExpressionSyntax BuildReplacementNode(ExpressionSyntax tagExpression, ExpressionSyntax otherExpression)
 		{
-			var CompareTagIdentifier = SyntaxFactory.IdentifierName(nameof(UnityEngine.Component.CompareTag));
-			ExpressionSyntax invocation = CompareTagIdentifier;
+			var compareTagIdentifier = SyntaxFactory.IdentifierName(nameof(UnityEngine.Component.CompareTag));
+			ExpressionSyntax invocation = compareTagIdentifier;
 			if (tagExpression is MemberAccessExpressionSyntax mae)
 			{
 				invocation = SyntaxFactory.MemberAccessExpression(
 					SyntaxKind.SimpleMemberAccessExpression,
 					mae.Expression,
-					CompareTagIdentifier);
+					compareTagIdentifier);
 			}
 
 			var replacement = BuildInvocationExpression(invocation, otherExpression);

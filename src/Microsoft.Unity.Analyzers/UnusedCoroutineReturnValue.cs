@@ -109,6 +109,9 @@ namespace Microsoft.Unity.Analyzers
 							Argument(invocation)))));
 
 			var newRoot = root.ReplaceNode(parent, newExpressionStatement);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}

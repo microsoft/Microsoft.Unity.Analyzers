@@ -151,6 +151,9 @@ namespace Microsoft.Unity.Analyzers
 									IdentifierName(typeInfo.Type.Name))))));
 
 			var newRoot = root.ReplaceNode(creation, invocation);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}

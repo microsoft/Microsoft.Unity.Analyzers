@@ -143,6 +143,9 @@ namespace Microsoft.Unity.Analyzers
 
 			var newDeclaration = declaration.WithAttributeLists(attributes);
 			var newRoot = root.ReplaceNode(declaration, newDeclaration);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}

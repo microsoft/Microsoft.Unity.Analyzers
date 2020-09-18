@@ -96,6 +96,9 @@ namespace Microsoft.Unity.Analyzers
 				.WithMembers(classDeclaration.Members.Insert(0, emptyStaticConstructor));
 
 			var newRoot = root.ReplaceNode(classDeclaration, newClassDeclaration);
+			if (newRoot == null)
+				return document;
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}
