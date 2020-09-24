@@ -142,6 +142,7 @@ dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA2211.severity = none
 dotnet_diagnostic.IDE1006.severity = none
 dotnet_diagnostic.IDE0060.severity = none
+dotnet_diagnostic.RS2008.severity = none
 
 # C++ Files
 [*.{cpp,h,in}]
