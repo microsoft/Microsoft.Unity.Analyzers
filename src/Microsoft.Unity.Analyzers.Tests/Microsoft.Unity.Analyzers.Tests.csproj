@@ -9,13 +9,13 @@
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.6.0-3.20177.13" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.0.0" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.4.0" />
+    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.3.0" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.7.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="All" Version="1.0.0" />    
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.5.132" PrivateAssets="all" />	
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.7.56" PrivateAssets="all" />	
   </ItemGroup>
 
   <ItemGroup>
