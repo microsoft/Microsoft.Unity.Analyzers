@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
@@ -36,7 +37,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		private static IEnumerable<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
 		{
-			var reference = new AnalyzerFileReference(assembly, new AnalyzerAssemblyLoader());
+			var fullpath = Path.GetFullPath(assembly);
+			var reference = new AnalyzerFileReference(fullpath, new AnalyzerAssemblyLoader());
 			reference.AnalyzerLoadFailed += (s, e) => { Assert.True(false, e.Message); };
 			return reference.GetAnalyzers(LanguageNames.CSharp);
 		}
