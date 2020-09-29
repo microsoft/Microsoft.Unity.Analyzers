@@ -80,7 +80,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 			}
 
-			var symbol = GetSymbol(diagnostic.Location.SourceTree, declarationSyntax.Declaration.Type, context.Compilation);
+			var symbol = GetSymbol(diagnostic.Location.SourceTree, declarationSyntax.Declaration.Type, context);
 
 			if (!symbol.Extends(typeof(UnityEngine.Object)))
 				return;
@@ -105,7 +105,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeProperties(PropertyDeclarationSyntax declarationSyntax, Diagnostic diagnostic, SuppressionAnalysisContext context, SyntaxNode root)
 		{
-			var symbol = GetSymbol(diagnostic.Location.SourceTree, declarationSyntax.Type, context.Compilation);
+			var symbol = GetSymbol(diagnostic.Location.SourceTree, declarationSyntax.Type, context);
 
 			if (!symbol.Extends(typeof(UnityEngine.Object)))
 				return;
@@ -115,9 +115,10 @@ namespace Microsoft.Unity.Analyzers
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 
-		private static ITypeSymbol GetSymbol(CodeAnalysis.SyntaxTree tree, TypeSyntax type, Compilation compilation)
+		private static ITypeSymbol GetSymbol(CodeAnalysis.SyntaxTree tree, TypeSyntax type, SuppressionAnalysisContext context)
 		{
-			return (ITypeSymbol)compilation.GetSemanticModel(tree).GetSymbolInfo(type).Symbol;
+			var model = context.GetSemanticModel(tree);
+			return (ITypeSymbol)model.GetSymbolInfo(type).Symbol;
 		}
 
 		//analyze if a property is assigned inside a methodbody
