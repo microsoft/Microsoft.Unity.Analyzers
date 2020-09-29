@@ -54,7 +54,7 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit == 'true'
       run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
-    - name: Test context (master)
+    - name: Test context (main)
       if: github.ref == 'refs/heads/main'
       run: echo "::set-env name=TEST_FILTER::."
     
