@@ -60,7 +60,7 @@ jobs:
       run: xcopy /s /i /y /q "UnityCache\MonoBleedingEdge" "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge"
       shell: cmd
       
-    - name: Test context (master)
+    - name: Test context (main)
       if: github.ref == 'refs/heads/main'
       run: echo "::set-env name=TEST_FILTER::."
     
