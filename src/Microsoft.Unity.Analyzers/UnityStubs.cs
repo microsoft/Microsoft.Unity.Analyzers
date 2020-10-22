@@ -137,8 +137,8 @@ namespace UnityEngine
 		void Awake() { }
 		void FixedUpdate() { }
 		void LateUpdate() { }
-		void OnApplicationPause(bool pause) { }
-		void OnApplicationQuit() { }
+		IEnumeratorOrVoid OnApplicationPause(bool pause) { return null; }
+		IEnumeratorOrVoid OnApplicationQuit() { return null; }
 		IEnumeratorOrVoid OnBecameInvisible() { return null; }
 		IEnumeratorOrVoid OnBecameVisible() { return null; }
 		IEnumeratorOrVoid OnCollisionEnter(Collision collision) { return null; }
@@ -146,9 +146,9 @@ namespace UnityEngine
 		IEnumeratorOrVoid OnCollisionStay(Collision collision) { return null; }
 		void OnDisable() { }
 		void OnDrawGizmos() { }
-		void OnDrawGizmosSelected() { }
+		IEnumeratorOrVoid OnDrawGizmosSelected() { return null; }
 		void OnEnable() { }
-		void OnLevelWasLoaded(int level) { }
+		IEnumeratorOrVoid OnLevelWasLoaded(int level) { return null; }
 		IEnumeratorOrVoid OnMouseDown() { return null; }
 		IEnumeratorOrVoid OnMouseDrag() { return null; }
 		IEnumeratorOrVoid OnMouseEnter() { return null; }
@@ -156,38 +156,38 @@ namespace UnityEngine
 		IEnumeratorOrVoid OnMouseOver() { return null; }
 		IEnumeratorOrVoid OnMouseUp() { return null; }
 		IEnumeratorOrVoid OnParticleCollision(GameObject other) { return null; }
-		void OnPostRender() { }
-		void OnPreCull() { }
-		void OnPreRender() { }
-		void OnRenderImage(RenderTexture source, RenderTexture destination) { }
+		IEnumeratorOrVoid OnPostRender() { return null; }
+		IEnumeratorOrVoid OnPreCull() { return null; }
+		IEnumeratorOrVoid OnPreRender() { return null; }
+		IEnumeratorOrVoid OnRenderImage(RenderTexture source, RenderTexture destination) { return null; }
 		IEnumeratorOrVoid OnTriggerEnter(Collider other) { return null; }
 		IEnumeratorOrVoid OnTriggerExit(Collider other) { return null; }
 		IEnumeratorOrVoid OnTriggerStay(Collider other) { return null; }
-		void Reset() { }
+		IEnumeratorOrVoid Reset() { return null; }
 		IEnumeratorOrVoid Start() { return null; }
 		void Update() { }
-		void OnConnectedToServer() { }
-		void OnControllerColliderHit(ControllerColliderHit hit) { }
+		IEnumeratorOrVoid OnConnectedToServer() { return null; }
+		IEnumeratorOrVoid OnControllerColliderHit(ControllerColliderHit hit) { return null; }
 		void OnDisconnectedFromServer(NetworkDisconnection info) { }
 		void OnDisconnectedFromMasterServer(NetworkDisconnection info) { }
 		void OnFailedToConnect(NetworkConnectionError error) { }
 		void OnFailedToConnectToMasterServer(NetworkConnectionError error) { }
 		void OnGUI() { }
-		void OnJointBreak(float breakForce) { }
+		IEnumeratorOrVoid OnJointBreak(float breakForce) { return null; }
 		void OnMasterServerEvent(MasterServerEvent msEvent) { }
 		void OnNetworkInstantiate(NetworkMessageInfo info) { }
 		void OnPlayerConnected(NetworkPlayer player) { }
 		void OnPlayerDisconnected(NetworkPlayer player) { }
 		void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) { }
-		void OnServerInitialized() { }
-		void OnWillRenderObject() { }
+		IEnumeratorOrVoid OnServerInitialized() { return null; }
+		IEnumeratorOrVoid OnWillRenderObject() { return null; }
 		IEnumeratorOrVoid OnApplicationFocus(bool focus) { return null; }
 		void OnRenderObject() { }
 		void OnDestroy() { }
 		IEnumeratorOrVoid OnMouseUpAsButton() { return null; }
-		void OnAudioFilterRead(float[] data, int channels) { }
-		void OnAnimatorIK(int layerIndex) { }
-		void OnAnimatorMove() { }
+		IEnumeratorOrVoid OnAudioFilterRead(float[] data, int channels) { return null; }
+		IEnumeratorOrVoid OnAnimatorIK(int layerIndex) { return null; }
+		IEnumeratorOrVoid OnAnimatorMove() { return null; }
 		void OnValidate() { }
 		IEnumeratorOrVoid OnCollisionEnter2D(Collision2D collision) { return null; }
 		IEnumeratorOrVoid OnCollisionExit2D(Collision2D collision) { return null; }
@@ -196,15 +196,15 @@ namespace UnityEngine
 		IEnumeratorOrVoid OnTriggerExit2D(Collider2D collision) { return null; }
 		IEnumeratorOrVoid OnTriggerStay2D(Collider2D collision) { return null; }
 		IEnumeratorOrVoid OnJointBreak2D(Joint2D joint) { return null; }
-		void OnBeforeTransformParentChanged() { }
-		void OnTransformParentChanged() { }
-		void OnTransformChildrenChanged() { }
-		void OnRectTransformDimensionsChange() { } // Not a typo on our side, the 'd' is missing...
-		void OnRectTransformRemoved() { }
-		void OnCanvasGroupChanged() { }
+		IEnumeratorOrVoid OnBeforeTransformParentChanged() { return null; }
+		IEnumeratorOrVoid OnTransformParentChanged() { return null; }
+		IEnumeratorOrVoid OnTransformChildrenChanged() { return null; }
+		IEnumeratorOrVoid OnRectTransformDimensionsChange() { return null; } // Not a typo on our side, the 'd' is missing...
+		IEnumeratorOrVoid OnRectTransformRemoved() { return null; }
+		IEnumeratorOrVoid OnCanvasGroupChanged() { return null; }
 		IEnumeratorOrVoid OnParticleTrigger() { return null; }
-		void OnParticleSystemStopped() { }
-		void OnParticleUpdateJobScheduled() { }
+		IEnumeratorOrVoid OnParticleSystemStopped() { return null; }
+		IEnumeratorOrVoid OnParticleUpdateJobScheduled() { return null; }
 	}
 
 	class Animator
