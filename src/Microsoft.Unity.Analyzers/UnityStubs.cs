@@ -414,7 +414,7 @@ namespace UnityEditor
 
 	class AssetPostprocessor
 	{
-		void OnAssignMaterialModel(Material material, Renderer renderer) { }
+		Material OnAssignMaterialModel(Material material, Renderer renderer) { return null; }
 		void OnPostprocessAnimation(GameObject root, AnimationClip clip) { }
 		void OnPostprocessAssetbundleNameChanged(string assetPath, string previousAssetBundleName, string newAssetBundleName) { }
 		void OnPostprocessAudio(AudioClip clip) { }
