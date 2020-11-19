@@ -63,10 +63,12 @@ jobs:
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
       run: echo "TEST_FILTER=." >> $GITHUB_ENV
+      shell: cmd
     
     - name: Test context (feature)    
       if: github.ref != 'refs/heads/main'
       run: echo "TEST_FILTER=FullyQualifiedName!~ConsistencyTests" >> $GITHUB_ENV
+      shell: cmd
 
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
@@ -74,4 +76,4 @@ jobs:
         DOTNET_CLI_TELEMETRY_OPTOUT: 1
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
         DOTNET_NOLOGO: 1
-      shell: bash
+      shell: cmd
