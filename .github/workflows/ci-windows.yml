@@ -16,7 +16,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-      
+
     # So far we need Unity assemblies (Managed) and framework 4.7.1 reference assemblies (MonoBleedingEdge\lib\mono\4.7.1-api) for testing
     # We don't need to download/install Unity every run, we just need to cache those managed assemblies
     # But we have to deal with the following:
@@ -29,7 +29,7 @@ jobs:
       with:
         key: ${{ runner.os }}-unitycache-2019.4.8f1
         path: UnityCache
-      
+
     - name: Download Unity 2019.4.8f1 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
       run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/60781d942082/Windows64EditorInstaller/UnitySetup64-2019.4.8f1.exe" "%CD%\unitysetup.exe"
@@ -44,12 +44,12 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit != 'true'
       run: xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\Managed" "UnityCache\Managed"
       shell: cmd
-      
+
     - name: Prepare MonoBleedingEdge Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
       run: xcopy /s /i /y /q "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge" "UnityCache\MonoBleedingEdge"
       shell: cmd
-      
+
     - name: Restore Managed Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
       run: xcopy /s /i /y /q "UnityCache\Managed" "C:\Program Files\Unity\Editor\Data\Managed"
@@ -59,7 +59,7 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit == 'true'
       run: xcopy /s /i /y /q "UnityCache\MonoBleedingEdge" "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge"
       shell: cmd
-      
+
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
       run: echo "TEST_FILTER=." >> $GITHUB_ENV
@@ -74,4 +74,4 @@ jobs:
         DOTNET_CLI_TELEMETRY_OPTOUT: 1
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
         DOTNET_NOLOGO: 1
-      shell: sh
+      shell: bash
