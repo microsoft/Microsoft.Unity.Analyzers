@@ -56,12 +56,12 @@ jobs:
 
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
-      run: echo "::set-env name=TEST_FILTER::."
+      run: echo "TEST_FILTER=." >> $GITHUB_ENV
     
     - name: Test context (feature)    
       if: github.ref != 'refs/heads/main'
-      run: echo "::set-env name=TEST_FILTER::FullyQualifiedName!~ConsistencyTests"
-      
+      run: echo "TEST_FILTER=FullyQualifiedName!~ConsistencyTests" >> $GITHUB_ENV
+
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
       env:
