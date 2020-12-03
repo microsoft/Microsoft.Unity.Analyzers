@@ -387,6 +387,7 @@ namespace UnityEditor
 		void OnProjectChange() { }
 		void OnSelectionChange() { }
 		void Update() { }
+		void CreateGUI() { }
 	}
 
 	class ScriptableWizard : EditorWindow
