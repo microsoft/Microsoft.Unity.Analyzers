@@ -95,6 +95,29 @@ Example for creating `CustomSuppressor` and `CustomSuppressorTests` classes :
 
 `dotnet run --project .\src\new-analyzer CustomSuppressor`
 
+# Installing in Visual Studio Code
+
+Begin by [following this guide](https://code.visualstudio.com/docs/languages/csharp) to enable C# support in Visual Studio Code using Omnisharp.
+
+Due to how Unity handles its `.csproj` files, it does not seem possible to install packages automatically. You will need to download the analyzers from the [NuGet website](https://www.nuget.org/packages/Microsoft.Unity.Analyzers/) manually. When you're done, open the package file using a tool such as 7zip and extract `Microsoft.Unity.Analyzers.dll` onto your project's `Assets` folder. You can place it anywhere you'd like.
+
+Next, create an `omnisharp.json` file at the root folder of your project, as explained [here](https://www.strathweb.com/2019/04/roslyn-analyzers-in-code-fixes-in-omnisharp-and-vs-code/). Analyzer support in Omnisharp is experimental at the moment, so we need to enable it explicitly. We also need to point it to the `.dll` file we just extracted. Your `omnisharp.json` file should end up looking like this:
+
+```
+{
+    "RoslynExtensionsOptions": {
+        "EnableAnalyzersSupport": true,
+        "LocationPaths": [
+            "./Assets/NuGet/microsoft.unity.analyzers.1.9.0"
+        ]
+    }
+}
+```
+
+Where `"./Assets/NuGet/microsoft.unity.analyzers.1.9.0"` is a relative path pointing to the folder containing the `.dll` file. Depending on where you placed it, your path may look different.
+
+The Unity analyzers should now be working in your project. You can test them by creating an empty `FixedUpdate()` method inside one of your `MonoBehavior` classes, which should trigger a `The Unity message 'FixedUpdate' is empty` warning ([UNT0001](doc/UNT0001.md)) 
+
 # Contributing
 
 This project welcomes contributions and suggestions.
