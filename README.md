@@ -116,7 +116,25 @@ Next, create an `omnisharp.json` file at the root folder of your project, as exp
 
 Where `"./Assets/NuGet/microsoft.unity.analyzers.1.9.0"` is a relative path pointing to the folder containing the `.dll` file. Depending on where you placed it, your path may look different.
 
-The Unity analyzers should now be working in your project. You can test them by creating an empty `FixedUpdate()` method inside one of your `MonoBehavior` classes, which should trigger a `The Unity message 'FixedUpdate' is empty` warning ([UNT0001](doc/UNT0001.md)) 
+The Unity analyzers should now be working in your project. You can test them by creating an empty `FixedUpdate()` method inside one of your `MonoBehavior` classes, which should trigger a `The Unity message 'FixedUpdate' is empty` warning ([UNT0001](doc/UNT0001.md)).
+
+Note that while it is possible to activate these analyzers, the supressors they ship with the package (that turn off other C# warnings that may conflict with these custom ones) may not be picked up by Omnisharp at the moment, [according to this thread](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/122#issuecomment-743747554). You can still turn off specific rules manually, by following these steps:
+
+1. Create a `.editorconfig` file in your project's root folder (next to Unity's `.csproj` files)
+2. Add the following contents to the file:
+
+```
+root=true
+
+[*.cs]
+dotnet_diagnostic.IDE0051.severity = none
+```
+
+`root=true` tells Omnisharp that this is your project root and it should stop looking for parent `.editorconfig` files outside of this folder.
+
+`dotnet_diagnostic.IDE0051.severity = none` is an example of turning off the analyzer with ID `IDE0051` by setting its severity level to `none`. You can read more about this [here](https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019). You can add as many of these rules as you wish to this file.
+
+`[*.cs]` indicates that our custom rules should apply to all C# scripts (files with the `.cs` extension).
 
 # Contributing
 
