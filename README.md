@@ -97,7 +97,7 @@ Example for creating `CustomSuppressor` and `CustomSuppressorTests` classes :
 
 # Installing in Visual Studio Code
 
-Begin by [following this guide](https://code.visualstudio.com/docs/languages/csharp) to enable C# support in Visual Studio Code using Omnisharp.
+Begin by [following this guide](https://code.visualstudio.com/docs/other/unity) to configure Unity to run with Visual Studio Code.
 
 Due to how Unity handles its `.csproj` files, it does not seem possible to install packages automatically. You will need to download the analyzers from the [NuGet website](https://www.nuget.org/packages/Microsoft.Unity.Analyzers/) manually. When you're done, open the package file using a tool such as 7zip and extract `Microsoft.Unity.Analyzers.dll` onto your project's `Assets` folder. You can place it anywhere you'd like.
 
