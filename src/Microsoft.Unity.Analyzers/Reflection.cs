@@ -90,7 +90,8 @@ namespace Microsoft.Unity.Analyzers
 			{
 				var typeInfo = context.SemanticModel.GetTypeInfo(node);
 				var typeSymbol = typeInfo.Type;
-				if (typeSymbol == null)
+
+				if (typeSymbol?.ContainingNamespace == null)
 					continue;
 
 				if (typeSymbol.ContainingNamespace.ToDisplayString() != srns)
