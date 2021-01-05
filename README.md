@@ -10,7 +10,7 @@ Check out the [list of analyzers and suppressors](doc/index.md) defined in this 
 
 # Releases
 
-We are focusing our efforts on the experience brought by our IDEs (Visual Studio and Visual Studio for Mac) with Unity where these analyzers **ship in the box**.
+We are focusing our efforts on the experience brought by our IDEs (Visual Studio and Visual Studio for Mac) with Unity where these analyzers **ship in the box**. For Visual Studio Code, you can find all the documentation [here](https://code.visualstudio.com/docs/other/unity#_enabling-unity-warnings).
 
 We also ship them on [NuGet](https://nuget.org/packages/Microsoft.Unity.Analyzers) as for people building class librairies for Unity and for other advanced usages.
 
