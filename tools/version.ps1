@@ -7,7 +7,7 @@ function Process([string[]]$files, [string]$search, [string]$replace)
 	 }
 }
 
-$VERSION_SHORT = "1.9.0"
+$VERSION_SHORT = "1.9.1"
 $VERSION_LONG = $VERSION_SHORT + ".0"
 $VERSIONSEARCH_SHORT = "\d+\.\d+\.\d+"
 $VERSIONSEARCH_LONG = $VERSIONSEARCH_SHORT + "\.\d+"
