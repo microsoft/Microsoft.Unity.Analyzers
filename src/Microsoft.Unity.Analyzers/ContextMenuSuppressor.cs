@@ -96,6 +96,7 @@ namespace Microsoft.Unity.Analyzers
 				case IFieldSymbol fieldSymbol:
 					if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute))))
 						return true;
+
 					break;
 			}
 
