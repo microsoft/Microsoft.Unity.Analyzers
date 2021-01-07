@@ -60,8 +60,11 @@ class A : MonoBehaviour
 
 			var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
 				.WithLocation(15, 14);
-
+			
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
+
+		
 	}
 }
+
