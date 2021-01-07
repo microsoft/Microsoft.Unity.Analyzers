@@ -115,8 +115,6 @@ class Menu : MonoBehaviour
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
-		/////
-		///
 		[Fact]
 		public async Task OutsideMonoBehaviourMenuItemSuppressed()
 		{
