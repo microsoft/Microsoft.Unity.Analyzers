@@ -84,8 +84,6 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var containingType = symbol.ContainingType;
-			if (!containingType.Extends(typeof(UnityEngine.MonoBehaviour)))
-				return false;
 
 			switch (symbol)
 			{

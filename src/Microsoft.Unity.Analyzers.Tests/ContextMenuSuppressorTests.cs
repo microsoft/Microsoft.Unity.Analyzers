@@ -115,5 +115,26 @@ class Menu : MonoBehaviour
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
+		[Fact]
+		public async Task OutsideMonoBehaviourMenuItemSuppressed()
+		{
+			const string test = @"
+using UnityEditor;
+
+static class TestCode
+{
+    [MenuItem(""Test/Hello World"")]
+    static void DoMenuItem()
+    {
+        EditorUtility.DisplayDialog(""Hello"", ""World"", ""OK"");
+    }
+}";
+
+			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
+				.WithLocation(7, 17);
+
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
+
 	}
 }
