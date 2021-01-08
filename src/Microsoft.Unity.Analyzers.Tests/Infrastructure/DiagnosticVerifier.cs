@@ -279,7 +279,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 		}
 
-		private Document[] GetDocuments(string[] sources)
+		private static Document[] GetDocuments(string[] sources)
 		{
 			var project = CreateProject(sources);
 			var documents = project.Documents.ToArray();
@@ -292,7 +292,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return documents;
 		}
 
-		protected Document CreateDocument(string source)
+		protected static Document CreateDocument(string source)
 		{
 			return CreateProject(new[] { source }).Documents.First();
 		}
@@ -333,7 +333,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			yield return Path.Combine(monolib, "system.dll");
 		}
 
-		private Project CreateProject(string[] sources)
+		private static Project CreateProject(string[] sources)
 		{
 			var projectId = ProjectId.CreateNewId(TestProjectName);
 
