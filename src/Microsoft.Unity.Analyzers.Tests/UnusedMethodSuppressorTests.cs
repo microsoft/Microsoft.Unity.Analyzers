@@ -63,8 +63,6 @@ class A : MonoBehaviour
 			
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
-
-		
 	}
 }
 
