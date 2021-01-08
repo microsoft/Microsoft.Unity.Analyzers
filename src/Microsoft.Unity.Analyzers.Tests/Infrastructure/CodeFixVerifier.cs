@@ -91,8 +91,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		private static IEnumerable<Diagnostic> GetNewDiagnostics(IEnumerable<Diagnostic> diagnostics, IEnumerable<Diagnostic> newDiagnostics)
 		{
-			var oldArray = diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
-			var newArray = newDiagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
+			var oldArray = FilterDiagnostics(diagnostics).OrderBy(d => d.Location.SourceSpan.Start).ToArray();
+			var newArray = FilterDiagnostics(newDiagnostics).OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 
 			var oldIndex = 0;
 			var newIndex = 0;
