@@ -8,7 +8,8 @@
   <Import Project="$(VstuDirectory)build\UnityVS.Signing.props" Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.props')" />
 
   <PropertyGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">  
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Tests are using a distinct Roslyn version, so use a dedicated folder to host assembly output -->
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <Configurations>Debug;Release;DebugRelease</Configurations>
   </PropertyGroup>
 

@@ -71,7 +71,7 @@ public class TestScript : MonoBehaviour
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
 
 				DiagnosticResult.CompilerWarning("CS8618")
-					.WithMessage("Non-nullable field 'hiddenField' is uninitialized. Consider declaring the field as nullable.")
+					.WithMessage("Non-nullable field 'hiddenField' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.")
 					.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
 				
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)

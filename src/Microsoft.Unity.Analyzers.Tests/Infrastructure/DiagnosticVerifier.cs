@@ -24,16 +24,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 		private const string CSharpDefaultFileExt = "cs";
 		private const string TestProjectName = "TestProject";
 
-		protected virtual string EditorConfig => @"
-is_global = true
-[*]
-# Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
-dotnet_diagnostic.CS1701.severity = none
-
-# cf. IDE0051
-dotnet_diagnostic.CS0414.severity = none
-";
-
 		protected abstract DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer();
 
 		protected virtual IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
@@ -271,9 +261,17 @@ dotnet_diagnostic.CS0414.severity = none
 				}
 			}
 
-			var results = SortDiagnostics(diagnostics);
+			var results = SortDiagnostics(FilterDiagnostics(diagnostics));
 			diagnostics.Clear();
 			return results;
+		}
+
+		protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics)
+		{
+			return diagnostics
+				.Where(d => d.Id != "CS1701") // Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
+				.Where(d => d.Id != "CS0414") // IDE0051
+				.ToArray();
 		}
 
 		private static Diagnostic[] SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
@@ -281,7 +279,7 @@ dotnet_diagnostic.CS0414.severity = none
 			return diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 		}
 
-		private Document[] GetDocuments(string[] sources)
+		private static Document[] GetDocuments(string[] sources)
 		{
 			var project = CreateProject(sources);
 			var documents = project.Documents.ToArray();
@@ -294,7 +292,7 @@ dotnet_diagnostic.CS0414.severity = none
 			return documents;
 		}
 
-		protected Document CreateDocument(string source)
+		protected static Document CreateDocument(string source)
 		{
 			return CreateProject(new[] { source }).Documents.First();
 		}
@@ -335,30 +333,22 @@ dotnet_diagnostic.CS0414.severity = none
 			yield return Path.Combine(monolib, "system.dll");
 		}
 
-		private Project CreateProject(string[] sources)
+		private static Project CreateProject(string[] sources)
 		{
-			var fileNamePrefix = DefaultFilePathPrefix;
-			var fileExt = CSharpDefaultFileExt;
-
 			var projectId = ProjectId.CreateNewId(TestProjectName);
 
 			var solution = new AdhocWorkspace()
 				.CurrentSolution
 				.AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp);
 
-			const string editorconfig = ".editorconfig";
-			var ecId = DocumentId.CreateNewId(projectId, editorconfig);
-			var analyzerConfigSource = SourceText.From(EditorConfig);
-
-			solution = solution.AddAnalyzerConfigDocument(ecId, editorconfig, analyzerConfigSource, filePath: @"/" + editorconfig);
 			solution = UnityAssemblies().Aggregate(solution, (current, dll) => current.AddMetadataReference(projectId, MetadataReference.CreateFromFile(dll)));
 
 			var count = 0;
 			foreach (var source in sources)
 			{
-				var newFileName = fileNamePrefix + count + "." + fileExt;
+				var newFileName = DefaultFilePathPrefix + count + "." + CSharpDefaultFileExt;
 				var documentId = DocumentId.CreateNewId(projectId, newFileName);
-				solution = solution.AddDocument(documentId, newFileName, SourceText.From(source), filePath: @"/" + newFileName); // keep path in sync with editorconfig
+				solution = solution.AddDocument(documentId, newFileName, SourceText.From(source), filePath: @"/" + newFileName); 
 				count++;
 			}
 
