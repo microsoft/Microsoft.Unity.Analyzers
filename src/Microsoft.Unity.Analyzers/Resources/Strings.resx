@@ -384,4 +384,16 @@
   <data name="ReflectionDiagnosticTitle" xml:space="preserve">
     <value>System.Reflection features in performance critical messages</value>
   </data>
+  <data name="IndirectionMessageCodeFixTitle" xml:space="preserve">
+    <value>TODO: Add code fix title</value>
+  </data>
+  <data name="IndirectionMessageDiagnosticDescription" xml:space="preserve">
+    <value>TODO: Add description.</value>
+  </data>
+  <data name="IndirectionMessageDiagnosticMessageFormat" xml:space="preserve">
+    <value>TODO: Add Message format</value>
+  </data>
+  <data name="IndirectionMessageDiagnosticTitle" xml:space="preserve">
+    <value>TODO: Add title</value>
+  </data>
 </root>
