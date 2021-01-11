@@ -348,7 +348,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			{
 				var newFileName = DefaultFilePathPrefix + count + "." + CSharpDefaultFileExt;
 				var documentId = DocumentId.CreateNewId(projectId, newFileName);
-				solution = solution.AddDocument(documentId, newFileName, SourceText.From(source), filePath: @"z:\" + newFileName); 
+				solution = solution.AddDocument(documentId, newFileName, SourceText.From(source), filePath: @"/" + newFileName); 
 				count++;
 			}
 
