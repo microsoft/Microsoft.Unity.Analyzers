@@ -20,7 +20,8 @@ class Camera : MonoBehaviour
 {
      private void OnTriggerEnter(Collider collider)
 	{
-		collider.gameObject.GetComponent<Rigidbody>();
+		GameObject original = null;
+		GameObject duplicate = original.gameObject;
 	}
 }
 ";
@@ -35,41 +36,9 @@ class Camera : MonoBehaviour
 {
      private void OnTriggerEnter(Collider collider)
 	{
-		collider.GetComponent<Rigidbody>();
+		GameObject original = null;
+		GameObject duplicate = original;
 	}
-}
-";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
-
-		[Fact]
-		public async Task RemoveTransformProperty()
-		{
-			const string test = @"
-using UnityEditor;
-
-class Camera : MonoBehaviour
-{
-     private void Awake()
-	{
-		transform.name = ""Title"";
-	}
-}
-";
-
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ScriptableObjectId).WithLocation(9, 19).WithArguments("Foo");
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-
-			const string fixedTest = @"
-using UnityEditor;
-
-class Camera : MonoBehaviour
-{
-     private void OnTriggerEnter(Collider collider)
-	{
-		name = ""Title"";
-	}
-
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
