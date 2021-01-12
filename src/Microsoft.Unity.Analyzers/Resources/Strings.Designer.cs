@@ -259,6 +259,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use static method..
+        /// </summary>
+        internal static string ImproperMenuItemMethodCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MenuItem can only be used on static methods.
+        /// </summary>
+        internal static string ImproperMenuItemMethodDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is not a static method..
+        /// </summary>
+        internal static string ImproperMenuItemMethodDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make method static..
+        /// </summary>
+        internal static string ImproperMenuItemMethodDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove SerializeField attribute.
         /// </summary>
         internal static string ImproperSerializeFieldCodeFixTitle {
