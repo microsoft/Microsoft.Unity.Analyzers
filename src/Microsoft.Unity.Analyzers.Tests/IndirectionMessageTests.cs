@@ -66,15 +66,15 @@ class Camera : MonoBehaviour
 			const string fixedTest = @"
 	using UnityEngine;
 
-	class Camera : MonoBehaviour
+class Camera : MonoBehaviour
+{
+     private void OnTriggerEnter(Collider collider)
 	{
-		 private void OnTriggerEnter(Collider collider)
-		{
 			GameObject original = null;
 			GameObject duplicate = original;
-		}
 	}
-	";
+}
+";
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
@@ -84,19 +84,19 @@ class Camera : MonoBehaviour
 			const string test = @"
 	using UnityEngine;
 
-	class Camera : MonoBehaviour
-	{
+class Camera : MonoBehaviour
+{
 		 private void OnTriggerEnter(Collider collider)
 		{
 			GameObject duplicate = GetGameObject().gameObject;
 		}
 
 		GameObject GetGameObject()
-		{
+	{
 			return null;
-		}
 	}
-	";
+}
+";
 
 			var diagnostic = ExpectDiagnostic().WithLocation(8, 27).WithLocation(9, 25);
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -104,19 +104,19 @@ class Camera : MonoBehaviour
 			const string fixedTest = @"
 	using UnityEngine;
 
-	class Camera : MonoBehaviour
+class Camera : MonoBehaviour
+{
+     private void OnTriggerEnter(Collider collider)
 	{
-		 private void OnTriggerEnter(Collider collider)
-		{
 			GameObject duplicate = GetGameObject();
-		}
+	}
 
 		GameObject GetGameObject()
 		{
 			return null;
 		}
-	}
-	";
+}
+";
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 	}

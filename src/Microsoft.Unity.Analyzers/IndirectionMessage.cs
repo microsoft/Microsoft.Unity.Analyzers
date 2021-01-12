@@ -76,11 +76,11 @@ namespace Microsoft.Unity.Analyzers
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), access.Name));
 		}
-	}
+		}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp)]
-	public class IndirectionMessageCodeFix : CodeFixProvider
-	{
+		[ExportCodeFixProvider(LanguageNames.CSharp)]
+		public class IndirectionMessageCodeFix : CodeFixProvider
+		{
 		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(IndirectionMessageAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
@@ -98,7 +98,7 @@ namespace Microsoft.Unity.Analyzers
 					ct => DeleteIndirectionAsync(context.Document, access, ct),
 					access.Expression.ToFullString()),
 				context.Diagnostics);
-		}
+			}
 
 		private static async Task<Document> DeleteIndirectionAsync(Document document, MemberAccessExpressionSyntax access, CancellationToken cancellationToken)
 		{
@@ -108,6 +108,6 @@ namespace Microsoft.Unity.Analyzers
 
 			return document.WithSyntaxRoot(newRoot);
 		}
+		}
 	}
-}
 
