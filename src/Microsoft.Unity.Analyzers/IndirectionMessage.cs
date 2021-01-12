@@ -74,60 +74,40 @@ namespace Microsoft.Unity.Analyzers
 			if (access.Name.ToFullString() != "gameObject")
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), access.Expression));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), access.Name));
+		}
+	}
+
+	[ExportCodeFixProvider(LanguageNames.CSharp)]
+	public class IndirectionMessageCodeFix : CodeFixProvider
+	{
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(IndirectionMessageAnalyzer.Rule.Id);
+
+		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+
+		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+		{
+			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+
+			if (!(root?.FindNode(context.Span) is MemberAccessExpressionSyntax access))
+				return;
+
+			context.RegisterCodeFix(
+				CodeAction.Create(
+					Strings.IndirectionMessageCodeFixTitle,
+					ct => DeleteIndirectionAsync(context.Document, access, ct),
+					access.Expression.ToFullString()),
+				context.Diagnostics);
 		}
 
+		private static async Task<Document> DeleteIndirectionAsync(Document document, MemberAccessExpressionSyntax access, CancellationToken cancellationToken)
+		{
+			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+			var newExpression = access.Expression;
+			var newRoot = root.ReplaceNode(access,newExpression);
 
-		//[ExportCodeFixProvider(LanguageNames.CSharp)]
-		//public class IndirectionMessageCodeFix : CodeFixProvider
-		//{
-		//public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(IndirectionMessageAnalyzer.Rule.Id);
-
-		//public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
-
-		//public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
-		//{
-		//	var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-
-		//	if (!(root?.FindNode(context.Span) is MemberAccessExpressionSyntax access))
-		//		return;
-
-		//	context.RegisterCodeFix(
-		//		CodeAction.Create(
-		//			Strings.IndirectionMessageCodeFixTitle,
-		//			ct => DeleteIndirectionAsync(context.Document, access, ct),
-		//			expression.ToFullString()),
-		//		context.Diagnostics);
-		//	}
-
-		//private static async Task<Document> DeleteIndirectionAsync(Document document, MemberAccessExpressionSyntax access, CancellationToken cancellationToken)
-		//{
-		//	var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-		//	var typeOf = (TypeOfExpressionSyntax)access
-
-			// 
-
-			//var typeOf = (TypeOfExpressionSyntax)access.ArgumentList.Arguments[0].Expression;
-			//var identifierSyntax = (IdentifierNameSyntax)access.Expression;
-
-				//var new = access
-				//	.WithExpression(GenericName(
-				//		identifierSyntax.Identifier,
-				//		TypeArgumentList(
-				//			SeparatedList(new[] { typeOf.Type }))))
-				//	.WithArgumentList(access.ArgumentList.Arguments.Count == 0
-				//		? ArgumentList()
-				//		: invocation.ArgumentList.RemoveNode(access.ArgumentList.Arguments[0], SyntaxRemoveOptions.KeepNoTrivia));
-
-				//	// If we're casting the GetComponent result, remove the cast as the returned value is now type safe
-				//var target = invocation;
-
-				//var newRoot = root.ReplaceNode(target, newInvocation.WithAdditionalAnnotations(Formatter.Annotation));
-				//if (newRoot == null)
-				//	return document;
-
-				//return document.WithSyntaxRoot(newRoot);
-		//	}
-		//}
+			return document.WithSyntaxRoot(newRoot);
+		}
 	}
 }
+
