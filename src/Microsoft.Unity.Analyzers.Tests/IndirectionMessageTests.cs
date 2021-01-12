@@ -60,8 +60,8 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(9, 27);
-			//await VerifyCSharpDiagnosticAsync(test, diagnostic);
+			var diagnostic = ExpectDiagnostic().WithLocation(9, 26);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic,diagnostic);
 
 			const string fixedTest = @"
 using UnityEngine;
