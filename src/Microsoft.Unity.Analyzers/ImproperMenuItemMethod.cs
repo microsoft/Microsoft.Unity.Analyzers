@@ -21,7 +21,7 @@ namespace Microsoft.Unity.Analyzers
 	public class ImproperMenuItemMethodAnalyzer : DiagnosticAnalyzer
 	{
 		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			id: "UNT0019",
+			id: "UNT0020",
 			title: Strings.ImproperMenuItemMethodDiagnosticTitle,
 			messageFormat: Strings.ImproperMenuItemMethodDiagnosticMessageFormat,
 			category: DiagnosticCategory.Correctness,
@@ -39,10 +39,6 @@ namespace Microsoft.Unity.Analyzers
 		}
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			// check if it is of method declaration syntax
-			// check if the attribute thing is a Menu Item
-			// check if the method specifies static
-			// later check: if method references this anywhere --> what is code fix then?
 
 			if (!(context.Node is MethodDeclarationSyntax))
 				return;
