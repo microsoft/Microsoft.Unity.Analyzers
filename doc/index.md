@@ -20,7 +20,7 @@ ID | Title | Category
 [UNT0016](UNT0016.md) | Unsafe way to get the method name | Type Safety
 [UNT0017](UNT0017.md) | SetPixels invocation is slow | Performance
 [UNT0018](UNT0018.md) | System.Reflection features in performance critical messages | Performance
-[UNT0019](UNT0019.md) | Unnecessary indirection call for GameObject.gameObject and Transform.transform | Performance
+[UNT0019](UNT0019.md) | Unnecessary indirection call for GameObject.gameObject | Performance
 
 # Diagnostic Suppressors
 
