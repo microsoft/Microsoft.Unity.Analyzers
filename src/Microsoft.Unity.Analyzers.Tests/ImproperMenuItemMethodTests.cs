@@ -21,12 +21,12 @@ class Camera : MonoBehaviour
 {
 	[MenuItem(""Name"")]
 	private void Menu1()
-	{
-	}
+    {
+    }
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(6,18);
+			var diagnostic = ExpectDiagnostic().WithLocation(7,2);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -38,8 +38,8 @@ class Camera : MonoBehaviour
 {
 	[MenuItem(""Name"")]
 	private static void Menu1()
-	{
-	}
+    {
+    }
 }
 ";
 

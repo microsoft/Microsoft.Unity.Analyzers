@@ -48,13 +48,15 @@ namespace Microsoft.Unity.Analyzers
 				return;
 			
 			var method = (MethodDeclarationSyntax)context.Node;
-			var symbol = context.SemanticModel.GetSymbolInfo(method);
-			
-			if (!(symbol.Symbol is IMethodSymbol methodSymbol))
+			var declaredSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+
+			if (!(declaredSymbol is IMethodSymbol methodSymbol))
 				return;
 
-			var declaredSymbol = context.SemanticModel.GetDeclaredSymbol(method);
-			if (!methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
+			if (!declaredSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
+				return;
+
+			if (declaredSymbol.IsStatic)
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, method.GetLocation(), method));
@@ -83,13 +85,22 @@ namespace Microsoft.Unity.Analyzers
 					declaration.ToFullString()),
 				context.Diagnostics);
 		}
-		private static async Task<Document> AddStaticDeclarationAsync(Document document, MethodDeclarationSyntax declaration, CancellationToken cancellationToken)
+		private static async Task<Document> AddStaticDeclarationAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-			//var newExpression = declaration.Expression;
-			//var newRoot = root.ReplaceNode(access, newExpression);
 
-			return document.WithSyntaxRoot(root);
+			var newMethodDeclaration = methodDeclaration.WithParameterList(SyntaxFactory.ParameterList());
+
+			if (!methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
+			{
+				newMethodDeclaration = newMethodDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+			}
+
+			var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+			if (newRoot == null)
+				return document;
+
+			return document.WithSyntaxRoot(newRoot);
 		}
 	}
 }
