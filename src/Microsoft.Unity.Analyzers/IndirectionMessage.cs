@@ -47,6 +47,10 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var access = (MemberAccessExpressionSyntax)context.Node;
+			
+			if (access.Name.ToFullString() != "gameObject")
+				return;
+				
 			var symbol = context.SemanticModel.GetSymbolInfo(access);
 			var typeInfo = context.SemanticModel.GetTypeInfo(access.Expression);
 			
@@ -60,9 +64,6 @@ namespace Microsoft.Unity.Analyzers
 				return;
 				
 			if (!typeInfo.Type.Extends(typeof(UnityEngine.GameObject)))
-				return;
-
-			if (access.Name.ToFullString() != "gameObject")
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), access.Name));
