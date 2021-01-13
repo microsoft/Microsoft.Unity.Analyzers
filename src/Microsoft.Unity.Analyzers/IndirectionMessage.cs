@@ -3,14 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-//using System.Collections.Immutable;
-//using System.Threading.Tasks;
-//using Microsoft.CodeAnalysis;
-//using Microsoft.CodeAnalysis.CodeFixes;
-//using Microsoft.CodeAnalysis.CSharp;
-//using Microsoft.CodeAnalysis.CSharp.Syntax;
-//using Microsoft.CodeAnalysis.Diagnostics;
-//using Microsoft.Unity.Analyzers.Resources;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -39,8 +31,6 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.IndirectionMessageDiagnosticDescription);
 
-		internal const string UpdateId = "UNT0019";
-
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 		public override void Initialize(AnalysisContext context)
@@ -58,14 +48,18 @@ namespace Microsoft.Unity.Analyzers
 
 			var access = (MemberAccessExpressionSyntax)context.Node;
 			var symbol = context.SemanticModel.GetSymbolInfo(access);
-
+			var typeInfo = context.SemanticModel.GetTypeInfo(access.Expression);
+			
 			if (symbol.Symbol == null)
 				return;
 
-			if (!(symbol.Symbol is IPropertySymbol property))
+			if (!(symbol.Symbol is IPropertySymbol))
 				return;
-
-			if (!context.SemanticModel.GetTypeInfo(access.Expression).Type.Extends(typeof(UnityEngine.GameObject)))
+				
+			if (typeInfo.Type == null)
+				return;
+				
+			if (!typeInfo.Type.Extends(typeof(UnityEngine.GameObject)))
 				return;
 
 			if (access.Name.ToFullString() != "gameObject")
@@ -102,7 +96,10 @@ namespace Microsoft.Unity.Analyzers
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var newExpression = access.Expression;
 			var newRoot = root.ReplaceNode(access,newExpression);
-
+			
+			if (newRoot == null)
+				return document;
+				
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}
