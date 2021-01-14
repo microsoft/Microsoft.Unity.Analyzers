@@ -37,6 +37,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
 		}
+		
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
 
@@ -81,6 +82,7 @@ namespace Microsoft.Unity.Analyzers
 					declaration.ToFullString()),
 				context.Diagnostics);
 		}
+		
 		private static async Task<Document> AddStaticDeclarationAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
