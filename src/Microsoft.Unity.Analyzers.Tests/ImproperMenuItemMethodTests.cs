@@ -1,0 +1,49 @@
+/*--------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *-------------------------------------------------------------------------------------------*/
+
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Microsoft.Unity.Analyzers.Tests
+{
+	public class ImproperMenuItemMethodTests : BaseCodeFixVerifierTest<ImproperMenuItemMethodAnalyzer, ImproperMenuItemMethodCodeFix>
+	{
+		[Fact]
+		public async Task MissingStaticDeclaration()
+		{
+			const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class Camera : MonoBehaviour
+{
+	[MenuItem(""Name"")]
+	private void Menu1()
+    {
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(7,2);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+using UnityEditor;
+
+class Camera : MonoBehaviour
+{
+	[MenuItem(""Name"")]
+	private static void Menu1()
+    {
+    }
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+	}
+}
