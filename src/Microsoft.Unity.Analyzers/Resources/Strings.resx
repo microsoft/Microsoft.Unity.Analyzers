@@ -384,6 +384,18 @@
   <data name="ReflectionDiagnosticTitle" xml:space="preserve">
     <value>System.Reflection features in performance critical messages</value>
   </data>
+  <data name="ImproperMenuItemMethodCodeFixTitle" xml:space="preserve">
+    <value>Use static method.</value>
+  </data>
+  <data name="ImproperMenuItemMethodDiagnosticDescription" xml:space="preserve">
+    <value>MenuItem can only be used on static methods</value>
+  </data>
+  <data name="ImproperMenuItemMethodDiagnosticMessageFormat" xml:space="preserve">
+    <value>This is not a static method.</value>
+  </data>
+  <data name="ImproperMenuItemMethodDiagnosticTitle" xml:space="preserve">
+    <value>Make method static.</value>
+  </data>
   <data name="IndirectionMessageCodeFixTitle" xml:space="preserve">
     <value>Remove indirection call.</value>
   </data>
