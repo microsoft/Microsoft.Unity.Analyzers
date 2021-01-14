@@ -45,6 +45,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 			
 			var method = (MethodDeclarationSyntax)context.Node;
+			
 			if (!(context.SemanticModel.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
 				return;
 
@@ -52,15 +53,6 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			if (methodSymbol.IsStatic)
-				return;
-
-			if (!(declaredSymbol is IMethodSymbol methodSymbol))
-				return;
-
-			if (!declaredSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
-				return;
-
-			if (declaredSymbol.IsStatic)
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, method.GetLocation(), method));
