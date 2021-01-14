@@ -45,7 +45,14 @@ namespace Microsoft.Unity.Analyzers
 				return;
 			
 			var method = (MethodDeclarationSyntax)context.Node;
-			var declaredSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+			if (!(context.SemanticModel.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
+				return;
+
+			if (!methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
+				return;
+
+			if (methodSymbol.IsStatic)
+				return;
 
 			if (!(declaredSymbol is IMethodSymbol methodSymbol))
 				return;
