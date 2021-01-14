@@ -47,22 +47,22 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var access = (MemberAccessExpressionSyntax)context.Node;
-			
+
 			if (access.Name.ToFullString() != "gameObject")
 				return;
-				
+
 			var symbol = context.SemanticModel.GetSymbolInfo(access);
 			var typeInfo = context.SemanticModel.GetTypeInfo(access.Expression);
-			
+
 			if (symbol.Symbol == null)
 				return;
 
 			if (!(symbol.Symbol is IPropertySymbol))
 				return;
-				
+
 			if (typeInfo.Type == null)
 				return;
-				
+
 			if (!typeInfo.Type.Extends(typeof(UnityEngine.GameObject)))
 				return;
 
@@ -96,11 +96,11 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var newExpression = access.Expression;
-			var newRoot = root.ReplaceNode(access,newExpression);
-			
+			var newRoot = root.ReplaceNode(access, newExpression);
+
 			if (newRoot == null)
 				return document;
-				
+
 			return document.WithSyntaxRoot(newRoot);
 		}
 	}

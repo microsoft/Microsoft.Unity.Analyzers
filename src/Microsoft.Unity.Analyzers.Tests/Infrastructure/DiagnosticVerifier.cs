@@ -321,7 +321,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				}
 			}
 
-			if (!Directory.Exists(installationFullPath)) 
+			if (!Directory.Exists(installationFullPath))
 				yield break;
 
 			var managed = Path.Combine(installationFullPath, "Managed");
@@ -348,7 +348,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			{
 				var newFileName = DefaultFilePathPrefix + count + "." + CSharpDefaultFileExt;
 				var documentId = DocumentId.CreateNewId(projectId, newFileName);
-				solution = solution.AddDocument(documentId, newFileName, SourceText.From(source), filePath: @"/" + newFileName); 
+				solution = solution.AddDocument(documentId, newFileName, SourceText.From(source), filePath: @"/" + newFileName);
 				count++;
 			}
 

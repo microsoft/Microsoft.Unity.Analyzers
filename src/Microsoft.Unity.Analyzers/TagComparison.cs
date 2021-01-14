@@ -42,7 +42,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeInvocationExpression(SyntaxNodeAnalysisContext context)
 		{
-			var expr = (InvocationExpressionSyntax) context.Node;
+			var expr = (InvocationExpressionSyntax)context.Node;
 			var nameSyntax = GetMethodNameSyntax(expr);
 
 			if (!IsSupportedMethod(context, nameSyntax))
@@ -67,7 +67,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			if (IsReportableExpression(context, expr.Left)
-			    || IsReportableExpression(context, expr.Right))
+				|| IsReportableExpression(context, expr.Right))
 				context.ReportDiagnostic(Diagnostic.Create(Rule, expr.GetLocation()));
 		}
 
@@ -148,7 +148,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			Func<CancellationToken, Task<Document>> action = null;
-			switch(node)
+			switch (node)
 			{
 				case BinaryExpressionSyntax bes:
 					action = ct => ReplaceBinaryExpressionAsync(context.Document, bes, ct);

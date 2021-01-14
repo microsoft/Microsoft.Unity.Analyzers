@@ -31,7 +31,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			var result = new DiagnosticResult(descriptor.Id, DiagnosticSeverity.Hidden)
 				.WithMessageFormat(descriptor.Justification)
 				.WithSuppressedId(descriptor.SuppressedDiagnosticId);
-			
+
 			return result;
 		}
 

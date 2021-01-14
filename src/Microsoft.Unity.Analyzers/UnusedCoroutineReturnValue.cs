@@ -94,16 +94,16 @@ namespace Microsoft.Unity.Analyzers
 				context.Diagnostics);
 		}
 
-		private static async Task<Document> WrapWithStartCoroutineAsync(Document document, 
-			SyntaxNode parent, 
-			InvocationExpressionSyntax invocation, 
+		private static async Task<Document> WrapWithStartCoroutineAsync(Document document,
+			SyntaxNode parent,
+			InvocationExpressionSyntax invocation,
 			CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
 			var newExpressionStatement = ExpressionStatement(
 				InvocationExpression(
-					IdentifierName("StartCoroutine"), 
+					IdentifierName("StartCoroutine"),
 					ArgumentList(
 						SingletonSeparatedList(
 							Argument(invocation)))));

@@ -42,8 +42,8 @@ namespace Microsoft.Unity.Analyzers
 		}
 
 		// TODO we cannot add this to our stubs/KnownMethods so far (else they will be matched as Unity messages)
-		internal static readonly HashSet<string> InvokeMethodNames = new HashSet<string>(new[] {"Invoke", "InvokeRepeating"});
-		internal static readonly HashSet<string> CoroutineMethodNames = new HashSet<string>(new[] {"StartCoroutine", "StopCoroutine"});
+		internal static readonly HashSet<string> InvokeMethodNames = new HashSet<string>(new[] { "Invoke", "InvokeRepeating" });
+		internal static readonly HashSet<string> CoroutineMethodNames = new HashSet<string>(new[] { "StartCoroutine", "StopCoroutine" });
 
 		private static bool InvocationMatches(SyntaxNode node)
 		{
@@ -125,7 +125,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!(root?.FindNode(context.Span) is InvocationExpressionSyntax invocation))
 				return;
 
-			if (! await IsRegistrableAsync(context, invocation))
+			if (!await IsRegistrableAsync(context, invocation))
 				return;
 
 			context.RegisterCodeFix(

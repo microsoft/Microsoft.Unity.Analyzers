@@ -37,15 +37,15 @@ namespace Microsoft.Unity.Analyzers
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
 		}
-		
+
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
 
 			if (!(context.Node is MethodDeclarationSyntax))
 				return;
-			
+
 			var method = (MethodDeclarationSyntax)context.Node;
-			
+
 			if (!(context.SemanticModel.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
 				return;
 
@@ -80,7 +80,7 @@ namespace Microsoft.Unity.Analyzers
 					declaration.ToFullString()),
 				context.Diagnostics);
 		}
-		
+
 		private static async Task<Document> AddStaticDeclarationAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);

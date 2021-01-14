@@ -110,7 +110,7 @@ namespace Microsoft.Unity.Analyzers
 				.WithExpression(GenericName(
 					identifierSyntax.Identifier,
 					TypeArgumentList(
-						SeparatedList(new[] {typeOf.Type}))))
+						SeparatedList(new[] { typeOf.Type }))))
 				.WithArgumentList(invocation.ArgumentList.Arguments.Count == 0
 					? ArgumentList()
 					: invocation.ArgumentList.RemoveNode(invocation.ArgumentList.Arguments[0], SyntaxRemoveOptions.KeepNoTrivia));

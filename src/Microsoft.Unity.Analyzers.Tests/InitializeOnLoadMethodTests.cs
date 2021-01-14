@@ -132,7 +132,7 @@ class Loader
 
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
-		
+
 		[Fact]
 		public async Task RuntimeInitializeOnLoadMethodTest()
 		{

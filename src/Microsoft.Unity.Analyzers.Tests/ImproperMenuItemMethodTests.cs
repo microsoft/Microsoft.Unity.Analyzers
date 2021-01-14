@@ -26,7 +26,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(7,2);
+			var diagnostic = ExpectDiagnostic().WithLocation(7, 2);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 

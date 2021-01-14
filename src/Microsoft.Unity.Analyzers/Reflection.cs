@@ -32,7 +32,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			context.EnableConcurrentExecution();
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			
+
 			context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
 		}
 
@@ -41,7 +41,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!(context.Node is MethodDeclarationSyntax method))
 				return;
 
-			if (!IsCriticalMessage(context, method)) 
+			if (!IsCriticalMessage(context, method))
 				return;
 
 			AnalyzeMethodBody(context, method);
