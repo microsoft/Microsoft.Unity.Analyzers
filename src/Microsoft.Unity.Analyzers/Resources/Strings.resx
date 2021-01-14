@@ -396,4 +396,16 @@
   <data name="ImproperMenuItemMethodDiagnosticTitle" xml:space="preserve">
     <value>Make method static.</value>
   </data>
+  <data name="IndirectionMessageCodeFixTitle" xml:space="preserve">
+    <value>Remove indirection call.</value>
+  </data>
+  <data name="IndirectionMessageDiagnosticDescription" xml:space="preserve">
+    <value>Each access is called.</value>
+  </data>
+  <data name="IndirectionMessageDiagnosticMessageFormat" xml:space="preserve">
+    <value>Indirection is redundant</value>
+  </data>
+  <data name="IndirectionMessageDiagnosticTitle" xml:space="preserve">
+    <value>Indirection call</value>
+  </data>
 </root>

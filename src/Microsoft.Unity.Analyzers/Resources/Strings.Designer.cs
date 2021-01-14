@@ -331,6 +331,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove indirection call..
+        /// </summary>
+        internal static string IndirectionMessageCodeFixTitle {
+            get {
+                return ResourceManager.GetString("IndirectionMessageCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each access is called..
+        /// </summary>
+        internal static string IndirectionMessageDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("IndirectionMessageDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indirection is redundant.
+        /// </summary>
+        internal static string IndirectionMessageDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("IndirectionMessageDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indirection call.
+        /// </summary>
+        internal static string IndirectionMessageDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("IndirectionMessageDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fix method signature.
         /// </summary>
         internal static string InitializeOnLoadMethodCodeFixTitle {
