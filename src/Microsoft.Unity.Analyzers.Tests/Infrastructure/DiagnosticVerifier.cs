@@ -24,6 +24,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 		private const string CSharpDefaultFileExt = "cs";
 		private const string TestProjectName = "TestProject";
 
+		public virtual LanguageVersion LanguageVersion => LanguageVersion.Latest;
+
 		protected abstract DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer();
 
 		protected virtual IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
@@ -166,36 +168,39 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 				foreach (var rule in rules)
 				{
-					if (rule != null && rule.Id == diagnostics[i].Id)
+					if (rule.Id != diagnostics[i].Id)
+						continue;
+
+					var location = diagnostics[i].Location;
+					if (location == Location.None)
 					{
-						var location = diagnostics[i].Location;
-						if (location == Location.None)
-						{
-							builder.AppendFormat("GetGlobalResult({0}.{1})", analyzerType.Name, rule.Id);
-						}
-						else
-						{
-							Assert.True(location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
-
-							var resultMethodName = diagnostics[i].Location.SourceTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
-							var linePosition = diagnostics[i].Location.GetLineSpan().StartLinePosition;
-
-							builder.AppendFormat("{0}({1}, {2}, {3}.{4})",
-								resultMethodName,
-								linePosition.Line + 1,
-								linePosition.Character + 1,
-								analyzerType.Name,
-								rule.Id);
-						}
-
-						if (i != diagnostics.Length - 1)
-						{
-							builder.Append(',');
-						}
-
-						builder.AppendLine();
-						break;
+						builder.AppendFormat("GetGlobalResult({0}.{1})", analyzerType.Name, rule.Id);
 					}
+					else
+					{
+						Assert.True(location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
+
+						var syntaxTree = diagnostics[i].Location.SourceTree;
+						Assert.NotNull(syntaxTree);
+
+						var resultMethodName = syntaxTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
+						var linePosition = diagnostics[i].Location.GetLineSpan().StartLinePosition;
+
+						builder.AppendFormat("{0}({1}, {2}, {3}.{4})",
+							resultMethodName,
+							linePosition.Line + 1,
+							linePosition.Character + 1,
+							analyzerType.Name,
+							rule.Id);
+					}
+
+					if (i != diagnostics.Length - 1)
+					{
+						builder.Append(',');
+					}
+
+					builder.AppendLine();
+					break;
 				}
 			}
 			return builder.ToString();
@@ -223,7 +228,14 @@ namespace Microsoft.Unity.Analyzers.Tests
 				var compilation = await project.GetCompilationAsync();
 				Assert.NotNull(compilation);
 
-				var analyzerOptions = new CompilationWithAnalyzersOptions(default, null, true, true, true);
+				var overrides = expected
+					.SelectMany(d => d.Options)
+					.GroupBy(d => d.Key)
+					.ToImmutableDictionary(kvp => kvp.Key, g => g.First().Value);
+
+				var optionsProvider = new AnalyzerOptionsProvider(overrides);
+				var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
+				var analyzerOptions = new CompilationWithAnalyzersOptions(options, null, true, true, true);
 
 				var compilationWithAnalyzers = compilation
 					.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true))
@@ -261,16 +273,17 @@ namespace Microsoft.Unity.Analyzers.Tests
 				}
 			}
 
-			var results = SortDiagnostics(FilterDiagnostics(diagnostics));
+			var results = SortDiagnostics(FilterDiagnostics(diagnostics, expected.SelectMany(d => d.Filters).ToArray()));
 			diagnostics.Clear();
 			return results;
 		}
 
-		protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics)
+		protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, params string[] overrides)
 		{
 			return diagnostics
 				.Where(d => d.Id != "CS1701") // Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
 				.Where(d => d.Id != "CS0414") // IDE0051
+				.Where(d => !overrides.Contains(d.Id))
 				.ToArray();
 		}
 
@@ -279,7 +292,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 		}
 
-		private static Document[] GetDocuments(string[] sources)
+		private Document[] GetDocuments(string[] sources)
 		{
 			var project = CreateProject(sources);
 			var documents = project.Documents.ToArray();
@@ -292,7 +305,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return documents;
 		}
 
-		protected static Document CreateDocument(string source)
+		protected Document CreateDocument(string source)
 		{
 			return CreateProject(new[] { source }).Documents.First();
 		}
@@ -333,7 +346,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			yield return Path.Combine(monolib, "system.dll");
 		}
 
-		private static Project CreateProject(string[] sources)
+		private Project CreateProject(string[] sources)
 		{
 			var projectId = ProjectId.CreateNewId(TestProjectName);
 
@@ -342,6 +355,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				.AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp);
 
 			solution = UnityAssemblies().Aggregate(solution, (current, dll) => current.AddMetadataReference(projectId, MetadataReference.CreateFromFile(dll)));
+			solution = solution.WithProjectParseOptions(projectId, new CSharpParseOptions(LanguageVersion));
 
 			var count = 0;
 			foreach (var source in sources)

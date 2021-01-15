@@ -59,12 +59,13 @@ namespace Microsoft.Unity.Analyzers.Tests
 				if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
 				{
 					// Format and get the compiler diagnostics again so that the locations make sense in the output
-					document = document.WithSyntaxRoot(Formatter.Format(await document.GetSyntaxRootAsync(), Formatter.Annotation, document.Project.Solution.Workspace));
+					var root = await document.GetSyntaxRootAsync();
+					Assert.NotNull(root);
+
+					document = document.WithSyntaxRoot(Formatter.Format(root, Formatter.Annotation, document.Project.Solution.Workspace));
 					newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
 					var diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
-					var root = await document.GetSyntaxRootAsync();
-					Assert.NotNull(root);
 
 					var newDoc = root.ToFullString();
 					Assert.True(false, $"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{newDoc}\r\n");
@@ -123,6 +124,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 		{
 			var simplifiedDoc = await Simplifier.ReduceAsync(document, Simplifier.Annotation);
 			var root = await simplifiedDoc.GetSyntaxRootAsync();
+			Assert.NotNull(root);
+
 			root = Formatter.Format(root, Formatter.Annotation, simplifiedDoc.Project.Solution.Workspace);
 			return root.GetText().ToString();
 		}

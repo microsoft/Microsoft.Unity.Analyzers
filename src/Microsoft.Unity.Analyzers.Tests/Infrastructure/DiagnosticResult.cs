@@ -20,6 +20,8 @@ namespace Microsoft.Unity.Analyzers.Tests
 		private static readonly object[] EmptyArguments = new object[0];
 
 		private readonly ImmutableArray<DiagnosticLocation> _spans;
+		private readonly ImmutableDictionary<string, string> _options;
+		private readonly ImmutableArray<string> _filters;
 		private readonly bool _suppressMessage;
 		private readonly string _message;
 
@@ -46,7 +48,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 			string id,
 			LocalizableString messageFormat,
 			object[] messageArguments,
-			string suppressedId)
+			string suppressedId,
+			ImmutableDictionary<string, string> options,
+			ImmutableArray<string> filters)
 		{
 			_spans = spans;
 			_suppressMessage = suppressMessage;
@@ -56,9 +60,13 @@ namespace Microsoft.Unity.Analyzers.Tests
 			MessageFormat = messageFormat;
 			MessageArguments = messageArguments;
 			SuppressedId = suppressedId;
+			_options = options;
+			_filters = filters;
 		}
 
 		public ImmutableArray<DiagnosticLocation> Spans => _spans.IsDefault ? ImmutableArray<DiagnosticLocation>.Empty : _spans;
+		public ImmutableDictionary<string, string> Options => _options ?? ImmutableDictionary<string, string>.Empty;
+		public ImmutableArray<string> Filters => _filters.IsDefault ? ImmutableArray<string>.Empty : _filters;
 
 		public DiagnosticSeverity Severity { get; }
 
@@ -101,7 +109,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
 		}
 
 		public DiagnosticResult WithArguments(params object[] arguments)
@@ -114,7 +124,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				arguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
 		}
 
 		public DiagnosticResult WithMessage(string message)
@@ -127,7 +139,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
 		}
 
 		public DiagnosticResult WithMessageFormat(LocalizableString messageFormat)
@@ -140,7 +154,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				messageFormat,
 				MessageArguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
 		}
 
 		public DiagnosticResult WithNoLocation()
@@ -153,7 +169,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
 		}
 
 		public DiagnosticResult WithSuppressedId(string suppressedId)
@@ -166,7 +184,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				suppressedId);
+				suppressedId,
+				_options,
+				_filters);
 		}
 
 		public DiagnosticResult WithLocation(int line, int column)
@@ -213,7 +233,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
 		}
 
 		public DiagnosticResult WithLineOffset(int offset)
@@ -238,7 +260,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
 		}
 
 		private DiagnosticResult AppendSpan(FileLinePositionSpan span, DiagnosticLocationOptions options)
@@ -251,7 +275,39 @@ namespace Microsoft.Unity.Analyzers.Tests
 				Id,
 				MessageFormat,
 				MessageArguments,
-				SuppressedId);
+				SuppressedId,
+				_options,
+				_filters);
+		}
+
+		public DiagnosticResult WithAnalyzerOption(string key, string value)
+		{
+			return new DiagnosticResult(
+				_spans,
+				_suppressMessage,
+				_message,
+				Severity,
+				Id,
+				MessageFormat,
+				MessageArguments,
+				SuppressedId,
+				Options.Add(key, value),
+				_filters);
+		}
+
+		public DiagnosticResult WithAnalyzerFilter(string value)
+		{
+			return new DiagnosticResult(
+				_spans,
+				_suppressMessage,
+				_message,
+				Severity,
+				Id,
+				MessageFormat,
+				MessageArguments,
+				SuppressedId,
+				_options,
+				Filters.Add(value));
 		}
 
 		public override string ToString()

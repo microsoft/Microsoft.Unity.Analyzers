@@ -20,17 +20,18 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    readonly string someField; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
+    string someField;
 
-    private void RemoveIDE0051() {
+    private void ReadField() {
         var _ = someField;
-        RemoveIDE0051();
     }
 }
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
-				.WithLocation(7, 21);
+				.WithLocation(7, 12)
+				.WithAnalyzerOption("dotnet_style_readonly_field", "false")
+				.WithAnalyzerFilter("IDE0051");
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
@@ -46,15 +47,15 @@ class Camera : MonoBehaviour
     [SerializeField]
     private string someField = ""default"";
 
-    private void RemoveIDE0051() {
+    private void ReadField() {
         var _ = someField;
-        RemoveIDE0051();
     }
 }
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
-				.WithLocation(7, 20);
+				.WithLocation(7, 20)
+				.WithAnalyzerFilter("IDE0051");
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
@@ -111,12 +112,13 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    readonly string someField = ""default""; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
+    string someField = ""default"";
 }
 ";
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
-				.WithLocation(7, 21);
+				.WithAnalyzerOption("dotnet_style_readonly_field", "false")
+				.WithLocation(7, 12);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
