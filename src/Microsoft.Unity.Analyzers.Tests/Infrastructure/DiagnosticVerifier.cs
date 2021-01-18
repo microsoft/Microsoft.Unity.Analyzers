@@ -24,8 +24,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 		private const string CSharpDefaultFileExt = "cs";
 		private const string TestProjectName = "TestProject";
 
-		public virtual LanguageVersion LanguageVersion => LanguageVersion.Latest;
-
 		protected abstract DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer();
 
 		protected virtual IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
@@ -70,17 +68,17 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
 		{
-			return VerifyDiagnosticsAsync(new[] { source }, GetCSharpDiagnosticAnalyzer(), expected);
+			return VerifyCSharpDiagnosticAsync(AnalyzerVerificationContext.Default, source, expected);
 		}
 
-		protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
+		protected Task VerifyCSharpDiagnosticAsync(AnalyzerVerificationContext context, string source, params DiagnosticResult[] expected)
 		{
-			return VerifyDiagnosticsAsync(sources, GetCSharpDiagnosticAnalyzer(), expected);
+			return VerifyDiagnosticsAsync(context, new[] { source }, GetCSharpDiagnosticAnalyzer(), expected);
 		}
 
-		private async Task VerifyDiagnosticsAsync(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+		private async Task VerifyDiagnosticsAsync(AnalyzerVerificationContext context, string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			var diagnostics = await GetSortedDiagnosticsAsync(sources, analyzer, expected);
+			var diagnostics = await GetSortedDiagnosticsAsync(context, sources, analyzer, expected);
 			VerifyDiagnosticResults(diagnostics, analyzer, expected);
 		}
 
@@ -206,12 +204,12 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return builder.ToString();
 		}
 
-		private Task<Diagnostic[]> GetSortedDiagnosticsAsync(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+		private Task<Diagnostic[]> GetSortedDiagnosticsAsync(AnalyzerVerificationContext context, string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			return GetSortedDiagnosticsFromDocumentsAsync(analyzer, GetDocuments(sources), expected);
+			return GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, GetDocuments(context, sources), expected);
 		}
 
-		protected async Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents, params DiagnosticResult[] expected)
+		protected async Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(AnalyzerVerificationContext context, DiagnosticAnalyzer analyzer, Document[] documents, params DiagnosticResult[] expected)
 		{
 			var projects = new HashSet<Project>();
 			foreach (var document in documents)
@@ -228,12 +226,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				var compilation = await project.GetCompilationAsync();
 				Assert.NotNull(compilation);
 
-				var overrides = expected
-					.SelectMany(d => d.Options)
-					.GroupBy(d => d.Key)
-					.ToImmutableDictionary(kvp => kvp.Key, g => g.First().Value);
-
-				var optionsProvider = new AnalyzerOptionsProvider(overrides);
+				var optionsProvider = new AnalyzerOptionsProvider(context.Options);
 				var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
 				var analyzerOptions = new CompilationWithAnalyzersOptions(options, null, true, true, true);
 
@@ -273,17 +266,15 @@ namespace Microsoft.Unity.Analyzers.Tests
 				}
 			}
 
-			var results = SortDiagnostics(FilterDiagnostics(diagnostics, expected.SelectMany(d => d.Filters).ToArray()));
+			var results = SortDiagnostics(FilterDiagnostics(diagnostics, context.Filters));
 			diagnostics.Clear();
 			return results;
 		}
 
-		protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, params string[] overrides)
+		protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, ImmutableArray<string> filters)
 		{
 			return diagnostics
-				.Where(d => d.Id != "CS1701") // Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
-				.Where(d => d.Id != "CS0414") // IDE0051
-				.Where(d => !overrides.Contains(d.Id))
+				.Where(d => !filters.Contains(d.Id))
 				.ToArray();
 		}
 
@@ -292,9 +283,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 		}
 
-		private Document[] GetDocuments(string[] sources)
+		private static Document[] GetDocuments(AnalyzerVerificationContext context, string[] sources)
 		{
-			var project = CreateProject(sources);
+			var project = CreateProject(context, sources);
 			var documents = project.Documents.ToArray();
 
 			if (sources.Length != documents.Length)
@@ -305,9 +296,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return documents;
 		}
 
-		protected Document CreateDocument(string source)
+		protected static Document CreateDocument(AnalyzerVerificationContext context, string source)
 		{
-			return CreateProject(new[] { source }).Documents.First();
+			return CreateProject(context, new[] { source }).Documents.First();
 		}
 
 		private static IEnumerable<string> UnityAssemblies()
@@ -346,7 +337,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			yield return Path.Combine(monolib, "system.dll");
 		}
 
-		private Project CreateProject(string[] sources)
+		private static Project CreateProject(AnalyzerVerificationContext context, string[] sources)
 		{
 			var projectId = ProjectId.CreateNewId(TestProjectName);
 
@@ -355,7 +346,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				.AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp);
 
 			solution = UnityAssemblies().Aggregate(solution, (current, dll) => current.AddMetadataReference(projectId, MetadataReference.CreateFromFile(dll)));
-			solution = solution.WithProjectParseOptions(projectId, new CSharpParseOptions(LanguageVersion));
+			solution = solution.WithProjectParseOptions(projectId, new CSharpParseOptions(context.LanguageVersion));
 
 			var count = 0;
 			foreach (var source in sources)

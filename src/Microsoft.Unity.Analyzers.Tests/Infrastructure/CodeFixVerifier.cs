@@ -23,21 +23,26 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected Task VerifyCSharpFixAsync(string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
 		{
-			return VerifyFixAsync(GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+			return VerifyCSharpFixAsync(AnalyzerVerificationContext.Default, oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
 		}
 
-		private async Task VerifyFixAsync(DiagnosticAnalyzer analyzer, CodeFixProvider codeFixProvider, string oldSource, string newSource, int? codeFixIndex, bool allowNewCompilerDiagnostics)
+		protected Task VerifyCSharpFixAsync(AnalyzerVerificationContext context, string oldSource, string newSource, int? codeFixIndex = null, bool allowNewCompilerDiagnostics = false)
 		{
-			var document = CreateDocument(oldSource);
-			var analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] { document });
+			return VerifyFixAsync(context, GetCSharpDiagnosticAnalyzer(), GetCSharpCodeFixProvider(), oldSource, newSource, codeFixIndex, allowNewCompilerDiagnostics);
+		}
+
+		private async Task VerifyFixAsync(AnalyzerVerificationContext context, DiagnosticAnalyzer analyzer, CodeFixProvider codeFixProvider, string oldSource, string newSource, int? codeFixIndex, bool allowNewCompilerDiagnostics)
+		{
+			var document = CreateDocument(context, oldSource);
+			var analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, new[] { document });
 			var compilerDiagnostics = (await GetCompilerDiagnosticsAsync(document)).ToList();
 			var attempts = analyzerDiagnostics.Length;
 
 			for (var i = 0; i < attempts; ++i)
 			{
 				var actions = new List<CodeAction>();
-				var context = new CodeFixContext(document, analyzerDiagnostics[0], (a, d) => actions.Add(a), CancellationToken.None);
-				await codeFixProvider.RegisterCodeFixesAsync(context);
+				var codeFixContext = new CodeFixContext(document, analyzerDiagnostics[0], (a, d) => actions.Add(a), CancellationToken.None);
+				await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 
 				if (!actions.Any())
 				{
@@ -51,9 +56,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				}
 
 				document = await ApplyFixAsync(document, actions.ElementAt(0));
-				analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(analyzer, new[] { document });
+				analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, new[] { document });
 
-				var newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
+				var newCompilerDiagnostics = GetNewDiagnostics(context, compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
 				//check if applying the code fix introduced any new compiler diagnostics
 				if (!allowNewCompilerDiagnostics && newCompilerDiagnostics.Any())
@@ -63,7 +68,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 					Assert.NotNull(root);
 
 					document = document.WithSyntaxRoot(Formatter.Format(root, Formatter.Annotation, document.Project.Solution.Workspace));
-					newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
+					newCompilerDiagnostics = GetNewDiagnostics(context, compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
 					var diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
 
@@ -90,10 +95,10 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return solution.GetDocument(document.Id);
 		}
 
-		private static IEnumerable<Diagnostic> GetNewDiagnostics(IEnumerable<Diagnostic> diagnostics, IEnumerable<Diagnostic> newDiagnostics)
+		private static IEnumerable<Diagnostic> GetNewDiagnostics(AnalyzerVerificationContext context, IEnumerable<Diagnostic> diagnostics, IEnumerable<Diagnostic> newDiagnostics)
 		{
-			var oldArray = FilterDiagnostics(diagnostics).OrderBy(d => d.Location.SourceSpan.Start).ToArray();
-			var newArray = FilterDiagnostics(newDiagnostics).OrderBy(d => d.Location.SourceSpan.Start).ToArray();
+			var oldArray = FilterDiagnostics(diagnostics, context.Filters).OrderBy(d => d.Location.SourceSpan.Start).ToArray();
+			var newArray = FilterDiagnostics(newDiagnostics, context.Filters).OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 
 			var oldIndex = 0;
 			var newIndex = 0;

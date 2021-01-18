@@ -27,13 +27,14 @@ class Camera : MonoBehaviour
     }
 }
 ";
-
-			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
-				.WithLocation(7, 12)
+			var context = AnalyzerVerificationContext.Default
 				.WithAnalyzerOption("dotnet_style_readonly_field", "false")
 				.WithAnalyzerFilter("IDE0051");
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
+				.WithLocation(7, 12);
+
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 
 		[Fact]
@@ -52,12 +53,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-
-			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
-				.WithLocation(7, 20)
+			var context = AnalyzerVerificationContext.Default
 				.WithAnalyzerFilter("IDE0051");
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
+				.WithLocation(7, 20);
+
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 
 		[Fact]
@@ -115,12 +117,13 @@ class Camera : MonoBehaviour
     string someField = ""default"";
 }
 ";
+			var context = AnalyzerVerificationContext.Default
+				.WithAnalyzerOption("dotnet_style_readonly_field", "false");
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
-				.WithAnalyzerOption("dotnet_style_readonly_field", "false")
 				.WithLocation(7, 12);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 
 	}
