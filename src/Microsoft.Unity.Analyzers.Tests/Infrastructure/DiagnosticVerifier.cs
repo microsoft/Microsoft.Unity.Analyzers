@@ -68,17 +68,17 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected Task VerifyCSharpDiagnosticAsync(string source, params DiagnosticResult[] expected)
 		{
-			return VerifyDiagnosticsAsync(new[] { source }, GetCSharpDiagnosticAnalyzer(), expected);
+			return VerifyCSharpDiagnosticAsync(AnalyzerVerificationContext.Default, source, expected);
 		}
 
-		protected Task VerifyCSharpDiagnosticAsync(string[] sources, params DiagnosticResult[] expected)
+		protected Task VerifyCSharpDiagnosticAsync(AnalyzerVerificationContext context, string source, params DiagnosticResult[] expected)
 		{
-			return VerifyDiagnosticsAsync(sources, GetCSharpDiagnosticAnalyzer(), expected);
+			return VerifyDiagnosticsAsync(context, new[] { source }, GetCSharpDiagnosticAnalyzer(), expected);
 		}
 
-		private async Task VerifyDiagnosticsAsync(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+		private async Task VerifyDiagnosticsAsync(AnalyzerVerificationContext context, string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			var diagnostics = await GetSortedDiagnosticsAsync(sources, analyzer, expected);
+			var diagnostics = await GetSortedDiagnosticsAsync(context, sources, analyzer, expected);
 			VerifyDiagnosticResults(diagnostics, analyzer, expected);
 		}
 
@@ -166,47 +166,50 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 				foreach (var rule in rules)
 				{
-					if (rule != null && rule.Id == diagnostics[i].Id)
+					if (rule.Id != diagnostics[i].Id)
+						continue;
+
+					var location = diagnostics[i].Location;
+					if (location == Location.None)
 					{
-						var location = diagnostics[i].Location;
-						if (location == Location.None)
-						{
-							builder.AppendFormat("GetGlobalResult({0}.{1})", analyzerType.Name, rule.Id);
-						}
-						else
-						{
-							Assert.True(location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
-
-							var resultMethodName = diagnostics[i].Location.SourceTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
-							var linePosition = diagnostics[i].Location.GetLineSpan().StartLinePosition;
-
-							builder.AppendFormat("{0}({1}, {2}, {3}.{4})",
-								resultMethodName,
-								linePosition.Line + 1,
-								linePosition.Character + 1,
-								analyzerType.Name,
-								rule.Id);
-						}
-
-						if (i != diagnostics.Length - 1)
-						{
-							builder.Append(',');
-						}
-
-						builder.AppendLine();
-						break;
+						builder.AppendFormat("GetGlobalResult({0}.{1})", analyzerType.Name, rule.Id);
 					}
+					else
+					{
+						Assert.True(location.IsInSource, $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
+
+						var syntaxTree = diagnostics[i].Location.SourceTree;
+						Assert.NotNull(syntaxTree);
+
+						var resultMethodName = syntaxTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
+						var linePosition = diagnostics[i].Location.GetLineSpan().StartLinePosition;
+
+						builder.AppendFormat("{0}({1}, {2}, {3}.{4})",
+							resultMethodName,
+							linePosition.Line + 1,
+							linePosition.Character + 1,
+							analyzerType.Name,
+							rule.Id);
+					}
+
+					if (i != diagnostics.Length - 1)
+					{
+						builder.Append(',');
+					}
+
+					builder.AppendLine();
+					break;
 				}
 			}
 			return builder.ToString();
 		}
 
-		private Task<Diagnostic[]> GetSortedDiagnosticsAsync(string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
+		private Task<Diagnostic[]> GetSortedDiagnosticsAsync(AnalyzerVerificationContext context, string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
 		{
-			return GetSortedDiagnosticsFromDocumentsAsync(analyzer, GetDocuments(sources), expected);
+			return GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, GetDocuments(context, sources), expected);
 		}
 
-		protected async Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents, params DiagnosticResult[] expected)
+		protected async Task<Diagnostic[]> GetSortedDiagnosticsFromDocumentsAsync(AnalyzerVerificationContext context, DiagnosticAnalyzer analyzer, Document[] documents, params DiagnosticResult[] expected)
 		{
 			var projects = new HashSet<Project>();
 			foreach (var document in documents)
@@ -223,7 +226,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 				var compilation = await project.GetCompilationAsync();
 				Assert.NotNull(compilation);
 
-				var analyzerOptions = new CompilationWithAnalyzersOptions(default, null, true, true, true);
+				var optionsProvider = new AnalyzerOptionsProvider(context.Options);
+				var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
+				var analyzerOptions = new CompilationWithAnalyzersOptions(options, null, true, true, true);
 
 				var compilationWithAnalyzers = compilation
 					.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true))
@@ -261,16 +266,15 @@ namespace Microsoft.Unity.Analyzers.Tests
 				}
 			}
 
-			var results = SortDiagnostics(FilterDiagnostics(diagnostics));
+			var results = SortDiagnostics(FilterDiagnostics(diagnostics, context.Filters));
 			diagnostics.Clear();
 			return results;
 		}
 
-		protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics)
+		protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, ImmutableArray<string> filters)
 		{
 			return diagnostics
-				.Where(d => d.Id != "CS1701") // Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
-				.Where(d => d.Id != "CS0414") // IDE0051
+				.Where(d => !filters.Contains(d.Id))
 				.ToArray();
 		}
 
@@ -279,9 +283,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
 		}
 
-		private static Document[] GetDocuments(string[] sources)
+		private static Document[] GetDocuments(AnalyzerVerificationContext context, string[] sources)
 		{
-			var project = CreateProject(sources);
+			var project = CreateProject(context, sources);
 			var documents = project.Documents.ToArray();
 
 			if (sources.Length != documents.Length)
@@ -292,9 +296,9 @@ namespace Microsoft.Unity.Analyzers.Tests
 			return documents;
 		}
 
-		protected static Document CreateDocument(string source)
+		protected static Document CreateDocument(AnalyzerVerificationContext context, string source)
 		{
-			return CreateProject(new[] { source }).Documents.First();
+			return CreateProject(context, new[] { source }).Documents.First();
 		}
 
 		private static IEnumerable<string> UnityAssemblies()
@@ -333,7 +337,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			yield return Path.Combine(monolib, "system.dll");
 		}
 
-		private static Project CreateProject(string[] sources)
+		private static Project CreateProject(AnalyzerVerificationContext context, string[] sources)
 		{
 			var projectId = ProjectId.CreateNewId(TestProjectName);
 
@@ -342,6 +346,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				.AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp);
 
 			solution = UnityAssemblies().Aggregate(solution, (current, dll) => current.AddMetadataReference(projectId, MetadataReference.CreateFromFile(dll)));
+			solution = solution.WithProjectParseOptions(projectId, new CSharpParseOptions(context.LanguageVersion));
 
 			var count = 0;
 			foreach (var source in sources)

@@ -20,19 +20,21 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    readonly string someField; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
+    string someField;
 
-    private void RemoveIDE0051() {
+    private void ReadField() {
         var _ = someField;
-        RemoveIDE0051();
     }
 }
 ";
+			var context = AnalyzerVerificationContext.Default
+				.WithAnalyzerOption("dotnet_style_readonly_field", "false")
+				.WithAnalyzerFilter("IDE0051");
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
-				.WithLocation(7, 21);
+				.WithLocation(7, 12);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 
 		[Fact]
@@ -46,17 +48,18 @@ class Camera : MonoBehaviour
     [SerializeField]
     private string someField = ""default"";
 
-    private void RemoveIDE0051() {
+    private void ReadField() {
         var _ = someField;
-        RemoveIDE0051();
     }
 }
 ";
+			var context = AnalyzerVerificationContext.Default
+				.WithAnalyzerFilter("IDE0051");
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
 				.WithLocation(7, 20);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 
 		[Fact]
@@ -111,14 +114,16 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     [SerializeField]
-    readonly string someField = ""default""; // we only use readonly here for testing purposes, suppressor is tested unitarily (so SerializeFieldSuppressor.ReadonlyRule [IDE0044] cannot be suppressed here)
+    string someField = ""default"";
 }
 ";
+			var context = AnalyzerVerificationContext.Default
+				.WithAnalyzerOption("dotnet_style_readonly_field", "false");
 
 			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
-				.WithLocation(7, 21);
+				.WithLocation(7, 12);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 
 	}
