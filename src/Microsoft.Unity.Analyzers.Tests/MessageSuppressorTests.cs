@@ -24,7 +24,7 @@ class Processor : AssetPostprocessor
     }
 }";
 
-			var suppressors = new [] {
+			var suppressors = new[] {
 				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(6, 27),
 				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 55),
 				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 68),

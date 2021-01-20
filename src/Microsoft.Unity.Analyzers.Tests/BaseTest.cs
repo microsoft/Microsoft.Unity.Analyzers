@@ -16,7 +16,7 @@ using Xunit;
 namespace Microsoft.Unity.Analyzers.Tests
 {
 	public abstract class BaseDiagnosticVerifierTest<TAnalyzer> : DiagnosticVerifier
-		where TAnalyzer : DiagnosticAnalyzer, new() 
+		where TAnalyzer : DiagnosticAnalyzer, new()
 	{
 
 		internal const string InterfaceTest = @"
@@ -39,7 +39,7 @@ interface IFailure
 	}
 
 	public abstract class BaseSuppressorVerifierTest<TAnalyzer> : SuppressorVerifier
-		where TAnalyzer : DiagnosticSuppressor, new() 
+		where TAnalyzer : DiagnosticSuppressor, new()
 	{
 		[Fact]
 		public async Task DoNotFailWithInterfaceMembers()
@@ -54,8 +54,8 @@ interface IFailure
 	}
 
 	public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVerifier
-		where TAnalyzer : DiagnosticAnalyzer, new() 
-		where TCodeFix : CodeFixProvider, new() 
+		where TAnalyzer : DiagnosticAnalyzer, new()
+		where TCodeFix : CodeFixProvider, new()
 	{
 		[Fact]
 		public async Task DoNotFailWithInterfaceMembers()

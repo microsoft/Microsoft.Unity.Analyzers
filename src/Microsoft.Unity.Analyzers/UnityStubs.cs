@@ -437,7 +437,7 @@ namespace UnityEditor
 		void OnPreprocessSpeedTree() { }
 		void OnPreprocessTexture() { }
 
-        // undocumented static methods
+		// undocumented static methods
 		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) { }
 		static bool OnPreGeneratingCSProjectFiles() { return false; }
 		static string OnGeneratedSlnSolution(string path, string content) { return null; }

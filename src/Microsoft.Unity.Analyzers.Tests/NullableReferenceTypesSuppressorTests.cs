@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -54,7 +55,6 @@ public class TestScript : MonoBehaviour
 	}
 }
 ";
-
 			DiagnosticResult[] suppressor =
 			{
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(8, 29), //field1
@@ -63,10 +63,6 @@ public class TestScript : MonoBehaviour
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 28), //Property1
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(14, 29), //property2Field
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(16, 38), //serializedField
-
-				DiagnosticResult.CompilerWarning("CS0169")
-					.WithMessage("The field 'TestScript.serializedField' is never used")
-					.WithLocation(16, 38), //warning is not part of this analyzer
 
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
 
@@ -77,7 +73,11 @@ public class TestScript : MonoBehaviour
 				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)
 			};
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			var context = AnalyzerVerificationContext.Default
+				.WithLanguageVersion(LanguageVersion.CSharp8)
+				.WithAnalyzerFilter("CS0169");
+
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 	}
 }

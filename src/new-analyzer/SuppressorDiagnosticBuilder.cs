@@ -8,7 +8,7 @@ namespace NewAnalyzer
 	internal class SuppressorDiagnosticBuilder : AbstractDiagnosticBuilder
 	{
 		protected override string IdPrefix => "USP";
-		
+
 		protected override string GetResourceTemplate()
 		{
 			return @"  <data name=""$(DiagnosticName)Justification"" xml:space=""preserve"">

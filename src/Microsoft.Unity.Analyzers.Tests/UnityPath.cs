@@ -75,7 +75,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 						RegisterUnityInstallation(unitypath);
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Assert.True(false, e.ToString());
 			}

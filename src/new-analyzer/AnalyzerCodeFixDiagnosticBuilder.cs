@@ -8,7 +8,7 @@ namespace NewAnalyzer
 	internal class AnalyzerCodeFixDiagnosticBuilder : AbstractDiagnosticBuilder
 	{
 		protected override string IdPrefix => "UNT";
-		
+
 		protected override string GetResourceTemplate()
 		{
 			return @"  <data name=""$(DiagnosticName)CodeFixTitle"" xml:space=""preserve"">

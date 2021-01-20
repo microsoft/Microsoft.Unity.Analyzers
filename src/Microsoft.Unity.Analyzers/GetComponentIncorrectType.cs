@@ -59,7 +59,7 @@ namespace Microsoft.Unity.Analyzers
 			var argumentType = method.TypeArguments.FirstOrDefault();
 			if (argumentType == null)
 				return false;
-			
+
 			if (argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface)
 				return false;
 

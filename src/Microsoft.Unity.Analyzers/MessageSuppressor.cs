@@ -63,7 +63,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!scriptInfo.IsMessage(methodSymbol))
 				return;
 
-			foreach(var suppression in SupportedSuppressions)
+			foreach (var suppression in SupportedSuppressions)
 			{
 				if (suppression.SuppressedDiagnosticId == diagnostic.Id)
 					context.ReportSuppression(Suppression.Create(suppression, diagnostic));

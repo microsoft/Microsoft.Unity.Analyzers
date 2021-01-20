@@ -259,6 +259,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use static method..
+        /// </summary>
+        internal static string ImproperMenuItemMethodCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MenuItem can only be used on static methods.
+        /// </summary>
+        internal static string ImproperMenuItemMethodDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is not a static method..
+        /// </summary>
+        internal static string ImproperMenuItemMethodDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make method static..
+        /// </summary>
+        internal static string ImproperMenuItemMethodDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ImproperMenuItemMethodDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove SerializeField attribute.
         /// </summary>
         internal static string ImproperSerializeFieldCodeFixTitle {
@@ -291,6 +327,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string ImproperSerializeFieldDiagnosticTitle {
             get {
                 return ResourceManager.GetString("ImproperSerializeFieldDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove indirection call..
+        /// </summary>
+        internal static string IndirectionMessageCodeFixTitle {
+            get {
+                return ResourceManager.GetString("IndirectionMessageCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each access is called..
+        /// </summary>
+        internal static string IndirectionMessageDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("IndirectionMessageDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indirection is redundant.
+        /// </summary>
+        internal static string IndirectionMessageDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("IndirectionMessageDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indirection call.
+        /// </summary>
+        internal static string IndirectionMessageDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("IndirectionMessageDiagnosticTitle", resourceCulture);
             }
         }
         

@@ -47,6 +47,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			LocalizableString messageFormat,
 			object[] messageArguments,
 			string suppressedId)
+			
 		{
 			_spans = spans;
 			_suppressMessage = suppressMessage;

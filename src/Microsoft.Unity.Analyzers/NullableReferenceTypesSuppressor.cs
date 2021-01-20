@@ -67,7 +67,7 @@ namespace Microsoft.Unity.Analyzers
 
 			//suppress for fields that are not private and not static => statics cannot be set in editor and are not shown in the inspector and cannot be set there
 			if (!declarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.StaticKeyword))
-			    && !declarationSyntax.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == nameof(UnityEngine.HideInInspector))))
+				&& !declarationSyntax.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == nameof(UnityEngine.HideInInspector))))
 			{
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 				return;
@@ -146,7 +146,7 @@ namespace Microsoft.Unity.Analyzers
 				methodBodies = methodBodies.Concat(methods
 					.Where(syntax => methodSyntax.DescendantNodes().OfType<InvocationExpressionSyntax>()
 						.Any(invocationSyntax => invocationSyntax.Expression.ToString() == syntax.Identifier.Text))
-					.Concat(new[] {methodSyntax})
+					.Concat(new[] { methodSyntax })
 					.Select(method => method.Body ?? (SyntaxNode)method.ExpressionBody));
 			}
 
