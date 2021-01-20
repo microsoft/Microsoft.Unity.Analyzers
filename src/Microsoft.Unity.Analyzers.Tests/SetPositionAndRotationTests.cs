@@ -20,8 +20,9 @@ class Camera : MonoBehaviour
 {
 	void Update()
 	{
+		Debug.Log(""HERE"");
 		transform.position = new Vector3(0.0f, 1.0f, 0.0f);
-		transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+		transform.rotation = transform.rotation;
 	}
 }
 ";
