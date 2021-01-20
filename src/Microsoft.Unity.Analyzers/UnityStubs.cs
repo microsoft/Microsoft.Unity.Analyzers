@@ -47,6 +47,9 @@ namespace UnityEngine
 	{
 	}
 
+	class Transform
+	{
+	}
 	class NetworkDisconnection
 	{
 	}
