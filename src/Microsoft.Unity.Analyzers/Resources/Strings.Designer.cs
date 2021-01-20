@@ -592,6 +592,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set position and rotation..
+        /// </summary>
+        internal static string SetPositionAndRotationCodeFixTitle {
+            get {
+                return ResourceManager.GetString("SetPositionAndRotationCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set position and rotation using joint method.
+        /// </summary>
+        internal static string SetPositionAndRotationDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("SetPositionAndRotationDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set position and rotation separately is slow..
+        /// </summary>
+        internal static string SetPositionAndRotationDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("SetPositionAndRotationDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inefficient set position and rotation..
+        /// </summary>
+        internal static string SetPositionAndRotationDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("SetPositionAndRotationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use CompareTag method.
         /// </summary>
         internal static string TagComparisonCodeFixTitle {
