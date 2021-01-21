@@ -19,12 +19,12 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     private void Start()
-	{
-	}
+    {
+    }
 
     private void Foo()
-	{
-	}
+    {
+    }
 }
 ";
 
@@ -38,12 +38,12 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     protected void Start()
-	{
-	}
+    {
+    }
 
     private void Foo()
-	{
-	}
+    {
+    }
 }
 ";
 
