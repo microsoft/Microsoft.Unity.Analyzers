@@ -7,14 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers
@@ -23,7 +21,7 @@ namespace Microsoft.Unity.Analyzers
 	public class SetPositionAndRotationAnalyzer : DiagnosticAnalyzer
 	{
 		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-			id: "UNT0021",
+			id: "UNT0022",
 			title: Strings.SetPositionAndRotationDiagnosticTitle,
 			messageFormat: Strings.SetPositionAndRotationDiagnosticMessageFormat,
 			category: DiagnosticCategory.Performance,
@@ -45,94 +43,74 @@ namespace Microsoft.Unity.Analyzers
 			if (!(context.Node is AssignmentExpressionSyntax))
 				return;
 
-
-			if (!IsSetPositionOrRotation(context))
-				return;
-
 			var assignmentExpression = (AssignmentExpressionSyntax)context.Node;
 
-			var block = assignmentExpression.FirstAncestorOrSelf<BlockSyntax>();
-
-			var children = block.ChildNodes();
-
-			//foreach (var statement in block.ChildThatContainsPosition(0) ChildNodes())
-			//{
-			//	Debug.WriteLine("statements");
-			//	Debug.WriteLine(statement);
-			//}
-
-			////assignmentExpression.;
-			//var currentIndex = block.Statements.IndexOf((StatementSyntax)context.Node);
-			//var nextStatement = block.Statements.Where(s => block.ChildThatContainsPosition(0));
-			//Debug.WriteLine(loc);
-		}
-
-		private static void AnalyzeBlock(SyntaxNodeAnalysisContext context)
-		{
-			if (!(context.Node is BlockSyntax))
+			if (!IsSetPositionOrRotation(assignmentExpression, context.SemanticModel))
 				return;
-
-			var block = (BlockSyntax)context.Node;
-
-
-			var statements = block.Statements;
 
 			
-
-			if (statements.Count < 2)
+			if (context.Node.FirstAncestorOrSelf<BlockSyntax>() == null)
 				return;
 
-			bool position = false;
-			bool rotation = false;
-			//var positionAssignment;
-			//var rotationAssignment;
+			var block = context.Node.FirstAncestorOrSelf<BlockSyntax>();
 
-			//foreach (var statement in block.Statements.Where(d => IsSetPositionOrRotation(context, d) == true))
-			//{
-			//	Debug.WriteLine("YAY");
-			//	Debug.WriteLine(statement);
-			//	Debug.WriteLine(block.Statements.IndexOf(statement));
-			//}
+			if (context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>() == null)
+				return;
+			
+			var expression = context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>();
 
-			foreach (var statement in block.Statements)
-			{
-				
-				// if (!CheckPositionOrRotation = boolean)
-				//rotation = false
-				// position == false
-				// continue
-				// String getName = "position" or "rotation"
-				// if position: position = true
-				// if rotation: rotation = true
-				// if (position && rotation): report
+			var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
+			var currentIndex = siblingsAndSelf.LastIndexOf(expression);
+			var nextIndex = currentIndex + 1;
+			if (nextIndex == siblingsAndSelf.Length)
+				return;
 
-				//if (!IsSetPositionOrRotation(context, statement))
-				//{
-				//	rotation = false;
-				//	position = false;
-				//	continue;
-				//}
-				//var property = (MemberAccessExpressionSyntax)((ExpressionStatementSyntax)statement).Expression);
+			var statement = siblingsAndSelf[nextIndex];
 
-				//if (property == "rotation")
-				//	rotation = true;
 
-				//if (property == "position")
-				//	position = true;
+			if (!(statement is ExpressionStatementSyntax))
+				return;
 
-				if (rotation && position)
-					context.ReportDiagnostic(Diagnostic.Create(Rule, statement.GetLocation()));
+			var nextExpression = ((ExpressionStatementSyntax)statement).Expression;
 
-			}
 
-			return;
+			if (!(nextExpression is AssignmentExpressionSyntax))
+				return;
+
+
+			var nextAssignmentExpression = (AssignmentExpressionSyntax)nextExpression;
+
+			if (!IsSetPositionOrRotation(nextAssignmentExpression, context.SemanticModel))
+				return;
+
+			Debug.WriteLine("here");
+
+			var property = GetProperty(assignmentExpression);
+
+			var nextProperty = GetProperty(nextAssignmentExpression);
+			Debug.WriteLine(property);
+			Debug.WriteLine(nextProperty);
+			if (property == nextProperty)
+				return;
+			
+			var assignmnet = assignmentExpression.Right;
+
+			var nextAssignment = nextAssignmentExpression.Right;
+
+			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(),property, assignmnet,nextProperty,nextAssignment));
 		}
 
-
-
-		private static bool IsSetPositionOrRotation(SyntaxNodeAnalysisContext context)
+		private static string GetProperty(AssignmentExpressionSyntax assignmentExpression)
 		{
-			var assignmentExpression = (AssignmentExpressionSyntax)context.Node;
+			var left = (MemberAccessExpressionSyntax)(assignmentExpression.Left);
+
+			var property = left.Name.ToString();
+
+			return property;
+		}
+
+		private static bool IsSetPositionOrRotation(AssignmentExpressionSyntax assignmentExpression, SemanticModel model)
+		{
 
 			if (!(assignmentExpression.Left is MemberAccessExpressionSyntax))
 				return false;
@@ -144,7 +122,7 @@ namespace Microsoft.Unity.Analyzers
 			if (property != "position" && property != "rotation")
 				return false;
 
-			var leftSymbol = context.SemanticModel.GetSymbolInfo(left);
+			var leftSymbol = model.GetSymbolInfo(left);
 
 			if (leftSymbol.Symbol == null)
 				return false;
@@ -152,7 +130,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!(leftSymbol.Symbol is IPropertySymbol))
 				return false;
 
-			var leftExpressionTypeInfo = context.SemanticModel.GetTypeInfo(left.Expression);
+			var leftExpressionTypeInfo = model.GetTypeInfo(left.Expression);
 
 			if (leftExpressionTypeInfo.Type == null)
 				return false;
