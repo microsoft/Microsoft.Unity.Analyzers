@@ -121,5 +121,39 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
+
+		[Fact]
+		public async Task FixUnityMessageWithBody()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update()
+	{
+		Vector3 position = new Vector3(1,1,1);
+	}
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(6, 17);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    protected void Update()
+	{
+		Vector3 position = new Vector3(1,1,1);
+	}
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
 	}
 }
