@@ -592,6 +592,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make Unity message protected..
+        /// </summary>
+        internal static string ProtectedUnityMessageCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ProtectedUnityMessageCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity message should be protected..
+        /// </summary>
+        internal static string ProtectedUnityMessageDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ProtectedUnityMessageDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity message should be protected..
+        /// </summary>
+        internal static string ProtectedUnityMessageDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ProtectedUnityMessageDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Protected Unity Message..
+        /// </summary>
+        internal static string ProtectedUnityMessageDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ProtectedUnityMessageDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t set fields with a ContextMenuItem attribute as readonly..
         /// </summary>
         internal static string ReadonlyContextMenuItemJustification {
