@@ -22,6 +22,7 @@ ID | Title | Category
 [UNT0018](UNT0018.md) | System.Reflection features in performance critical messages | Performance
 [UNT0019](UNT0019.md) | Unnecessary indirection call for GameObject.gameObject | Performance
 [UNT0020](UNT0020.md) | MenuItem attribute used on non-static method | Correctness
+[UNT0021](UNT0021.md) | Unity message should be protected | Correctness
 
 # Diagnostic Suppressors
 
