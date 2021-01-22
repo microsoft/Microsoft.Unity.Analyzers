@@ -230,8 +230,15 @@ namespace Microsoft.Unity.Analyzers.Tests
 				var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
 				var analyzerOptions = new CompilationWithAnalyzersOptions(options, null, true, true, true);
 
+				var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true);
+				var specificDiagnosticOptions = compilationOptions.SpecificDiagnosticOptions;
+
+				// Force all tested diagnostics to be enabled
+				foreach (var descriptor in analyzer.SupportedDiagnostics)
+					specificDiagnosticOptions = specificDiagnosticOptions.SetItem(descriptor.Id, ReportDiagnostic.Info);
+
 				var compilationWithAnalyzers = compilation
-					.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true))
+					.WithOptions(compilationOptions.WithSpecificDiagnosticOptions(specificDiagnosticOptions))
 					.WithAnalyzers(analyzers, analyzerOptions);
 
 				var allDiagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync();
