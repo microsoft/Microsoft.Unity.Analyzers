@@ -18,15 +18,15 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-     private void OnTriggerEnter(Collider collider)
-	{
-		GameObject original = null;
-		GameObject duplicate = original.gameObject;
-	}
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject original = null;
+        GameObject duplicate = original.gameObject;
+    }
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(9, 26);
+			var diagnostic = ExpectDiagnostic().WithLocation(9, 32);
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
@@ -34,11 +34,11 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-     private void OnTriggerEnter(Collider collider)
-	{
-		GameObject original = null;
-		GameObject duplicate = original;
-	}
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject original = null;
+        GameObject duplicate = original;
+    }
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
@@ -52,15 +52,15 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	private void OnTriggerEnter(Collider collider)
-	{
-		GameObject original = null;
-		GameObject duplicate = original.gameObject.gameObject;
-	}
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject original = null;
+        GameObject duplicate = original.gameObject.gameObject;
+    }
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(9, 26);
+			var diagnostic = ExpectDiagnostic().WithLocation(9, 32);
 			await VerifyCSharpDiagnosticAsync(test, diagnostic, diagnostic);
 
 			const string fixedTest = @"
@@ -68,11 +68,11 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	private void OnTriggerEnter(Collider collider)
-	{
-		GameObject original = null;
-		GameObject duplicate = original;
-	}
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject original = null;
+        GameObject duplicate = original;
+    }
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
@@ -86,19 +86,19 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	private void OnTriggerEnter(Collider collider)
-	{
-		GameObject duplicate = GetGameObject().gameObject;
-	}
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject duplicate = GetGameObject().gameObject;
+    }
 
-	GameObject GetGameObject()
-	{
-		return null;
-	}
+    GameObject GetGameObject()
+    {
+        return null;
+    }
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(8, 26);
+			var diagnostic = ExpectDiagnostic().WithLocation(8, 32);
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
@@ -106,15 +106,15 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	private void OnTriggerEnter(Collider collider)
-	{
-		GameObject duplicate = GetGameObject();
-	}
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject duplicate = GetGameObject();
+    }
 
-	GameObject GetGameObject()
-	{
-		return null;
-	}
+    GameObject GetGameObject()
+    {
+        return null;
+    }
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);

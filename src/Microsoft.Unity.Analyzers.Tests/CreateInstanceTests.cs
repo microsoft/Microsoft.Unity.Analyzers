@@ -100,7 +100,10 @@ class Program
     }
 }
 ";
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId).WithLocation(9, 19).WithArguments("Foo");
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+				.WithLocation(9, 19)
+				.WithArguments("Foo");
+
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 
@@ -120,7 +123,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ScriptableObjectId).WithLocation(9, 19).WithArguments("Foo");
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ScriptableObjectId)
+				.WithLocation(9, 19)
+				.WithArguments("Foo");
+
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"

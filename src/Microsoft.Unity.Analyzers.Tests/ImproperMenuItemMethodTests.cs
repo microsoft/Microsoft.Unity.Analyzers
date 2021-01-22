@@ -19,14 +19,14 @@ using UnityEditor;
 
 class Camera : MonoBehaviour
 {
-	[MenuItem(""Name"")]
-	private void Menu1()
+    [MenuItem(""Name"")]
+    private void Menu1()
     {
     }
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(7, 2);
+			var diagnostic = ExpectDiagnostic().WithLocation(7, 5);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -36,8 +36,8 @@ using UnityEditor;
 
 class Camera : MonoBehaviour
 {
-	[MenuItem(""Name"")]
-	private static void Menu1()
+    [MenuItem(""Name"")]
+    private static void Menu1()
     {
     }
 }
