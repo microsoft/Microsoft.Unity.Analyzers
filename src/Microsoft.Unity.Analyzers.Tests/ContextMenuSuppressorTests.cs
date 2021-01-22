@@ -83,13 +83,16 @@ using UnityEngine;
 class Menu : MonoBehaviour
 {
     [ContextMenuItem(""Foo"", ""Bar"")]
-    readonly string contextMenuString = """"; // we only use readonly here for testing purposes, suppressor is tested unitarily (so ContextMenuSuppressor.ContextMenuItemReadonlyRule [IDE0044] cannot be suppressed here)
+    string contextMenuString = """"; 
 }";
 
-			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
-				.WithLocation(7, 21);
+			var context = AnalyzerVerificationContext.Default
+				.WithAnalyzerOption("dotnet_style_readonly_field", "false");
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
+			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
+				.WithLocation(7, 12);
+
+			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
 
 		[Fact]
