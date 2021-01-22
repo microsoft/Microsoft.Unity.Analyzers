@@ -772,6 +772,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects, which is incompatible with coalescing assignment..
+        /// </summary>
+        internal static string UnityObjectCoalesceAssignmentDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalesceAssignmentDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use coalescing assignment..
+        /// </summary>
+        internal static string UnityObjectCoalesceAssignmentDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalesceAssignmentDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coalescing assignment on Unity objects.
+        /// </summary>
+        internal static string UnityObjectCoalesceAssignmentDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalesceAssignmentDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use coalescing assignment..
+        /// </summary>
+        internal static string UnityObjectCoalesceAssignmentSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalesceAssignmentSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use null comparison.
         /// </summary>
         internal static string UnityObjectNullCoalescingCodeFixTitle {

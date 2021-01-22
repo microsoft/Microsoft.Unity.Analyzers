@@ -38,7 +38,16 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullPropagationDiagnosticDescription);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule);
+		internal static readonly DiagnosticDescriptor CoalesceAssignmentRule = new DiagnosticDescriptor(
+			id: "UNT0022",
+			title: Strings.UnityObjectCoalesceAssignmentDiagnosticTitle,
+			messageFormat: Strings.UnityObjectCoalesceAssignmentDiagnosticMessageFormat,
+			category: DiagnosticCategory.Correctness,
+			defaultSeverity: DiagnosticSeverity.Info,
+			isEnabledByDefault: true,
+			description: Strings.UnityObjectCoalesceAssignmentDiagnosticDescription);
+
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -46,6 +55,13 @@ namespace Microsoft.Unity.Analyzers
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.RegisterSyntaxNodeAction(AnalyzeCoalesceExpression, SyntaxKind.CoalesceExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeConditionalAccessExpression, SyntaxKind.ConditionalAccessExpression);
+			context.RegisterSyntaxNodeAction(AnalyzeCoalesceAssignmentExpression, SyntaxKind.CoalesceAssignmentExpression);
+		}
+
+		private static void AnalyzeCoalesceAssignmentExpression(SyntaxNodeAnalysisContext context)
+		{
+			var assignment = (AssignmentExpressionSyntax)context.Node;
+			AnalyzeExpression(assignment, assignment.Left, context, CoalesceAssignmentRule);
 		}
 
 		private static void AnalyzeCoalesceExpression(SyntaxNodeAnalysisContext context)
@@ -143,7 +159,12 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "IDE0031",
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule);
+		internal static readonly SuppressionDescriptor CoalesceAssignmentRule = new SuppressionDescriptor(
+			id: "USP0017",
+			suppressedDiagnosticId: "IDE0074",
+			justification: Strings.UnityObjectCoalesceAssignmentSuppressorJustification);
+
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{
@@ -153,21 +174,13 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var root = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken);
-
-			// We can be called in the context of a method argument or a regular expression
-			if (!(root
-				.FindNode(diagnostic.Location.SourceSpan)
-				.DescendantNodesAndSelf()
-				.OfType<ConditionalExpressionSyntax>()
-				.FirstOrDefault() is ConditionalExpressionSyntax expressionSyntax))
-				return;
+			var node = root?.FindNode(diagnostic.Location.SourceSpan);
 
 			// We can be tricked by extra parentheses for the condition, so go to the first concrete binary expression
-			if (!(expressionSyntax
-				.Condition
+			if (!(node?
 				.DescendantNodesAndSelf()
 				.OfType<BinaryExpressionSyntax>()
 				.FirstOrDefault() is BinaryExpressionSyntax binaryExpression))
@@ -176,19 +189,22 @@ namespace Microsoft.Unity.Analyzers
 			AnalyzeBinaryExpression(diagnostic, context, binaryExpression);
 		}
 
-		private static void AnalyzeBinaryExpression(Diagnostic diagnostic, SuppressionAnalysisContext context, BinaryExpressionSyntax binaryExpression)
+		private void AnalyzeBinaryExpression(Diagnostic diagnostic, SuppressionAnalysisContext context, BinaryExpressionSyntax binaryExpression)
 		{
 			switch (binaryExpression.Kind())
 			{
 				case SyntaxKind.EqualsExpression:
 				case SyntaxKind.NotEqualsExpression:
+					if (!binaryExpression.Right.IsKind(SyntaxKind.NullLiteralExpression))
+						return;
 					break;
+
+				case SyntaxKind.CoalesceExpression:
+					break;
+
 				default:
 					return;
 			}
-
-			if (!binaryExpression.Right.IsKind(SyntaxKind.NullLiteralExpression))
-				return;
 
 			var model = context.GetSemanticModel(binaryExpression.SyntaxTree);
 			if (model == null)
@@ -201,10 +217,9 @@ namespace Microsoft.Unity.Analyzers
 			if (!type.Type.Extends(typeof(UnityEngine.Object)))
 				return;
 
-			if (diagnostic.Id == NullCoalescingRule.SuppressedDiagnosticId)
-				context.ReportSuppression(Suppression.Create(NullCoalescingRule, diagnostic));
-			else if (diagnostic.Id == NullPropagationRule.SuppressedDiagnosticId)
-				context.ReportSuppression(Suppression.Create(NullPropagationRule, diagnostic));
+			var rule = SupportedSuppressions.FirstOrDefault(r => r.SuppressedDiagnosticId == diagnostic.Id);
+			if (rule != null)
+				context.ReportSuppression(Suppression.Create(rule, diagnostic));
 		}
 	}
 }

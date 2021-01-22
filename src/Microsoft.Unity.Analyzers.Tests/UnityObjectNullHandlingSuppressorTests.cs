@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
@@ -146,6 +147,54 @@ class Camera : MonoBehaviour
 				.WithLocation(11, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
+
+		[Fact]
+		public async Task CoalesceAssignmentSuppressed()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+    public Transform NP()
+    {
+        return a ?? (a = b);
+    }
+}
+";
+
+			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.CoalesceAssignmentRule)
+				.WithLocation(11, 18);
+
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
+
+		[Fact]
+		public async Task CoalesceAssignmentNotSuppressedForRegularObjects()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public System.Object a = null;
+    public System.Object b = null;
+
+    public System.Object NP()
+    {
+        return a ?? (a = b);
+    }
+}";
+
+			var diagnostic = new DiagnosticResult("IDE0074", DiagnosticSeverity.Info)
+				.WithLocation(11, 18)
+				.WithMessage("Use compound assignment");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 
 
