@@ -25,7 +25,7 @@ namespace Microsoft.Unity.Analyzers
 			messageFormat: Strings.ProtectedUnityMessageDiagnosticMessageFormat,
 			category: DiagnosticCategory.Correctness,
 			defaultSeverity: DiagnosticSeverity.Info,
-			isEnabledByDefault: true,
+			isEnabledByDefault: false,
 			description: Strings.ProtectedUnityMessageDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
@@ -47,8 +47,9 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-			if (classDeclaration == null)
+			if (classDeclaration == null || classDeclaration.Modifiers.Any(SyntaxKind.SealedKeyword))
 				return;
+
 
 			var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
 			var scriptInfo = new ScriptInfo(typeSymbol);
@@ -74,9 +75,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-				if (!(root?.FindNode(context.Span) is MethodDeclarationSyntax declaration))
-				return;
-			if (declaration == null)
+			if (!(root?.FindNode(context.Span) is MethodDeclarationSyntax declaration))
 				return;
 
 			context.RegisterCodeFix(
@@ -94,7 +93,7 @@ namespace Microsoft.Unity.Analyzers
 
 			foreach (var modifier in declaration.Modifiers)
 			{
-				if (!modifier.IsKind(SyntaxKind.PublicKeyword) && !modifier.IsKind(SyntaxKind.PrivateKeyword))
+				if (!modifier.IsKind(SyntaxKind.PublicKeyword) && !modifier.IsKind(SyntaxKind.PrivateKeyword) && !modifier.IsKind(SyntaxKind.InternalKeyword))
 				{
 					var kind = modifier.Kind();
 					newDeclaration = newDeclaration.AddModifiers(SyntaxFactory.Token(kind));

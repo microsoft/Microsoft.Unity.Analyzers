@@ -59,12 +59,12 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     public virtual void Awake()
-	{
-	}
+    {
+    }
 
     protected void Update()
-	{
-	}
+    {
+    }
 }
 ";
 
@@ -78,12 +78,12 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     protected virtual void Awake()
-	{
-	}
+    {
+    }
 
     protected void Update()
-	{
-	}
+    {
+    }
 }
 ";
 
@@ -99,8 +99,8 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     public virtual void FixedUpdate()
-	{
-	}
+    {
+    }
 }
 ";
 
@@ -114,8 +114,8 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     protected virtual void FixedUpdate()
-	{
-	}
+    {
+    }
 }
 ";
 
@@ -131,9 +131,9 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     public void Update()
-	{
-		Vector3 position = new Vector3(1,1,1);
-	}
+    {
+        Vector3 position = new Vector3(1,1,1);
+    }
 }
 ";
 
@@ -147,13 +147,32 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     protected void Update()
-	{
-		Vector3 position = new Vector3(1,1,1);
-	}
+    {
+        Vector3 position = new Vector3(1,1,1);
+    }
 }
 ";
 
 			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task SealedClassUnityMessage()
+		{
+			const string test = @"
+using UnityEngine;
+
+public sealed class Camera : MonoBehaviour
+{
+    public void Update()
+    {
+        Vector3 position = new Vector3(1,1,1);
+    }
+}
+";
+
+
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}
 }
