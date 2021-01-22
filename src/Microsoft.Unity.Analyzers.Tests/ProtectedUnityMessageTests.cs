@@ -171,7 +171,6 @@ public sealed class Camera : MonoBehaviour
 }
 ";
 
-
 			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}
