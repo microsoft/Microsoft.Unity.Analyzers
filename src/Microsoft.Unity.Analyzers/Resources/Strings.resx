@@ -384,6 +384,18 @@
   <data name="ReflectionDiagnosticTitle" xml:space="preserve">
     <value>System.Reflection features in performance critical messages</value>
   </data>
+  <data name="SetPositionAndRotationCodeFixTitle" xml:space="preserve">
+    <value>Set position and rotation.</value>
+  </data>
+  <data name="SetPositionAndRotationDiagnosticDescription" xml:space="preserve">
+    <value>Set position and rotation using joint method</value>
+  </data>
+  <data name="SetPositionAndRotationDiagnosticMessageFormat" xml:space="preserve">
+    <value>Set position and rotation separately is slow.</value>
+  </data>
+  <data name="SetPositionAndRotationDiagnosticTitle" xml:space="preserve">
+    <value>Inefficient set position and rotation.</value>
+  </data>
   <data name="ImproperMenuItemMethodCodeFixTitle" xml:space="preserve">
     <value>Use static method.</value>
   </data>
