@@ -3,17 +3,19 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Editing;
 using Microsoft.Unity.Analyzers.Resources;
+
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers
 {
@@ -60,13 +62,18 @@ namespace Microsoft.Unity.Analyzers
 			var expression = context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>();
 
 			var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
+
+			if (siblingsAndSelf.LastIndexOf(expression) == -1)
+				return;
+
 			var currentIndex = siblingsAndSelf.LastIndexOf(expression);
+
 			var nextIndex = currentIndex + 1;
+
 			if (nextIndex == siblingsAndSelf.Length)
 				return;
 
 			var statement = siblingsAndSelf[nextIndex];
-
 
 			if (!(statement is ExpressionStatementSyntax))
 				return;
@@ -77,27 +84,19 @@ namespace Microsoft.Unity.Analyzers
 			if (!(nextExpression is AssignmentExpressionSyntax))
 				return;
 
-
 			var nextAssignmentExpression = (AssignmentExpressionSyntax)nextExpression;
 
 			if (!IsSetPositionOrRotation(nextAssignmentExpression, context.SemanticModel))
 				return;
 
-			Debug.WriteLine("here");
-
 			var property = GetProperty(assignmentExpression);
 
 			var nextProperty = GetProperty(nextAssignmentExpression);
-			Debug.WriteLine(property);
-			Debug.WriteLine(nextProperty);
+
 			if (property == nextProperty)
 				return;
-			
-			var assignmnet = assignmentExpression.Right;
 
-			var nextAssignment = nextAssignmentExpression.Right;
-
-			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(),property, assignmnet,nextProperty,nextAssignment));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation()));
 		}
 
 		private static string GetProperty(AssignmentExpressionSyntax assignmentExpression)
@@ -152,18 +151,91 @@ namespace Microsoft.Unity.Analyzers
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
-			// var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			// var declaration = root.FindNode(context.Span) as MethodDeclarationSyntax;
-			// if (declaration == null)
-			//     return;
+			if (!(root?.FindNode(context.Span) is AssignmentExpressionSyntax expression))
+				return;
 
-			// context.RegisterCodeFix(
-			//     CodeAction.Create(
-			//         Strings.SetPositionAndRotationCodeFixTitle,
-			//         ct => {},
-			//         declaration.ToFullString()),
-			//     context.Diagnostics);
+			context.RegisterCodeFix(
+				CodeAction.Create(
+					Strings.SetPositionAndRotationCodeFixTitle,
+					ct => ReplaceWithInvocationAsync(context.Document, expression, "transform", "SetPositionAndRotation", ct),
+					expression.ToFullString()),
+				context.Diagnostics);
+		}
+		private static async Task<Document> ReplaceWithInvocationAsync(Document document, AssignmentExpressionSyntax assignmentExpression, string identifierName, string genericMethodName, CancellationToken cancellationToken)
+		{
+			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+			
+			if (assignmentExpression.FirstAncestorOrSelf<BlockSyntax>() == null)
+				return document;
+
+			var block = assignmentExpression.FirstAncestorOrSelf<BlockSyntax>();
+
+			if (assignmentExpression.FirstAncestorOrSelf<ExpressionStatementSyntax>() == null)
+				return document;
+
+			var expression = assignmentExpression.FirstAncestorOrSelf<ExpressionStatementSyntax>();
+
+			var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
+
+			if (siblingsAndSelf.LastIndexOf(expression) == -1)
+				return document;
+
+			var currentIndex = siblingsAndSelf.LastIndexOf(expression);
+
+			var nextIndex = currentIndex + 1;
+
+			if (nextIndex == siblingsAndSelf.Length)
+				return document;
+
+			var statement = siblingsAndSelf[nextIndex];
+
+			if (!(statement is ExpressionStatementSyntax))
+				return document;
+
+			var nextExpression = ((ExpressionStatementSyntax)statement).Expression;
+
+
+			if (!(nextExpression is AssignmentExpressionSyntax))
+				return null;
+
+			var nextAssignmentExpression = (AssignmentExpressionSyntax)nextExpression;
+
+			if (assignmentExpression.Right == null || nextAssignmentExpression.Right == null)
+				return document;
+
+			var argList = ArgumentList();
+
+			var property = ((MemberAccessExpressionSyntax)(assignmentExpression.Left)).Name.ToString();
+
+			if (property == "position")
+			{
+				argList = argList.AddArguments(Argument(assignmentExpression.Right));
+				argList = argList.AddArguments(Argument(nextAssignmentExpression.Right));
+			}
+			else
+			{
+				argList = argList.AddArguments(Argument(nextAssignmentExpression.Right));
+				argList = argList.AddArguments(Argument(assignmentExpression.Right));
+			}
+
+			
+
+			var invocation = InvocationExpression(
+				MemberAccessExpression(
+					SyntaxKind.SimpleMemberAccessExpression,
+					IdentifierName(identifierName),
+					IdentifierName(genericMethodName)))
+						.WithArgumentList(
+							argList);
+
+			var documentEditor = await DocumentEditor.CreateAsync(document);
+			documentEditor.RemoveNode(statement);
+			documentEditor.ReplaceNode(assignmentExpression, invocation);
+
+			return documentEditor.GetChangedDocument();
+
 		}
 	}
 }

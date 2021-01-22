@@ -47,9 +47,6 @@ namespace UnityEngine
 	{
 	}
 
-	class Transform
-	{
-	}
 	class NetworkDisconnection
 	{
 	}
@@ -122,6 +119,12 @@ namespace UnityEngine
 	{
 	}
 
+	class Transform
+	{
+		void position() { }
+		void rotation() { }
+		void SetPositionAndRotation() { }
+	}
 	class ScriptableObject
 	{
 		void Awake() { }
