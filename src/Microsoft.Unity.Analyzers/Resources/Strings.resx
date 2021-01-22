@@ -408,4 +408,16 @@
   <data name="IndirectionMessageDiagnosticTitle" xml:space="preserve">
     <value>Indirection call</value>
   </data>
+  <data name="ProtectedUnityMessageCodeFixTitle" xml:space="preserve">
+    <value>Make Unity message protected.</value>
+  </data>
+  <data name="ProtectedUnityMessageDiagnosticDescription" xml:space="preserve">
+    <value>Unity message should be protected.</value>
+  </data>
+  <data name="ProtectedUnityMessageDiagnosticMessageFormat" xml:space="preserve">
+    <value>Unity message should be protected.</value>
+  </data>
+  <data name="ProtectedUnityMessageDiagnosticTitle" xml:space="preserve">
+    <value>Protected Unity Message.</value>
+  </data>
 </root>
