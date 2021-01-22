@@ -420,4 +420,16 @@
   <data name="ProtectedUnityMessageDiagnosticTitle" xml:space="preserve">
     <value>Protected Unity Message.</value>
   </data>
+  <data name="SetPositionAndRotationCodeFixTitle" xml:space="preserve">
+    <value>Set position and rotation.</value>
+  </data>
+  <data name="SetPositionAndRotationDiagnosticDescription" xml:space="preserve">
+    <value>Set position and rotation using joint method</value>
+  </data>
+  <data name="SetPositionAndRotationDiagnosticMessageFormat" xml:space="preserve">
+    <value>Set position and rotation separately is slow.</value>
+  </data>
+  <data name="SetPositionAndRotationDiagnosticTitle" xml:space="preserve">
+    <value>Inefficient set position and rotation.</value>
+  </data>
 </root>
