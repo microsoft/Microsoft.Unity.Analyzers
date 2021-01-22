@@ -190,7 +190,7 @@ class Camera : MonoBehaviour
     }
 }";
 
-			var diagnostic = new DiagnosticResult("IDE0074", DiagnosticSeverity.Info)
+			var diagnostic = new DiagnosticResult(UnityObjectNullHandlingSuppressor.CoalesceAssignmentRule.SuppressedDiagnosticId, DiagnosticSeverity.Info)
 				.WithLocation(11, 18)
 				.WithMessage("Use compound assignment");
 
