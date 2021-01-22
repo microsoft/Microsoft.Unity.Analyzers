@@ -112,11 +112,11 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	void Update()
-	{
+    void Update()
+    {
         Vector3 newPosition = new Vector3(1,2,3);
         transform.SetPositionAndRotation(newPosition, transform.rotation);
-	}
+    }
 }
 ";
 

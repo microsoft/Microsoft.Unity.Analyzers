@@ -50,55 +50,51 @@ namespace Microsoft.Unity.Analyzers
 			if (!IsSetPositionOrRotation(assignmentExpression, context.SemanticModel))
 				return;
 
-			bool position = false;
-			bool rotation = false;
-			bool previous = false;
-			
+
 			if (context.Node.FirstAncestorOrSelf<BlockSyntax>() == null)
-					return;
-				
+				return;
+
 			var block = context.Node.FirstAncestorOrSelf<BlockSyntax>();
 
 			if (context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>() == null)
-					return;
+				return;
 
 			var expression = context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>();
 
 			var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
 
 			if (siblingsAndSelf.LastIndexOf(expression) == -1)
-					return;
+				return;
 
 			var currentIndex = siblingsAndSelf.LastIndexOf(expression);
 
 			var nextIndex = currentIndex + 1;
 
 			if (nextIndex == siblingsAndSelf.Length)
-					return;
+				return;
 
 			var statement = siblingsAndSelf[nextIndex];
 
 			if (!(statement is ExpressionStatementSyntax))
-					return;
+				return;
 
 			var nextExpression = ((ExpressionStatementSyntax)statement).Expression;
 
-				var leftExpressionTypeInfo = context.SemanticModel.GetTypeInfo(left.Expression);
 
 			if (!(nextExpression is AssignmentExpressionSyntax))
-					return;
+				return;
 
 			var nextAssignmentExpression = (AssignmentExpressionSyntax)nextExpression;
 
 			if (!IsSetPositionOrRotation(nextAssignmentExpression, context.SemanticModel))
-					return;
+				return;
 
 			var property = GetProperty(assignmentExpression);
 
 			var nextProperty = GetProperty(nextAssignmentExpression);
 
 			if (property == nextProperty)
-			return;
+				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation()));
 		}
@@ -121,12 +117,12 @@ namespace Microsoft.Unity.Analyzers
 			var left = (MemberAccessExpressionSyntax)(assignmentExpression.Left);
 
 			var property = left.Name.ToString();
-		
+
 			if (property != "position" && property != "rotation")
 				return false;
 
 			var leftSymbol = model.GetSymbolInfo(left);
-			
+
 			if (leftSymbol.Symbol == null)
 				return false;
 
@@ -146,7 +142,7 @@ namespace Microsoft.Unity.Analyzers
 		}
 	}
 
-		[ExportCodeFixProvider(LanguageNames.CSharp)]
+	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class SetPositionAndRotationCodeFix : CodeFixProvider
 	{
 		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(SetPositionAndRotationAnalyzer.Rule.Id);
@@ -170,7 +166,7 @@ namespace Microsoft.Unity.Analyzers
 		private static async Task<Document> ReplaceWithInvocationAsync(Document document, AssignmentExpressionSyntax assignmentExpression, string identifierName, string genericMethodName, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-			
+
 			if (assignmentExpression.FirstAncestorOrSelf<BlockSyntax>() == null)
 				return document;
 
@@ -224,7 +220,7 @@ namespace Microsoft.Unity.Analyzers
 				argList = argList.AddArguments(Argument(assignmentExpression.Right));
 			}
 
-			
+
 
 			var invocation = InvocationExpression(
 				MemberAccessExpression(
@@ -240,12 +236,6 @@ namespace Microsoft.Unity.Analyzers
 
 			return documentEditor.GetChangedDocument();
 
-			// context.RegisterCodeFix(
-			//     CodeAction.Create(
-			//         Strings.SetPositionAndRotationCodeFixTitle,
-			//         ct => {},
-			//         declaration.ToFullString()),
-			//     context.Diagnostics);
 		}
 	}
 }
