@@ -50,7 +50,6 @@ namespace Microsoft.Unity.Analyzers
 			if (classDeclaration == null || classDeclaration.Modifiers.Any(SyntaxKind.SealedKeyword))
 				return;
 
-
 			var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
 			var scriptInfo = new ScriptInfo(typeSymbol);
 			if (!scriptInfo.HasMessages)
