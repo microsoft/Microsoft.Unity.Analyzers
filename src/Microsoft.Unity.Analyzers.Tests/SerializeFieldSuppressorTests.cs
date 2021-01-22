@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Xunit;
 using Xunit.Sdk;
 
@@ -91,17 +92,11 @@ class Test : System.Object
 ";
 
 			// We don't want to suppress 'never assigned' for standard types
-			var rule = SerializeFieldSuppressor.NeverAssignedRule;
-			var exception = await Assert.ThrowsAsync<TrueException>(async () =>
-			{
-				var suppressor = ExpectSuppressor(rule)
-					.WithLocation(4, 19);
-
-				await VerifyCSharpDiagnosticAsync(test, suppressor);
-			});
-
-			var message = $"Expected diagnostic id to be \"{rule.Id}\" was \"{rule.SuppressedDiagnosticId}\"";
-			Assert.Contains(message, exception.Message);
+			var diagnostic = new DiagnosticResult(SerializeFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, DiagnosticSeverity.Warning)
+					.WithLocation(4, 19)
+					.WithMessage("Field 'Test.someField' is never assigned to, and will always have its default value null");
+			
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 
 
