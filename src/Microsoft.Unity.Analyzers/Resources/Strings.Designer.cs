@@ -259,7 +259,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use static method..
+        ///   Looks up a localized string similar to Use static method.
         /// </summary>
         internal static string ImproperMenuItemMethodCodeFixTitle {
             get {
@@ -268,7 +268,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MenuItem can only be used on static methods.
+        ///   Looks up a localized string similar to MenuItem can only be used on static methods..
         /// </summary>
         internal static string ImproperMenuItemMethodDiagnosticDescription {
             get {
@@ -286,7 +286,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Make method static..
+        ///   Looks up a localized string similar to Make method static.
         /// </summary>
         internal static string ImproperMenuItemMethodDiagnosticTitle {
             get {
@@ -331,7 +331,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove indirection call..
+        ///   Looks up a localized string similar to Remove indirection call.
         /// </summary>
         internal static string IndirectionMessageCodeFixTitle {
             get {
@@ -340,7 +340,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Each access is called..
+        ///   Looks up a localized string similar to Do not use unnecessary indirection..
         /// </summary>
         internal static string IndirectionMessageDiagnosticDescription {
             get {
@@ -592,7 +592,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Make Unity message protected..
+        ///   Looks up a localized string similar to Make Unity message protected.
         /// </summary>
         internal static string ProtectedUnityMessageCodeFixTitle {
             get {
@@ -619,7 +619,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Protected Unity Message..
+        ///   Looks up a localized string similar to Prefer Protected Unity Message.
         /// </summary>
         internal static string ProtectedUnityMessageDiagnosticTitle {
             get {
@@ -700,7 +700,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set position and rotation..
+        ///   Looks up a localized string similar to Use SetPositionAndRotation() method.
         /// </summary>
         internal static string SetPositionAndRotationCodeFixTitle {
             get {
@@ -709,7 +709,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set position and rotation using joint method.
+        ///   Looks up a localized string similar to Assigning position and rotation using SetPositionAndRotation() method..
         /// </summary>
         internal static string SetPositionAndRotationDiagnosticDescription {
             get {
@@ -718,7 +718,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set position and rotation separately is slow..
+        ///   Looks up a localized string similar to Assigning position and rotation sequentially could be optimized..
         /// </summary>
         internal static string SetPositionAndRotationDiagnosticMessageFormat {
             get {
@@ -727,7 +727,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inefficient set position and rotation..
+        ///   Looks up a localized string similar to Inefficient position/rotation assignment.
         /// </summary>
         internal static string SetPositionAndRotationDiagnosticTitle {
             get {

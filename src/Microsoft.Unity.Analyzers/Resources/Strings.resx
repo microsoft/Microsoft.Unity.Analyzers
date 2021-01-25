@@ -385,34 +385,34 @@
     <value>System.Reflection features in performance critical messages</value>
   </data>
   <data name="SetPositionAndRotationCodeFixTitle" xml:space="preserve">
-    <value>Set position and rotation.</value>
+    <value>Use SetPositionAndRotation() method</value>
   </data>
   <data name="SetPositionAndRotationDiagnosticDescription" xml:space="preserve">
-    <value>Set position and rotation using joint method</value>
+    <value>Prefer using SetPositionAndRotation() method.</value>
   </data>
   <data name="SetPositionAndRotationDiagnosticMessageFormat" xml:space="preserve">
-    <value>Set position and rotation separately is slow.</value>
+    <value>Assigning position and rotation sequentially could be optimized.</value>
   </data>
   <data name="SetPositionAndRotationDiagnosticTitle" xml:space="preserve">
-    <value>Inefficient set position and rotation.</value>
+    <value>Inefficient position/rotation assignment</value>
   </data>
   <data name="ImproperMenuItemMethodCodeFixTitle" xml:space="preserve">
-    <value>Use static method.</value>
+    <value>Use static method</value>
   </data>
   <data name="ImproperMenuItemMethodDiagnosticDescription" xml:space="preserve">
-    <value>MenuItem can only be used on static methods</value>
+    <value>MenuItem can only be used on static methods.</value>
   </data>
   <data name="ImproperMenuItemMethodDiagnosticMessageFormat" xml:space="preserve">
     <value>This is not a static method.</value>
   </data>
   <data name="ImproperMenuItemMethodDiagnosticTitle" xml:space="preserve">
-    <value>Make method static.</value>
+    <value>Make method static</value>
   </data>
   <data name="IndirectionMessageCodeFixTitle" xml:space="preserve">
-    <value>Remove indirection call.</value>
+    <value>Remove indirection call</value>
   </data>
   <data name="IndirectionMessageDiagnosticDescription" xml:space="preserve">
-    <value>Each access is called.</value>
+    <value>Do not use unnecessary indirection.</value>
   </data>
   <data name="IndirectionMessageDiagnosticMessageFormat" xml:space="preserve">
     <value>Indirection is redundant</value>
@@ -421,7 +421,7 @@
     <value>Indirection call</value>
   </data>
   <data name="ProtectedUnityMessageCodeFixTitle" xml:space="preserve">
-    <value>Make Unity message protected.</value>
+    <value>Make Unity message protected</value>
   </data>
   <data name="ProtectedUnityMessageDiagnosticDescription" xml:space="preserve">
     <value>Unity message should be protected.</value>
@@ -430,18 +430,6 @@
     <value>Unity message should be protected.</value>
   </data>
   <data name="ProtectedUnityMessageDiagnosticTitle" xml:space="preserve">
-    <value>Protected Unity Message.</value>
-  </data>
-  <data name="SetPositionAndRotationCodeFixTitle" xml:space="preserve">
-    <value>Set position and rotation.</value>
-  </data>
-  <data name="SetPositionAndRotationDiagnosticDescription" xml:space="preserve">
-    <value>Set position and rotation using joint method</value>
-  </data>
-  <data name="SetPositionAndRotationDiagnosticMessageFormat" xml:space="preserve">
-    <value>Set position and rotation separately is slow.</value>
-  </data>
-  <data name="SetPositionAndRotationDiagnosticTitle" xml:space="preserve">
-    <value>Inefficient set position and rotation.</value>
+    <value>Prefer Protected Unity Message</value>
   </data>
 </root>
