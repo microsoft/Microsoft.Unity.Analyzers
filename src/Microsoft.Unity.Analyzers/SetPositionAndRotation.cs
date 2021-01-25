@@ -42,10 +42,8 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeAssignment(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is AssignmentExpressionSyntax))
+			if (!(context.Node is AssignmentExpressionSyntax assignmentExpression))
 				return;
-
-			var assignmentExpression = (AssignmentExpressionSyntax)context.Node;
 
 			if (!IsSetPositionOrRotation(assignmentExpression, context.SemanticModel))
 				return;
@@ -75,16 +73,11 @@ namespace Microsoft.Unity.Analyzers
 
 			var statement = siblingsAndSelf[nextIndex];
 
-			if (!(statement is ExpressionStatementSyntax))
+			if (!(statement is ExpressionStatementSyntax expressionStatement))
 				return;
 
-			var nextExpression = ((ExpressionStatementSyntax)statement).Expression;
-
-
-			if (!(nextExpression is AssignmentExpressionSyntax))
+			if (!(expressionStatement.Expression is AssignmentExpressionSyntax nextAssignmentExpression))
 				return;
-
-			var nextAssignmentExpression = (AssignmentExpressionSyntax)nextExpression;
 
 			if (!IsSetPositionOrRotation(nextAssignmentExpression, context.SemanticModel))
 				return;
@@ -101,22 +94,19 @@ namespace Microsoft.Unity.Analyzers
 
 		private static string GetProperty(AssignmentExpressionSyntax assignmentExpression)
 		{
-			var left = (MemberAccessExpressionSyntax)(assignmentExpression.Left);
+			if (!(assignmentExpression.Left is MemberAccessExpressionSyntax left))
+				return string.Empty;
 
-			var property = left.Name.ToString();
-
-			return property;
+			return left.Name.ToString();
 		}
 
 		private static bool IsSetPositionOrRotation(AssignmentExpressionSyntax assignmentExpression, SemanticModel model)
 		{
 
-			if (!(assignmentExpression.Left is MemberAccessExpressionSyntax))
+			if (!(assignmentExpression.Left is MemberAccessExpressionSyntax left))
 				return false;
 
-			var left = (MemberAccessExpressionSyntax)(assignmentExpression.Left);
-
-			var property = left.Name.ToString();
+			var property = GetProperty(assignmentExpression);
 
 			if (property != "position" && property != "rotation")
 				return false;
@@ -134,11 +124,7 @@ namespace Microsoft.Unity.Analyzers
 			if (leftExpressionTypeInfo.Type == null)
 				return false;
 
-			if (!leftExpressionTypeInfo.Type.Extends(typeof(UnityEngine.Transform)))
-				return false;
-
-			return true;
-
+			return leftExpressionTypeInfo.Type.Extends(typeof(UnityEngine.Transform));
 		}
 	}
 
@@ -191,46 +177,34 @@ namespace Microsoft.Unity.Analyzers
 
 			var statement = siblingsAndSelf[nextIndex];
 
-			if (!(statement is ExpressionStatementSyntax))
+			if (!(statement is ExpressionStatementSyntax expressionStatement))
 				return document;
 
-			var nextExpression = ((ExpressionStatementSyntax)statement).Expression;
-
-
-			if (!(nextExpression is AssignmentExpressionSyntax))
+			if (!(expressionStatement.Expression is AssignmentExpressionSyntax nextAssignmentExpression))
 				return null;
-
-			var nextAssignmentExpression = (AssignmentExpressionSyntax)nextExpression;
 
 			if (assignmentExpression.Right == null || nextAssignmentExpression.Right == null)
 				return document;
 
 			var argList = ArgumentList();
 
-			var property = ((MemberAccessExpressionSyntax)(assignmentExpression.Left)).Name.ToString();
+			var property = SetPositionAndRotationAnalyzer.GetProperty(assignmentExpression);
 
-			if (property == "position")
-			{
-				argList = argList.AddArguments(Argument(assignmentExpression.Right));
-				argList = argList.AddArguments(Argument(nextAssignmentExpression.Right));
-			}
-			else
-			{
-				argList = argList.AddArguments(Argument(nextAssignmentExpression.Right));
-				argList = argList.AddArguments(Argument(assignmentExpression.Right));
-			}
+			var arguments = new[] {Argument(assignmentExpression.Right), Argument(nextAssignmentExpression.Right)};
+			if (property != "position")
+				Array.Reverse(arguments);
 
-
+			var argList = ArgumentList()
+				.AddArguments(arguments);
 
 			var invocation = InvocationExpression(
-				MemberAccessExpression(
-					SyntaxKind.SimpleMemberAccessExpression,
-					IdentifierName(identifierName),
-					IdentifierName(genericMethodName)))
-						.WithArgumentList(
-							argList);
+					MemberAccessExpression(
+						SyntaxKind.SimpleMemberAccessExpression,
+						IdentifierName(identifierName),
+						IdentifierName(methodName)))
+				.WithArgumentList(argList);
 
-			var documentEditor = await DocumentEditor.CreateAsync(document);
+			var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
 			documentEditor.RemoveNode(statement);
 			documentEditor.ReplaceNode(assignmentExpression, invocation);
 
