@@ -75,7 +75,7 @@ class Camera : MonoBehaviour
     void Start()
     {
 		transform.position = new Vector3(0.0f, 1.0f, 0.0f);
-	}
+    }
     void Update()
     {
         transform.rotation = transform.rotation;
