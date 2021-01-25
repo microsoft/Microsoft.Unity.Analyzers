@@ -57,7 +57,7 @@ namespace Microsoft.Unity.Analyzers
 			if (property == nextProperty)
 				return;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation()));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, assignmentExpression.GetLocation()));
 		}
 
 		internal static bool GetNextAssignmentExpression(SemanticModel model, AssignmentExpressionSyntax assignmentExpression, out AssignmentExpressionSyntax assignmentExpressionSyntax)
