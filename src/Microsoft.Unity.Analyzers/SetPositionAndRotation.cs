@@ -52,14 +52,14 @@ namespace Microsoft.Unity.Analyzers
 			if (context.Node.FirstAncestorOrSelf<BlockSyntax>() == null)
 				return;
 
-			var block = context.Node.FirstAncestorOrSelf<BlockSyntax>();
-
 			if (context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>() == null)
 				return;
-
-			var expression = context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>();
+			
+			var block = context.Node.FirstAncestorOrSelf<BlockSyntax>();
 
 			var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
+			
+			var expression = context.Node.FirstAncestorOrSelf<ExpressionStatementSyntax>();
 
 			if (siblingsAndSelf.LastIndexOf(expression) == -1)
 				return;
@@ -149,10 +149,8 @@ namespace Microsoft.Unity.Analyzers
 					expression.ToFullString()),
 				context.Diagnostics);
 		}
-		private static async Task<Document> ReplaceWithInvocationAsync(Document document, AssignmentExpressionSyntax assignmentExpression, string identifierName, string genericMethodName, CancellationToken cancellationToken)
+		private static async Task<Document> ReplaceWithInvocationAsync(Document document, AssignmentExpressionSyntax assignmentExpression, string identifierName, string methodName, CancellationToken cancellationToken)
 		{
-			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-
 			if (assignmentExpression.FirstAncestorOrSelf<BlockSyntax>() == null)
 				return document;
 
@@ -183,10 +181,6 @@ namespace Microsoft.Unity.Analyzers
 			if (!(expressionStatement.Expression is AssignmentExpressionSyntax nextAssignmentExpression))
 				return null;
 
-			if (assignmentExpression.Right == null || nextAssignmentExpression.Right == null)
-				return document;
-
-			var argList = ArgumentList();
 
 			var property = SetPositionAndRotationAnalyzer.GetProperty(assignmentExpression);
 
