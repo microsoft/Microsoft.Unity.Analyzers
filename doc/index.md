@@ -23,6 +23,7 @@ ID | Title | Category
 [UNT0019](UNT0019.md) | Unnecessary indirection call for GameObject.gameObject | Performance
 [UNT0020](UNT0020.md) | MenuItem attribute used on non-static method | Correctness
 [UNT0021](UNT0021.md) | Unity message should be protected `[opt-in]` | Correctness
+[UNT0022](UNT0022.md) | Inefficient method to set position and rotation | Performance
 
 # Diagnostic Suppressors
 
