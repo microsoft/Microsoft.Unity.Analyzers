@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,10 @@ namespace Microsoft.Unity.Analyzers
 			description: Strings.SetPositionAndRotationDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+
+		internal const string position = "position";
+		
+		internal const string rotation = "rotation";
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -92,7 +97,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation()));
 		}
 
-		private static string GetProperty(AssignmentExpressionSyntax assignmentExpression)
+		internal static string GetProperty(AssignmentExpressionSyntax assignmentExpression)
 		{
 			if (!(assignmentExpression.Left is MemberAccessExpressionSyntax left))
 				return string.Empty;
@@ -108,7 +113,7 @@ namespace Microsoft.Unity.Analyzers
 
 			var property = GetProperty(assignmentExpression);
 
-			if (property != "position" && property != "rotation")
+			if (property != position && property != rotation)
 				return false;
 
 			var leftSymbol = model.GetSymbolInfo(left);
@@ -181,11 +186,10 @@ namespace Microsoft.Unity.Analyzers
 			if (!(expressionStatement.Expression is AssignmentExpressionSyntax nextAssignmentExpression))
 				return null;
 
-
 			var property = SetPositionAndRotationAnalyzer.GetProperty(assignmentExpression);
 
 			var arguments = new[] {Argument(assignmentExpression.Right), Argument(nextAssignmentExpression.Right)};
-			if (property != "position")
+			if (property != SetPositionAndRotationAnalyzer.position)
 				Array.Reverse(arguments);
 
 			var argList = ArgumentList()

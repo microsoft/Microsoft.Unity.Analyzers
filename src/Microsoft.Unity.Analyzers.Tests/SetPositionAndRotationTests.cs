@@ -55,7 +55,7 @@ class Camera : MonoBehaviour
 {
 	void Update()
 	{
-		transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+        transform.position = new Vector3(0.0f, 1.0f, 0.0f);
         transform.position = new Vector3(0.5f, 1.0f, 2.0f);
     }
 }
@@ -99,7 +99,7 @@ class Camera : MonoBehaviour
         Vector3 newPosition = new Vector3(1,2,3);
         transform.rotation = transform.rotation;
         transform.position = newPosition;
-}
+    }
 }
 ";
 
