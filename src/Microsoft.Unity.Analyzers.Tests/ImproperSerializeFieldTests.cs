@@ -58,6 +58,39 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task RedundantSerializeFieldComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // comment
+    [SerializeField]
+    public string publicField = null; /* comment */
+}
+";
+
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
+				.WithLocation(7, 5)
+				.WithArguments("publicField");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // comment
+    public string publicField = null; /* comment */
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task InvalidSerializeFieldTest()
 		{
 			const string test = @"

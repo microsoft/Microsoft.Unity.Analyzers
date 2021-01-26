@@ -113,7 +113,9 @@ namespace Microsoft.Unity.Analyzers
 				.ConfigureAwait(false);
 
 			var newMethodDeclaration = methodDeclaration
-				.WithParameterList(SyntaxFactory.ParameterList());
+				.WithParameterList(methodDeclaration
+					.ParameterList
+					.WithParameters(SyntaxFactory.SeparatedList<ParameterSyntax>()));
 
 			if (!methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
 			{

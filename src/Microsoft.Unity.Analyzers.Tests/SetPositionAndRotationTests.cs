@@ -46,6 +46,49 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task UpdatePositionAndRotationMethodComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // position
+        transform.position = /* inner position */ new Vector3(0.0f, 1.0f, 0.0f) /* outer position */;
+        // rotation
+        transform.rotation = /* inner rotation */ transform.rotation /* outer rotation */;
+        // trailing
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(9, 9);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // position
+        // rotation
+        transform.SetPositionAndRotation(
+/* inner position */ new Vector3(0.0f, 1.0f, 0.0f) /* outer position */,
+/* inner rotation */ transform.rotation /* outer rotation */);
+        // trailing
+    }
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task MultiplePositionChanges()
 		{
 			const string test = @"

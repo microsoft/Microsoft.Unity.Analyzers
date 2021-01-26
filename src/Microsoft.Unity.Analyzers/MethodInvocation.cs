@@ -168,11 +168,15 @@ namespace Microsoft.Unity.Analyzers
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
 			// We already know that we have at least one string argument
-			var les = (LiteralExpressionSyntax)invocation.ArgumentList.Arguments[0].Expression;
+			var argument = invocation.ArgumentList.Arguments[0];
+			var les = (LiteralExpressionSyntax)argument.Expression;
 			var name = les.Token.ValueText;
 
 			var newInvocation = invocation
-				.WithArgumentList(invocation.ArgumentList.ReplaceNode(invocation.ArgumentList.Arguments[0], GetArgument(name)));
+				.WithArgumentList(invocation
+					.ArgumentList
+					.ReplaceNode(argument, GetArgument(name)
+						.WithTrailingTrivia(argument.GetTrailingTrivia())));
 
 			var newRoot = root.ReplaceNode(invocation, newInvocation);
 			if (newRoot == null)

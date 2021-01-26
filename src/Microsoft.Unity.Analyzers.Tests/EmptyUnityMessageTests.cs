@@ -18,6 +18,7 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
+    // comment expected to be removed
     private void FixedUpdate()
     {
     }
@@ -29,7 +30,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic()
-				.WithLocation(6, 18)
+				.WithLocation(7, 18)
 				.WithArguments("FixedUpdate");
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);

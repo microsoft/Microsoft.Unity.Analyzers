@@ -45,5 +45,79 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
+
+		[Fact]
+		public async Task MissingStaticDeclarationComments()
+		{
+			const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class Camera : MonoBehaviour
+{
+    // comment
+    [MenuItem(""Name"")]
+    private void Menu1() /* comment */
+    {
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(8, 5);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+using UnityEditor;
+
+class Camera : MonoBehaviour
+{
+    // comment
+    [MenuItem(""Name"")]
+    private static void Menu1() /* comment */
+    {
+    }
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task PreserveMenuCommand()
+		{
+			const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class Camera : MonoBehaviour
+{
+    [MenuItem(""Name"")]
+    private void Menu1(MenuCommand command)
+    {
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(7, 5);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+using UnityEditor;
+
+class Camera : MonoBehaviour
+{
+    [MenuItem(""Name"")]
+    private static void Menu1(MenuCommand command)
+    {
+    }
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
 	}
 }

@@ -49,6 +49,48 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task FixedUpdateWithDeltaTimeComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+     public void FixedUpdate()
+     {
+         // comment
+         var foo = /* inner */ Time.deltaTime /* outer */;
+         /* comment */
+     }
+}
+";
+			// see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
+			// this rule is now disabled by default
+			// but can be re-enabled using ruleset or editorconfig:
+			// dotnet_diagnostic.UNT0005.severity = suggestion
+
+			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
+				.WithLocation(9, 37);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+     public void FixedUpdate()
+     {
+         // comment
+         var foo = /* inner */ Time.fixedDeltaTime /* outer */;
+         /* comment */
+     }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task UpdateWithFixedDeltaTime()
 		{
 			const string test = @"

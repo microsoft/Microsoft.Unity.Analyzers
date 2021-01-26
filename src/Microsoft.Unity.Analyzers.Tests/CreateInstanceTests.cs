@@ -49,6 +49,47 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task CreateComponentInstanceComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Foo : Component { }
+
+class Camera : MonoBehaviour
+{
+    public void Update() {
+        // comment
+        Foo foo = /* inner */ new Foo();
+        /* comment */
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+				.WithLocation(10, 31)
+				.WithArguments("Foo");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Foo : Component { }
+
+class Camera : MonoBehaviour
+{
+    public void Update() {
+        // comment
+        Foo foo = /* inner */ gameObject.AddComponent<Foo>();
+        /* comment */
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task CreateMonoBehaviourInstance()
 		{
 			const string test = @"
