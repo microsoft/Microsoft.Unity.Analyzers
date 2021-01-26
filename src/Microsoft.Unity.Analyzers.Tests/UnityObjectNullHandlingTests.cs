@@ -18,18 +18,18 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a = null;
-	public Transform b = null;
+    public Transform a = null;
+    public Transform b = null;
 
-	public Transform NC()
-	{
-		return a ?? b;
-	}
+    public Transform NC()
+    {
+        return a ?? b;
+    }
 }
 ";
 
 			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
-				.WithLocation(11, 10);
+				.WithLocation(11, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -38,13 +38,13 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a = null;
-	public Transform b = null;
+    public Transform a = null;
+    public Transform b = null;
 
-	public Transform NC()
-	{
-		return a != null ? a : b;
-	}
+    public Transform NC()
+    {
+        return a != null ? a : b;
+    }
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
@@ -64,14 +64,14 @@ class Camera : MonoBehaviour
     public Transform NC()
     {
         // comment
-		return /* inner */ a ?? b /* outer */;
+        return /* inner */ a ?? b /* outer */;
         /* comment */
-	}
+    }
 }
 ";
 
 			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
-				.WithLocation(12, 22);
+				.WithLocation(12, 28);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -87,8 +87,8 @@ class Camera : MonoBehaviour
     {
         // comment
         return /* inner */ a != null ? a : b /* outer */;
-        // comment */
-	}
+        /* comment */
+    }
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
@@ -102,18 +102,18 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a = null;
-	public Transform b = null;
+    public Transform a = null;
+    public Transform b = null;
 
-	public Transform NC()
-	{
-		return this.a ?? this.b;
-	}
+    public Transform NC()
+    {
+        return this.a ?? this.b;
+    }
 }
 ";
 
 			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
-				.WithLocation(11, 10);
+				.WithLocation(11, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -122,13 +122,13 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a = null;
-	public Transform b = null;
+    public Transform a = null;
+    public Transform b = null;
 
-	public Transform NC()
-	{
-		return this.a != null ? this.a : this.b;
-	}
+    public Transform NC()
+    {
+        return this.a != null ? this.a : this.b;
+    }
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
@@ -143,18 +143,18 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform A() { return null; }
-	public Transform B() { return null; }
+    public Transform A() { return null; }
+    public Transform B() { return null; }
 
-	public Transform NC()
-	{
-		return A() ?? B();
-	}
+    public Transform NC()
+    {
+        return A() ?? B();
+    }
 }
 ";
 
 			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
-				.WithLocation(11, 10);
+				.WithLocation(11, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -163,13 +163,13 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform A() { return null; }
-	public Transform B() { return null; }
+    public Transform A() { return null; }
+    public Transform B() { return null; }
 
-	public Transform NC()
-	{
-		return A() ?? B();
-	}
+    public Transform NC()
+    {
+        return A() ?? B();
+    }
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
@@ -183,15 +183,15 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform NP()
-	{
-		return transform?.transform;
-	}
+    public Transform NP()
+    {
+        return transform?.transform;
+    }
 }
 ";
 
 			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
-				.WithLocation(8, 10);
+				.WithLocation(8, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
