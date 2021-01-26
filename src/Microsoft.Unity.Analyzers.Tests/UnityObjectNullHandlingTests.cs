@@ -51,6 +51,50 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task FixIdentifierCoalescingComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+	public Transform a = null;
+	public Transform b = null;
+
+	public Transform NC()
+	{
+        // before
+		return /* inner */ a ?? b /* outer */;
+        // after
+	}
+}
+";
+
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
+				.WithLocation(12, 22);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+	public Transform a = null;
+	public Transform b = null;
+
+	public Transform NC()
+	{
+        // before
+		return /* inner */ a != null ? a : b /* outer */;
+        // after
+	}
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task FixMemberCoalescing()
 		{
 			const string test = @"

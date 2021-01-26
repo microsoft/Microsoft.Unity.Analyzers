@@ -85,7 +85,8 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
-			var newMethodDeclaration = methodDeclaration.WithParameterList(SyntaxFactory.ParameterList());
+			// we want to keep MenuCommands, so do not reset parameter list
+			var newMethodDeclaration = methodDeclaration;
 
 			if (!methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
 			{

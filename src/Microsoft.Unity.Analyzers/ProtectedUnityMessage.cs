@@ -88,7 +88,9 @@ namespace Microsoft.Unity.Analyzers
 		private static async Task<Document> MakeMessageProtectedAsync(Document document, MethodDeclarationSyntax declaration, CancellationToken cancellationToken)
 		{
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-			var newDeclaration = declaration.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword)));
+			var newDeclaration = declaration
+				.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword)))
+				.WithLeadingTrivia(declaration.GetLeadingTrivia());
 
 			foreach (var modifier in declaration.Modifiers)
 			{

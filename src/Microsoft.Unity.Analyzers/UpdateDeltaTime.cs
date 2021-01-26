@@ -140,7 +140,9 @@ namespace Microsoft.Unity.Analyzers
 				.GetSyntaxRootAsync(ct)
 				.ConfigureAwait(false);
 
-			var newIdentifierName = identifierName.WithIdentifier(SyntaxFactory.Identifier(name));
+			var newIdentifierName = identifierName
+				.WithIdentifier(SyntaxFactory.Identifier(name))
+				.WithTriviaFrom(identifierName);
 
 			var newRoot = root.ReplaceNode(identifierName, newIdentifierName);
 			if (newRoot == null)

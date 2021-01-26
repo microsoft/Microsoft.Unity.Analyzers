@@ -157,7 +157,13 @@ namespace Microsoft.Unity.Analyzers
 				return document;
 
 			var property = SetPositionAndRotationAnalyzer.GetProperty(assignmentExpression);
-			var arguments = new[] {Argument(assignmentExpression.Right), Argument(nextAssignmentExpression.Right)};
+			var arguments = new[]
+			{
+				Argument(assignmentExpression.Right)
+					.WithLeadingTrivia(assignmentExpression.OperatorToken.TrailingTrivia),
+				Argument(nextAssignmentExpression.Right)
+					.WithLeadingTrivia(nextAssignmentExpression.OperatorToken.TrailingTrivia)
+			};
 
 			if (property != SetPositionAndRotationAnalyzer.Position)
 				Array.Reverse(arguments);
@@ -170,11 +176,15 @@ namespace Microsoft.Unity.Analyzers
 						SyntaxKind.SimpleMemberAccessExpression,
 						IdentifierName("transform"),
 						IdentifierName("SetPositionAndRotation")))
-				.WithArgumentList(argList);
+				.WithArgumentList(argList)
+				.WithLeadingTrivia(assignmentExpression
+					.GetLeadingTrivia()
+					.AddRange(nextAssignmentExpression
+						.GetLeadingTrivia()));
 
 			var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
-			documentEditor.RemoveNode(nextAssignmentExpression.Parent);
-			documentEditor.ReplaceNode(assignmentExpression, invocation);
+			documentEditor.RemoveNode(assignmentExpression.Parent, SyntaxRemoveOptions.KeepNoTrivia);
+			documentEditor.ReplaceNode(nextAssignmentExpression, invocation);
 
 			return documentEditor.GetChangedDocument();
 		}

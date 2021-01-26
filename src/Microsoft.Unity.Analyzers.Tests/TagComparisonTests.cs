@@ -45,6 +45,44 @@ public class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task TagAsIdentifierComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+public class Camera : MonoBehaviour
+{
+    private void Update()
+    {
+        // comment
+        Debug.Log(/* inner */ tag == ""tag1"" /* outer */);
+        /* comment */
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(9, 31);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+public class Camera : MonoBehaviour
+{
+    private void Update()
+    {
+        // comment
+        Debug.Log(/* inner */ CompareTag(""tag1"" /* outer */));
+        /* comment */
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task TagAsIdentifierInvoke()
 		{
 			const string test = @"

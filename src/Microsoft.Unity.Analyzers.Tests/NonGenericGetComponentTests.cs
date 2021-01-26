@@ -50,6 +50,50 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task GetComponentAsComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+	private Rigidbody rb;
+
+    private void Start()
+    {
+        // comment
+        rb = /* inner */ GetComponent(typeof(Rigidbody)) as Rigidbody;
+        /* comment */
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(11, 26)
+				.WithArguments("GetComponent");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+	private Rigidbody rb;
+
+    private void Start()
+    {
+        // comment
+        rb = /* inner */ GetComponent<Rigidbody>();
+        /* comment */
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+
+		[Fact]
 		public async Task CastGetComponent()
 		{
 			const string test = @"

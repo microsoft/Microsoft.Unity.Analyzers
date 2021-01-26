@@ -45,6 +45,44 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task RemoveGameObjectPropertyComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject original = null;
+        // comment
+        GameObject duplicate = /* inner */ original.gameObject;
+        /* comment */
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(10, 44);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void OnTriggerEnter(Collider collider)
+    {
+        GameObject original = null;
+        // comment
+        GameObject duplicate = /* inner */ original;
+        /* comment */
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task RemoveGameObjectPropertyMultiple()
 		{
 			const string test = @"

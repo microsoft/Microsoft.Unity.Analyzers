@@ -53,6 +53,52 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task TestInvokeComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        // comment
+        Invoke(/* inner */ ""InvokeMe"" /* outer */, 10.0f);
+        /* comments */
+    }
+
+    private void InvokeMe()
+    {
+    }
+}";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(9, 9)
+				.WithArguments("InvokeMe");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        // comment
+        Invoke(/* inner */ nameof(InvokeMe) /* outer */, 10.0f);
+        /* comments */
+    }
+
+    private void InvokeMe()
+    {
+    }
+}";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task TestInvokeRepeating()
 		{
 			const string test = @"

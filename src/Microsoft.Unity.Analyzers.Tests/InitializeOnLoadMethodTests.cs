@@ -62,6 +62,44 @@ class Loader
 		}
 
 		[Fact]
+		public async Task InitializeOnLoadMethodFixModifiersComments()
+		{
+			const string test = @"
+using UnityEditor;
+
+class Loader
+{
+    // comment
+    [InitializeOnLoadMethod]
+    private void OnLoad() /* comment */
+    {
+        // keep
+    }
+}";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(8, 18)
+				.WithArguments("OnLoad");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEditor;
+
+class Loader
+{
+    // comment
+    [InitializeOnLoadMethod]
+    private static void OnLoad() /* comment */
+    {
+        // keep
+    }
+}";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task InitializeOnLoadMethodFixParametersTest()
 		{
 			const string test = @"
