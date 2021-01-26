@@ -58,9 +58,9 @@ class Camera : MonoBehaviour
 {
      public void FixedUpdate()
      {
-         // before
+         // comment
          var foo = /* inner */ Time.deltaTime /* outer */;
-         // after
+         /* comment */
      }
 }
 ";
@@ -81,9 +81,9 @@ class Camera : MonoBehaviour
 {
      public void FixedUpdate()
      {
-         // before
+         // comment
          var foo = /* inner */ Time.fixedDeltaTime /* outer */;
-         // after
+         /* comment */
      }
 }
 ";

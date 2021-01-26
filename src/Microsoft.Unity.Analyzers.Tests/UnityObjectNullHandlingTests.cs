@@ -58,14 +58,14 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a = null;
-	public Transform b = null;
+    public Transform a = null;
+    public Transform b = null;
 
-	public Transform NC()
-	{
-        // before
+    public Transform NC()
+    {
+        // comment
 		return /* inner */ a ?? b /* outer */;
-        // after
+        /* comment */
 	}
 }
 ";
@@ -80,14 +80,14 @@ using UnityEngine;
 
 class Camera : MonoBehaviour
 {
-	public Transform a = null;
-	public Transform b = null;
+    public Transform a = null;
+    public Transform b = null;
 
-	public Transform NC()
-	{
-        // before
-		return /* inner */ a != null ? a : b /* outer */;
-        // after
+    public Transform NC()
+    {
+        // comment
+        return /* inner */ a != null ? a : b /* outer */;
+        // comment */
 	}
 }
 ";

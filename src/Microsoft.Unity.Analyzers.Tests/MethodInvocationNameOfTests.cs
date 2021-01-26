@@ -64,7 +64,7 @@ class Camera : MonoBehaviour
     {
         // comment
         Invoke(/* inner */ ""InvokeMe"" /* outer */, 10.0f);
-        /* comments */
+        /* comment */
     }
 
     private void InvokeMe()
@@ -87,7 +87,7 @@ class Camera : MonoBehaviour
     {
         // comment
         Invoke(/* inner */ nameof(InvokeMe) /* outer */, 10.0f);
-        /* comments */
+        /* comment */
     }
 
     private void InvokeMe()
