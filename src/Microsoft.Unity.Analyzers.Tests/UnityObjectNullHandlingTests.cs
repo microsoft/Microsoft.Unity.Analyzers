@@ -196,7 +196,6 @@ class Camera : MonoBehaviour
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 
-
 		[Fact]
 		public async Task FixIdentifierCoalescingAssignment()
 		{
@@ -280,6 +279,7 @@ class Camera : MonoBehaviour
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
+
 		[Fact]
 		public async Task FixMemberCoalescingAssignment()
 		{
@@ -314,45 +314,6 @@ class Camera : MonoBehaviour
     void Update()
     {
         this.a = this.a != null ? this.a : this.b;
-    }
-}
-";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
-
-		public async Task CantFixSideEffectAssignment()
-		{
-			const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public Transform A() { return null; }
-    public Transform B() { return null; }
-
-    void Update()
-    {
-        A() ??= B();
-    }
-}
-";
-
-			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
-				.WithLocation(11, 16);
-
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-
-			const string fixedTest = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public Transform A() { return null; }
-    public Transform B() { return null; }
-
-    void Update()
-    {
-        return A() ??= B();
     }
 }
 ";

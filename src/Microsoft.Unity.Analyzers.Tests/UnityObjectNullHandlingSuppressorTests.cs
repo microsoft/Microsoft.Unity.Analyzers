@@ -84,7 +84,6 @@ class Camera : MonoBehaviour
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 
-
 		[Fact]
 		public async Task NullPropagationSuppressed()
 		{
