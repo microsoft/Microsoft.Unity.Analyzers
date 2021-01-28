@@ -37,8 +37,16 @@ namespace Microsoft.Unity.Analyzers
 			defaultSeverity: DiagnosticSeverity.Info,
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullPropagationDiagnosticDescription);
+		internal static readonly DiagnosticDescriptor CoalesceAssignmentRule = new DiagnosticDescriptor(
+			id: "UNT0023",
+			title: Strings.UnityObjectCoalesceAssignmentDiagnosticTitle,
+			messageFormat: Strings.UnityObjectCoalesceAssignmentDiagnosticMessageFormat,
+			category: DiagnosticCategory.Correctness,
+			defaultSeverity: DiagnosticSeverity.Info,
+			isEnabledByDefault: true,
+			description: Strings.UnityObjectCoalesceAssignmentDiagnosticDescription);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule);
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -187,8 +195,12 @@ namespace Microsoft.Unity.Analyzers
 			id: "USP0002",
 			suppressedDiagnosticId: "IDE0031",
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);
+		internal static readonly SuppressionDescriptor CoalesceAssignmentRule = new SuppressionDescriptor(
+			id: "USP0017",
+			suppressedDiagnosticId: "IDE0074",
+			justification: Strings.UnityObjectCoalesceAssignmentSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule);
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{
