@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,15 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullPropagationDiagnosticDescription);
 
+		internal static readonly DiagnosticDescriptor NullCoalescingAssignmentRule = new DiagnosticDescriptor(
+			id: "UNT0023",
+			title: Strings.UnityObjectNullCoalescingDiagnosticTitle,
+			messageFormat: Strings.UnityObjectNullCoalescingDiagnosticMessageFormat,
+			category: DiagnosticCategory.Correctness,
+			defaultSeverity: DiagnosticSeverity.Info,
+			isEnabledByDefault: true,
+			description: Strings.UnityObjectNullCoalescingDiagnosticDescription);
+
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule);
 
 		public override void Initialize(AnalysisContext context)
@@ -46,6 +56,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.RegisterSyntaxNodeAction(AnalyzeCoalesceExpression, SyntaxKind.CoalesceExpression);
 			context.RegisterSyntaxNodeAction(AnalyzeConditionalAccessExpression, SyntaxKind.ConditionalAccessExpression);
+			context.RegisterSyntaxNodeAction(AnalyzeCoalesceAssignmentExpression, SyntaxKind.CoalesceAssignmentExpression);
 		}
 
 		private static void AnalyzeCoalesceExpression(SyntaxNodeAnalysisContext context)
@@ -58,6 +69,12 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var access = (ConditionalAccessExpressionSyntax)context.Node;
 			AnalyzeExpression(access, access.Expression, context, NullPropagationRule);
+		}
+
+		private static void AnalyzeCoalesceAssignmentExpression(SyntaxNodeAnalysisContext context)
+		{
+			var assign = (AssignmentExpressionSyntax)context.Node;
+			AnalyzeExpression(assign, assign.Left, context, NullCoalescingRule);
 		}
 
 		private static void AnalyzeExpression(ExpressionSyntax originalExpression, ExpressionSyntax typedExpression, SyntaxNodeAnalysisContext context, DiagnosticDescriptor rule)
@@ -84,22 +101,44 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root?.FindNode(context.Span) is BinaryExpressionSyntax coalescing))
+			var node = root.FindNode(context.Span);
+
+			if (!(root?.FindNode(context.Span) is BinaryExpressionSyntax || root?.FindNode(context.Span) is AssignmentExpressionSyntax))
 				return;
 
-			// We do not want to fix expressions with possible side effects such as `Foo() ?? bar`
-			// We could potentially rewrite by introducing a variable
-			if (HasSideEffect(coalescing.Left))
+			var coalescing = root?
+				.FindNode(context.Span).DescendantNodesAndSelf()
+				.FirstOrDefault(c => c is BinaryExpressionSyntax || c is AssignmentExpressionSyntax);
+			
+			if (coalescing == null)
 				return;
 
-			context.RegisterCodeFix(
-				CodeAction.Create(
-					Strings.UnityObjectNullCoalescingCodeFixTitle,
-					ct => ReplaceNullCoalescingAsync(context.Document, coalescing, ct),
-					coalescing.ToFullString()),
-				context.Diagnostics);
+				switch (coalescing)
+				{
+					case BinaryExpressionSyntax bes:
+						if (HasSideEffect(bes.Left))
+							return;
+						context.RegisterCodeFix(
+							CodeAction.Create(
+								Strings.UnityObjectNullCoalescingCodeFixTitle,
+								ct => ReplaceNullCoalescingAsync(context.Document, bes, ct),
+								bes.ToFullString()),
+							context.Diagnostics);
+						break;
+					case AssignmentExpressionSyntax aes:
+						if (HasSideEffect(aes.Left))
+							return;
+						context.RegisterCodeFix(
+								CodeAction.Create(
+									Strings.UnityObjectNullCoalescingCodeFixTitle,
+									ct => ReplaceNullCoalescingAssignmentAsync(context.Document, aes, ct),
+									aes.ToFullString()),
+								context.Diagnostics);
+						break;
+				}
 		}
-
+		// We do not want to fix expressions with possible side effects such as `Foo() ?? bar`
+		// We could potentially rewrite by introducing a variable
 		private static bool HasSideEffect(ExpressionSyntax expression)
 		{
 			switch (expression.Kind())
@@ -121,8 +160,26 @@ namespace Microsoft.Unity.Analyzers
 				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, coalescing.Left, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
 				whenTrue: coalescing.Left,
 				whenFalse: coalescing.Right);
-
 			var newRoot = root.ReplaceNode(coalescing, conditional);
+			if (newRoot == null)
+				return document;
+
+			return document.WithSyntaxRoot(newRoot);
+		}
+
+		private static async Task<Document> ReplaceNullCoalescingAssignmentAsync(Document document, AssignmentExpressionSyntax coalescing, CancellationToken cancellationToken)
+		{
+			// obj ??= foo -> obj != null ? obj = obj : obj = foo
+			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+
+			var conditional = SyntaxFactory.ConditionalExpression(
+				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, coalescing.Left, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
+				whenTrue: coalescing.Left.WithoutTrivia(),
+				whenFalse: coalescing.Right);
+
+			var assignment = SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, coalescing.Left.WithoutTrailingTrivia(), conditional.WithoutLeadingTrivia());
+			
+			var newRoot = root.ReplaceNode(coalescing, assignment);
 			if (newRoot == null)
 				return document;
 
