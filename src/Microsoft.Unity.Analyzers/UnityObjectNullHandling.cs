@@ -72,7 +72,7 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeCoalesceAssignmentExpression(SyntaxNodeAnalysisContext context)
 		{
 			var assign = (AssignmentExpressionSyntax)context.Node;
-			AnalyzeExpression(assign, assign.Left, context, NullCoalescingRule);
+			AnalyzeExpression(assign, assign.Left, context, CoalesceAssignmentRule);
 		}
 
 		private static void AnalyzeExpression(ExpressionSyntax originalExpression, ExpressionSyntax typedExpression, SyntaxNodeAnalysisContext context, DiagnosticDescriptor rule)

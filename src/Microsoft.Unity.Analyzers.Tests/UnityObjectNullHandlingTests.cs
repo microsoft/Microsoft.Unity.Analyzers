@@ -214,7 +214,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule)
 				.WithLocation(11, 9);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -256,7 +256,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule)
 				.WithLocation(12,21);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -298,7 +298,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullCoalescingRule)
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule)
 				.WithLocation(11, 9);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -318,6 +318,66 @@ class Camera : MonoBehaviour
 }
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+		[Fact]
+		public async Task DetectCoalesceAssignment()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+    public Transform NP()
+    {
+        return a ??= b;
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule)
+				.WithLocation(11, 16);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+    public Transform NP()
+    {
+        return a = a != null ? a : b;
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task CoalesceAssignmentForRegularObjects()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public System.Object a = null;
+    public System.Object b = null;
+
+    public System.Object NP()
+    {
+        return a ??= b;
+    }
+}
+";
+
+			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}
 }
