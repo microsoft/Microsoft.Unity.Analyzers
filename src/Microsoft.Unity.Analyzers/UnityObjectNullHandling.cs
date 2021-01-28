@@ -91,8 +91,6 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			var node = root.FindNode(context.Span);
-
 			if (!(root?.FindNode(context.Span) is BinaryExpressionSyntax || root?.FindNode(context.Span) is AssignmentExpressionSyntax))
 				return;
 
@@ -150,6 +148,7 @@ namespace Microsoft.Unity.Analyzers
 				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, coalescing.Left, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
 				whenTrue: coalescing.Left,
 				whenFalse: coalescing.Right);
+
 			var newRoot = root.ReplaceNode(coalescing, conditional);
 			if (newRoot == null)
 				return document;
@@ -159,9 +158,8 @@ namespace Microsoft.Unity.Analyzers
 
 		private static async Task<Document> ReplaceNullCoalescingAssignmentAsync(Document document, AssignmentExpressionSyntax coalescing, CancellationToken cancellationToken)
 		{
-			// obj ??= foo -> obj != null ? obj = obj : obj = foo
+			// obj ??= foo -> obj  = obj!= null ? obj : foo
 			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-
 			var conditional = SyntaxFactory.ConditionalExpression(
 				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, coalescing.Left, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
 				whenTrue: coalescing.Left.WithoutTrivia(),
