@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,15 +37,6 @@ namespace Microsoft.Unity.Analyzers
 			defaultSeverity: DiagnosticSeverity.Info,
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullPropagationDiagnosticDescription);
-
-		internal static readonly DiagnosticDescriptor NullCoalescingAssignmentRule = new DiagnosticDescriptor(
-			id: "UNT0023",
-			title: Strings.UnityObjectNullCoalescingDiagnosticTitle,
-			messageFormat: Strings.UnityObjectNullCoalescingDiagnosticMessageFormat,
-			category: DiagnosticCategory.Correctness,
-			defaultSeverity: DiagnosticSeverity.Info,
-			isEnabledByDefault: true,
-			description: Strings.UnityObjectNullCoalescingDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule);
 
