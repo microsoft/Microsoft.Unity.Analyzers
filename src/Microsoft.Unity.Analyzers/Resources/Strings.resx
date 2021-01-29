@@ -444,4 +444,7 @@
   <data name="UnityObjectCoalesceAssignmentSuppressorJustification" xml:space="preserve">
     <value>Unity objects should not use coalescing assignment.</value>
   </data>
+  <data name="UnityObjectCoalescingAssignmentCodeFixTitle" xml:space="preserve">
+    <value>Use null comparison</value>
+  </data>
 </root>

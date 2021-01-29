@@ -619,7 +619,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Prefer Protected Unity Message.
+        ///   Looks up a localized string similar to Prefer protected Unity Message..
         /// </summary>
         internal static string ProtectedUnityMessageDiagnosticTitle {
             get {
@@ -709,7 +709,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assigning position and rotation using SetPositionAndRotation() method..
+        ///   Looks up a localized string similar to Prefer using SetPositionAndRotation() method..
         /// </summary>
         internal static string SetPositionAndRotationDiagnosticDescription {
             get {
@@ -804,6 +804,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string UnityObjectCoalesceAssignmentSuppressorJustification {
             get {
                 return ResourceManager.GetString("UnityObjectCoalesceAssignmentSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use null comparison.
+        /// </summary>
+        internal static string UnityObjectCoalescingAssignmentCodeFixTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalescingAssignmentCodeFixTitle", resourceCulture);
             }
         }
         

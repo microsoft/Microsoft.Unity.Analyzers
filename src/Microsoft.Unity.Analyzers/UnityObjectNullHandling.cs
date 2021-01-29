@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -13,6 +14,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Editing;
 using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers
@@ -92,7 +94,7 @@ namespace Microsoft.Unity.Analyzers
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnityObjectNullHandlingAnalyzer.NullCoalescingRule.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnityObjectNullHandlingAnalyzer.NullCoalescingRule.Id, UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -100,22 +102,45 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(root?.FindNode(context.Span) is BinaryExpressionSyntax coalescing))
-				return;
+			var expression = root?
+				.FindNode(context.Span).DescendantNodesAndSelf()
+				.FirstOrDefault(c => c is BinaryExpressionSyntax || c is AssignmentExpressionSyntax || c is ConditionalAccessExpressionSyntax);
 
-			// We do not want to fix expressions with possible side effects such as `Foo() ?? bar`
-			// We could potentially rewrite by introducing a variable
-			if (HasSideEffect(coalescing.Left))
-				return;
+			CodeAction action;
+			switch (expression)
+			{
+				// Null coalescing
+				case BinaryExpressionSyntax bes:
+					if (HasSideEffect(bes.Left))
+						return;
 
-			context.RegisterCodeFix(
-				CodeAction.Create(
-					Strings.UnityObjectNullCoalescingCodeFixTitle,
-					ct => ReplaceNullCoalescingAsync(context.Document, coalescing, ct),
-					coalescing.ToFullString()),
-				context.Diagnostics);
+					action = CodeAction.Create(Strings.UnityObjectNullCoalescingCodeFixTitle, ct => ReplaceNullCoalescingAsync(context.Document, bes, ct), bes.ToFullString());
+					break;
+
+				// Null propagation
+				case ConditionalAccessExpressionSyntax caes:
+					if (HasSideEffect(caes.Expression) && caes.WhenNotNull is MemberBindingExpressionSyntax)
+						return;
+
+					action = CodeAction.Create(Strings.UnityObjectNullPropagationCodeFixTitle, ct => ReplaceNullPropagationAsync(context.Document, caes, ct), caes.ToFullString());
+					break;
+
+				// Coalescing assignment
+				case AssignmentExpressionSyntax aes:
+					if (HasSideEffect(aes.Left))
+						return;
+
+					action = CodeAction.Create(Strings.UnityObjectCoalescingAssignmentCodeFixTitle, ct => ReplaceCoalescingAssignmentAsync(context.Document, aes, ct), aes.ToFullString());
+					break;
+				default:
+					return;
+			}
+
+			context.RegisterCodeFix(action, context.Diagnostics);
 		}
 
+		// We do not want to fix expressions with possible side effects such as `Foo() ?? bar`
+		// We could potentially rewrite by introducing a variable
 		private static bool HasSideEffect(ExpressionSyntax expression)
 		{
 			switch (expression.Kind())
@@ -129,20 +154,47 @@ namespace Microsoft.Unity.Analyzers
 			return true;
 		}
 
+		private static async Task<Document> ReplaceWithAsync(Document document, SyntaxNode source, SyntaxNode replacement, CancellationToken cancellationToken)
+		{
+			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+			var newRoot = root.ReplaceNode(source, replacement);
+			return newRoot == null ? document : document.WithSyntaxRoot(newRoot);
+		}
+
 		private static async Task<Document> ReplaceNullCoalescingAsync(Document document, BinaryExpressionSyntax coalescing, CancellationToken cancellationToken)
 		{
 			// obj ?? foo -> obj != null ? obj : foo
-			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var conditional = SyntaxFactory.ConditionalExpression(
 				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, coalescing.Left, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
 				whenTrue: coalescing.Left,
 				whenFalse: coalescing.Right);
 
-			var newRoot = root.ReplaceNode(coalescing, conditional);
-			if (newRoot == null)
-				return document;
+			return await ReplaceWithAsync(document, coalescing, conditional, cancellationToken);
+		}
 
-			return document.WithSyntaxRoot(newRoot);
+		private static async Task<Document> ReplaceCoalescingAssignmentAsync(Document document, AssignmentExpressionSyntax coalescing, CancellationToken cancellationToken)
+		{
+			// obj ??= foo -> obj = obj != null ? obj : foo
+			var conditional = SyntaxFactory.ConditionalExpression(
+				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, coalescing.Left, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
+				whenTrue: coalescing.Left,
+				whenFalse: coalescing.Right);
+
+			var assignment = SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, coalescing.Left, conditional);
+			return await ReplaceWithAsync(document, coalescing, assignment, cancellationToken);
+		}
+
+		private static async Task<Document> ReplaceNullPropagationAsync(Document document, ConditionalAccessExpressionSyntax access, CancellationToken cancellationToken)
+		{
+			// obj?.member -> obj != null ? obj.member : null
+			var mbes = (MemberBindingExpressionSyntax)access.WhenNotNull;
+
+			var conditional = SyntaxFactory.ConditionalExpression(
+				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, access.Expression, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
+				whenTrue: SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, access.Expression, mbes.Name),
+				whenFalse: SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
+
+			return await ReplaceWithAsync(document, access, conditional, cancellationToken);
 		}
 	}
 
