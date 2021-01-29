@@ -197,7 +197,7 @@ namespace Microsoft.Unity.Analyzers
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);
 		internal static readonly SuppressionDescriptor CoalesceAssignmentRule = new SuppressionDescriptor(
 			id: "USP0017",
-			suppressedDiagnosticId: "IDE0074",
+			suppressedDiagnosticId: "IDE0054",
 			justification: Strings.UnityObjectCoalesceAssignmentSuppressorJustification);
 
 		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
@@ -213,7 +213,6 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var root = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken);
-
 			// We can be called in the context of a method argument or a regular expression
 			if (!(root
 				.FindNode(diagnostic.Location.SourceSpan)

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -190,6 +191,28 @@ class Camera : MonoBehaviour
 			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.NullCoalescingRule)
 				.WithLocation(11, 13);
 
+			await VerifyCSharpDiagnosticAsync(test, suppressor);
+		}
+
+		[Fact]
+		public async Task CoalesceAssignmentSuppressed()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+    public Transform NP()
+    {
+        return a ?? (a = b);
+    }
+}
+";
+			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.CoalesceAssignmentRule)
+				.WithLocation(11, 18);
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
 	}
