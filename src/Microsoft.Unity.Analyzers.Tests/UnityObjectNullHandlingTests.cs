@@ -136,7 +136,7 @@ class Camera : MonoBehaviour
 
 
 		[Fact]
-		public async Task CantFixSideEffect()
+		public async Task CantFixCoalescingSideEffect()
 		{
 			const string test = @"
 using UnityEngine;
@@ -158,21 +158,8 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public Transform A() { return null; }
-    public Transform B() { return null; }
-
-    public Transform NC()
-    {
-        return A() ?? B();
-    }
-}
-";
-			await VerifyCSharpFixAsync(test, fixedTest);
+			// we cannot fix with side-effects
+			await VerifyCSharpFixAsync(test, test);
 		}
 
 		[Fact]
@@ -248,7 +235,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task FixCoalesceAssignment()
+		public async Task FixCoalescingAssignment()
 		{
 			const string test = @"
 using UnityEngine;
@@ -288,7 +275,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task FixCoalesceAssignmentComments()
+		public async Task FixCoalescingAssignmentComments()
 		{
 			const string test = @"
 using UnityEngine;
@@ -333,7 +320,7 @@ class Camera : MonoBehaviour
 
 
 		[Fact]
-		public async Task CoalesceAssignmentForRegularObjects()
+		public async Task CoalescingAssignmentForRegularObjects()
 		{
 			const string test = @"
 using UnityEngine;
