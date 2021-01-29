@@ -39,7 +39,7 @@ namespace Microsoft.Unity.Analyzers
 			description: Strings.UnityObjectNullPropagationDiagnosticDescription);
 
 		internal static readonly DiagnosticDescriptor CoalesceAssignmentRule = new DiagnosticDescriptor(
-			id: "UNT0022",
+			id: "UNT0023",
 			title: Strings.UnityObjectCoalesceAssignmentDiagnosticTitle,
 			messageFormat: Strings.UnityObjectCoalesceAssignmentDiagnosticMessageFormat,
 			category: DiagnosticCategory.Correctness,
