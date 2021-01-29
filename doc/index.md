@@ -24,6 +24,7 @@ ID | Title | Category
 [UNT0020](UNT0020.md) | MenuItem attribute used on non-static method | Correctness
 [UNT0021](UNT0021.md) | Unity message should be protected `[opt-in]` | Correctness
 [UNT0022](UNT0022.md) | Inefficient method to set position and rotation | Performance
+[UNT0023](UNT0023.md) | Coalescing assignment on Unity objects | Correctness
 
 # Diagnostic Suppressors
 
@@ -45,3 +46,4 @@ ID | Suppressed ID | Justification
 [USP0014](USP0014.md) | CA1822 | The Unity runtime invokes Unity messages
 [USP0015](USP0015.md) | CA1801 | The Unity runtime invokes Unity messages
 [USP0016](USP0016.md) | CS8618 | Initialization detection of types inheriting from UnityEngine.Object
+[USP0017](USP0017.md) | IDE0074 | Unity objects should not use coalescing assignment
