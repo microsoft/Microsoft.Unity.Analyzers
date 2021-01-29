@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -14,7 +13,6 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Editing;
 using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers
@@ -40,7 +38,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullPropagationDiagnosticDescription);
 
-		internal static readonly DiagnosticDescriptor CoalesceAssignmentRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor CoalescingAssignmentRule = new DiagnosticDescriptor(
 			id: "UNT0023",
 			title: Strings.UnityObjectCoalescingAssignmentDiagnosticTitle,
 			messageFormat: Strings.UnityObjectCoalescingAssignmentDiagnosticMessageFormat,
@@ -49,7 +47,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectCoalescingAssignmentDiagnosticDescription);
 
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -63,7 +61,7 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeCoalesceAssignmentExpression(SyntaxNodeAnalysisContext context)
 		{
 			var assignment = (AssignmentExpressionSyntax)context.Node;
-			AnalyzeExpression(assignment, assignment.Left, context, CoalesceAssignmentRule);
+			AnalyzeExpression(assignment, assignment.Left, context, CoalescingAssignmentRule);
 		}
 
 		private static void AnalyzeCoalesceExpression(SyntaxNodeAnalysisContext context)
@@ -94,7 +92,7 @@ namespace Microsoft.Unity.Analyzers
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
 	public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnityObjectNullHandlingAnalyzer.NullCoalescingRule.Id, UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnityObjectNullHandlingAnalyzer.NullCoalescingRule.Id, UnityObjectNullHandlingAnalyzer.CoalescingAssignmentRule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -211,12 +209,12 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "IDE0031",
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor CoalesceAssignmentRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor CoalescingAssignmentRule = new SuppressionDescriptor(
 			id: "USP0017",
 			suppressedDiagnosticId: "IDE0074",
 			justification: Strings.UnityObjectCoalescingAssignmentSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{
