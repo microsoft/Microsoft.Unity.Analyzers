@@ -42,12 +42,12 @@ namespace Microsoft.Unity.Analyzers
 
 		internal static readonly DiagnosticDescriptor CoalesceAssignmentRule = new DiagnosticDescriptor(
 			id: "UNT0023",
-			title: Strings.UnityObjectCoalesceAssignmentDiagnosticTitle,
-			messageFormat: Strings.UnityObjectCoalesceAssignmentDiagnosticMessageFormat,
+			title: Strings.UnityObjectCoalescingAssignmentDiagnosticTitle,
+			messageFormat: Strings.UnityObjectCoalescingAssignmentDiagnosticMessageFormat,
 			category: DiagnosticCategory.Correctness,
 			defaultSeverity: DiagnosticSeverity.Info,
 			isEnabledByDefault: true,
-			description: Strings.UnityObjectCoalesceAssignmentDiagnosticDescription);
+			description: Strings.UnityObjectCoalescingAssignmentDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
 
@@ -214,7 +214,7 @@ namespace Microsoft.Unity.Analyzers
 		internal static readonly SuppressionDescriptor CoalesceAssignmentRule = new SuppressionDescriptor(
 			id: "USP0017",
 			suppressedDiagnosticId: "IDE0074",
-			justification: Strings.UnityObjectCoalesceAssignmentSuppressorJustification);
+			justification: Strings.UnityObjectCoalescingAssignmentSuppressorJustification);
 
 		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalesceAssignmentRule);
 
