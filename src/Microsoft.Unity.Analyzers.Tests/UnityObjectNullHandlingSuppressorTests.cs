@@ -150,7 +150,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task CoalesceAssignmentSuppressed()
+		public async Task CoalescingAssignmentSuppressed()
 		{
 			const string test = @"
 using UnityEngine;
@@ -174,7 +174,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task CoalesceAssignmentNotSuppressedForRegularObjects()
+		public async Task CoalescingAssignmentNotSuppressedForRegularObjects()
 		{
 			const string test = @"
 using UnityEngine;
