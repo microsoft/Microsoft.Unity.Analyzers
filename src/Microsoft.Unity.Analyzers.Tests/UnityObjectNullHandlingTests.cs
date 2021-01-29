@@ -252,7 +252,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule)
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalescingAssignmentRule)
 				.WithLocation(11, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
@@ -294,7 +294,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule)
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalescingAssignmentRule)
 				.WithLocation(12, 28);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);

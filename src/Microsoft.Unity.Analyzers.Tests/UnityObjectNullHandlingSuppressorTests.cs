@@ -167,7 +167,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.CoalesceAssignmentRule)
+			var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.CoalescingAssignmentRule)
 				.WithLocation(11, 18);
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -190,7 +190,7 @@ class Camera : MonoBehaviour
     }
 }";
 
-			var diagnostic = new DiagnosticResult(UnityObjectNullHandlingSuppressor.CoalesceAssignmentRule.SuppressedDiagnosticId, DiagnosticSeverity.Info)
+			var diagnostic = new DiagnosticResult(UnityObjectNullHandlingSuppressor.CoalescingAssignmentRule.SuppressedDiagnosticId, DiagnosticSeverity.Info)
 				.WithLocation(11, 18)
 				.WithMessage("Use compound assignment");
 
