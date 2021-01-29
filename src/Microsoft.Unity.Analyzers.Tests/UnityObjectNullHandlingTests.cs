@@ -176,7 +176,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task DetectNullPropagation()
+		public async Task FixNullPropagation()
 		{
 			const string test = @"
 using UnityEngine;
@@ -194,10 +194,61 @@ class Camera : MonoBehaviour
 				.WithLocation(8, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform NP()
+    {
+        return transform != null ? transform.transform : null;
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
 		[Fact]
-		public async Task DetectCoalesceAssignment()
+		public async Task FixNullPropagationComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform NP()
+    {
+        // comment
+        return /* inner */ transform?.transform;
+        /* comment */
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+				.WithLocation(9, 28);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform NP()
+    {
+        // comment
+        return /* inner */ transform != null ? transform.transform : null;
+        /* comment */
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task FixCoalesceAssignment()
 		{
 			const string test = @"
 using UnityEngine;
@@ -218,7 +269,68 @@ class Camera : MonoBehaviour
 				.WithLocation(11, 16);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+    public Transform NP()
+    {
+        return a = a != null ? a : b;
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
 		}
+
+		[Fact]
+		public async Task FixCoalesceAssignmentComments()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+    public Transform NP()
+    {
+        // comment
+        return /* inner */ a ??= b /* outer */;
+        /* comment */
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.CoalesceAssignmentRule)
+				.WithLocation(12, 28);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+    public Transform b = null;
+
+    public Transform NP()
+    {
+        // comment
+        return /* inner */ a = a != null ? a : b /* outer */;
+        /* comment */
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
 
 		[Fact]
 		public async Task CoalesceAssignmentForRegularObjects()
