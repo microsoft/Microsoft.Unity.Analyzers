@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -50,6 +51,11 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			if (!GetNextAssignmentExpression(context.SemanticModel, assignmentExpression, out var nextAssignmentExpression)) 
+				return;
+
+			// We know that both assignmentExpression.Left and nextAssignmentExpression.Left are MemberAccessExpressionSyntax
+			// cf. GetNextAssignmentExpression calling IsSetPositionOrRotation
+			if (((MemberAccessExpressionSyntax)assignmentExpression.Left).Expression.ToString() != ((MemberAccessExpressionSyntax)nextAssignmentExpression.Left).Expression.ToString())
 				return;
 
 			var property = GetProperty(assignmentExpression);
@@ -171,22 +177,45 @@ namespace Microsoft.Unity.Analyzers
 			var argList = ArgumentList()
 				.AddArguments(arguments);
 
+			var baseExpression = assignmentExpression
+				.Left
+				.FirstAncestorOrSelf<MemberAccessExpressionSyntax>()?.Expression;
+
+			if (baseExpression == null)
+				return document;
+
+			var trivia = MergeTrivia(assignmentExpression, nextAssignmentExpression);
+
 			var invocation = InvocationExpression(
 					MemberAccessExpression(
 						SyntaxKind.SimpleMemberAccessExpression,
-						IdentifierName("transform"),
+						baseExpression,
 						IdentifierName("SetPositionAndRotation")))
 				.WithArgumentList(argList)
-				.WithLeadingTrivia(assignmentExpression
-					.GetLeadingTrivia()
-					.AddRange(nextAssignmentExpression
-						.GetLeadingTrivia()));
+				.WithLeadingTrivia(trivia);
 
 			var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
 			documentEditor.RemoveNode(assignmentExpression.Parent, SyntaxRemoveOptions.KeepNoTrivia);
 			documentEditor.ReplaceNode(nextAssignmentExpression, invocation);
 
 			return documentEditor.GetChangedDocument();
+		}
+
+		private static SyntaxTriviaList MergeTrivia(CSharpSyntaxNode first, CSharpSyntaxNode second)
+		{
+			var merged = first.GetLeadingTrivia().AddRange(second.GetLeadingTrivia());
+			var result = SyntaxTriviaList.Empty;
+
+			SyntaxTrivia previous = new SyntaxTrivia();
+			foreach (var trivia in merged)
+			{
+				if (!trivia.IsEquivalentTo(previous))
+					result = result.Add(trivia);
+
+				previous = trivia;
+			}
+
+			return result;
 		}
 	}
 }
