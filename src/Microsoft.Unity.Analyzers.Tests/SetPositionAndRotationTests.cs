@@ -166,5 +166,65 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
+
+		[Fact]
+		public async Task MemberExpression()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        GameObject instance = null;
+        GameObject go = null;
+        instance.transform.position = go.transform.position;
+        instance.transform.rotation = go.transform.rotation;
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
+			
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        GameObject instance = null;
+        GameObject go = null;
+        instance.transform.SetPositionAndRotation(go.transform.position, go.transform.rotation);
+    }
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task DistinctMemberExpression()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        GameObject instance = null;
+        GameObject go = null;
+        instance.transform.position = go.transform.position;
+        go.transform.rotation = go.transform.rotation;
+    }
+}
+";
+		
+			await VerifyCSharpDiagnosticAsync(test);
+		}
 	}
 }
