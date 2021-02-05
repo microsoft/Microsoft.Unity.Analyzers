@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -36,7 +37,6 @@ namespace Microsoft.Unity.Analyzers
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.RegisterSyntaxNodeAction(AnalyzeExpression, SyntaxKind.SimpleMemberAccessExpression);
 		}
-
 
 		private static void AnalyzeExpression(SyntaxNodeAnalysisContext context)
 		{
@@ -76,9 +76,8 @@ namespace Microsoft.Unity.Analyzers
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
-			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-
-			if (!(root?.FindNode(context.Span) is MemberAccessExpressionSyntax access))
+			var access = await context.GetFixableNodeAsync<MemberAccessExpressionSyntax>();
+			if (access == null)
 				return;
 
 			context.RegisterCodeFix(

@@ -69,9 +69,8 @@ namespace Microsoft.Unity.Analyzers
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
-			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-
-			if (!(root?.FindNode(context.Span) is ClassDeclarationSyntax classDeclaration))
+			var classDeclaration = await context.GetFixableNodeAsync<ClassDeclarationSyntax>();
+			if (classDeclaration == null)
 				return;
 
 			context.RegisterCodeFix(

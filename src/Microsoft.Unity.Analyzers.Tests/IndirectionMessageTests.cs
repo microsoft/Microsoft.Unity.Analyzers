@@ -45,6 +45,40 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task RemoveGameObjectPropertyArgumentOrParenthesis()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Method(GameObject argument)
+    {
+        GameObject original = null;
+        Method(((original.gameObject)));
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic().WithLocation(9, 18);
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Method(GameObject argument)
+    {
+        GameObject original = null;
+        Method(((original)));
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task RemoveGameObjectPropertyComments()
 		{
 			const string test = @"

@@ -50,6 +50,41 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task GetComponentAsArgumentOrParenthesis()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Method(Rigidbody rb)
+    {
+        Method(((GetComponent(typeof(Rigidbody)) as Rigidbody)));
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(8, 18)
+				.WithArguments("GetComponent");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Method(Rigidbody rb)
+    {
+        Method(((GetComponent<Rigidbody>())));
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
 		public async Task GetComponentAsComments()
 		{
 			const string test = @"
