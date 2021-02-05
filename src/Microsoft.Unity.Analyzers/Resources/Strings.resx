@@ -430,6 +430,21 @@
     <value>Unity message should be protected.</value>
   </data>
   <data name="ProtectedUnityMessageDiagnosticTitle" xml:space="preserve">
-    <value>Prefer Protected Unity Message</value>
+    <value>Prefer protected Unity Message.</value>
+  </data>
+  <data name="UnityObjectCoalescingAssignmentDiagnosticDescription" xml:space="preserve">
+    <value>Unity overrides the null comparison operator for Unity objects, which is incompatible with coalescing assignment.</value>
+  </data>
+  <data name="UnityObjectCoalescingAssignmentDiagnosticMessageFormat" xml:space="preserve">
+    <value>Unity objects should not use coalescing assignment.</value>
+  </data>
+  <data name="UnityObjectCoalescingAssignmentDiagnosticTitle" xml:space="preserve">
+    <value>Coalescing assignment on Unity objects</value>
+  </data>
+  <data name="UnityObjectCoalescingAssignmentSuppressorJustification" xml:space="preserve">
+    <value>Unity objects should not use coalescing assignment.</value>
+  </data>
+  <data name="UnityObjectCoalescingAssignmentCodeFixTitle" xml:space="preserve">
+    <value>Use null comparison</value>
   </data>
 </root>

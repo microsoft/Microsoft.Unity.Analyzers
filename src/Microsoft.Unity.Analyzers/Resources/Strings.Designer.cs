@@ -619,7 +619,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Prefer Protected Unity Message.
+        ///   Looks up a localized string similar to Prefer protected Unity Message..
         /// </summary>
         internal static string ProtectedUnityMessageDiagnosticTitle {
             get {
@@ -709,7 +709,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assigning position and rotation using SetPositionAndRotation() method..
+        ///   Looks up a localized string similar to Prefer using SetPositionAndRotation() method..
         /// </summary>
         internal static string SetPositionAndRotationDiagnosticDescription {
             get {
@@ -768,6 +768,51 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string TagComparisonDiagnosticTitle {
             get {
                 return ResourceManager.GetString("TagComparisonDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use null comparison.
+        /// </summary>
+        internal static string UnityObjectCoalescingAssignmentCodeFixTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalescingAssignmentCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects, which is incompatible with coalescing assignment..
+        /// </summary>
+        internal static string UnityObjectCoalescingAssignmentDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalescingAssignmentDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use coalescing assignment..
+        /// </summary>
+        internal static string UnityObjectCoalescingAssignmentDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalescingAssignmentDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coalescing assignment on Unity objects.
+        /// </summary>
+        internal static string UnityObjectCoalescingAssignmentDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalescingAssignmentDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use coalescing assignment..
+        /// </summary>
+        internal static string UnityObjectCoalescingAssignmentSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnityObjectCoalescingAssignmentSuppressorJustification", resourceCulture);
             }
         }
         
