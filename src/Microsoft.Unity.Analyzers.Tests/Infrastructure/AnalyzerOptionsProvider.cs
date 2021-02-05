@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			_lookup = new AnalyzerConfigOptionsLookup(overrides);
 		}
 
-		public override AnalyzerConfigOptions GetOptions(SyntaxTree tree)
+		public override AnalyzerConfigOptions GetOptions(CodeAnalysis.SyntaxTree tree)
 		{
 			return _lookup;
 		}
