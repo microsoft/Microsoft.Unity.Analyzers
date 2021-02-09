@@ -98,11 +98,9 @@ namespace Microsoft.Unity.Analyzers
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
-			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-
-			var expression = root?
-				.FindNode(context.Span).DescendantNodesAndSelf()
-				.FirstOrDefault(c => c is BinaryExpressionSyntax || c is AssignmentExpressionSyntax || c is ConditionalAccessExpressionSyntax);
+			var expression = await context.GetFixableNodeAsync<SyntaxNode>(c => c is BinaryExpressionSyntax || c is AssignmentExpressionSyntax || c is ConditionalAccessExpressionSyntax);
+			if (expression == null)
+				return;
 
 			CodeAction action;
 			switch (expression)

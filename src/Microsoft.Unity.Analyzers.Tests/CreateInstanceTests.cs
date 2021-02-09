@@ -48,6 +48,46 @@ class Camera : MonoBehaviour
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
 
+
+
+		[Fact]
+		public async Task CreateComponentInstanceArgumentOrParenthesis()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Foo : Component { }
+
+class Camera : MonoBehaviour
+{
+    public void Method(Foo foo) {
+        Method(((new Foo())));
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+				.WithLocation(9, 18)
+				.WithArguments("Foo");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Foo : Component { }
+
+class Camera : MonoBehaviour
+{
+    public void Method(Foo foo) {
+        Method(((gameObject.AddComponent<Foo>())));
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+
 		[Fact]
 		public async Task CreateComponentInstanceComments()
 		{

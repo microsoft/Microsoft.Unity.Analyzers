@@ -84,16 +84,15 @@ namespace Microsoft.Unity.Analyzers
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
-			var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-			var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
-
-			if (!(root?.FindNode(context.Span) is ObjectCreationExpressionSyntax creation))
+			var creation = await context.GetFixableNodeAsync<ObjectCreationExpressionSyntax>();
+			if (creation == null)
 				return;
 
 			var diagnostic = context.Diagnostics.FirstOrDefault();
 			if (diagnostic == null)
 				return;
 
+			var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
 			switch (diagnostic.Id)
 			{
 				case CreateInstanceAnalyzer.ScriptableObjectId:
