@@ -47,16 +47,21 @@ namespace Microsoft.Unity.Analyzers
 
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var node = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken).FindNode(diagnostic.Location.SourceSpan);
+			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is ParameterSyntax || n is MethodDeclarationSyntax);
 
 			if (node is ParameterSyntax)
-				node = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+			{
+				node = node
+					.Ancestors()
+					.OfType<MethodDeclarationSyntax>()
+					.FirstOrDefault();
+			}
 
-			if (!(node is MethodDeclarationSyntax method))
+			if (node == null)
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (!(model.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
+			if (!(model.GetDeclaredSymbol(node) is IMethodSymbol methodSymbol))
 				return;
 
 			var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);

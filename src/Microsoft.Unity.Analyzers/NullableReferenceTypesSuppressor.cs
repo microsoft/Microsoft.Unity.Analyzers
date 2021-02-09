@@ -29,9 +29,9 @@ namespace Microsoft.Unity.Analyzers
 			foreach (var diagnostic in context.ReportedDiagnostics)
 			{
 				var root = diagnostic.Location.SourceTree.GetRoot();
-				var location = root?.FindNode(diagnostic.Location.SourceSpan);
+				var node = root?.FindNode(diagnostic.Location.SourceSpan);
 
-				var classDeclaration = location?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+				var classDeclaration = node?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 				if (classDeclaration is null)
 					continue;
 
@@ -44,7 +44,7 @@ namespace Microsoft.Unity.Analyzers
 				if (!scriptInfo.HasMessages)
 					continue;
 
-				var propertyDeclaration = location.FirstAncestorOrSelf<PropertyDeclarationSyntax>();
+				var propertyDeclaration = node.FirstAncestorOrSelf<PropertyDeclarationSyntax>();
 
 				//handle properties before fields to minimize double checking of potential backing fields
 				if (!(propertyDeclaration is null))
@@ -53,7 +53,8 @@ namespace Microsoft.Unity.Analyzers
 					continue;
 				}
 
-				if (location is VariableDeclaratorSyntax fieldDeclaration)
+				var fieldDeclaration = context.GetSuppressibleNode<VariableDeclaratorSyntax>(diagnostic);
+				if (fieldDeclaration != null)
 					AnalyzeFields(fieldDeclaration, diagnostic, context, root);
 
 				//TODO handle nullable warnings for constructors => diagnostic location is now on constructor

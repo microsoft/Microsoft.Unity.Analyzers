@@ -224,14 +224,8 @@ namespace Microsoft.Unity.Analyzers
 
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var root = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken);
-			var node = root?.FindNode(diagnostic.Location.SourceSpan);
-
-			// We can be tricked by extra parentheses for the condition, so go to the first concrete binary expression
-			if (!(node?
-				.DescendantNodesAndSelf()
-				.OfType<BinaryExpressionSyntax>()
-				.FirstOrDefault() is BinaryExpressionSyntax binaryExpression))
+			var binaryExpression = context.GetSuppressibleNode<BinaryExpressionSyntax>(diagnostic);
+			if (binaryExpression == null)
 				return;
 
 			AnalyzeBinaryExpression(diagnostic, context, binaryExpression);
