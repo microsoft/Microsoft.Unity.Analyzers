@@ -35,13 +35,13 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var sourceTree = diagnostic.Location.SourceTree;
 			var root = sourceTree.GetRoot(context.CancellationToken);
-			var node = root.FindNode(diagnostic.Location.SourceSpan);
 
-			if (!(node is MethodDeclarationSyntax method))
+			var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
+			if (methodDeclarationSyntax == null)
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (!(model.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
+			if (!(model.GetDeclaredSymbol(methodDeclarationSyntax) is IMethodSymbol methodSymbol))
 				return;
 
 			var typeSymbol = methodSymbol.ContainingType;

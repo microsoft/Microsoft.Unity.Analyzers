@@ -6,6 +6,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 using UnityEngine;
@@ -58,12 +59,12 @@ namespace Microsoft.Unity.Analyzers
 
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var node = diagnostic.Location.SourceTree.GetRoot(context.CancellationToken).FindNode(diagnostic.Location.SourceSpan);
-			if (node == null)
+			var fieldDeclarationSyntax = context.GetSuppressibleNode<VariableDeclaratorSyntax>(diagnostic);
+			if (fieldDeclarationSyntax == null)
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (!(model.GetDeclaredSymbol(node) is IFieldSymbol fieldSymbol))
+			if (!(model.GetDeclaredSymbol(fieldDeclarationSyntax) is IFieldSymbol fieldSymbol))
 				return;
 
 			if (!IsSuppressable(fieldSymbol))

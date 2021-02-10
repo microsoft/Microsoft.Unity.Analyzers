@@ -5,6 +5,7 @@
 
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
@@ -28,13 +29,11 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var sourceTree = diagnostic.Location.SourceTree;
-			var root = sourceTree.GetRoot(context.CancellationToken);
-			var node = root.FindNode(diagnostic.Location.SourceSpan);
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+			var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
 
 			// Reuse the same detection logic regarding decorated methods with *InitializeOnLoadMethodAttribute
-			if (InitializeOnLoadMethodAnalyzer.MethodMatches(node, model, out _, out _))
+			if (InitializeOnLoadMethodAnalyzer.MethodMatches(methodDeclarationSyntax, model, out _, out _))
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 	}

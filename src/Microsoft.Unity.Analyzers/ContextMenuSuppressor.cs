@@ -45,12 +45,10 @@ namespace Microsoft.Unity.Analyzers
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
 			var location = diagnostic.Location;
-			var sourceTree = location.SourceTree;
-			var root = sourceTree.GetRoot(context.CancellationToken);
-			var node = root.FindNode(location.SourceSpan);
 			var model = context.GetSemanticModel(location.SourceTree);
 			var symbols = new List<ISymbol>();
 
+			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax || n is VariableDeclaratorSyntax || n is FieldDeclarationSyntax);
 			switch (node)
 			{
 				case MethodDeclarationSyntax method:
