@@ -6,7 +6,6 @@
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
