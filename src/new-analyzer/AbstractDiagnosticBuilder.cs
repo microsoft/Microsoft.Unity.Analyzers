@@ -108,18 +108,15 @@ namespace NewAnalyzer
 		{
 			identifier = -1;
 
-			using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+			using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+			using var reader = new StreamReader(fs);
+
+			string line;
+			while ((line = reader.ReadLine()) != null)
 			{
-				using (var reader = new StreamReader(fs))
+				if (TryExtractIdentifier(line, out int id))
 				{
-					string line;
-					while ((line = reader.ReadLine()) != null)
-					{
-						if (TryExtractIdentifier(line, out int id))
-						{
-							identifier = Math.Max(identifier, id);
-						}
-					}
+					identifier = Math.Max(identifier, id);
 				}
 			}
 
@@ -141,8 +138,7 @@ namespace NewAnalyzer
 
 			index += 3;
 
-			var id = line.Substring(index, end - index);
-
+			var id = line[index..end];
 			return int.TryParse(id, out identifier);
 		}
 

@@ -11,7 +11,7 @@ using Xunit;
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods",
 	Justification = "Tests",
 	Scope = "namespaceanddescendants",
-	Target = "Microsoft.Unity.Analyzers.Tests")]
+	Target = "~N:Microsoft.Unity.Analyzers.Tests")]
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
