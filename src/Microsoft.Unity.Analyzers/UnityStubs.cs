@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Unity.Analyzers;
 
+#pragma warning disable 
+
 namespace UnityEngine
 {
 	class Object
@@ -451,3 +453,5 @@ namespace UnityEditor
 	}
 
 }
+
+#pragma warning enable

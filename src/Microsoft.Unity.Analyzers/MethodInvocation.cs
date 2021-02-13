@@ -194,16 +194,16 @@ namespace Microsoft.Unity.Analyzers
 
 		protected override ArgumentSyntax GetArgument(string name)
 		{
-			var nameof = IdentifierName(
-				Identifier(
-					TriviaList(),
+			const string nameof = "nameof";
+
+			var identifierName = IdentifierName(Identifier(TriviaList(),
 					SyntaxKind.NameOfKeyword,
-					"nameof",
-					"nameof",
+					nameof,
+					nameof,
 					TriviaList()));
 
 			return Argument(
-				InvocationExpression(nameof)
+				InvocationExpression(identifierName)
 					.WithArgumentList(
 						ArgumentList(
 							SingletonSeparatedList(

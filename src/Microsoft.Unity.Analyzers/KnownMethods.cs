@@ -10,7 +10,7 @@ namespace Microsoft.Unity.Analyzers
 {
 	internal static class KnownMethods
 	{
-		private static readonly HashSet<string> GetComponentNames = new HashSet<string>(new[]
+		internal static readonly HashSet<string> GetComponentNames = new HashSet<string>(new[]
 {
 			nameof(UnityEngine.Component.GetComponent),
 			nameof(UnityEngine.Component.GetComponentInChildren),
@@ -27,10 +27,7 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var containingType = method.ContainingType;
-			if (!containingType.Matches(typeof(UnityEngine.Component)) && !containingType.Matches(typeof(UnityEngine.GameObject)))
-				return false;
-
-			return true;
+			return containingType.Matches(typeof(UnityEngine.Component)) || containingType.Matches(typeof(UnityEngine.GameObject));
 		}
 	}
 }

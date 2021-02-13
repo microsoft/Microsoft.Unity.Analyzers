@@ -24,7 +24,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string ComponentId = "UNT0010";
 
-		private static readonly DiagnosticDescriptor ComponentIdRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor ComponentIdRule = new DiagnosticDescriptor(
 			ComponentId,
 			title: Strings.CreateComponentInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateComponentInstanceDiagnosticMessageFormat,
@@ -35,7 +35,7 @@ namespace Microsoft.Unity.Analyzers
 
 		public const string ScriptableObjectId = "UNT0011";
 
-		private static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
 			ScriptableObjectId,
 			title: Strings.CreateScriptableObjectInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateScriptableObjectInstanceDiagnosticMessageFormat,

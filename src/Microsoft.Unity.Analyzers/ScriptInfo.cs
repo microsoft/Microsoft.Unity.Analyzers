@@ -13,28 +13,38 @@ namespace Microsoft.Unity.Analyzers
 {
 	internal class ScriptInfo
 	{
-		private static readonly Type[] Types = { typeof(UnityEngine.Networking.NetworkBehaviour), typeof(UnityEngine.StateMachineBehaviour), typeof(UnityEngine.EventSystems.UIBehaviour), typeof(UnityEditor.ScriptableWizard), typeof(UnityEditor.EditorWindow), typeof(UnityEditor.Editor), typeof(UnityEngine.ScriptableObject), typeof(UnityEngine.MonoBehaviour), typeof(UnityEditor.AssetPostprocessor) };
+		internal static readonly Type[] Types =
+		{
+			typeof(UnityEngine.Networking.NetworkBehaviour),
+			typeof(UnityEngine.StateMachineBehaviour),
+			typeof(UnityEngine.EventSystems.UIBehaviour),
+			typeof(UnityEditor.ScriptableWizard),
+			typeof(UnityEditor.EditorWindow),
+			typeof(UnityEditor.Editor),
+			typeof(UnityEngine.ScriptableObject),
+			typeof(UnityEngine.MonoBehaviour),
+			typeof(UnityEditor.AssetPostprocessor)
+		};
 
 		private readonly ITypeSymbol _symbol;
-		private readonly Type _metadata;
 
-		public bool HasMessages => _metadata != null;
-		public Type Metadata => _metadata;
+		public bool HasMessages => Metadata != null;
+		public Type Metadata { get; }
 
 		public ScriptInfo(ITypeSymbol symbol)
 		{
 			_symbol = symbol;
-			_metadata = GetMatchingMetadata(symbol);
+			Metadata = GetMatchingMetadata(symbol);
 		}
 
 		public static MethodInfo[] Messages { get; } = Types.SelectMany(GetMessages).ToArray();
 
 		public IEnumerable<MethodInfo> GetMessages()
 		{
-			if (_metadata == null)
+			if (Metadata == null)
 				yield break;
 
-			for (var type = _metadata; type != null && type != typeof(object); type = type.GetTypeInfo().BaseType)
+			for (var type = Metadata; type != null && type != typeof(object); type = type.GetTypeInfo().BaseType)
 			{
 				foreach (var message in GetMessages(type))
 					yield return message;

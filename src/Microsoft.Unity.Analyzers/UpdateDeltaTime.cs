@@ -23,7 +23,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		internal const string UpdateId = "UNT0004";
 
-		private static readonly DiagnosticDescriptor UpdateRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor UpdateRule = new DiagnosticDescriptor(
 			UpdateId,
 			title: Strings.UpdateWithoutFixedDeltaTimeDiagnosticTitle,
 			messageFormat: Strings.UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat,
@@ -34,7 +34,7 @@ namespace Microsoft.Unity.Analyzers
 
 		internal const string FixedUpdateId = "UNT0005";
 
-		private static readonly DiagnosticDescriptor FixedUpdateRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor FixedUpdateRule = new DiagnosticDescriptor(
 			FixedUpdateId,
 			title: Strings.FixedUpdateWithoutDeltaTimeDiagnosticTitle,
 			messageFormat: Strings.FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat,
