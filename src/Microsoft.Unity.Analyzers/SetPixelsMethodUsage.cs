@@ -20,7 +20,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class SetPixelsMethodUsageAnalyzer : MethodUsageAnalyzer<SetPixelsMethodUsageAttribute>
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0017",
 			title: Strings.SetPixelsMethodUsageDiagnosticTitle,
 			messageFormat: Strings.SetPixelsMethodUsageDiagnosticMessageFormat,

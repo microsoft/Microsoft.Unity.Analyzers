@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class ProtectedUnityMessageAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0021",
 			title: Strings.ProtectedUnityMessageDiagnosticTitle,
 			messageFormat: Strings.ProtectedUnityMessageDiagnosticMessageFormat,

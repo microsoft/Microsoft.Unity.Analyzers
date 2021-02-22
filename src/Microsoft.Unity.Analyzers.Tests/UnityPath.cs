@@ -14,7 +14,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	internal static class UnityPath
 	{
-		private static readonly List<string> UnityInstallations = new List<string>();
+		private static readonly List<string> UnityInstallations = new();
 
 		public static string FirstInstallation()
 		{
@@ -95,14 +95,12 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		internal static bool OnWindows()
 		{
-			switch (Environment.OSVersion.Platform)
+			return Environment.OSVersion.Platform switch
 			{
-				case PlatformID.Win32NT:
-				case PlatformID.Win32Windows:
-					return true;
-			}
-
-			return false;
+				PlatformID.Win32NT => true,
+				PlatformID.Win32Windows => true,
+				_ => false
+			};
 		}
 	}
 }

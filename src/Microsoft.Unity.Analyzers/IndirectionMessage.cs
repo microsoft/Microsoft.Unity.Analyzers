@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class IndirectionMessageAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0019",
 			title: Strings.IndirectionMessageDiagnosticTitle,
 			messageFormat: Strings.IndirectionMessageDiagnosticMessageFormat,

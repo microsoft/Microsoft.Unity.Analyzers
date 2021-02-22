@@ -20,7 +20,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor NullCoalescingRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor NullCoalescingRule = new(
 			id: "UNT0007",
 			title: Strings.UnityObjectNullCoalescingDiagnosticTitle,
 			messageFormat: Strings.UnityObjectNullCoalescingDiagnosticMessageFormat,
@@ -29,7 +29,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullCoalescingDiagnosticDescription);
 
-		internal static readonly DiagnosticDescriptor NullPropagationRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor NullPropagationRule = new(
 			id: "UNT0008",
 			title: Strings.UnityObjectNullPropagationDiagnosticTitle,
 			messageFormat: Strings.UnityObjectNullPropagationDiagnosticMessageFormat,
@@ -38,7 +38,7 @@ namespace Microsoft.Unity.Analyzers
 			isEnabledByDefault: true,
 			description: Strings.UnityObjectNullPropagationDiagnosticDescription);
 
-		internal static readonly DiagnosticDescriptor CoalescingAssignmentRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor CoalescingAssignmentRule = new(
 			id: "UNT0023",
 			title: Strings.UnityObjectCoalescingAssignmentDiagnosticTitle,
 			messageFormat: Strings.UnityObjectCoalescingAssignmentDiagnosticMessageFormat,
@@ -139,15 +139,11 @@ namespace Microsoft.Unity.Analyzers
 		// We could potentially rewrite by introducing a variable
 		private static bool HasSideEffect(ExpressionSyntax expression)
 		{
-			switch (expression.Kind())
+			return expression.Kind() switch
 			{
-				case SyntaxKind.SimpleMemberAccessExpression:
-				case SyntaxKind.PointerMemberAccessExpression:
-				case SyntaxKind.IdentifierName:
-					return false;
-			}
-
-			return true;
+				SyntaxKind.SimpleMemberAccessExpression or SyntaxKind.PointerMemberAccessExpression or SyntaxKind.IdentifierName => false,
+				_ => true,
+			};
 		}
 
 		private static async Task<Document> ReplaceWithAsync(Document document, SyntaxNode source, SyntaxNode replacement, CancellationToken cancellationToken)
@@ -197,17 +193,17 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor NullCoalescingRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NullCoalescingRule = new(
 			id: "USP0001",
 			suppressedDiagnosticId: "IDE0029",
 			justification: Strings.UnityObjectNullCoalescingSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor NullPropagationRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NullPropagationRule = new(
 			id: "USP0002",
 			suppressedDiagnosticId: "IDE0031",
 			justification: Strings.UnityObjectNullPropagationSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor CoalescingAssignmentRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor CoalescingAssignmentRule = new(
 			id: "USP0017",
 			suppressedDiagnosticId: "IDE0074",
 			justification: Strings.UnityObjectCoalescingAssignmentSuppressorJustification);

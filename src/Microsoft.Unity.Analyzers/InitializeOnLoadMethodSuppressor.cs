@@ -14,7 +14,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class InitializeOnLoadMethodSuppressor : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor Rule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor Rule = new(
 			id: "USP0012",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.InitializeOnLoadMethodSuppressorJustification);

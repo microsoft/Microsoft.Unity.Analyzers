@@ -20,7 +20,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class ImproperMenuItemMethodAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0020",
 			title: Strings.ImproperMenuItemMethodDiagnosticTitle,
 			messageFormat: Strings.ImproperMenuItemMethodDiagnosticMessageFormat,
@@ -46,7 +46,7 @@ namespace Microsoft.Unity.Analyzers
 
 			var method = (MethodDeclarationSyntax)context.Node;
 
-			if (!(context.SemanticModel.GetDeclaredSymbol(method) is IMethodSymbol methodSymbol))
+			if (context.SemanticModel.GetDeclaredSymbol(method) is not { } methodSymbol)
 				return;
 
 			if (!methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))

@@ -16,7 +16,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnusedCoroutineReturnValueAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0012",
 			title: Strings.UnusedCoroutineReturnValueDiagnosticTitle,
 			messageFormat: Strings.UnusedCoroutineReturnValueDiagnosticMessageFormat,
@@ -53,7 +53,7 @@ namespace Microsoft.Unity.Analyzers
 		private static bool IsValidCoroutine(ISymbol symbol, out string methodName)
 		{
 			methodName = null;
-			if (!(symbol is IMethodSymbol method))
+			if (symbol is not IMethodSymbol method)
 				return false;
 
 			var containingType = method.ContainingType;

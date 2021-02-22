@@ -23,7 +23,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class SetPositionAndRotationAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0022",
 			title: Strings.SetPositionAndRotationDiagnosticTitle,
 			messageFormat: Strings.SetPositionAndRotationDiagnosticMessageFormat,
@@ -46,7 +46,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeAssignment(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is AssignmentExpressionSyntax assignmentExpression))
+			if (context.Node is not AssignmentExpressionSyntax assignmentExpression)
 				return;
 
 			if (!GetNextAssignmentExpression(context.SemanticModel, assignmentExpression, out var nextAssignmentExpression)) 
@@ -91,10 +91,10 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var statement = siblingsAndSelf[nextIndex];
-			if (!(statement is ExpressionStatementSyntax expressionStatement))
+			if (statement is not ExpressionStatementSyntax expressionStatement)
 				return false;
 
-			if (!(expressionStatement.Expression is AssignmentExpressionSyntax nextAssignmentExpression))
+			if (expressionStatement.Expression is not AssignmentExpressionSyntax nextAssignmentExpression)
 				return false;
 
 			if (!IsSetPositionOrRotation(model, nextAssignmentExpression))
@@ -106,7 +106,7 @@ namespace Microsoft.Unity.Analyzers
 
 		internal static string GetProperty(AssignmentExpressionSyntax assignmentExpression)
 		{
-			if (!(assignmentExpression.Left is MemberAccessExpressionSyntax left))
+			if (assignmentExpression.Left is not MemberAccessExpressionSyntax left)
 				return string.Empty;
 
 			return left.Name.ToString();
@@ -118,7 +118,7 @@ namespace Microsoft.Unity.Analyzers
 			if (property != Position && property != Rotation)
 				return false;
 
-			if (!(assignmentExpression.Left is MemberAccessExpressionSyntax left))
+			if (assignmentExpression.Left is not MemberAccessExpressionSyntax left)
 				return false;
 
 			var leftSymbol = model.GetSymbolInfo(left);

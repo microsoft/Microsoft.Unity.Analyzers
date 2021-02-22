@@ -20,7 +20,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class InitializeOnLoadMethodAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0015",
 			title: Strings.InitializeOnLoadMethodDiagnosticTitle,
 			messageFormat: Strings.InitializeOnLoadMethodDiagnosticMessageFormat,
@@ -43,12 +43,12 @@ namespace Microsoft.Unity.Analyzers
 			syntax = null;
 			symbol = null;
 
-			if (!(node is MethodDeclarationSyntax methodSyntax))
+			if (node is not MethodDeclarationSyntax methodSyntax)
 				return false;
 
 			syntax = methodSyntax;
 
-			if (!(model.GetDeclaredSymbol(methodSyntax) is IMethodSymbol methodSymbol))
+			if (model.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 				return false;
 
 			if (!IsDecorated(methodSymbol))

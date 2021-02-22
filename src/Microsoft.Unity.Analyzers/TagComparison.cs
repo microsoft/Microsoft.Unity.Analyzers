@@ -21,7 +21,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class TagComparisonAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0002",
 			title: Strings.TagComparisonDiagnosticTitle,
 			messageFormat: Strings.TagComparisonDiagnosticMessageFormat,
@@ -63,7 +63,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeBinaryExpression(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is BinaryExpressionSyntax expr))
+			if (context.Node is not BinaryExpressionSyntax expr)
 				return;
 
 			if (IsReportableExpression(context, expr.Left)
@@ -77,7 +77,7 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var symbolInfo = context.SemanticModel.GetSymbolInfo(nameSyntax);
-			if (!(symbolInfo.Symbol is IMethodSymbol symbol))
+			if (symbolInfo.Symbol is not IMethodSymbol symbol)
 				return false;
 
 			if (symbol.Name != "Equals" || symbol.Parameters.Length > 2)
@@ -120,7 +120,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsReportableSymbol(ISymbol symbol)
 		{
-			if (!(symbol is IPropertySymbol propertySymbol))
+			if (symbol is not IPropertySymbol propertySymbol)
 				return false;
 
 			var containingType = propertySymbol.ContainingType;

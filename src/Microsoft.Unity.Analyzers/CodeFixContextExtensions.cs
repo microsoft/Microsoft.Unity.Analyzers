@@ -15,7 +15,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public static async Task<T> GetFixableNodeAsync<T>(this CodeFixContext context) where T : SyntaxNode
 		{
-			return await GetFixableNodeAsync<T>(context, n => true);
+			return await GetFixableNodeAsync<T>(context, _ => true);
 		}
 
 		public static async Task<T> GetFixableNodeAsync<T>(this CodeFixContext context, Func<T, bool> predicate) where T : SyntaxNode

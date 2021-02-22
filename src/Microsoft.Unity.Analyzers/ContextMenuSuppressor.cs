@@ -16,17 +16,17 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class ContextMenuSuppressor : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor ContextMenuRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ContextMenuRule = new(
 			id: "USP0009",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedMethodContextMenuSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor ContextMenuItemUnusedRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ContextMenuItemUnusedRule = new(
 			id: "USP0010",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedContextMenuItemJustification);
 
-		internal static readonly SuppressionDescriptor ContextMenuItemReadonlyRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ContextMenuItemReadonlyRule = new(
 			id: "USP0011",
 			suppressedDiagnosticId: "IDE0044",
 			justification: Strings.ReadonlyContextMenuItemJustification);
@@ -104,7 +104,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			foreach (var member in containingType.GetMembers())
 			{
-				if (!(member is IFieldSymbol fieldSymbol))
+				if (member is not IFieldSymbol fieldSymbol)
 					continue;
 
 				var attributes = fieldSymbol
