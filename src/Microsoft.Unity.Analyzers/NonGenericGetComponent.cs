@@ -23,7 +23,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class NonGenericGetComponentAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0003",
 			title: Strings.NonGenericGetComponentDiagnosticTitle,
 			messageFormat: Strings.NonGenericGetComponentDiagnosticMessageFormat,
@@ -63,7 +63,7 @@ namespace Microsoft.Unity.Analyzers
 		private static bool IsNonGenericGetComponent(ISymbol symbol, out string methodName)
 		{
 			methodName = null;
-			if (!(symbol is IMethodSymbol method))
+			if (symbol is not IMethodSymbol method)
 				return false;
 
 			if (!KnownMethods.IsGetComponent(method))
@@ -128,12 +128,12 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsParentCastingResult(InvocationExpressionSyntax invocation)
 		{
-			switch (invocation.Parent)
+			return invocation.Parent switch
 			{
-				case CastExpressionSyntax _: return true;
-				case BinaryExpressionSyntax be: return be.IsKind(SyntaxKind.AsExpression);
-				default: return false;
-			}
+				CastExpressionSyntax => true,
+				BinaryExpressionSyntax be => be.IsKind(SyntaxKind.AsExpression),
+				_ => false,
+			};
 		}
 	}
 }

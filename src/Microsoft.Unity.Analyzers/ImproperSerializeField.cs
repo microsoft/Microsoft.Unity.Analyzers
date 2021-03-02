@@ -16,7 +16,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0013",
 			title: Strings.ImproperSerializeFieldDiagnosticTitle,
 			messageFormat: Strings.ImproperSerializeFieldDiagnosticMessageFormat,
@@ -75,17 +75,12 @@ namespace Microsoft.Unity.Analyzers
 			if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
 				return false;
 
-			switch (symbol)
+			return symbol switch
 			{
-				case IFieldSymbol _:
-					// Only invalid on public fields
-					return symbol.DeclaredAccessibility == Accessibility.Public;
-				case IPropertySymbol _:
-					// Should never be on a property
-					return true;
-				default:
-					return false;
-			}
+				IFieldSymbol => symbol.DeclaredAccessibility == Accessibility.Public,// Only invalid on public fields
+				IPropertySymbol => true,// Should never be on a property
+				_ => false,
+			};
 		}
 	}
 

@@ -24,7 +24,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public const string ComponentId = "UNT0010";
 
-		internal static readonly DiagnosticDescriptor ComponentIdRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor ComponentIdRule = new(
 			ComponentId,
 			title: Strings.CreateComponentInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateComponentInstanceDiagnosticMessageFormat,
@@ -35,7 +35,7 @@ namespace Microsoft.Unity.Analyzers
 
 		public const string ScriptableObjectId = "UNT0011";
 
-		internal static readonly DiagnosticDescriptor ScriptableObjectRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor ScriptableObjectRule = new(
 			ScriptableObjectId,
 			title: Strings.CreateScriptableObjectInstanceDiagnosticTitle,
 			messageFormat: Strings.CreateScriptableObjectInstanceDiagnosticMessageFormat,
@@ -55,7 +55,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeObjectCreation(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is ObjectCreationExpressionSyntax creation))
+			if (context.Node is not ObjectCreationExpressionSyntax creation)
 				return;
 
 			var typeInfo = context.SemanticModel.GetTypeInfo(creation);

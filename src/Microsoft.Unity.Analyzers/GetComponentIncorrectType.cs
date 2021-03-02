@@ -16,7 +16,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class GetComponentIncorrectTypeAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0014",
 			title: Strings.GetComponentIncorrectTypeDiagnosticTitle,
 			messageFormat: Strings.GetComponentIncorrectTypeDiagnosticMessageFormat,
@@ -41,7 +41,7 @@ namespace Microsoft.Unity.Analyzers
 			if (symbol.Symbol == null)
 				return;
 
-			if (!(symbol.Symbol is IMethodSymbol method))
+			if (symbol.Symbol is not IMethodSymbol method)
 				return;
 
 			if (!KnownMethods.IsGetComponent(method))

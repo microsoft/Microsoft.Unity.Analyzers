@@ -17,7 +17,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class ReflectionAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0018",
 			title: Strings.ReflectionDiagnosticTitle,
 			messageFormat: Strings.ReflectionDiagnosticMessageFormat,
@@ -38,7 +38,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is MethodDeclarationSyntax method))
+			if (context.Node is not MethodDeclarationSyntax method)
 				return;
 
 			if (!IsCriticalMessage(context, method))
@@ -63,16 +63,11 @@ namespace Microsoft.Unity.Analyzers
 			if (!scriptInfo.IsMessage(methodSymbol))
 				return false;
 
-			switch (methodSymbol.Name)
+			return methodSymbol.Name switch
 			{
-				case "Update":
-				case "FixedUpdate":
-				case "LateUpdate":
-				case "OnGUI":
-					return true;
-				default:
-					return false;
-			}
+				"Update" or "FixedUpdate" or "LateUpdate" or "OnGUI" => true,
+				_ => false,
+			};
 		}
 
 		private static void AnalyzeMethodBody(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method)

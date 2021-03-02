@@ -32,12 +32,9 @@ namespace Microsoft.Unity.Analyzers
 
 		protected virtual bool IsReportable(IMethodSymbol method)
 		{
-			if (_lookup == null)
-			{
-				_lookup = CollectMethods()
-					.Where(m => m.DeclaringType != null)
-					.ToLookup(m => m.DeclaringType.FullName);
-			}
+			_lookup ??= CollectMethods()
+				.Where(m => m.DeclaringType != null)
+				.ToLookup(m => m.DeclaringType.FullName);
 
 			// lookup returns an empty collection for nonexistent keys
 			var typename = method.ContainingType.ToDisplayString();
@@ -65,14 +62,14 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
 
-			if (!(invocation.Expression is MemberAccessExpressionSyntax member))
+			if (invocation.Expression is not MemberAccessExpressionSyntax member)
 				return;
 
 			var symbol = context.SemanticModel.GetSymbolInfo(member);
 			if (symbol.Symbol == null)
 				return;
 
-			if (!(symbol.Symbol is IMethodSymbol method))
+			if (symbol.Symbol is not IMethodSymbol method)
 				return;
 
 			if (!IsReportable(method))

@@ -16,22 +16,22 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class SerializeFieldSuppressor : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor ReadonlyRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ReadonlyRule = new(
 			id: "USP0004",
 			suppressedDiagnosticId: "IDE0044",
 			justification: Strings.ReadonlySerializeFieldSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor UnusedRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor UnusedRule = new(
 			id: "USP0006",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedSerializeFieldSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor UnusedFxCopRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor UnusedFxCopRule = new(
 			id: "USP0013",
 			suppressedDiagnosticId: "CA1823",
 			justification: Strings.UnusedSerializeFieldSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor NeverAssignedRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor NeverAssignedRule = new(
 			id: "USP0007",
 			suppressedDiagnosticId: "CS0649",
 			justification: Strings.NeverAssignedSerializeFieldSuppressorJustification);
@@ -64,7 +64,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (!(model.GetDeclaredSymbol(fieldDeclarationSyntax) is IFieldSymbol fieldSymbol))
+			if (model.GetDeclaredSymbol(fieldDeclarationSyntax) is not IFieldSymbol fieldSymbol)
 				return;
 
 			if (!IsSuppressable(fieldSymbol))

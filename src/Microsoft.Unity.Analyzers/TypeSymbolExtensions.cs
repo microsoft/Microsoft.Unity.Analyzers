@@ -52,7 +52,7 @@ namespace Microsoft.Unity.Analyzers
 				return symbol is IArrayTypeSymbol array && Matches(array.ElementType, type.GetElementType());
 			}
 
-			if (!(symbol is INamedTypeSymbol named))
+			if (symbol is not INamedTypeSymbol named)
 				return false;
 
 			if (type.IsConstructedGenericType)

@@ -16,7 +16,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class UnusedMethodSuppressor : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor Rule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor Rule = new(
 			id: "USP0008",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedMethodSuppressorJustification);
@@ -41,7 +41,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (!(model.GetDeclaredSymbol(methodDeclarationSyntax) is IMethodSymbol methodSymbol))
+			if (model.GetDeclaredSymbol(methodDeclarationSyntax) is not IMethodSymbol methodSymbol)
 				return;
 
 			var typeSymbol = methodSymbol.ContainingType;

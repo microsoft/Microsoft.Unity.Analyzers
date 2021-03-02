@@ -15,22 +15,22 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class MessageSuppressor : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor MethodRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor MethodRule = new(
 			id: "USP0003",
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.MessageSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor MethodFxCopRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor MethodFxCopRule = new(
 			id: "USP0014",
 			suppressedDiagnosticId: "CA1822",
 			justification: Strings.MessageSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor ParameterRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ParameterRule = new(
 			id: "USP0005",
 			suppressedDiagnosticId: "IDE0060",
 			justification: Strings.MessageSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor ParameterFxCopRule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor ParameterFxCopRule = new(
 			id: "USP0015",
 			suppressedDiagnosticId: "CA1801",
 			justification: Strings.MessageSuppressorJustification);
@@ -61,7 +61,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (!(model.GetDeclaredSymbol(node) is IMethodSymbol methodSymbol))
+			if (model.GetDeclaredSymbol(node) is not IMethodSymbol methodSymbol)
 				return;
 
 			var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);

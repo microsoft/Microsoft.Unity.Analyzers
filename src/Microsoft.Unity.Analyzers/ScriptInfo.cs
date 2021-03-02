@@ -84,7 +84,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			foreach (var member in _symbol.GetMembers())
 			{
-				if (!(member is IMethodSymbol methodSymbol))
+				if (member is not IMethodSymbol methodSymbol)
 					continue;
 
 				if (methodSymbol.Matches(method))

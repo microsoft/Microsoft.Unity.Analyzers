@@ -20,7 +20,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class InitializeOnLoadStaticCtorAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0009",
 			title: Strings.InitializeOnLoadStaticCtorDiagnosticTitle,
 			messageFormat: Strings.InitializeOnLoadStaticCtorDiagnosticMessageFormat,
@@ -40,7 +40,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is ClassDeclarationSyntax classDeclaration))
+			if (context.Node is not ClassDeclarationSyntax classDeclaration)
 				return;
 
 			var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);

@@ -17,7 +17,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor Rule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor Rule = new(
 			id: "USP0016",
 			suppressedDiagnosticId: "CS8618",
 			justification: Strings.NullableReferenceTypesSuppressorJustification);
@@ -156,16 +156,11 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsInitilizationMessage(MethodDeclarationSyntax method)
 		{
-			switch (method.Identifier.Text)
+			return method.Identifier.Text switch
 			{
-				case "Start":
-				case "Awake":
-				case "OnEnable":
-				case "OnWizardCreate":
-					return method.ReturnType.ChildTokens().Any(token => token.IsKind(SyntaxKind.VoidKeyword));
-				default:
-					return false;
-			}
+				"Start" or "Awake" or "OnEnable" or "OnWizardCreate" => method.ReturnType.ChildTokens().Any(token => token.IsKind(SyntaxKind.VoidKeyword)),
+				_ => false,
+			};
 		}
 
 		//get all explicit backingfields of assigned properties

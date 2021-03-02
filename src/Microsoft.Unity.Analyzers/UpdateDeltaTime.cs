@@ -23,7 +23,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		internal const string UpdateId = "UNT0004";
 
-		internal static readonly DiagnosticDescriptor UpdateRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor UpdateRule = new(
 			UpdateId,
 			title: Strings.UpdateWithoutFixedDeltaTimeDiagnosticTitle,
 			messageFormat: Strings.UpdateWithoutFixedDeltaTimeDiagnosticMessageFormat,
@@ -34,7 +34,7 @@ namespace Microsoft.Unity.Analyzers
 
 		internal const string FixedUpdateId = "UNT0005";
 
-		internal static readonly DiagnosticDescriptor FixedUpdateRule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor FixedUpdateRule = new(
 			FixedUpdateId,
 			title: Strings.FixedUpdateWithoutDeltaTimeDiagnosticTitle,
 			messageFormat: Strings.FixedUpdateWithoutDeltaTimeDiagnosticMessageFormat,
@@ -73,7 +73,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is MethodDeclarationSyntax method))
+			if (context.Node is not MethodDeclarationSyntax method)
 				return;
 
 			if (IsMessage(context, method, typeof(UnityEngine.MonoBehaviour), "Update"))

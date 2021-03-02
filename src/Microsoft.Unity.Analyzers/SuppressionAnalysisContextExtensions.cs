@@ -14,7 +14,7 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public static T GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic) where T : SyntaxNode
 		{
-			return GetSuppressibleNode<T>(context, diagnostic, n => true);
+			return GetSuppressibleNode<T>(context, diagnostic, _ => true);
 		}
 
 		public static T GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic, Func<T, bool> predicate) where T : SyntaxNode

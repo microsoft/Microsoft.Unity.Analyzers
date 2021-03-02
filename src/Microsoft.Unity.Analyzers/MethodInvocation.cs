@@ -23,7 +23,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0016",
 			title: Strings.MethodInvocationDiagnosticTitle,
 			messageFormat: Strings.MethodInvocationDiagnosticMessageFormat,
@@ -73,7 +73,7 @@ namespace Microsoft.Unity.Analyzers
 			if (args.Count <= 0)
 				return false;
 
-			if (!(args.First().Expression is LiteralExpressionSyntax les))
+			if (args.First().Expression is not LiteralExpressionSyntax les)
 				return false;
 
 			argument = les.Token.ValueText;
@@ -83,7 +83,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is InvocationExpressionSyntax invocation))
+			if (context.Node is not InvocationExpressionSyntax invocation)
 				return;
 
 			var options = invocation.SyntaxTree?.Options as CSharpParseOptions;
@@ -94,7 +94,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var model = context.SemanticModel;
-			if (!(model.GetSymbolInfo(invocation.Expression).Symbol is IMethodSymbol methodSymbol))
+			if (model.GetSymbolInfo(invocation.Expression).Symbol is not IMethodSymbol methodSymbol)
 				return;
 
 			var typeSymbol = methodSymbol.ContainingType;
@@ -140,10 +140,10 @@ namespace Microsoft.Unity.Analyzers
 			// for now we do not offer codefixes for mixed types
 			var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
 
-			if (!(invocation.Expression is MemberAccessExpressionSyntax maes))
+			if (invocation.Expression is not MemberAccessExpressionSyntax maes)
 				return true;
 
-			if (!(model.GetTypeInfo(maes.ChildNodes().FirstOrDefault()).Type is INamedTypeSymbol typeInvocationContext))
+			if (model.GetTypeInfo(maes.ChildNodes().FirstOrDefault()).Type is not INamedTypeSymbol typeInvocationContext)
 				return false;
 
 			var mdec = invocation
@@ -228,7 +228,7 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var model = await context.Document.GetSemanticModelAsync();
-			if (!(model.GetSymbolInfo(invocation.Expression).Symbol is IMethodSymbol methodSymbol))
+			if (model.GetSymbolInfo(invocation.Expression).Symbol is not IMethodSymbol methodSymbol)
 				return false;
 
 			return MethodInvocationAnalyzer.CoroutineMethodNames.Contains(methodSymbol.Name);

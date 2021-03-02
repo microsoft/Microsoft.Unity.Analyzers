@@ -81,7 +81,7 @@ namespace NewAnalyzer
 
 		private static string GetSourcePath()
 		{
-			return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Module.FullyQualifiedName), "..", "..", "..", ".."));
+			return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Module.FullyQualifiedName)!, "..", "..", "..", ".."));
 		}
 
 		private static string[] GetAllSourceFiles()
