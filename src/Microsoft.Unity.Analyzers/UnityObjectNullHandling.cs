@@ -115,7 +115,7 @@ namespace Microsoft.Unity.Analyzers
 
 				// Null propagation
 				case ConditionalAccessExpressionSyntax caes:
-					if (HasSideEffect(caes.Expression) && caes.WhenNotNull is MemberBindingExpressionSyntax)
+					if (HasSideEffect(caes.Expression))
 						return;
 
 					action = CodeAction.Create(Strings.UnityObjectNullPropagationCodeFixTitle, ct => ReplaceNullPropagationAsync(context.Document, caes, ct), caes.ToFullString());
@@ -179,7 +179,8 @@ namespace Microsoft.Unity.Analyzers
 		private static async Task<Document> ReplaceNullPropagationAsync(Document document, ConditionalAccessExpressionSyntax access, CancellationToken cancellationToken)
 		{
 			// obj?.member -> obj != null ? obj.member : null
-			var mbes = (MemberBindingExpressionSyntax)access.WhenNotNull;
+			if (access.WhenNotNull is not MemberBindingExpressionSyntax mbes)
+				return document;
 
 			var conditional = SyntaxFactory.ConditionalExpression(
 				condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, access.Expression, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),

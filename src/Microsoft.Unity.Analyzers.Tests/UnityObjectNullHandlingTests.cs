@@ -235,6 +235,32 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task CantFixNullPropagationSideEffect()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform NP()
+    {
+        FindObjectOfType<GameObject>()?.gameObject.SetActive(false);
+        return null;;
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+				.WithLocation(8, 9);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			// we cannot fix with side-effects
+			await VerifyCSharpFixAsync(test, test);
+		}
+
+
+		[Fact]
 		public async Task FixCoalescingAssignment()
 		{
 			const string test = @"
