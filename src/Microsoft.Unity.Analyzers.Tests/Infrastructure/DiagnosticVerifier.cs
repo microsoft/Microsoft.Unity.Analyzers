@@ -228,7 +228,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 				var optionsProvider = new AnalyzerOptionsProvider(context.Options);
 				var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
-				var analyzerOptions = new CompilationWithAnalyzersOptions(options, null, true, true, true);
+				var analyzerOptions = new CompilationWithAnalyzersOptions(options, (e,_,_) => throw e, true, true, true);
 
 				var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true);
 				var specificDiagnosticOptions = compilationOptions.SpecificDiagnosticOptions;
