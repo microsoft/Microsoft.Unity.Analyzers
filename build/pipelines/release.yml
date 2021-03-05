@@ -1,0 +1,114 @@
+trigger:
+- main
+
+pool:
+  name: VSEng-MicroBuildVS2019
+  demands:
+  - DotNetFramework
+  - msbuild
+
+variables:
+  BuildSolution: 'external/VSTUAnalyzers/src/Microsoft.Unity.Analyzers/Microsoft.Unity.Analyzers.csproj'
+  BuildConfiguration: 'Release'
+  OutputPath: 'bin/$(BuildConfiguration)'
+  BinLog: '$(OutputPath)/build.binlog'
+  MSBuildArguments: '/p:Features="pdb-path-determinism" /bl:$(BinLog)'
+  TeamName: 'VSTU'
+
+steps:
+- checkout: self
+  submodules: true
+
+- task: MicroBuildSigningPlugin@2
+  displayName: 'Install Signing Plugin'
+  inputs:
+    signType: '$(SignType)'
+
+- task: PowerShell@1
+  displayName: 'Build infos'
+  inputs:
+    scriptName: tools/buildinfos.ps1
+
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk 3.1.x'
+  inputs:
+    version: 3.1.x
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore Solution'
+  inputs:
+    command: restore
+    projects: '$(BuildSolution)'
+    feedsToUse: config
+    nugetConfigPath: nuget.config
+
+- task: MSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '$(BuildSolution)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '$(MSBuildArguments)'
+    clean: true
+
+- task: MSBuild@1
+  displayName: 'Pack solution'
+  inputs:
+    solution: '$(BuildSolution)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:Pack'
+
+- task: CredScan@2
+  displayName: 'Run CredScan'
+  inputs:
+    toolMajorVersion: V2
+    debugMode: false
+
+- task: PoliCheck@1
+  displayName: 'Run PoliCheck'
+  inputs:
+    targetType: F
+
+- task: PublishSecurityAnalysisLogs@2
+  displayName: 'Publish Security Analysis Logs'
+
+- task: PostAnalysis@1
+  displayName: 'Post Analysis'
+  inputs:
+    CredScan: true
+    PoliCheck: true
+
+- task: ComponentGovernanceComponentDetection@0
+  displayName: 'Component Detection'
+
+- task: CopyFiles@2
+  displayName: 'Collect Install'
+  inputs:
+    SourceFolder: '$(OutputPath)'
+    Contents: |
+     **\*.nupkg
+     **\*.snupkg
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\install'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Drop'
+  inputs:
+    PathtoPublish: '$(OutputPath)'
+    ArtifactName: Drop
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Install'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\install'
+    ArtifactName: Install
+
+- powershell: |
+   $regex = "\d+\.\d+(\.\d+\.\d+)?"
+   $version="$(Build.SourceBranchName)"
+   if ($version -match $regex) { 
+     Write-Host "##vso[build.addbuildtag]Built from tag"
+   }
+  displayName: 'Tag Build (when building from tag)'
+
+- task: MicroBuildCleanup@1
+  displayName: 'Perform Cleanup Tasks'
+  condition: succeededOrFailed()
