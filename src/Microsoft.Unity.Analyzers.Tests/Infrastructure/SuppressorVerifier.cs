@@ -39,7 +39,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		{
 			var fullpath = Path.GetFullPath(assembly);
 			var reference = new AnalyzerFileReference(fullpath, new AnalyzerAssemblyLoader());
-			reference.AnalyzerLoadFailed += (s, e) => { Assert.True(false, e.Message); };
+			reference.AnalyzerLoadFailed += (_, e) => { Assert.True(false, e.Message); };
 			return reference.GetAnalyzers(LanguageNames.CSharp);
 		}
 

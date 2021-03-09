@@ -168,7 +168,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			return root.DescendantNodes().OfType<PropertyDeclarationSyntax>()
 				.Where(property => property.AccessorList != null && property.AccessorList.Accessors.Any(accessor => accessor.Keyword.IsKind(SyntaxKind.SetKeyword) && IsAssignedTo(property.Identifier.Text, methodBodies)))
-				.SelectMany(syntax => syntax.AccessorList.Accessors
+				.SelectMany(syntax => syntax.AccessorList!.Accessors
 					.Select(accessor => accessor.Body ?? (SyntaxNode)accessor.ExpressionBody))
 				.Where(node => !(node is null))
 				.SelectMany(body => body.DescendantNodes().OfType<AssignmentExpressionSyntax>()

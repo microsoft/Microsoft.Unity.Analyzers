@@ -16,7 +16,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		// CS1701 - Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
 		// CS0414 - cf. IDE0051
-		public static AnalyzerVerificationContext Default = new AnalyzerVerificationContext(
+		public static AnalyzerVerificationContext Default = new(
 			ImmutableDictionary<string, string>.Empty,
 			new[] { "CS1701", "CS0414" }.ToImmutableArray(),
 			LanguageVersion.Latest);
@@ -30,7 +30,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public AnalyzerVerificationContext WithAnalyzerOption(string key, string value)
 		{
-			return new AnalyzerVerificationContext(
+			return new(
 				Options.Add(key, value),
 				Filters,
 				LanguageVersion);
@@ -38,7 +38,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public AnalyzerVerificationContext WithAnalyzerFilter(string value)
 		{
-			return new AnalyzerVerificationContext(
+			return new(
 				Options,
 				Filters.Add(value),
 				LanguageVersion);
@@ -46,7 +46,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public AnalyzerVerificationContext WithLanguageVersion(LanguageVersion languageVersion)
 		{
-			return new AnalyzerVerificationContext(
+			return new(
 				Options,
 				Filters,
 				languageVersion);

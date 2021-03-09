@@ -87,14 +87,14 @@ namespace Microsoft.Unity.Analyzers.Tests
 		public bool HasLocation => !Spans.IsEmpty;
 
 		public static DiagnosticResult CompilerError(string identifier)
-			=> new DiagnosticResult(identifier, DiagnosticSeverity.Error);
+			=> new(identifier, DiagnosticSeverity.Error);
 
 		public static DiagnosticResult CompilerWarning(string identifier)
-			=> new DiagnosticResult(identifier, DiagnosticSeverity.Warning);
+			=> new(identifier, DiagnosticSeverity.Warning);
 
 		public DiagnosticResult WithSeverity(DiagnosticSeverity severity)
 		{
-			return new DiagnosticResult(
+			return new(
 				_spans,
 				_suppressMessage,
 				_message,
@@ -107,7 +107,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public DiagnosticResult WithArguments(params object[] arguments)
 		{
-			return new DiagnosticResult(
+			return new(
 				_spans,
 				_suppressMessage,
 				_message,
@@ -120,7 +120,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public DiagnosticResult WithMessage(string message)
 		{
-			return new DiagnosticResult(
+			return new(
 				_spans,
 				message is null,
 				message,
@@ -133,7 +133,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public DiagnosticResult WithMessageFormat(LocalizableString messageFormat)
 		{
-			return new DiagnosticResult(
+			return new(
 				_spans,
 				_suppressMessage,
 				_message,
@@ -146,7 +146,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public DiagnosticResult WithNoLocation()
 		{
-			return new DiagnosticResult(
+			return new(
 				ImmutableArray<DiagnosticLocation>.Empty,
 				_suppressMessage,
 				_message,
@@ -159,7 +159,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		public DiagnosticResult WithSuppressedId(string suppressedId)
 		{
-			return new DiagnosticResult(
+			return new(
 				_spans,
 				_suppressMessage,
 				_message,
@@ -206,7 +206,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				if (spans[i].Span.Path == string.Empty)
 					spans[i] = new DiagnosticLocation(new FileLinePositionSpan(path, spans[i].Span.Span), spans[i].Options);
 
-			return new DiagnosticResult(
+			return new(
 				spans.MoveToImmutable(),
 				_suppressMessage,
 				_message,
@@ -231,7 +231,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				spansBuilder[i] = new DiagnosticLocation(new FileLinePositionSpan(result.Spans[i].Span.Path, newStartLinePosition, newEndLinePosition), result.Spans[i].Options);
 			}
 
-			return new DiagnosticResult(
+			return new(
 				spansBuilder.MoveToImmutable(),
 				_suppressMessage,
 				_message,
@@ -244,7 +244,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		private DiagnosticResult AppendSpan(FileLinePositionSpan span, DiagnosticLocationOptions options)
 		{
-			return new DiagnosticResult(
+			return new(
 				Spans.Add(new DiagnosticLocation(span, options)),
 				_suppressMessage,
 				_message,

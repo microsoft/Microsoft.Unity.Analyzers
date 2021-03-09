@@ -41,7 +41,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			for (var i = 0; i < attempts; ++i)
 			{
 				var actions = new List<CodeAction>();
-				var codeFixContext = new CodeFixContext(document, analyzerDiagnostics[0], (a, d) => actions.Add(a), CancellationToken.None);
+				var codeFixContext = new CodeFixContext(document, analyzerDiagnostics[0], (a, _) => actions.Add(a), CancellationToken.None);
 				await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 
 				if (!actions.Any())
