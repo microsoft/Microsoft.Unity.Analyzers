@@ -12,7 +12,7 @@ variables:
   BuildConfiguration: 'Release'
   OutputPath: 'bin/$(BuildConfiguration)'
   BinLog: '$(OutputPath)/build.binlog'
-  MSBuildArguments: '/p:Features="pdb-path-determinism" /bl:$(BinLog)'
+  MSBuildArguments: '/restore /p:Features="pdb-path-determinism" /bl:$(BinLog)'
   TeamName: 'VSTU'
 
 steps:
@@ -40,10 +40,10 @@ steps:
   inputs:
     targetType: F
 
-- task: UseDotNet@2
-  displayName: 'Use .NET Core sdk 3.1.x'
-  inputs:
-    version: 3.1.x
+#- task: UseDotNet@2
+#  displayName: 'Use .NET Core sdk 3.1.x'
+#  inputs:
+#    version: 3.1.x
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet restore Solution'
