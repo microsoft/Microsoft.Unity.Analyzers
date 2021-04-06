@@ -6,6 +6,7 @@
     <OutputPath>$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
 	<NoWarn>$(NoWarn);NU5128</NoWarn>
+    <ErrorLog>$(MSBuildProjectFullPath).$([System.Guid]::NewGuid().ToString().Substring(0,8)).sarif</ErrorLog>	
   </PropertyGroup>
   
   <PropertyGroup>
