@@ -45,14 +45,6 @@ steps:
   inputs:
     version: 3.1.x
 
-#- task: DotNetCoreCLI@2
-#  displayName: 'dotnet restore Solution'
-#  inputs:
-#    command: restore
-#    projects: '$(BuildSolution)'
-#    feedsToUse: config
-#    nugetConfigPath: nuget.config
-
 - task: MSBuild@1
   displayName: 'Build solution'
   inputs:
@@ -64,7 +56,10 @@ steps:
 - task: RoslynAnalyzers@2
   displayName: 'Run RoslynAnalyzers'
   inputs:
-    userProvideBuildInfo: 'auto'
+    userProvideBuildInfo: 'msBuildInfo'
+    msBuildVersion: '16.0'
+    msBuildArchitecture: 'x86'
+    msBuildCommandline: '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" $(BuildSolution) $(MSBuildArguments) /p:configuration=$(BuildConfiguration)'
     rulesetName: 'Required'
   condition: and(succeeded(), eq(variables['SignType'], 'Test'))
 
