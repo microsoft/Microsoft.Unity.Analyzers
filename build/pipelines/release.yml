@@ -61,19 +61,19 @@ steps:
     msbuildArguments: '$(MSBuildArguments)'
     clean: true
 
-- task: MSBuild@1
-  displayName: 'Pack solution'
-  inputs:
-    solution: '$(BuildSolution)'
-    configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/t:Pack'
-
 - task: RoslynAnalyzers@2
   displayName: 'Run RoslynAnalyzers'
   inputs:
     userProvideBuildInfo: 'auto'
     rulesetName: 'Required'
   condition: and(succeeded(), eq(variables['SignType'], 'Test'))
+
+- task: MSBuild@1
+  displayName: 'Pack solution'
+  inputs:
+    solution: '$(BuildSolution)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:Pack'
 
 - task: PublishSecurityAnalysisLogs@2
   displayName: 'Publish Security Analysis Logs'
