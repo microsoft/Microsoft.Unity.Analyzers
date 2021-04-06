@@ -8,7 +8,7 @@ pool:
   - msbuild
 
 variables:
-  BuildSolution: 'external/VSTUAnalyzers/src/Microsoft.Unity.Analyzers/Microsoft.Unity.Analyzers.csproj'
+  BuildSolution: 'external/VSTUAnalyzers/src/Microsoft.Unity.Analyzers.sln'
   BuildConfiguration: 'Release'
   OutputPath: 'bin/$(BuildConfiguration)'
   BinLog: '$(OutputPath)/build.binlog'
