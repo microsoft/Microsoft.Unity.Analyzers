@@ -59,7 +59,7 @@ steps:
     userProvideBuildInfo: 'msBuildInfo'
     msBuildVersion: '16.0'
     msBuildArchitecture: 'x86'
-    msBuildCommandline: '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" $(BuildSolution) $(MSBuildArguments) /t:rebuild /p:configuration=$(BuildConfiguration)'
+    msBuildCommandline: 'dotnet build $(BuildSolution)'
     rulesetName: 'Required'
   condition: and(succeeded(), eq(variables['SignType'], 'Test'))
 
