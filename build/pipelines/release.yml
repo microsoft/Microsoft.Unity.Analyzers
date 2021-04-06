@@ -29,6 +29,17 @@ steps:
   inputs:
     scriptName: tools/buildinfos.ps1
 
+- task: CredScan@2
+  displayName: 'Run CredScan'
+  inputs:
+    toolMajorVersion: V2
+    debugMode: false
+
+- task: PoliCheck@1
+  displayName: 'Run PoliCheck'
+  inputs:
+    targetType: F
+
 - task: UseDotNet@2
   displayName: 'Use .NET Core sdk 3.1.x'
   inputs:
@@ -57,16 +68,12 @@ steps:
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/t:Pack'
 
-- task: CredScan@2
-  displayName: 'Run CredScan'
+- task: RoslynAnalyzers@2
+  displayName: 'Run RoslynAnalyzers'
   inputs:
-    toolMajorVersion: V2
-    debugMode: false
-
-- task: PoliCheck@1
-  displayName: 'Run PoliCheck'
-  inputs:
-    targetType: F
+    userProvideBuildInfo: 'auto'
+    rulesetName: 'Required'
+  condition: and(succeeded(), eq(variables['SignType'], 'Test'))
 
 - task: PublishSecurityAnalysisLogs@2
   displayName: 'Publish Security Analysis Logs'
@@ -76,6 +83,8 @@ steps:
   inputs:
     CredScan: true
     PoliCheck: true
+    RoslynAnalyzers: true
+    RoslynAnalyzersBreakOn: 'Error'
 
 - task: ComponentGovernanceComponentDetection@0
   displayName: 'Component Detection'
