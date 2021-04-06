@@ -53,16 +53,6 @@ steps:
     msbuildArguments: '$(MSBuildArguments)'
     clean: true
 
-- task: RoslynAnalyzers@2
-  displayName: 'Run RoslynAnalyzers'
-  inputs:
-    userProvideBuildInfo: 'msBuildInfo'
-    msBuildVersion: '16.0'
-    msBuildArchitecture: 'x86'
-    msBuildCommandline: 'dotnet build $(BuildSolution)'
-    rulesetName: 'Required'
-  condition: and(succeeded(), eq(variables['SignType'], 'Test'))
-
 - task: MSBuild@1
   displayName: 'Pack solution'
   inputs:
