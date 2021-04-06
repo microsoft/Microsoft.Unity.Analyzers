@@ -40,18 +40,18 @@ steps:
   inputs:
     targetType: F
 
-#- task: UseDotNet@2
-#  displayName: 'Use .NET Core sdk 3.1.x'
-#  inputs:
-#    version: 3.1.x
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet restore Solution'
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk 3.1.x'
   inputs:
-    command: restore
-    projects: '$(BuildSolution)'
-    feedsToUse: config
-    nugetConfigPath: nuget.config
+    version: 3.1.x
+
+#- task: DotNetCoreCLI@2
+#  displayName: 'dotnet restore Solution'
+#  inputs:
+#    command: restore
+#    projects: '$(BuildSolution)'
+#    feedsToUse: config
+#    nugetConfigPath: nuget.config
 
 - task: MSBuild@1
   displayName: 'Build solution'
