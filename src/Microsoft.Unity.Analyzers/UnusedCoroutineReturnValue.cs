@@ -50,7 +50,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), methodName));
 		}
 
-		private static bool IsValidCoroutine(ISymbol symbol, out string methodName)
+		private static bool IsValidCoroutine(ISymbol symbol, out string? methodName)
 		{
 			methodName = null;
 			if (symbol is not IMethodSymbol method)

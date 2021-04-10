@@ -12,12 +12,12 @@ namespace Microsoft.Unity.Analyzers
 {
 	internal static class SuppressionAnalysisContextExtensions
 	{
-		public static T GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic) where T : SyntaxNode
+		public static T? GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic) where T : SyntaxNode
 		{
 			return GetSuppressibleNode<T>(context, diagnostic, _ => true);
 		}
 
-		public static T GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic, Func<T, bool> predicate) where T : SyntaxNode
+		public static T? GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic, Func<T, bool> predicate) where T : SyntaxNode
 		{
 			var location = diagnostic.Location;
 			var sourceTree = location.SourceTree;

@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,7 +62,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		internal static bool InvocationMatches(InvocationExpressionSyntax ies, out string argument)
+		internal static bool InvocationMatches(InvocationExpressionSyntax ies, [NotNullWhen(true)] out string? argument)
 		{
 			argument = null;
 
@@ -90,7 +91,7 @@ namespace Microsoft.Unity.Analyzers
 			if (options == null || options.LanguageVersion < LanguageVersion.CSharp6) // we want nameof support
 				return;
 
-			if (!InvocationMatches(invocation, out string argument))
+			if (!InvocationMatches(invocation, out string? argument))
 				return;
 
 			var model = context.SemanticModel;

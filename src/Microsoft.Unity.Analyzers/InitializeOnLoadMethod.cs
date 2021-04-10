@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace Microsoft.Unity.Analyzers
 			context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
 		}
 
-		internal static bool MethodMatches(SyntaxNode node, SemanticModel model, out MethodDeclarationSyntax syntax, out IMethodSymbol symbol)
+		internal static bool MethodMatches(SyntaxNode? node, SemanticModel model, [NotNullWhen(true)] out MethodDeclarationSyntax? syntax, [NotNullWhen(true)] out IMethodSymbol? symbol)
 		{
 			syntax = null;
 			symbol = null;

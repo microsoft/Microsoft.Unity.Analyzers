@@ -21,7 +21,7 @@ namespace Microsoft.Unity.Analyzers
 
 	public abstract class MethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : MethodUsageAttribute
 	{
-		private static ILookup<string, MethodInfo> _lookup;
+		private static ILookup<string, MethodInfo>? _lookup;
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -34,7 +34,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			_lookup ??= CollectMethods()
 				.Where(m => m.DeclaringType != null)
-				.ToLookup(m => m.DeclaringType.FullName);
+				.ToLookup(m => m.DeclaringType!.FullName);
 
 			// lookup returns an empty collection for nonexistent keys
 			var typename = method.ContainingType.ToDisplayString();

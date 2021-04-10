@@ -29,7 +29,7 @@ namespace Microsoft.Unity.Analyzers
 		private readonly ITypeSymbol _symbol;
 
 		public bool HasMessages => Metadata != null;
-		public Type Metadata { get; }
+		public Type? Metadata { get; }
 
 		public ScriptInfo(ITypeSymbol symbol)
 		{
@@ -51,7 +51,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		public IEnumerable<MethodInfo> GetNotImplementedMessages(Accessibility? accessibility = null, ITypeSymbol returnType = null)
+		public IEnumerable<MethodInfo> GetNotImplementedMessages(Accessibility? accessibility = null, ITypeSymbol? returnType = null)
 		{
 			foreach (var message in GetMessages())
 			{
@@ -99,7 +99,7 @@ namespace Microsoft.Unity.Analyzers
 			return GetMessages().Any(method.Matches);
 		}
 
-		private static Type GetMatchingMetadata(ITypeSymbol symbol)
+		private static Type? GetMatchingMetadata(ITypeSymbol symbol)
 		{
 			for (; symbol != null; symbol = symbol.BaseType)
 			{

@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,7 +72,7 @@ namespace Microsoft.Unity.Analyzers
 				context.ReportDiagnostic(Diagnostic.Create(Rule, expr.GetLocation()));
 		}
 
-		private static bool IsSupportedMethod(SyntaxNodeAnalysisContext context, ExpressionSyntax nameSyntax)
+		private static bool IsSupportedMethod(SyntaxNodeAnalysisContext context, [NotNullWhen(true)] ExpressionSyntax? nameSyntax)
 		{
 			if (nameSyntax == null)
 				return false;
@@ -90,7 +91,7 @@ namespace Microsoft.Unity.Analyzers
 			return containgType.Matches(typeof(string)) || containgType.Matches(typeof(object));
 		}
 
-		private static NameSyntax GetMethodNameSyntax(InvocationExpressionSyntax expr)
+		private static NameSyntax? GetMethodNameSyntax(InvocationExpressionSyntax expr)
 		{
 			var nameSyntax = default(NameSyntax);
 
@@ -115,6 +116,9 @@ namespace Microsoft.Unity.Analyzers
 		internal static bool IsReportableExpression(SemanticModel model, ExpressionSyntax expr)
 		{
 			var symbol = model.GetSymbolInfo(expr).Symbol;
+			if (symbol == null)
+				return false;
+
 			return IsReportableSymbol(symbol);
 		}
 
@@ -142,7 +146,7 @@ namespace Microsoft.Unity.Analyzers
 			if (node == null)
 				return;
 
-			Func<CancellationToken, Task<Document>> action = null;
+			Func<CancellationToken, Task<Document>>? action = null;
 			switch (node)
 			{
 				case BinaryExpressionSyntax bes:
@@ -165,6 +169,8 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await document.GetSyntaxRootAsync(ct).ConfigureAwait(false);
 			var model = await document.GetSemanticModelAsync(ct).ConfigureAwait(false);
+			if (model == null)
+				return document;
 
 			SortExpressions(model, expr, out var tagExpression, out var otherExpression);
 
@@ -180,6 +186,8 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var root = await document.GetSyntaxRootAsync(ct).ConfigureAwait(false);
 			var model = await document.GetSemanticModelAsync(ct).ConfigureAwait(false);
+			if (model == null)
+				return document;
 
 			SortExpressions(model, expr, out var tagExpression, out var otherExpression);
 

@@ -93,6 +93,9 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+			if (model == null)
+				return;
+
 			switch (diagnostic.Id)
 			{
 				case CreateInstanceAnalyzer.ScriptableObjectId:
