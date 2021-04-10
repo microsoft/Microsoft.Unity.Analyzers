@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -65,7 +66,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ReportDiagnostic(Diagnostic.Create(Rule, assignmentExpression.GetLocation()));
 		}
 
-		internal static bool GetNextAssignmentExpression(SemanticModel model, AssignmentExpressionSyntax assignmentExpression, out AssignmentExpressionSyntax assignmentExpressionSyntax)
+		internal static bool GetNextAssignmentExpression(SemanticModel model, AssignmentExpressionSyntax assignmentExpression, [NotNullWhen(true)] out AssignmentExpressionSyntax? assignmentExpressionSyntax)
 		{
 			assignmentExpressionSyntax = null;
 
@@ -157,6 +158,9 @@ namespace Microsoft.Unity.Analyzers
 		private static async Task<Document> ReplaceWithInvocationAsync(Document document, AssignmentExpressionSyntax assignmentExpression, CancellationToken cancellationToken)
 		{
 			var model = await document.GetSemanticModelAsync(cancellationToken);
+			if (model == null)
+				return document;
+
 			if (!SetPositionAndRotationAnalyzer.GetNextAssignmentExpression(model, assignmentExpression, out var nextAssignmentExpression)) 
 				return document;
 

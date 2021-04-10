@@ -120,8 +120,11 @@ namespace Microsoft.Unity.Analyzers
 				var nodes = new List<AttributeSyntax>();
 				foreach (var node in attributeList.Attributes)
 				{
-					var attributeType = model.GetTypeInfo(node);
-					if (attributeType.Type.Matches(typeof(UnityEngine.SerializeField)))
+					var attributeType = model.GetTypeInfo(node).Type;
+					if (attributeType == null)
+						continue;
+
+					if (attributeType.Matches(typeof(UnityEngine.SerializeField)))
 						nodes.Add(node);
 				}
 

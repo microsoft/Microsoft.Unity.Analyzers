@@ -56,7 +56,7 @@ namespace Microsoft.Unity.Analyzers
 			{
 				references.AddRange(typeNode.DescendantNodes()
 					.OfType<InvocationExpressionSyntax>()
-					.Where(e => MethodInvocationAnalyzer.InvocationMatches(e, out string argument) && argument == methodSymbol.Name));
+					.Where(e => MethodInvocationAnalyzer.InvocationMatches(e, out string? argument) && argument == methodSymbol.Name));
 			}
 
 			if (references.Any())

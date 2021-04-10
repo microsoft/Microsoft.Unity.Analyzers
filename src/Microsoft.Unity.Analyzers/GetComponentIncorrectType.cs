@@ -53,7 +53,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), identifier));
 		}
 
-		private static bool HasInvalidTypeArgument(IMethodSymbol method, out string identifier)
+		private static bool HasInvalidTypeArgument(IMethodSymbol method, out string? identifier)
 		{
 			identifier = null;
 			var argumentType = method.TypeArguments.FirstOrDefault();

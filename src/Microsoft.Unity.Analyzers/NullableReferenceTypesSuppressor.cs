@@ -29,9 +29,14 @@ namespace Microsoft.Unity.Analyzers
 			foreach (var diagnostic in context.ReportedDiagnostics)
 			{
 				var root = diagnostic.Location.SourceTree.GetRoot();
-				var node = root?.FindNode(diagnostic.Location.SourceSpan);
+				if (root == null)
+					continue;
 
-				var classDeclaration = node?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+				var node = root.FindNode(diagnostic.Location.SourceSpan);
+				if (node == null)
+					continue;
+
+				var classDeclaration = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 				if (classDeclaration is null)
 					continue;
 
@@ -82,6 +87,8 @@ namespace Microsoft.Unity.Analyzers
 			}
 
 			var symbol = GetSymbol(diagnostic.Location.SourceTree, declarationSyntax.Declaration.Type, context);
+			if (symbol == null)
+				return;
 
 			if (!symbol.Extends(typeof(UnityEngine.Object)))
 				return;
@@ -107,6 +114,8 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeProperties(PropertyDeclarationSyntax declarationSyntax, Diagnostic diagnostic, SuppressionAnalysisContext context, SyntaxNode root)
 		{
 			var symbol = GetSymbol(diagnostic.Location.SourceTree, declarationSyntax.Type, context);
+			if (symbol == null)
+				return;
 
 			if (!symbol.Extends(typeof(UnityEngine.Object)))
 				return;
@@ -116,10 +125,10 @@ namespace Microsoft.Unity.Analyzers
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 
-		private static ITypeSymbol GetSymbol(CodeAnalysis.SyntaxTree tree, TypeSyntax type, SuppressionAnalysisContext context)
+		private static ITypeSymbol? GetSymbol(CodeAnalysis.SyntaxTree tree, TypeSyntax type, SuppressionAnalysisContext context)
 		{
 			var model = context.GetSemanticModel(tree);
-			return (ITypeSymbol)model.GetSymbolInfo(type).Symbol;
+			return model.GetSymbolInfo(type).Symbol as ITypeSymbol;
 		}
 
 		//analyze if a property is assigned inside a methodbody
@@ -148,7 +157,7 @@ namespace Microsoft.Unity.Analyzers
 					.Where(syntax => methodSyntax.DescendantNodes().OfType<InvocationExpressionSyntax>()
 						.Any(invocationSyntax => invocationSyntax.Expression.ToString() == syntax.Identifier.Text))
 					.Concat(new[] { methodSyntax })
-					.Select(method => method.Body ?? (SyntaxNode)method.ExpressionBody));
+					.Select(method => method.Body ?? method.ExpressionBody as SyntaxNode))!;
 			}
 
 			return methodBodies;
@@ -169,9 +178,9 @@ namespace Microsoft.Unity.Analyzers
 			return root.DescendantNodes().OfType<PropertyDeclarationSyntax>()
 				.Where(property => property.AccessorList != null && property.AccessorList.Accessors.Any(accessor => accessor.Keyword.IsKind(SyntaxKind.SetKeyword) && IsAssignedTo(property.Identifier.Text, methodBodies)))
 				.SelectMany(syntax => syntax.AccessorList!.Accessors
-					.Select(accessor => accessor.Body ?? (SyntaxNode)accessor.ExpressionBody))
-				.Where(node => !(node is null))
-				.SelectMany(body => body.DescendantNodes().OfType<AssignmentExpressionSyntax>()
+					.Select(accessor => accessor.Body ?? accessor.ExpressionBody as SyntaxNode))
+				.Where(node => node is not null)
+				.SelectMany(body => body!.DescendantNodes().OfType<AssignmentExpressionSyntax>()
 					.Select(assignment => assignment.Left.ToString()));
 		}
 	}

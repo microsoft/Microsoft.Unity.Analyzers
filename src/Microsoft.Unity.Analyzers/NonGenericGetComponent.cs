@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -60,7 +61,7 @@ namespace Microsoft.Unity.Analyzers
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), methodName));
 		}
 
-		private static bool IsNonGenericGetComponent(ISymbol symbol, out string methodName)
+		private static bool IsNonGenericGetComponent(ISymbol symbol, [NotNullWhen(true)] out string? methodName)
 		{
 			methodName = null;
 			if (symbol is not IMethodSymbol method)

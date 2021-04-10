@@ -13,12 +13,12 @@ namespace Microsoft.Unity.Analyzers
 {
 	internal static class CodeFixContextExtensions
 	{
-		public static async Task<T> GetFixableNodeAsync<T>(this CodeFixContext context) where T : SyntaxNode
+		public static async Task<T?> GetFixableNodeAsync<T>(this CodeFixContext context) where T : SyntaxNode
 		{
 			return await GetFixableNodeAsync<T>(context, _ => true);
 		}
 
-		public static async Task<T> GetFixableNodeAsync<T>(this CodeFixContext context, Func<T, bool> predicate) where T : SyntaxNode
+		public static async Task<T?> GetFixableNodeAsync<T>(this CodeFixContext context, Func<T, bool> predicate) where T : SyntaxNode
 		{
 			var root = await context
 				.Document

@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers
 {
 	internal static class TypeSymbolExtensions
 	{
-		public static bool Extends(this ITypeSymbol symbol, Type type)
+		public static bool Extends(this ITypeSymbol? symbol, Type? type)
 		{
 			if (symbol == null || type == null)
 				return false;

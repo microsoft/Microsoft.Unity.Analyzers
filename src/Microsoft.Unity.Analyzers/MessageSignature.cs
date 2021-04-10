@@ -110,7 +110,11 @@ namespace Microsoft.Unity.Analyzers
 				.GetMessages()
 				.First(m => m.Name == methodSymbol.Name);
 
-			var builder = new MessageBuilder(document.Project.LanguageServices.GetService<SyntaxGenerator>());
+			var syntaxGenerator = document.Project.LanguageServices.GetService<SyntaxGenerator>();
+			if (syntaxGenerator == null)
+				return document;
+
+			var builder = new MessageBuilder(syntaxGenerator);
 			var newMethodDeclaration = methodDeclaration
 				.WithParameterList(CreateParameterList(builder, message));
 
