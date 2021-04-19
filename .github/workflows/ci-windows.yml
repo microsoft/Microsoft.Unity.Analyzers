@@ -27,12 +27,12 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unitycache-2019.4.16f1
+        key: ${{ runner.os }}-unitycache-2020.3.4f1
         path: UnityCache
 
-    - name: Download Unity 2019.4.16f1 LTS
+    - name: Download Unity 2020.3.4f1 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/e05b6e02d63e/Windows64EditorInstaller/UnitySetup64-2019.4.16f1.exe" "%CD%\unitysetup.exe"
+      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/0abb6314276a/Windows64EditorInstaller/UnitySetup64-2020.3.4f1.exe" "%CD%\unitysetup.exe"
       shell: cmd
       
     - name: Install Unity

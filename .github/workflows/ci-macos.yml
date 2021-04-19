@@ -27,12 +27,12 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unitycache-2019.4.16f1
+        key: ${{ runner.os }}-unitycache-2020.3.4f1
         path: UnityCache
 
-    - name: Download Unity 2019.4.16f1 LTS
+    - name: Download Unity 2020.3.4f1 LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/e05b6e02d63e/MacEditorInstaller/Unity.pkg
+      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/0abb6314276a/MacEditorInstaller/Unity.pkg
 
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
