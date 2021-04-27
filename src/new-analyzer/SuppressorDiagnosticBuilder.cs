@@ -34,7 +34,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class $(DiagnosticName) : DiagnosticSuppressor
 	{
-		internal static readonly SuppressionDescriptor Rule = new SuppressionDescriptor(
+		internal static readonly SuppressionDescriptor Rule = new(
 			id: ""$(DiagnosticId)"",
 			suppressedDiagnosticId: _FIXME_,
 			justification: Strings.$(DiagnosticName)Justification);
@@ -51,9 +51,9 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			// var sourceTree = diagnostic.Location.SourceTree;
-			// var root = sourceTree.GetRoot(context.CancellationToken);
-			// var node = root.FindNode(diagnostic.Location.SourceSpan);
+			// var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic)
+			// if (node == null)
+			//   return;
 
 			// TODO: context.ReportSuppression
 			// example: context.ReportSuppression(Suppression.Create(Rule, diagnostic));

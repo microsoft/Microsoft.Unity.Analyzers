@@ -45,7 +45,7 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class $(DiagnosticName)Analyzer : DiagnosticAnalyzer
 	{
-		internal static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+		internal static readonly DiagnosticDescriptor Rule = new(
 			id: ""$(DiagnosticId)"",
 			title: Strings.$(DiagnosticName)DiagnosticTitle,
 			messageFormat: Strings.$(DiagnosticName)DiagnosticMessageFormat,
@@ -77,7 +77,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			// var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-			// var declaration = root.FindNode(context.Span) as MethodDeclarationSyntax;
+			// var declaration = await context.GetFixableNodeAsync<MethodDeclarationSyntax>();
 			// if (declaration == null)
 			//     return;
 
