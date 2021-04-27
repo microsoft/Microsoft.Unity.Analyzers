@@ -447,4 +447,16 @@
   <data name="UnityObjectCoalescingAssignmentCodeFixTitle" xml:space="preserve">
     <value>Use null comparison</value>
   </data>
+  <data name="MatrixMathCodeFixTitle" xml:space="preserve">
+    <value>Re-order operands</value>
+  </data>
+  <data name="MatrixMathDiagnosticDescription" xml:space="preserve">
+    <value>Floating-point math is faster than matrix math.</value>
+  </data>
+  <data name="MatrixMathDiagnosticMessageFormat" xml:space="preserve">
+    <value>Re-order operands for better performance.</value>
+  </data>
+  <data name="MatrixMathDiagnosticTitle" xml:space="preserve">
+    <value>Give priority to floating point calculations over matrix calculations</value>
+  </data>
 </root>

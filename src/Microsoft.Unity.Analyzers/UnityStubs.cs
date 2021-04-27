@@ -291,6 +291,10 @@ namespace UnityEngine
 		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement, int miplevel) { }
 		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement) { }
 	}
+
+	public struct Vector2 { }
+	public struct Vector3 { }
+	public struct Vector4 { }
 }
 
 namespace UnityEngine.EventSystems
