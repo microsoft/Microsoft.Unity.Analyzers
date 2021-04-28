@@ -63,12 +63,10 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		private bool IsReportableExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
+		private static bool IsReportableExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
 		{
-			if (!IsCandidateExpression(context, node, vectorType))
-				return false;
-
-			return NeedsOrdering(context, (ExpressionSyntax)node);
+			return IsCandidateExpression(context, node, vectorType)
+			       && NeedsOrdering(context, (ExpressionSyntax)node);
 		}
 
 		private static bool NeedsOrdering(SyntaxNodeAnalysisContext context, ExpressionSyntax node)
