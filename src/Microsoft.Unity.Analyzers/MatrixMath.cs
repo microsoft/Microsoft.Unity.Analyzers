@@ -124,7 +124,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		private bool IsCandidateExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
+		private static bool IsCandidateExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
 		{
 			if (node is not BinaryExpressionSyntax be)
 				return false;
@@ -135,7 +135,7 @@ namespace Microsoft.Unity.Analyzers
 			return IsSupportedExpression(context, be.Left, vectorType) && IsSupportedExpression(context, be.Right, vectorType);
 		}
 
-		private bool IsSupportedExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax expression, Type vectorType)
+		private static bool IsSupportedExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax expression, Type vectorType)
 		{
 			if (IsCandidateExpression(context, expression, vectorType))
 				return true;
