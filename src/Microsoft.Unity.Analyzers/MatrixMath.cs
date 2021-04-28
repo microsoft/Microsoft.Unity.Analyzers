@@ -77,28 +77,28 @@ namespace Microsoft.Unity.Analyzers
 			if (operands.Length < 3)
 				return false;
 
-			int firstMatrixIndex = -1;
-			int lastPrimitiveIndex = -1;
-			int primitiveCount = 0;
+			int firstVectorIndex = -1;
+			int lastScalarIndex = -1;
+			int scalarCount = 0;
 			for (int i = 0; i < operands.Length; i++)
 			{
 				var (_, typeInfo) = operands[i];
 				if (IsFloatType(typeInfo))
 				{
-					lastPrimitiveIndex = i;
-					primitiveCount++;
+					lastScalarIndex = i;
+					scalarCount++;
 				}
 				else
 				{
-					if (firstMatrixIndex == -1)
-						firstMatrixIndex = i;
+					if (firstVectorIndex == -1)
+						firstVectorIndex = i;
 				}
 			}
 
-			return firstMatrixIndex != -1
-			       && lastPrimitiveIndex != -1
-			       && firstMatrixIndex < lastPrimitiveIndex
-			       && primitiveCount >= 2;
+			return firstVectorIndex != -1
+			       && lastScalarIndex != -1
+			       && firstVectorIndex < lastScalarIndex
+			       && scalarCount >= 2;
 		}
 
 		internal static bool IsFloatType(TypeInfo typeInfo)
