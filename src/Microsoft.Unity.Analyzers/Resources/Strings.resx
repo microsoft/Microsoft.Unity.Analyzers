@@ -447,16 +447,16 @@
   <data name="UnityObjectCoalescingAssignmentCodeFixTitle" xml:space="preserve">
     <value>Use null comparison</value>
   </data>
-  <data name="MatrixMathCodeFixTitle" xml:space="preserve">
+  <data name="VectorMathCodeFixTitle" xml:space="preserve">
     <value>Re-order operands</value>
   </data>
-  <data name="MatrixMathDiagnosticDescription" xml:space="preserve">
-    <value>Floating-point math is faster than matrix math.</value>
+  <data name="VectorMathDiagnosticDescription" xml:space="preserve">
+    <value>Scalar calculations are faster than vector calculations.</value>
   </data>
-  <data name="MatrixMathDiagnosticMessageFormat" xml:space="preserve">
+  <data name="VectorMathDiagnosticMessageFormat" xml:space="preserve">
     <value>Re-order operands for better performance.</value>
   </data>
-  <data name="MatrixMathDiagnosticTitle" xml:space="preserve">
-    <value>Give priority to floating point calculations over matrix calculations</value>
+  <data name="VectorMathDiagnosticTitle" xml:space="preserve">
+    <value>Give priority to scalar calculations over vector calculations</value>
   </data>
 </root>

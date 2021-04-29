@@ -25,7 +25,7 @@ ID | Title | Category
 [UNT0021](UNT0021.md) | Unity message should be protected `[opt-in]` | Correctness
 [UNT0022](UNT0022.md) | Inefficient method to set position and rotation | Performance
 [UNT0023](UNT0023.md) | Coalescing assignment on Unity objects | Correctness
-[UNT0024](UNT0024.md) | Give priority to floating point calculations over matrix calculations | Performance
+[UNT0024](UNT0024.md) | Give priority to scalar calculations over vector calculations | Performance
 
 # Diagnostic Suppressors
 

@@ -448,42 +448,6 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Re-order operands.
-        /// </summary>
-        internal static string MatrixMathCodeFixTitle {
-            get {
-                return ResourceManager.GetString("MatrixMathCodeFixTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Floating-point math is faster than matrix math..
-        /// </summary>
-        internal static string MatrixMathDiagnosticDescription {
-            get {
-                return ResourceManager.GetString("MatrixMathDiagnosticDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Re-order operands for better performance..
-        /// </summary>
-        internal static string MatrixMathDiagnosticMessageFormat {
-            get {
-                return ResourceManager.GetString("MatrixMathDiagnosticMessageFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Give priority to floating point calculations over matrix calculations.
-        /// </summary>
-        internal static string MatrixMathDiagnosticTitle {
-            get {
-                return ResourceManager.GetString("MatrixMathDiagnosticTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Fix message signature.
         /// </summary>
         internal static string MessageSignatureCodeFixTitle {
@@ -1047,6 +1011,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string UpdateWithoutFixedDeltaTimeDiagnosticTitle {
             get {
                 return ResourceManager.GetString("UpdateWithoutFixedDeltaTimeDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Re-order operands.
+        /// </summary>
+        internal static string VectorMathCodeFixTitle {
+            get {
+                return ResourceManager.GetString("VectorMathCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scalar calculations are faster than vector calculations..
+        /// </summary>
+        internal static string VectorMathDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("VectorMathDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Re-order operands for better performance..
+        /// </summary>
+        internal static string VectorMathDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("VectorMathDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Give priority to scalar calculations over vector calculations.
+        /// </summary>
+        internal static string VectorMathDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("VectorMathDiagnosticTitle", resourceCulture);
             }
         }
     }

@@ -21,16 +21,16 @@ using UnityEngine;
 namespace Microsoft.Unity.Analyzers
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class MatrixMathAnalyzer : DiagnosticAnalyzer
+	public class VectorMathAnalyzer : DiagnosticAnalyzer
 	{
 		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0024",
-			title: Strings.MatrixMathDiagnosticTitle,
-			messageFormat: Strings.MatrixMathDiagnosticMessageFormat,
+			title: Strings.VectorMathDiagnosticTitle,
+			messageFormat: Strings.VectorMathDiagnosticMessageFormat,
 			category: DiagnosticCategory.Performance,
 			defaultSeverity: DiagnosticSeverity.Info,
 			isEnabledByDefault: true,
-			description: Strings.MatrixMathDiagnosticDescription);
+			description: Strings.VectorMathDiagnosticDescription);
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -155,9 +155,9 @@ namespace Microsoft.Unity.Analyzers
 	}
 
 	[ExportCodeFixProvider(LanguageNames.CSharp)]
-	public class MatrixMathCodeFix : CodeFixProvider
+	public class VectorMathCodeFix : CodeFixProvider
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MatrixMathAnalyzer.Rule.Id);
+		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(VectorMathAnalyzer.Rule.Id);
 
 		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -169,7 +169,7 @@ namespace Microsoft.Unity.Analyzers
 
 			context.RegisterCodeFix(
 				CodeAction.Create(
-					Strings.MatrixMathCodeFixTitle,
+					Strings.VectorMathCodeFixTitle,
 					ct => FixOperandOrderAsync(context.Document, node, ct),
 					node.ToFullString()),
 				context.Diagnostics);
@@ -191,7 +191,7 @@ namespace Microsoft.Unity.Analyzers
 			if (model == null)
 				return document;
 
-			var operands = MatrixMathAnalyzer.GetOperands(model, node)
+			var operands = VectorMathAnalyzer.GetOperands(model, node)
 				.OrderBy(GetTypePriority)
 				.ThenBy(GetSyntaxPriority)
 				.Select(o => o.Item1)
@@ -210,7 +210,7 @@ namespace Microsoft.Unity.Analyzers
 		private static int GetTypePriority((ExpressionSyntax, TypeInfo) item)
 		{
 			var (_, typeInfo) = item;
-			if (MatrixMathAnalyzer.IsFloatType(typeInfo))
+			if (VectorMathAnalyzer.IsFloatType(typeInfo))
 				return 0;
 
 			return 1;

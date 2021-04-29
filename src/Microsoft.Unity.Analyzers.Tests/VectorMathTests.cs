@@ -10,11 +10,11 @@ using Xunit;
 namespace Microsoft.Unity.Analyzers.Tests
 {
 
-	public class Vector2MathTests: MatrixMathTests<Vector2> {}
-	public class Vector3MathTests: MatrixMathTests<Vector3> {}
-	public class Vector4MathTests: MatrixMathTests<Vector4> {}
+	public class Vector2MathTests: VectorMathTests<Vector2> {}
+	public class Vector3MathTests: VectorMathTests<Vector3> {}
+	public class Vector4MathTests: VectorMathTests<Vector4> {}
 
-	public abstract class MatrixMathTests<T> : BaseCodeFixVerifierTest<MatrixMathAnalyzer, MatrixMathCodeFix>
+	public abstract class VectorMathTests<T> : BaseCodeFixVerifierTest<VectorMathAnalyzer, VectorMathCodeFix>
 	{
 		[Fact]
 		public async Task AlreadySorted()
