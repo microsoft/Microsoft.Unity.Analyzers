@@ -447,4 +447,16 @@
   <data name="UnityObjectCoalescingAssignmentCodeFixTitle" xml:space="preserve">
     <value>Use null comparison</value>
   </data>
+  <data name="VectorMathCodeFixTitle" xml:space="preserve">
+    <value>Re-order operands</value>
+  </data>
+  <data name="VectorMathDiagnosticDescription" xml:space="preserve">
+    <value>Scalar calculations are faster than vector calculations.</value>
+  </data>
+  <data name="VectorMathDiagnosticMessageFormat" xml:space="preserve">
+    <value>Re-order operands for better performance.</value>
+  </data>
+  <data name="VectorMathDiagnosticTitle" xml:space="preserve">
+    <value>Give priority to scalar calculations over vector calculations</value>
+  </data>
 </root>
