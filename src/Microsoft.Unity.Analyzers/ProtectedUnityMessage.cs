@@ -39,7 +39,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			var method = (MethodDeclarationSyntax)context.Node;
+			var method = context.Node as MethodDeclarationSyntax;
 			if (method?.Body == null)
 				return;
 
@@ -93,11 +93,11 @@ namespace Microsoft.Unity.Analyzers
 
 			foreach (var modifier in declaration.Modifiers)
 			{
-				if (!modifier.IsKind(SyntaxKind.PublicKeyword) && !modifier.IsKind(SyntaxKind.PrivateKeyword) && !modifier.IsKind(SyntaxKind.InternalKeyword))
-				{
-					var kind = modifier.Kind();
-					newDeclaration = newDeclaration.AddModifiers(SyntaxFactory.Token(kind));
-				}
+				if (modifier.IsKind(SyntaxKind.PublicKeyword) || modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.InternalKeyword)) 
+					continue;
+
+				var kind = modifier.Kind();
+				newDeclaration = newDeclaration.AddModifiers(SyntaxFactory.Token(kind));
 			}
 
 			var newRoot = root.ReplaceNode(declaration, newDeclaration);

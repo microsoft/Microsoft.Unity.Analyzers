@@ -48,7 +48,7 @@ namespace Microsoft.Unity.Analyzers
 			var model = context.GetSemanticModel(location.SourceTree);
 			var symbols = new List<ISymbol>();
 
-			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax || n is VariableDeclaratorSyntax || n is FieldDeclarationSyntax);
+			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax or VariableDeclaratorSyntax or FieldDeclarationSyntax);
 			switch (node)
 			{
 				case MethodDeclarationSyntax method:
@@ -78,9 +78,6 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsReportable(ISymbol symbol)
 		{
-			if (symbol == null)
-				return false;
-
 			var containingType = symbol.ContainingType;
 
 			switch (symbol)

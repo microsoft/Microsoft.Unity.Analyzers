@@ -92,10 +92,7 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var statement = siblingsAndSelf[nextIndex];
-			if (statement is not ExpressionStatementSyntax expressionStatement)
-				return false;
-
-			if (expressionStatement.Expression is not AssignmentExpressionSyntax nextAssignmentExpression)
+			if (statement is not ExpressionStatementSyntax {Expression: AssignmentExpressionSyntax nextAssignmentExpression})
 				return false;
 
 			if (!IsSetPositionOrRotation(model, nextAssignmentExpression))

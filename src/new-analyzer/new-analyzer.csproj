@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>NewAnalyzer</RootNamespace>
-    <LangVersion>9</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
 </Project>

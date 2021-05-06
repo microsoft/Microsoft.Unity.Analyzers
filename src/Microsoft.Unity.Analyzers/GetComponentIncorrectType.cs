@@ -38,8 +38,6 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
 			var symbol = context.SemanticModel.GetSymbolInfo(invocation);
-			if (symbol.Symbol == null)
-				return;
 
 			if (symbol.Symbol is not IMethodSymbol method)
 				return;

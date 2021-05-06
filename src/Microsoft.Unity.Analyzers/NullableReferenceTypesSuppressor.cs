@@ -30,11 +30,11 @@ namespace Microsoft.Unity.Analyzers
 			{
 				var root = diagnostic.Location.SourceTree.GetRoot();
 				if (root == null)
-					continue;
+					return;
 
 				var node = root.FindNode(diagnostic.Location.SourceSpan);
 				if (node == null)
-					continue;
+					return;
 
 				var classDeclaration = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 				if (classDeclaration is null)
@@ -52,7 +52,7 @@ namespace Microsoft.Unity.Analyzers
 				var propertyDeclaration = node.FirstAncestorOrSelf<PropertyDeclarationSyntax>();
 
 				//handle properties before fields to minimize double checking of potential backing fields
-				if (!(propertyDeclaration is null))
+				if (propertyDeclaration is not null)
 				{
 					AnalyzeProperties(propertyDeclaration, diagnostic, context, root);
 					continue;

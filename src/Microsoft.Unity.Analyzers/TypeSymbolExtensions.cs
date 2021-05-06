@@ -31,8 +31,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			if (type == typeof(UnityEngine.IEnumeratorOrVoid))
 			{
-				return symbol.SpecialType == SpecialType.System_Void
-					|| symbol.SpecialType == SpecialType.System_Collections_IEnumerator;
+				return symbol.SpecialType is SpecialType.System_Void or SpecialType.System_Collections_IEnumerator;
 			}
 
 			switch (symbol.SpecialType)
@@ -49,7 +48,7 @@ namespace Microsoft.Unity.Analyzers
 
 			if (type.IsArray)
 			{
-				return symbol is IArrayTypeSymbol array && Matches(array.ElementType, type.GetElementType());
+				return symbol is IArrayTypeSymbol array && Matches(array.ElementType, type.GetElementType()!);
 			}
 
 			if (symbol is not INamedTypeSymbol named)

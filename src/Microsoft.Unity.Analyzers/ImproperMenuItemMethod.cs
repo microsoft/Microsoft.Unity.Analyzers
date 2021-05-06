@@ -41,10 +41,8 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
 
-			if (!(context.Node is MethodDeclarationSyntax))
+			if (context.Node is not MethodDeclarationSyntax method)
 				return;
-
-			var method = (MethodDeclarationSyntax)context.Node;
 
 			if (context.SemanticModel.GetDeclaredSymbol(method) is not { } methodSymbol)
 				return;
