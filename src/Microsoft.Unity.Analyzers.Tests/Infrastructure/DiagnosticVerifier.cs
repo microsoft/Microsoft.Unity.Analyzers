@@ -33,7 +33,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected static DiagnosticResult ExpectDiagnostic(DiagnosticDescriptor descriptor)
 		{
-			return new DiagnosticResult(descriptor);
+			return new(descriptor);
 		}
 
 		protected DiagnosticResult ExpectDiagnostic(string diagnosticId)
