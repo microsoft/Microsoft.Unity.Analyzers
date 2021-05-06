@@ -30,11 +30,11 @@ namespace Microsoft.Unity.Analyzers
 			{
 				var root = diagnostic.Location.SourceTree.GetRoot();
 				if (root == null)
-					return;
+					continue;
 
 				var node = root.FindNode(diagnostic.Location.SourceSpan);
 				if (node == null)
-					return;
+					continue;
 
 				var classDeclaration = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 				if (classDeclaration is null)
