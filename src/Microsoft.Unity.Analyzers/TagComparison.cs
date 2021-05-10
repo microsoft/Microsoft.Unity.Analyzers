@@ -217,8 +217,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		private static void SortExpressions(SemanticModel model, InvocationExpressionSyntax expr, out ExpressionSyntax tagExpression,
-			out ExpressionSyntax otherExpression)
+		private static void SortExpressions(SemanticModel model, InvocationExpressionSyntax expr, out ExpressionSyntax tagExpression, out ExpressionSyntax otherExpression)
 		{
 			if (expr.Expression is MemberAccessExpressionSyntax mae && expr.ArgumentList.Arguments.Count == 1)
 			{
@@ -247,7 +246,8 @@ namespace Microsoft.Unity.Analyzers
 			return argumentList
 				.Arguments
 				.Where(argument => TagComparisonAnalyzer.IsReportableExpression(model, argument.Expression))
-				.Select(argument => argument.Expression).FirstOrDefault();
+				.Select(argument => argument.Expression)
+				.First();
 		}
 
 		private static ExpressionSyntax BuildReplacementNode(ExpressionSyntax tagExpression, ExpressionSyntax otherExpression)

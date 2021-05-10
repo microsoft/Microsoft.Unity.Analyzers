@@ -39,21 +39,17 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeExpression(SyntaxNodeAnalysisContext context)
 		{
-			if (!(context.Node is MemberAccessExpressionSyntax))
+			if (context.Node is not MemberAccessExpressionSyntax access)
 				return;
-
-			var access = (MemberAccessExpressionSyntax)context.Node;
 
 			if (access.Name.ToFullString() != "gameObject")
 				return;
 
-			var symbol = context.SemanticModel.GetSymbolInfo(access);
-			var typeInfo = context.SemanticModel.GetTypeInfo(access.Expression);
+			var model = context.SemanticModel;
+			var symbol = model.GetSymbolInfo(access);
+			var typeInfo = model.GetTypeInfo(access.Expression);
 
-			if (symbol.Symbol == null)
-				return;
-
-			if (!(symbol.Symbol is IPropertySymbol))
+			if (symbol.Symbol is not IPropertySymbol)
 				return;
 
 			if (typeInfo.Type == null)

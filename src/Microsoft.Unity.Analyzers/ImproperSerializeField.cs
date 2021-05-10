@@ -66,9 +66,6 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsReportable(ISymbol symbol)
 		{
-			if (symbol == null)
-				return false;
-
 			if (!symbol.ContainingType.Extends(typeof(UnityEngine.Object)))
 				return false;
 
@@ -94,10 +91,8 @@ namespace Microsoft.Unity.Analyzers
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
 			var declaration = await context.GetFixableNodeAsync<MemberDeclarationSyntax>();
-			if (declaration == null)
-				return;
 
-			if (!(declaration is PropertyDeclarationSyntax || declaration is FieldDeclarationSyntax))
+			if (declaration is not (PropertyDeclarationSyntax or FieldDeclarationSyntax))
 				return;
 
 			context.RegisterCodeFix(

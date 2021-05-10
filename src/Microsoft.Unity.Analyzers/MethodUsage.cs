@@ -66,8 +66,6 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			var symbol = context.SemanticModel.GetSymbolInfo(member);
-			if (symbol.Symbol == null)
-				return;
 
 			if (symbol.Symbol is not IMethodSymbol method)
 				return;

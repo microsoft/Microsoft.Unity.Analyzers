@@ -52,7 +52,7 @@ namespace Microsoft.Unity.Analyzers
 				var propertyDeclaration = node.FirstAncestorOrSelf<PropertyDeclarationSyntax>();
 
 				//handle properties before fields to minimize double checking of potential backing fields
-				if (!(propertyDeclaration is null))
+				if (propertyDeclaration is not null)
 				{
 					AnalyzeProperties(propertyDeclaration, diagnostic, context, root);
 					continue;

@@ -52,7 +52,7 @@ namespace Microsoft.Unity.Analyzers
 			if (!IsNonGenericGetComponent(symbol.Symbol, out var methodName))
 				return;
 
-			if (!(invocation.Expression is IdentifierNameSyntax))
+			if (invocation.Expression is not IdentifierNameSyntax)
 				return;
 
 			if (!invocation.ArgumentList.Arguments[0].Expression.IsKind(SyntaxKind.TypeOfExpression))

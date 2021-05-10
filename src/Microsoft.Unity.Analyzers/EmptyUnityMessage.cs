@@ -39,7 +39,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			var method = (MethodDeclarationSyntax)context.Node;
+			var method = context.Node as MethodDeclarationSyntax;
 			if (method?.Body == null)
 				return;
 
