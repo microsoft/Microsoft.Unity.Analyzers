@@ -20,9 +20,17 @@ namespace Microsoft.Unity.Analyzers.Tests
 	{
 
 		internal const string InterfaceTest = @"
+using UnityEngine;
+
 interface IFailure
 {
 	void FixedUpdate();
+}
+
+class Failure : MonoBehaviour, IFailure {
+
+    void IFailure.FixedUpdate() {
+    }
 }
 ";
 
