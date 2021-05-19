@@ -57,12 +57,18 @@ namespace Microsoft.Unity.Analyzers
 
 			foreach (var method in methods)
 			{
+				// Exclude explicit interface implementations, that will not be called by the Unity runtime
+				// scriptInfo.IsMessage is already handling this through fullname, but for this very specific task we are looking for bad signatures, so not relying on scriptInfo.IsMessage at this step
+				if (method.ExplicitInterfaceSpecifier != null)
+					continue;
+
 				var methodName = method.Identifier.Text;
 
 				if (!messages.Contains(methodName))
 					continue;
 
 				var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+				// A message is detected, so the signature is correct
 				if (scriptInfo.IsMessage(methodSymbol))
 					continue;
 
@@ -108,7 +114,10 @@ namespace Microsoft.Unity.Analyzers
 			var scriptInfo = new ScriptInfo(typeSymbol);
 			var message = scriptInfo
 				.GetMessages()
-				.First(m => m.Name == methodSymbol.Name);
+				.FirstOrDefault(m => m.Name == methodSymbol.Name);
+
+			if (message == null)
+				return document;
 
 			var syntaxGenerator = document.Project.LanguageServices.GetService<SyntaxGenerator>();
 			if (syntaxGenerator == null)
