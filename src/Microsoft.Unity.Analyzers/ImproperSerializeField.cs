@@ -74,7 +74,7 @@ namespace Microsoft.Unity.Analyzers
 
 			return symbol switch
 			{
-				IFieldSymbol => symbol.DeclaredAccessibility == Accessibility.Public,// Only invalid on public fields
+				IFieldSymbol fieldSymbol => fieldSymbol.DeclaredAccessibility == Accessibility.Public || fieldSymbol.IsStatic || fieldSymbol.IsReadOnly,// redundant on public fields and invalid on static/readonly fields
 				IPropertySymbol => true,// Should never be on a property
 				_ => false,
 			};
