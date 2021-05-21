@@ -91,7 +91,7 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
-		public async Task InvalidSerializeFieldTest()
+		public async Task InvalidSerializeFieldPropertyTest()
 		{
 			const string test = @"
 using UnityEngine;
@@ -115,6 +115,74 @@ using UnityEngine;
 class Camera : MonoBehaviour
 {
     private string privateProperty { get; set; } 
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task InvalidSerializeFieldReadonlyTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField]
+    readonly string readonlyField;
+}
+";
+
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
+				.WithLocation(6, 5)
+				.WithArguments("readonlyField");
+
+			var context = AnalyzerVerificationContext.Default
+				.WithAnalyzerFilter("CS0169");
+
+			await VerifyCSharpDiagnosticAsync(context, test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    readonly string readonlyField;
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task InvalidSerializeFieldStaticTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField]
+    static string staticField;
+}
+";
+
+			var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
+				.WithLocation(6, 5)
+				.WithArguments("staticField");
+
+			var context = AnalyzerVerificationContext.Default
+				.WithAnalyzerFilter("CS0169");
+
+			await VerifyCSharpDiagnosticAsync(context, test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    static string staticField;
 }
 ";
 
