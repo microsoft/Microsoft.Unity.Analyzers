@@ -448,6 +448,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use KeyCode argument.
+        /// </summary>
+        internal static string InputGetKeyCodeFixTitle {
+            get {
+                return ResourceManager.GetString("InputGetKeyCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage of the method overload with KeyCode argument is preferred..
+        /// </summary>
+        internal static string InputGetKeyDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("InputGetKeyDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A method overload with KeyCode argument exists..
+        /// </summary>
+        internal static string InputGetKeyDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("InputGetKeyDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input.GetKey overloads with KeyCode argument.
+        /// </summary>
+        internal static string InputGetKeyDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("InputGetKeyDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fix message signature.
         /// </summary>
         internal static string MessageSignatureCodeFixTitle {

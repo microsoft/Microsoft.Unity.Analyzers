@@ -459,4 +459,16 @@
   <data name="VectorMathDiagnosticTitle" xml:space="preserve">
     <value>Give priority to scalar calculations over vector calculations</value>
   </data>
+  <data name="InputGetKeyCodeFixTitle" xml:space="preserve">
+    <value>Use KeyCode argument</value>
+  </data>
+  <data name="InputGetKeyDiagnosticDescription" xml:space="preserve">
+    <value>Usage of the method overload with KeyCode argument is preferred.</value>
+  </data>
+  <data name="InputGetKeyDiagnosticMessageFormat" xml:space="preserve">
+    <value>A method overload with KeyCode argument exists.</value>
+  </data>
+  <data name="InputGetKeyDiagnosticTitle" xml:space="preserve">
+    <value>Input.GetKey overloads with KeyCode argument</value>
+  </data>
 </root>
