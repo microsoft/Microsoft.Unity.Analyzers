@@ -96,6 +96,10 @@ namespace UnityEngine
 	class Shader
 	{
 	}
+	
+	class Bounds
+	{
+	}
 
 	class Material
 	{
@@ -134,6 +138,7 @@ namespace UnityEngine
 		void OnDisable() { }
 		void OnEnable() { }
 		void OnValidate() { }
+		void Reset() { }
 	}
 
 	class IEnumeratorOrVoid
@@ -732,6 +737,8 @@ namespace UnityEditor
 		public virtual VisualElement CreateInspectorGUI() { return null; }
 		protected virtual bool ShouldHideOpenButton() { return false; }
 		void OnSceneGUI() { }
+		bool HasFrameBounds() { return false; }
+		Bounds OnGetFrameBounds() { return default; }
 	}
 
 	class EditorWindow : ScriptableObject
