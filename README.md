@@ -22,7 +22,7 @@ For building and testing, you'll need **.NET 5 and Visual Studio version 16.8+ o
 
 This project binaries are targeting **Visual Studio 2019 16.4+** and **Visual Studio for Mac 8.4+**.
 
-This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics. 
+This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics.
 
 On Windows, you'll need the _Visual Studio extension development_ workload installed to build a VSIX to use and debug the project in Visual Studio.
 
