@@ -4,7 +4,7 @@
 [![Build status on macOS](https://github.com/microsoft/Microsoft.Unity.Analyzers/workflows/CI-macOS/badge.svg)](https://github.com/microsoft/Microsoft.Unity.Analyzers/actions?query=workflow%3ACI-macOS)
 [![NuGet](https://img.shields.io/nuget/v/Microsoft.Unity.Analyzers.svg)](https://nuget.org/packages/Microsoft.Unity.Analyzers)
 
-This project provides Visual Studio with a better understanding of Unity projects by adding Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects. 
+This project provides Visual Studio with a better understanding of Unity projects by adding Unity-specific diagnostics or by removing general C# diagnostics that do not apply to Unity projects.
 
 Check out the [list of analyzers and suppressors](doc/index.md) defined in this project.
 
