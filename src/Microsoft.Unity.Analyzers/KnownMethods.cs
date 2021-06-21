@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Unity.Analyzers
 {
@@ -20,6 +21,8 @@ namespace Microsoft.Unity.Analyzers
 			nameof(UnityEngine.Component.GetComponentsInChildren),
 			nameof(UnityEngine.Component.GetComponentsInParent),
 		});
+
+		public static bool IsGetComponentName(SimpleNameSyntax name) => GetComponentNames.Contains(name.Identifier.Text);
 
 		public static bool IsGetComponent(IMethodSymbol method)
 		{

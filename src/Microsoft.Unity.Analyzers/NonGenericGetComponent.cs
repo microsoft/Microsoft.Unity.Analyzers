@@ -45,6 +45,13 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
+			var name = invocation.GetMethodNameSyntax();
+			if (name == null)
+				return;
+
+			if (!KnownMethods.IsGetComponentName(name))
+				return;
+
 			var symbol = context.SemanticModel.GetSymbolInfo(invocation);
 			if (symbol.Symbol == null)
 				return;
