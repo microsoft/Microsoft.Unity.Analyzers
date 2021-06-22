@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -46,34 +47,28 @@ namespace Microsoft.Unity.Analyzers
 		{
 			var location = diagnostic.Location;
 			var model = context.GetSemanticModel(location.SourceTree);
-			var symbols = new List<ISymbol>();
 
-			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax or VariableDeclaratorSyntax or FieldDeclarationSyntax);
+			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax or VariableDeclaratorSyntax);
 			switch (node)
 			{
 				case MethodDeclarationSyntax method:
-					symbols.Add(model.GetDeclaredSymbol(method));
+					if (IsReportable(model.GetDeclaredSymbol(method)))
+					{
+						context.ReportSuppression(Suppression.Create(ContextMenuRule, diagnostic));
+						return;
+					}
 					break;
 				case VariableDeclaratorSyntax vdec:
-					symbols.Add(model.GetDeclaredSymbol(vdec));
-					break;
-				case FieldDeclarationSyntax fdec:
-					symbols.AddRange(fdec.Declaration.Variables.Select(v => model.GetDeclaredSymbol(v)));
+					if (IsReportable(model.GetDeclaredSymbol(vdec)))
+					{
+						foreach (var descriptor in SupportedSuppressions)
+							if (descriptor.SuppressedDiagnosticId == diagnostic.Id)
+								context.ReportSuppression(Suppression.Create(descriptor, diagnostic));
+
+						return;
+					}
 					break;
 			}
-
-			var reportableSymbols = symbols
-				.Where(IsReportable)
-				.ToList();
-
-			if (!reportableSymbols.Any())
-				return;
-
-			if (reportableSymbols.FirstOrDefault() is IMethodSymbol)
-				context.ReportSuppression(Suppression.Create(ContextMenuRule, diagnostic));
-			else
-				foreach (var descriptor in SupportedSuppressions.Where(d => d.SuppressedDiagnosticId == diagnostic.Id))
-					context.ReportSuppression(Suppression.Create(descriptor, diagnostic));
 		}
 
 		private static bool IsReportable(ISymbol symbol)

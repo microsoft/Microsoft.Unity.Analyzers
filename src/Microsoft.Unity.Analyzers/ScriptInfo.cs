@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Unity.Analyzers
 {
-	internal class ScriptInfo
+	internal readonly struct ScriptInfo
 	{
 		internal static readonly Type[] Types =
 		{

@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +13,7 @@ using Microsoft.CodeAnalysis.Editing;
 
 namespace Microsoft.Unity.Analyzers
 {
-	internal class MessageBuilder
+	internal readonly struct MessageBuilder
 	{
 		private readonly SyntaxGenerator _generator;
 
@@ -23,8 +22,19 @@ namespace Microsoft.Unity.Analyzers
 			_generator = generator;
 		}
 
-		public IEnumerable<SyntaxNode> CreateParameters(MethodInfo message) =>
-			message.GetParameters().Select(p => _generator.ParameterDeclaration(name: p.Name, type: CreateTypeReference(p.ParameterType)));
+		public SyntaxNode[] CreateParameters(MethodInfo message)
+		{
+			var parameters = message.GetParameters();
+			var nodes = new SyntaxNode[parameters.Length];
+
+			for (int i = 0; i < parameters.Length; i++)
+			{
+				var parameter = parameters[i];
+				nodes[i] = _generator.ParameterDeclaration(name: parameter.Name, type: CreateTypeReference(parameter.ParameterType));
+			}
+
+			return nodes;
+		}
 
 		private SyntaxNode CreateTypeReference(Type type)
 		{

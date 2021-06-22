@@ -51,15 +51,14 @@ namespace Microsoft.Unity.Analyzers
 			while (typeSymbol.ContainingType != null && typeSymbol.ContainingType.Extends(typeof(UnityEngine.MonoBehaviour)))
 				typeSymbol = typeSymbol.ContainingType;
 
-			var references = new List<InvocationExpressionSyntax>();
-			foreach (var typeNode in typeSymbol.Locations.Select(location => root.FindNode(location.SourceSpan)))
-			{
-				references.AddRange(typeNode.DescendantNodes()
-					.OfType<InvocationExpressionSyntax>()
-					.Where(e => MethodInvocationAnalyzer.InvocationMatches(e, out string? argument) && argument == methodSymbol.Name));
-			}
+			var report = typeSymbol.Locations
+				.Select(location => root.FindNode(location.SourceSpan))
+				.SelectMany(typeNode => typeNode.DescendantNodes())
+				.OfType<InvocationExpressionSyntax>()
+				.Where(e => MethodInvocationAnalyzer.InvocationMatches(e, out string? argument) && argument == methodSymbol.Name)
+				.Any();
 
-			if (references.Any())
+			if (report)
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 	}
