@@ -14,8 +14,7 @@ namespace Microsoft.Unity.Analyzers
 			return expr.Expression switch
 			{
 				MemberAccessExpressionSyntax mae => mae.Name,
-				IdentifierNameSyntax ins => ins,
-				GenericNameSyntax gns => gns,
+				SimpleNameSyntax sns => sns,
 				_ => null,
 			};
 		}
