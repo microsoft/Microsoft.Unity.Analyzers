@@ -29,7 +29,8 @@ namespace Microsoft.Unity.Analyzers
 
 			for (int i = 0; i < parameters.Length; i++)
 			{
-				nodes[i] = _generator.ParameterDeclaration(name: parameters[i].Name, type: CreateTypeReference(parameters[i].ParameterType));
+				var parameter = parameters[i];
+				nodes[i] = _generator.ParameterDeclaration(name: parameter.Name, type: CreateTypeReference(parameter.ParameterType));
 			}
 
 			return nodes;
