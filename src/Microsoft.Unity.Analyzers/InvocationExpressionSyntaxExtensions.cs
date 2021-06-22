@@ -11,20 +11,13 @@ namespace Microsoft.Unity.Analyzers
 	{
 		public static SimpleNameSyntax? GetMethodNameSyntax(this InvocationExpressionSyntax expr)
 		{
-			SimpleNameSyntax? nameSyntax = null;
-
-			switch (expr.Expression)
+			return expr.Expression switch
 			{
-				case MemberAccessExpressionSyntax mae:
-					nameSyntax = mae.Name;
-					break;
-				case IdentifierNameSyntax ies:
-					nameSyntax = ies;
-					break;
-			}
-
-			return nameSyntax;
+				MemberAccessExpressionSyntax mae => mae.Name,
+				IdentifierNameSyntax ins => ins,
+				GenericNameSyntax gns => gns,
+				_ => null,
+			};
 		}
-
 	}
 }
