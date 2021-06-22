@@ -54,7 +54,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsMessage(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method, Type metadata, string methodName)
 		{
-			var classDeclaration = method?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+			var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 			if (classDeclaration == null)
 				return false;
 

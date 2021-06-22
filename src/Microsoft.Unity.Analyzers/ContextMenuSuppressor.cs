@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -53,20 +51,13 @@ namespace Microsoft.Unity.Analyzers
 			{
 				case MethodDeclarationSyntax method:
 					if (IsReportable(model.GetDeclaredSymbol(method)))
-					{
 						context.ReportSuppression(Suppression.Create(ContextMenuRule, diagnostic));
-						return;
-					}
 					break;
 				case VariableDeclaratorSyntax vdec:
 					if (IsReportable(model.GetDeclaredSymbol(vdec)))
-					{
 						foreach (var descriptor in SupportedSuppressions)
 							if (descriptor.SuppressedDiagnosticId == diagnostic.Id)
 								context.ReportSuppression(Suppression.Create(descriptor, diagnostic));
-
-						return;
-					}
 					break;
 			}
 		}
