@@ -44,7 +44,7 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeInvocationExpression(SyntaxNodeAnalysisContext context)
 		{
 			var expr = (InvocationExpressionSyntax)context.Node;
-			var nameSyntax = GetMethodNameSyntax(expr);
+			var nameSyntax = expr.GetMethodNameSyntax();
 
 			if (!IsSupportedMethod(context, nameSyntax))
 				return;
@@ -72,16 +72,22 @@ namespace Microsoft.Unity.Analyzers
 				context.ReportDiagnostic(Diagnostic.Create(Rule, expr.GetLocation()));
 		}
 
-		private static bool IsSupportedMethod(SyntaxNodeAnalysisContext context, [NotNullWhen(true)] ExpressionSyntax? nameSyntax)
+		private static bool IsSupportedMethod(SyntaxNodeAnalysisContext context, SimpleNameSyntax? nameSyntax)
 		{
 			if (nameSyntax == null)
+				return false;
+
+			const string equalsName = "Equals";
+
+			var name = GetMethodName(nameSyntax);
+			if (name != equalsName)
 				return false;
 
 			var symbolInfo = context.SemanticModel.GetSymbolInfo(nameSyntax);
 			if (symbolInfo.Symbol is not IMethodSymbol symbol)
 				return false;
 
-			if (symbol.Name != "Equals" || symbol.Parameters.Length > 2)
+			if (symbol.Name != equalsName || symbol.Parameters.Length > 2)
 				return false;
 
 			if (!symbol.ReturnType.Matches(typeof(bool)))
@@ -91,22 +97,7 @@ namespace Microsoft.Unity.Analyzers
 			return containgType.Matches(typeof(string)) || containgType.Matches(typeof(object));
 		}
 
-		private static NameSyntax? GetMethodNameSyntax(InvocationExpressionSyntax expr)
-		{
-			var nameSyntax = default(NameSyntax);
-
-			switch (expr.Expression)
-			{
-				case MemberAccessExpressionSyntax mae:
-					nameSyntax = mae.Name;
-					break;
-				case IdentifierNameSyntax ies:
-					nameSyntax = ies;
-					break;
-			}
-
-			return nameSyntax;
-		}
+		private static string GetMethodName(SimpleNameSyntax nameSyntax) => nameSyntax.Identifier.Text;
 
 		private static bool IsReportableExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax expr)
 		{

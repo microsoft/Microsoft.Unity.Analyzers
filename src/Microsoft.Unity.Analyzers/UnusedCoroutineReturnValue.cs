@@ -37,14 +37,14 @@ namespace Microsoft.Unity.Analyzers
 		private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
+			if (!invocation.Parent.IsKind(SyntaxKind.ExpressionStatement))
+				return;
+
 			var symbol = context.SemanticModel.GetSymbolInfo(invocation);
 			if (symbol.Symbol == null)
 				return;
 
 			if (!IsValidCoroutine(symbol.Symbol, out var methodName))
-				return;
-
-			if (!invocation.Parent.IsKind(SyntaxKind.ExpressionStatement))
 				return;
 
 			context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), methodName));
