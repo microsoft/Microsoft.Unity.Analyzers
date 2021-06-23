@@ -42,7 +42,7 @@ namespace Microsoft.Unity.Analyzers
 				return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword));
 
 			if (type.IsArray)
-				return _generator.ArrayTypeExpression(CreateTypeReference(type.GetElementType()));
+				return _generator.ArrayTypeExpression(CreateTypeReference(type.GetElementType()!));
 
 			if (type.IsConstructedGenericType)
 				return _generator.WithTypeArguments(

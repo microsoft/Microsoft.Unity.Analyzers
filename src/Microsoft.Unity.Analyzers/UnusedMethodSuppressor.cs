@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -55,8 +54,7 @@ namespace Microsoft.Unity.Analyzers
 				.Select(location => root.FindNode(location.SourceSpan))
 				.SelectMany(typeNode => typeNode.DescendantNodes())
 				.OfType<InvocationExpressionSyntax>()
-				.Where(e => MethodInvocationAnalyzer.InvocationMatches(e, out string? argument) && argument == methodSymbol.Name)
-				.Any();
+				.Any(e => MethodInvocationAnalyzer.InvocationMatches(e, out string? argument) && argument == methodSymbol.Name);
 
 			if (report)
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));

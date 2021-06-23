@@ -120,7 +120,7 @@ namespace Microsoft.Unity.Analyzers
 				return false;
 
 			var leftSymbol = model.GetSymbolInfo(left);
-			if (!(leftSymbol.Symbol is IPropertySymbol))
+			if (leftSymbol.Symbol is not IPropertySymbol)
 				return false;
 
 			var leftExpressionTypeInfo = model.GetTypeInfo(left.Expression);

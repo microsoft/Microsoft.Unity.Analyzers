@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -133,20 +132,16 @@ namespace Microsoft.Unity.Analyzers
 
 		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 		{
-			var node = await context.GetFixableNodeAsync<SyntaxNode>(n => n is BinaryExpressionSyntax || n is InvocationExpressionSyntax);
+			var node = await context.GetFixableNodeAsync<SyntaxNode>(n => n is BinaryExpressionSyntax or InvocationExpressionSyntax);
 			if (node == null)
 				return;
 
-			Func<CancellationToken, Task<Document>>? action = null;
-			switch (node)
+			Func<CancellationToken, Task<Document>>? action = node switch
 			{
-				case BinaryExpressionSyntax bes:
-					action = ct => ReplaceBinaryExpressionAsync(context.Document, bes, ct);
-					break;
-				case InvocationExpressionSyntax ies:
-					action = ct => ReplaceInvocationExpressionAsync(context.Document, ies, ct);
-					break;
-			}
+				BinaryExpressionSyntax bes => ct => ReplaceBinaryExpressionAsync(context.Document, bes, ct),
+				InvocationExpressionSyntax ies => ct => ReplaceInvocationExpressionAsync(context.Document, ies, ct),
+				_ => null
+			};
 
 			context.RegisterCodeFix(
 				CodeAction.Create(

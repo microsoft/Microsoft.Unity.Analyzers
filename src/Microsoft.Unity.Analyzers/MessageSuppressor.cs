@@ -47,7 +47,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is ParameterSyntax || n is MethodDeclarationSyntax);
+			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is ParameterSyntax or MethodDeclarationSyntax);
 
 			if (node is ParameterSyntax)
 			{
