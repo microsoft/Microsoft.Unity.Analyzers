@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: VSEng-MicroBuildVS2019
+  name: VSEngSS-MicroBuild2019
   demands:
   - DotNetFramework
   - msbuild
@@ -23,6 +23,8 @@ steps:
   displayName: 'Install Signing Plugin'
   inputs:
     signType: '$(SignType)'
+
+- task: NuGetAuthenticate@0
 
 - task: PowerShell@1
   displayName: 'Build infos'
