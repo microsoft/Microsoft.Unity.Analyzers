@@ -65,7 +65,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsReportableExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
 		{
-			return IsCandidateExpression(context, node, vectorType)
+			return IsSupportedExpression(context, node, vectorType)
 			       && NeedsOrdering(context, (ExpressionSyntax)node);
 		}
 
@@ -122,35 +122,29 @@ namespace Microsoft.Unity.Analyzers
 			}
 		}
 
-		private static bool IsCandidateExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
+		private static bool IsSupportedExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
 		{
 			if (node is not BinaryExpressionSyntax be)
+			{
+				var model = context.SemanticModel;
+				var typeInfo = model.GetTypeInfo(node);
+
+				// We want to check the converted type here, given all is float-based.
+				if (IsFloatType(typeInfo))
+					return true;
+
+				// Else we want a matrix-like item
+				var type = typeInfo.Type;
+				if (type != null && type.Matches(vectorType))
+					return true;
+
 				return false;
+			}
 
 			if (!node.IsKind(SyntaxKind.MultiplyExpression))
 				return false;
 
 			return IsSupportedExpression(context, be.Left, vectorType) && IsSupportedExpression(context, be.Right, vectorType);
-		}
-
-		private static bool IsSupportedExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax expression, Type vectorType)
-		{
-			if (IsCandidateExpression(context, expression, vectorType))
-				return true;
-
-			var model = context.SemanticModel;
-			var typeInfo = model.GetTypeInfo(expression);
-
-			// We want to check the converted type here, given all is float-based.
-			if (IsFloatType(typeInfo))
-				return true;
-
-			// Else we want a matrix-like item
-			var type = typeInfo.Type;
-			if (type != null && type.Matches(vectorType))
-				return true;
-
-			return false;
 		}
 	}
 

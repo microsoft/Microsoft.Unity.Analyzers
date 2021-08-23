@@ -235,5 +235,65 @@ class Camera : MonoBehaviour
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
+
+		[Fact]
+		public async Task OnlyMultiplyExpression()
+		{
+			string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update() {
+        float curAngle = 0, preAngle = 0, rev = 0;
+        Transform target = transform;
+        Vector3 offsetPerRound = Vector3.up;
+
+        target.position += offsetPerRound * (curAngle - preAngle) / 360 * rev;
+    }
+}
+";
+
+			await VerifyCSharpDiagnosticAsync(test);
+		}
+
+		[Fact]
+		public async Task WhenMultiplyExpressionUsed()
+		{
+			string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update() {
+        float curAngle = 0, preAngle = 0, rev = 0;
+        Transform target = transform;
+        Vector3 offsetPerRound = Vector3.up;
+
+        target.position += offsetPerRound * (curAngle - preAngle) * 360 * rev;
+    }
+}
+";
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(11, 28);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update() {
+        float curAngle = 0, preAngle = 0, rev = 0;
+        Transform target = transform;
+        Vector3 offsetPerRound = Vector3.up;
+
+        target.position += (curAngle - preAngle) * 360 * rev * offsetPerRound;
+    }
+}
+";
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
 	}
 }
