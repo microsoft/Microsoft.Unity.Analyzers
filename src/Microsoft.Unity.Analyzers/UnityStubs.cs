@@ -724,6 +724,13 @@ namespace UnityEditor.AssetImporters
 	class MaterialDescription
 	{
 	}
+
+	class ScriptedImporter
+	{
+		static string[] GatherDependenciesFromSourceFile(string assetPath) { return null; }
+		void OnValidate() { }
+		void Reset() { }
+	}
 }
 
 namespace UnityEditor
