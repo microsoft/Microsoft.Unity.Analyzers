@@ -141,6 +141,66 @@ class Camera : MonoBehaviour
 		}
 
 		[Fact]
+		public async Task TestCancelInvokeNoArgument()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        CancelInvoke();
+    }
+}";
+
+			await VerifyCSharpDiagnosticAsync(test);
+		}
+
+		[Fact]
+		public async Task TestCancelInvoke()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        CancelInvoke(""InvokeMe"");
+    }
+
+    private void InvokeMe()
+    {
+    }
+}";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(8, 9)
+				.WithArguments("InvokeMe");
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        CancelInvoke(nameof(InvokeMe));
+    }
+
+    private void InvokeMe()
+    {
+    }
+}";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+
+		[Fact]
 		public async Task TestInvokeRepeatingThis()
 		{
 			const string test = @"
