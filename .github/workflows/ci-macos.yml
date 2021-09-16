@@ -10,6 +10,11 @@ on:
     - main
     - release/*
 
+env:
+  UNITY_FULL_VERSION: 2020.3.18f1
+  UNITY_HASH: a7d1c678663c
+  UNITY_PATH: /Applications/Unity/Unity.app/Contents
+
 jobs:
   macos:
     runs-on: macos-latest
@@ -27,12 +32,12 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unitycache-2020.3.9f1
+        key: ${{ runner.os }}-unitycache-${{env.UNITY_FULL_VERSION}}
         path: UnityCache
 
-    - name: Download Unity 2020.3.9f1 LTS
+    - name: Download Unity ${{env.UNITY_FULL_VERSION}} LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/108be757e447/MacEditorInstaller/Unity.pkg
+      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/${{env.UNITY_HASH}}/MacEditorInstaller/Unity.pkg
 
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
@@ -40,19 +45,19 @@ jobs:
 
     - name: Prepare Managed Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: sudo ditto /Applications/Unity/Unity.app/Contents/Managed/ UnityCache/Managed
+      run: sudo ditto {{env.UNITY_PATH}}/Managed/ UnityCache/Managed
 
     - name: Prepare MonoBleedingEdge Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: sudo ditto /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/ UnityCache/MonoBleedingEdge
+      run: sudo ditto {{env.UNITY_PATH}}/MonoBleedingEdge/ UnityCache/MonoBleedingEdge
 
     - name: Restore Managed Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: sudo ditto UnityCache/Managed/ /Applications/Unity/Unity.app/Contents/Managed/
+      run: sudo ditto UnityCache/Managed/ {{env.UNITY_PATH}}/Managed/
 
     - name: Restore MonoBleedingEdge Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
+      run: sudo ditto UnityCache/MonoBleedingEdge/ {{env.UNITY_PATH}}/MonoBleedingEdge/
 
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
