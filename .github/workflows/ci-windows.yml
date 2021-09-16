@@ -32,7 +32,7 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{runner.os}}-unitycache-${{env.UNITY_FULL_VERSION}}
+        key: ${{runner.os}}-unitycacheDEBUG1-${{env.UNITY_FULL_VERSION}}
         path: UnityCache
 
     - name: Download Unity ${{env.UNITY_FULL_VERSION}} LTS
