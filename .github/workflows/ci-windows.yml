@@ -13,7 +13,7 @@ on:
 env:
   UNITY_FULL_VERSION: 2020.3.18f1
   UNITY_HASH: a7d1c678663c
-  UNITY_PATH: C:/Program\ Files/Unity
+  UNITY_PATH: 'C:\Program Files\Unity'
 
 jobs:
   windows:
