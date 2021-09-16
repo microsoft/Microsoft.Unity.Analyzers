@@ -9,6 +9,10 @@ on:
     branches:
     - main
     - release/*
+    
+env:
+  UNITY_FULL_VERSION: 2020.3.18f1
+  UNITY_HASH: a7d1c678663c
 
 jobs:
   windows:
@@ -27,12 +31,12 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unitycache-2020.3.9f1
+        key: ${{runner.os}}-unitycache-${{env.UNITY_FULL_VERSION}}
         path: UnityCache
 
-    - name: Download Unity 2020.3.9f1 LTS
+    - name: Download Unity ${{env.UNITY_FULL_VERSION}} LTS
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/108be757e447/Windows64EditorInstaller/UnitySetup64-2020.3.9f1.exe" "%CD%\unitysetup.exe"
+      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/${{env.UNITY_HASH}}/Windows64EditorInstaller/UnitySetup64-${{env.UNITY_FULL_VERSION}}.exe" "%CD%\unitysetup.exe"
       shell: cmd
       
     - name: Install Unity
