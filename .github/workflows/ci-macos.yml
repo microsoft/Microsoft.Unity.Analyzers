@@ -10,6 +10,10 @@ on:
     - main
     - release/*
 
+env:
+  UNITY_HASH: a7d1c678663c
+  UNITY_FULL_VERSION: 2020.3.18f1
+  
 jobs:
   macos:
     runs-on: macos-latest
@@ -27,12 +31,12 @@ jobs:
       id: cache-unity
       uses: actions/cache@v1
       with:
-        key: ${{ runner.os }}-unitycache-2020.3.9f1
+        key: ${{ runner.os }}-unitycache-${{ env.UNITY_FULL_VERSION }}
         path: UnityCache
 
-    - name: Download Unity 2020.3.9f1 LTS
+    - name: Download Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/108be757e447/MacEditorInstaller/Unity.pkg
+      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/${{ env.UNITY_HASH }}/MacEditorInstaller/Unity.pkg
 
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
