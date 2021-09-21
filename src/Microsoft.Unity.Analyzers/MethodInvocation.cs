@@ -43,7 +43,7 @@ namespace Microsoft.Unity.Analyzers
 		}
 
 		// TODO we cannot add this to our stubs/KnownMethods so far (else they will be matched as Unity messages)
-		internal static readonly HashSet<string> InvokeMethodNames = new(new[] { "Invoke", "InvokeRepeating" });
+		internal static readonly HashSet<string> InvokeMethodNames = new(new[] { "Invoke", "InvokeRepeating", "CancelInvoke" });
 		internal static readonly HashSet<string> CoroutineMethodNames = new(new[] { "StartCoroutine", "StopCoroutine" });
 
 		private static bool InvocationMatches(SyntaxNode node)
