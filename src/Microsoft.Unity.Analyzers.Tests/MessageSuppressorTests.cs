@@ -73,5 +73,48 @@ public class TestScript : MonoBehaviour
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
+
+		[Fact]
+		public async Task UnusedMethodScriptedImporterSuppressed()
+		{
+			const string test = @"
+using System;
+using UnityEditor.AssetImporters;
+
+internal class Test : ScriptedImporter
+{
+    private void Reset()
+    {
+    }
+
+    private static string[] GatherDependenciesFromSourceFile(string assetPath)
+    {
+        return null;
+    }
+
+    private void OnValidate()
+    {
+    }
+
+    public override void OnImportAsset(AssetImportContext ctx)
+    {
+    }
+
+    public override bool SupportsRemappedAssetType(Type type)
+    {
+        return true;
+    }
+}
+";
+
+			var suppressors = new[] {
+				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(7, 18),
+				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(11, 29),
+				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(11, 69),
+				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(16, 18),
+			};
+
+			await VerifyCSharpDiagnosticAsync(test, suppressors);
+		}
 	}
 }

@@ -23,7 +23,8 @@ namespace Microsoft.Unity.Analyzers
 			typeof(UnityEditor.Editor),
 			typeof(UnityEngine.ScriptableObject),
 			typeof(UnityEngine.MonoBehaviour),
-			typeof(UnityEditor.AssetPostprocessor)
+			typeof(UnityEditor.AssetPostprocessor),
+			typeof(UnityEditor.AssetImporters.ScriptedImporter)
 		};
 
 		private readonly ITypeSymbol _symbol;
