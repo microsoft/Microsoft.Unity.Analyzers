@@ -59,6 +59,10 @@ namespace Microsoft.Unity.Analyzers
 			if (!scriptInfo.IsMessage(symbol))
 				return;
 
+			// In this case the scope is enforced
+			if (symbol.IsOverride)
+				return;
+
 			context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation()));
 		}
 	}
