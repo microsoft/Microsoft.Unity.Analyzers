@@ -215,5 +215,22 @@ public sealed class Camera : MonoBehaviour
 
 			await VerifyCSharpDiagnosticAsync(test);
 		}
+
+		[Fact]
+		public async Task ShouldNotWarnForOverride()
+		{
+			const string test = @"
+using UnityEngine;
+
+class StateMachine : StateMachineBehaviour
+{
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
+    {
+    }
+}
+";
+
+			await VerifyCSharpDiagnosticAsync(test);
+		}
 	}
 }
