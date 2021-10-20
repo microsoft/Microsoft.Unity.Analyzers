@@ -41,7 +41,7 @@ jobs:
       
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: unitysetup.exe /UI=reduced /S
+      run: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
       shell: cmd
               
     - name: Prepare Managed Cache
