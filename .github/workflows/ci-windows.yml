@@ -11,8 +11,8 @@ on:
     - release/*
 
 env:
-  UNITY_HASH: a7d1c678663c
-  UNITY_FULL_VERSION: 2020.3.18f1
+  UNITY_HASH: 41c4e627c95f
+  UNITY_FULL_VERSION: 2020.3.20f1
 
 jobs:
   windows:
