@@ -11,8 +11,8 @@ on:
     - release/*
 
 env:
-  UNITY_HASH: a7d1c678663c
-  UNITY_FULL_VERSION: 2020.3.18f1
+  UNITY_HASH: 41c4e627c95f
+  UNITY_FULL_VERSION: 2020.3.20f1
 
 jobs:
   windows:
@@ -41,7 +41,7 @@ jobs:
       
     - name: Install Unity
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: unitysetup.exe /UI=reduced /S
+      run: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
       shell: cmd
               
     - name: Prepare Managed Cache
