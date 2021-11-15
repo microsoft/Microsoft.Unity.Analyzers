@@ -13,17 +13,50 @@ using Microsoft.Unity.Analyzers;
 
 namespace UnityEngine
 {
-	class Object
-	{
-	}
+	class AnimationClip { }
+	class Animator { }
+	class AnimatorStateInfo { }
+	class AudioClip { }
+	class BitStream { }
+	class Bounds { }
+	class Camera { }
+	class Collider { }
+	class Collider2D { }
+	class Collision { }
+	class Collision2D { }
+	class ContextMenu : System.Attribute { }
+	class ContextMenuItemAttribute : System.Attribute { }
+	class ControllerColliderHit { }
+	class Cubemap { }
+	class GameObject { }
+	class HideInInspector : System.Attribute { }
+	class Joint2D { }
+	class Light { }
+	class MasterServerEvent { }
+	class Material { }
+	class NetworkConnectionError { }
+	class NetworkDisconnection { }
+	class NetworkMessageInfo { }
+	class NetworkPlayer { }
+	class Object { }
+	class Renderer { }
+	class RenderTexture { }
+	class RuntimeInitializeOnLoadMethodAttribute : System.Attribute { }
+	class SerializeField : System.Attribute { }
+	class SerializeReference : System.Attribute { }
+	class Shader { }
+	class Sprite { }
 
-	class Collision
-	{
-	}
+	enum CubemapFace { }
 
-	class Collision2D
-	{
-	}
+	struct Color { }
+	
+	public struct Vector2 { }
+	public struct Vector3 { }
+	public struct Vector4 { }
+
+
+	class IEnumeratorOrVoid { }
 
 	class Component
 	{
@@ -45,86 +78,6 @@ namespace UnityEngine
 		public Component[] GetComponentsInParent<T>(bool includeInactive = false) { return null; }
 	}
 
-	class ControllerColliderHit
-	{
-	}
-
-	class NetworkDisconnection
-	{
-	}
-
-	class NetworkConnectionError
-	{
-	}
-
-	class NetworkMessageInfo
-	{
-	}
-
-	class GameObject
-	{
-	}
-
-	class NetworkPlayer
-	{
-	}
-
-	class RenderTexture
-	{
-	}
-
-	class MasterServerEvent
-	{
-	}
-
-	class BitStream
-	{
-	}
-
-	class Collider
-	{
-	}
-
-	class Collider2D
-	{
-	}
-
-	class Joint2D
-	{
-	}
-
-	class Shader
-	{
-	}
-	
-	class Bounds
-	{
-	}
-
-	class Material
-	{
-	}
-
-	class Renderer
-	{
-	}
-
-	class AnimationClip
-	{
-	}
-
-	class AudioClip
-	{
-	}
-
-	class Cubemap
-	{
-	}
-
-	class Sprite
-	{
-	}
-
 	class Transform
 	{
 		void position() { }
@@ -139,10 +92,6 @@ namespace UnityEngine
 		void OnEnable() { }
 		void OnValidate() { }
 		void Reset() { }
-	}
-
-	class IEnumeratorOrVoid
-	{
 	}
 
 	class MonoBehaviour
@@ -220,14 +169,6 @@ namespace UnityEngine
 		IEnumeratorOrVoid OnParticleUpdateJobScheduled() { return null; }
 	}
 
-	class Animator
-	{
-	}
-
-	class AnimatorStateInfo
-	{
-	}
-
 	class StateMachineBehaviour : ScriptableObject
 	{
 		public virtual void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) { }
@@ -237,38 +178,6 @@ namespace UnityEngine
 		public virtual void OnStateUpdate(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex) { }
 		public virtual void OnStateMachineEnter(Animator animator, int stateMachinePathHash) { }
 		public virtual void OnStateMachineExit(Animator animator, int stateMachinePathHash) { }
-	}
-
-	class HideInInspector : System.Attribute
-	{
-	}
-
-	class SerializeField : System.Attribute
-	{
-	}
-
-	class SerializeReference : System.Attribute
-	{
-	}
-
-	class ContextMenu : System.Attribute
-	{
-	}
-
-	class ContextMenuItemAttribute : System.Attribute
-	{
-	}
-
-	class RuntimeInitializeOnLoadMethodAttribute : System.Attribute
-	{
-	}
-
-	struct Color
-	{
-	}
-
-	enum CubemapFace
-	{
 	}
 
 	class Texture2D
@@ -296,10 +205,6 @@ namespace UnityEngine
 		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement, int miplevel) { }
 		[SetPixelsMethodUsage] void SetPixels(Color[] colors, CubemapFace face, int arrayElement) { }
 	}
-
-	public struct Vector2 { }
-	public struct Vector3 { }
-	public struct Vector4 { }
 
 	class Input
 	{
@@ -671,17 +576,9 @@ namespace UnityEngine.EventSystems
 
 namespace UnityEngine.Networking
 {
-	class NetworkReader
-	{
-	}
-
-	class NetworkWriter
-	{
-	}
-
-	class NetworkConnection
-	{
-	}
+	class NetworkReader { }
+	class NetworkWriter { }
+	class NetworkConnection { }
 
 	class NetworkBehaviour : MonoBehaviour
 	{
@@ -714,16 +611,14 @@ namespace UnityEngine.Networking
 
 namespace UnityEngine.UIElements
 {
-	class VisualElement
-	{
-	}
+	class VisualElement { }
 }
 
 namespace UnityEditor.AssetImporters
 {
-	class MaterialDescription
-	{
-	}
+	class MaterialDescription { }
+	class CameraDescription { }
+	class LightDescription { }
 
 	class ScriptedImporter
 	{
@@ -800,6 +695,9 @@ namespace UnityEditor
 		void OnPostprocessSpeedTree(GameObject gameobject) { }
 		void OnPostProcessSprites(Texture2D texture, Sprite[] sprites) { }
 		void OnPostprocessTexture(Texture2D texture) { }
+		void OnPostprocessPrefab(GameObject gameObject) { }
+		void OnPostprocessTexture2DArray(Texture2DArray texture) { }
+		void OnPostprocessTexture3D(Texture3D texture) { }
 
 		void OnPreprocessAnimation() { }
 		void OnPreprocessAsset() { }
@@ -808,9 +706,12 @@ namespace UnityEditor
 		void OnPreprocessModel() { }
 		void OnPreprocessSpeedTree() { }
 		void OnPreprocessTexture() { }
+		void OnPreprocessCameraDescription(CameraDescription description, Camera camera, AnimationClip[] clips) { }
+		void OnPreprocessLightDescription(LightDescription description, Light light, AnimationClip[] clips) { }
+
+		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) { }
 
 		// undocumented static methods
-		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) { }
 		static bool OnPreGeneratingCSProjectFiles() { return false; }
 		static string OnGeneratedSlnSolution(string path, string content) { return null; }
 		static string OnGeneratedCSProject(string path, string content) { return null; }
