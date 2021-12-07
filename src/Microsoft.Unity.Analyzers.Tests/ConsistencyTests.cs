@@ -38,7 +38,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 					Assert.NotNull(rule);
 
 					var id = reader(rule);
-					var prefix = id.Substring(0, 3);
+					var prefix = id[..3];
 					var num = int.Parse(id[3..]);
 
 					if (!lookup.TryGetValue(prefix, out _))
