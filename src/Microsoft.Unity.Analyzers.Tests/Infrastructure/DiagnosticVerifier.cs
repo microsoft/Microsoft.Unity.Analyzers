@@ -73,7 +73,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected Task VerifyCSharpDiagnosticAsync(AnalyzerVerificationContext context, string source, params DiagnosticResult[] expected)
 		{
-			return VerifyDiagnosticsAsync(context, new[] { source }, GetCSharpDiagnosticAnalyzer(), expected);
+			return VerifyDiagnosticsAsync(context, new[] {source}, GetCSharpDiagnosticAnalyzer(), expected);
 		}
 
 		private async Task VerifyDiagnosticsAsync(AnalyzerVerificationContext context, string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
@@ -201,6 +201,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 					break;
 				}
 			}
+
 			return builder.ToString();
 		}
 
@@ -228,7 +229,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 				var optionsProvider = new AnalyzerOptionsProvider(context.Options);
 				var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
-				var analyzerOptions = new CompilationWithAnalyzersOptions(options, (e,_,_) => throw e, true, true, true);
+				var analyzerOptions = new CompilationWithAnalyzersOptions(options, (e, _, _) => throw e, true, true, true);
 
 				var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true);
 				var specificDiagnosticOptions = compilationOptions.SpecificDiagnosticOptions;
@@ -305,7 +306,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 		protected static Document CreateDocument(AnalyzerVerificationContext context, string source)
 		{
-			return CreateProject(context, new[] { source }).Documents.First();
+			return CreateProject(context, new[] {source}).Documents.First();
 		}
 
 		private static IEnumerable<string> UnityAssemblies()
@@ -366,6 +367,5 @@ namespace Microsoft.Unity.Analyzers.Tests
 
 			return solution.GetProject(projectId);
 		}
-
 	}
 }

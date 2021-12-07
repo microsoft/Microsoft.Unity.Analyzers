@@ -18,7 +18,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 	public abstract class BaseDiagnosticVerifierTest<TAnalyzer> : DiagnosticVerifier
 		where TAnalyzer : DiagnosticAnalyzer, new()
 	{
-
 		internal const string InterfaceTest = @"
 using UnityEngine;
 
@@ -81,5 +80,4 @@ class Failure : MonoBehaviour, IFailure {
 			return new TCodeFix();
 		}
 	}
-
 }

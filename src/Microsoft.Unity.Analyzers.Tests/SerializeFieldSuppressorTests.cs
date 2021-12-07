@@ -92,9 +92,9 @@ class Test : System.Object
 
 			// We don't want to suppress 'never assigned' for standard types
 			var diagnostic = new DiagnosticResult(SerializeFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, DiagnosticSeverity.Warning)
-					.WithLocation(4, 19)
-					.WithMessage("Field 'Test.someField' is never assigned to, and will always have its default value null");
-			
+				.WithLocation(4, 19)
+				.WithMessage("Field 'Test.someField' is never assigned to, and will always have its default value null");
+
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 		}
 
@@ -119,6 +119,5 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 		}
-
 	}
 }

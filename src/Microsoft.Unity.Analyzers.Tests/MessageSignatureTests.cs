@@ -162,6 +162,5 @@ class TestWindow : EditorWindow
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
-
 	}
 }
