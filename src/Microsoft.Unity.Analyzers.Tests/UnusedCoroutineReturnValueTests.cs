@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class UnusedCoroutineReturnValueTests : BaseCodeFixVerifierTest<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>
 {
-	public class UnusedCoroutineReturnValueTests : BaseCodeFixVerifierTest<UnusedCoroutineReturnValueAnalyzer, UnusedCoroutineReturnValueCodeFix>
+	[Fact]
+	public async Task UnusedCoroutineReturnValueTest()
 	{
-		[Fact]
-		public async Task UnusedCoroutineReturnValueTest()
-		{
-			const string test = @"
+		const string test = @"
 using System.Collections;
 using UnityEngine;
 
@@ -34,13 +34,13 @@ public class UnusedCoroutineScript : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UnusedCoroutineReturnValueAnalyzer.Rule.Id)
-				.WithLocation(9, 9)
-				.WithArguments("UnusedCoroutine");
+		var diagnostic = ExpectDiagnostic(UnusedCoroutineReturnValueAnalyzer.Rule.Id)
+			.WithLocation(9, 9)
+			.WithArguments("UnusedCoroutine");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using System.Collections;
 using UnityEngine;
 
@@ -60,7 +60,6 @@ public class UnusedCoroutineScript : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

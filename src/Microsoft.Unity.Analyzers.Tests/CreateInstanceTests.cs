@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class CreateInstanceTests : BaseCodeFixVerifierTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 {
-	public class CreateInstanceTests : BaseCodeFixVerifierTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
+	[Fact]
+	public async Task CreateComponentInstance()
 	{
-		[Fact]
-		public async Task CreateComponentInstance()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Foo : Component { }
@@ -26,13 +26,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
-				.WithLocation(9, 19)
-				.WithArguments("Foo");
+		var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+			.WithLocation(9, 19)
+			.WithArguments("Foo");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Foo : Component { }
@@ -44,14 +44,14 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
 
-		[Fact]
-		public async Task CreateComponentInstanceArgumentOrParenthesis()
-		{
-			const string test = @"
+	[Fact]
+	public async Task CreateComponentInstanceArgumentOrParenthesis()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Foo : Component { }
@@ -64,13 +64,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
-				.WithLocation(9, 18)
-				.WithArguments("Foo");
+		var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+			.WithLocation(9, 18)
+			.WithArguments("Foo");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Foo : Component { }
@@ -82,14 +82,14 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
 
-		[Fact]
-		public async Task CreateComponentInstanceComments()
-		{
-			const string test = @"
+	[Fact]
+	public async Task CreateComponentInstanceComments()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Foo : Component { }
@@ -104,13 +104,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
-				.WithLocation(10, 31)
-				.WithArguments("Foo");
+		var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+			.WithLocation(10, 31)
+			.WithArguments("Foo");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Foo : Component { }
@@ -124,13 +124,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task CreateMonoBehaviourInstance()
-		{
-			const string test = @"
+	[Fact]
+	public async Task CreateMonoBehaviourInstance()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Foo : MonoBehaviour { }
@@ -143,13 +143,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
-				.WithLocation(9, 19)
-				.WithArguments("Foo");
+		var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+			.WithLocation(9, 19)
+			.WithArguments("Foo");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Foo : MonoBehaviour { }
@@ -161,13 +161,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task CreateMonoBehaviourInstanceFromNonComponent()
-		{
-			const string test = @"
+	[Fact]
+	public async Task CreateMonoBehaviourInstanceFromNonComponent()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Foo : MonoBehaviour { }
@@ -179,17 +179,17 @@ class Program
     }
 }
 ";
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
-				.WithLocation(9, 19)
-				.WithArguments("Foo");
+		var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ComponentId)
+			.WithLocation(9, 19)
+			.WithArguments("Foo");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 
-		[Fact]
-		public async Task CreateScriptableObjectInstance()
-		{
-			const string test = @"
+	[Fact]
+	public async Task CreateScriptableObjectInstance()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Foo : ScriptableObject { }
@@ -202,13 +202,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ScriptableObjectId)
-				.WithLocation(9, 19)
-				.WithArguments("Foo");
+		var diagnostic = ExpectDiagnostic(CreateInstanceAnalyzer.ScriptableObjectId)
+			.WithLocation(9, 19)
+			.WithArguments("Foo");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Foo : ScriptableObject { }
@@ -220,7 +220,6 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

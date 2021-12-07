@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class SetPixelsTests : BaseDiagnosticVerifierTest<SetPixelsMethodUsageAnalyzer>
 {
-	public class SetPixelsTests : BaseDiagnosticVerifierTest<SetPixelsMethodUsageAnalyzer>
+	[Fact]
+	public async Task Texture2DTest()
 	{
-		[Fact]
-		public async Task Texture2DTest()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -25,17 +25,17 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 14)
-				.WithArguments("SetPixels");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 14)
+			.WithArguments("SetPixels");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 
-		[Fact]
-		public async Task Texture3DTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task Texture3DTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -47,17 +47,17 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 14)
-				.WithArguments("SetPixels");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 14)
+			.WithArguments("SetPixels");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 
-		[Fact]
-		public async Task CubemapArrayTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task CubemapArrayTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -69,17 +69,17 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 14)
-				.WithArguments("SetPixels");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 14)
+			.WithArguments("SetPixels");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 
-		[Fact]
-		public async Task Texture2DArrayTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task Texture2DArrayTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -91,11 +91,10 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 14)
-				.WithArguments("SetPixels");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 14)
+			.WithArguments("SetPixels");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}
 }

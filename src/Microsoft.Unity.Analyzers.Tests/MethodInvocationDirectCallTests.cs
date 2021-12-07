@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class MethodInvocationDirectCallTests : BaseCodeFixVerifierTest<MethodInvocationAnalyzer, MethodInvocationDirectCallCodeFix>
 {
-	public class MethodInvocationDirectCallTests : BaseCodeFixVerifierTest<MethodInvocationAnalyzer, MethodInvocationDirectCallCodeFix>
+	[Fact]
+	public async Task TestStartCoroutine()
 	{
-		[Fact]
-		public async Task TestStartCoroutine()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 using System.Collections;
 
@@ -30,13 +30,13 @@ class Camera : MonoBehaviour
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(9, 9)
-				.WithArguments("InvokeMe");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(9, 9)
+			.WithArguments("InvokeMe");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using System.Collections;
 
@@ -53,13 +53,13 @@ class Camera : MonoBehaviour
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task TestStartCoroutineArgumentOrParenthesis()
-		{
-			const string test = @"
+	[Fact]
+	public async Task TestStartCoroutineArgumentOrParenthesis()
+	{
+		const string test = @"
 using UnityEngine;
 using System.Collections;
 
@@ -76,13 +76,13 @@ class Camera : MonoBehaviour
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(9, 18)
-				.WithArguments("InvokeMe");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(9, 18)
+			.WithArguments("InvokeMe");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using System.Collections;
 
@@ -99,13 +99,13 @@ class Camera : MonoBehaviour
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task TestStartCoroutineComments()
-		{
-			const string test = @"
+	[Fact]
+	public async Task TestStartCoroutineComments()
+	{
+		const string test = @"
 using UnityEngine;
 using System.Collections;
 
@@ -124,13 +124,13 @@ class Camera : MonoBehaviour
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 9)
-				.WithArguments("InvokeMe");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 9)
+			.WithArguments("InvokeMe");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using System.Collections;
 
@@ -149,13 +149,13 @@ class Camera : MonoBehaviour
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task TestStopCoroutine()
-		{
-			const string test = @"
+	[Fact]
+	public async Task TestStopCoroutine()
+	{
+		const string test = @"
 using UnityEngine;
 using System.Collections;
 
@@ -172,13 +172,13 @@ class Camera : MonoBehaviour
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(9, 9)
-				.WithArguments("InvokeMe");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(9, 9)
+			.WithArguments("InvokeMe");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using System.Collections;
 
@@ -195,7 +195,6 @@ class Camera : MonoBehaviour
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

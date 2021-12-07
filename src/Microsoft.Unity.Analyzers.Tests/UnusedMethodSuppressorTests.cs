@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class UnusedMethodSuppressorTests : BaseSuppressorVerifierTest<UnusedMethodSuppressor>
 {
-	public class UnusedMethodSuppressorTests : BaseSuppressorVerifierTest<UnusedMethodSuppressor>
+	[Fact]
+	public async Task UnusedMethodSuppressed()
 	{
-		[Fact]
-		public async Task UnusedMethodSuppressed()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -29,16 +29,16 @@ class Camera : MonoBehaviour
     }
 }";
 
-			var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
-				.WithLocation(11, 18);
+		var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
+			.WithLocation(11, 18);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task UnusedMethodMixedTypes()
-		{
-			const string test = @"
+	[Fact]
+	public async Task UnusedMethodMixedTypes()
+	{
+		const string test = @"
 using UnityEngine;
 
 class A : MonoBehaviour
@@ -58,10 +58,9 @@ class A : MonoBehaviour
     }
 }";
 
-			var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
-				.WithLocation(15, 14);
+		var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
+			.WithLocation(15, 14);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
 }

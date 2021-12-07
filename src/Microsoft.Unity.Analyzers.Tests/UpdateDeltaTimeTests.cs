@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class UpdateWithoutDeltaTimeTests : BaseCodeFixVerifierTest<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
 {
-	public class UpdateWithoutDeltaTimeTests : BaseCodeFixVerifierTest<UpdateDeltaTimeAnalyzer, UpdateDeltaTimeCodeFix>
+	[Fact]
+	public async Task FixedUpdateWithDeltaTime()
 	{
-		[Fact]
-		public async Task FixedUpdateWithDeltaTime()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -24,17 +24,17 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			// see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
-			// this rule is now disabled by default
-			// but can be re-enabled using ruleset or editorconfig:
-			// dotnet_diagnostic.UNT0005.severity = suggestion
+		// see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
+		// this rule is now disabled by default
+		// but can be re-enabled using ruleset or editorconfig:
+		// dotnet_diagnostic.UNT0005.severity = suggestion
 
-			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
-				.WithLocation(8, 25);
+		var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
+			.WithLocation(8, 25);
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -45,13 +45,13 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task FixedUpdateWithDeltaTimeComments()
-		{
-			const string test = @"
+	[Fact]
+	public async Task FixedUpdateWithDeltaTimeComments()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -64,17 +64,17 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			// see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
-			// this rule is now disabled by default
-			// but can be re-enabled using ruleset or editorconfig:
-			// dotnet_diagnostic.UNT0005.severity = suggestion
+		// see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
+		// this rule is now disabled by default
+		// but can be re-enabled using ruleset or editorconfig:
+		// dotnet_diagnostic.UNT0005.severity = suggestion
 
-			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
-				.WithLocation(9, 37);
+		var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.FixedUpdateId)
+			.WithLocation(9, 37);
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -87,13 +87,13 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task UpdateWithFixedDeltaTime()
-		{
-			const string test = @"
+	[Fact]
+	public async Task UpdateWithFixedDeltaTime()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -105,12 +105,12 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.UpdateId)
-				.WithLocation(8, 25);
+		var diagnostic = ExpectDiagnostic(UpdateDeltaTimeAnalyzer.UpdateId)
+			.WithLocation(8, 25);
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -121,7 +121,6 @@ class Camera : MonoBehaviour
      }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

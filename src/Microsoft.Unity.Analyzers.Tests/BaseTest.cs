@@ -13,12 +13,12 @@ using Xunit;
 	Scope = "namespaceanddescendants",
 	Target = "~N:Microsoft.Unity.Analyzers.Tests")]
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public abstract class BaseDiagnosticVerifierTest<TAnalyzer> : DiagnosticVerifier
+	where TAnalyzer : DiagnosticAnalyzer, new()
 {
-	public abstract class BaseDiagnosticVerifierTest<TAnalyzer> : DiagnosticVerifier
-		where TAnalyzer : DiagnosticAnalyzer, new()
-	{
-		internal const string InterfaceTest = @"
+	internal const string InterfaceTest = @"
 using UnityEngine;
 
 interface IFailure
@@ -33,51 +33,50 @@ class Failure : MonoBehaviour, IFailure {
 }
 ";
 
-		[Fact]
-		public async Task DoNotFailWithInterfaceMembers()
-		{
-			await VerifyCSharpDiagnosticAsync(InterfaceTest);
-		}
-
-		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-		{
-			return new TAnalyzer();
-		}
+	[Fact]
+	public async Task DoNotFailWithInterfaceMembers()
+	{
+		await VerifyCSharpDiagnosticAsync(InterfaceTest);
 	}
 
-	public abstract class BaseSuppressorVerifierTest<TAnalyzer> : SuppressorVerifier
-		where TAnalyzer : DiagnosticSuppressor, new()
+	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
-		[Fact]
-		public async Task DoNotFailWithInterfaceMembers()
-		{
-			await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
-		}
+		return new TAnalyzer();
+	}
+}
 
-		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-		{
-			return new TAnalyzer();
-		}
+public abstract class BaseSuppressorVerifierTest<TAnalyzer> : SuppressorVerifier
+	where TAnalyzer : DiagnosticSuppressor, new()
+{
+	[Fact]
+	public async Task DoNotFailWithInterfaceMembers()
+	{
+		await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 	}
 
-	public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVerifier
-		where TAnalyzer : DiagnosticAnalyzer, new()
-		where TCodeFix : CodeFixProvider, new()
+	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
-		[Fact]
-		public async Task DoNotFailWithInterfaceMembers()
-		{
-			await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
-		}
+		return new TAnalyzer();
+	}
+}
 
-		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-		{
-			return new TAnalyzer();
-		}
+public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVerifier
+	where TAnalyzer : DiagnosticAnalyzer, new()
+	where TCodeFix : CodeFixProvider, new()
+{
+	[Fact]
+	public async Task DoNotFailWithInterfaceMembers()
+	{
+		await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
+	}
 
-		protected override CodeFixProvider GetCSharpCodeFixProvider()
-		{
-			return new TCodeFix();
-		}
+	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	{
+		return new TAnalyzer();
+	}
+
+	protected override CodeFixProvider GetCSharpCodeFixProvider()
+	{
+		return new TCodeFix();
 	}
 }

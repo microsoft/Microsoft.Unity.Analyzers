@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class InitializeOnLoadMethodTests : BaseCodeFixVerifierTest<InitializeOnLoadMethodAnalyzer, InitializeOnLoadMethodCodeFix>
 {
-	public class InitializeOnLoadMethodTests : BaseCodeFixVerifierTest<InitializeOnLoadMethodAnalyzer, InitializeOnLoadMethodCodeFix>
+	[Fact]
+	public async Task InitializeOnLoadMethodTest()
 	{
-		[Fact]
-		public async Task InitializeOnLoadMethodTest()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEditor;
 
 class Loader
@@ -22,13 +22,13 @@ class Loader
     private static void OnLoad() {}
 }";
 
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task InitializeOnLoadMethodFixModifiersTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task InitializeOnLoadMethodFixModifiersTest()
+	{
+		const string test = @"
 using UnityEditor;
 
 class Loader
@@ -40,13 +40,13 @@ class Loader
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(7, 18)
-				.WithArguments("OnLoad");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("OnLoad");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEditor;
 
 class Loader
@@ -58,13 +58,13 @@ class Loader
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task InitializeOnLoadMethodFixModifiersComments()
-		{
-			const string test = @"
+	[Fact]
+	public async Task InitializeOnLoadMethodFixModifiersComments()
+	{
+		const string test = @"
 using UnityEditor;
 
 class Loader
@@ -77,13 +77,13 @@ class Loader
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 18)
-				.WithArguments("OnLoad");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 18)
+			.WithArguments("OnLoad");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEditor;
 
 class Loader
@@ -96,13 +96,13 @@ class Loader
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task InitializeOnLoadMethodFixParametersTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task InitializeOnLoadMethodFixParametersTest()
+	{
+		const string test = @"
 using UnityEditor;
 
 class Loader
@@ -114,13 +114,13 @@ class Loader
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(7, 25)
-				.WithArguments("OnLoad");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 25)
+			.WithArguments("OnLoad");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEditor;
 
 class Loader
@@ -132,13 +132,13 @@ class Loader
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task InitializeOnLoadMethodFixAllTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task InitializeOnLoadMethodFixAllTest()
+	{
+		const string test = @"
 using UnityEditor;
 
 class Loader
@@ -150,13 +150,13 @@ class Loader
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(7, 18)
-				.WithArguments("OnLoad");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("OnLoad");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEditor;
 
 class Loader
@@ -168,13 +168,13 @@ class Loader
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task RuntimeInitializeOnLoadMethodTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task RuntimeInitializeOnLoadMethodTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Loader
@@ -184,13 +184,13 @@ class Loader
     }
 }";
 
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task RuntimeInitializeOnLoadMethodFixModifiersTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task RuntimeInitializeOnLoadMethodFixModifiersTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Loader
@@ -202,13 +202,13 @@ class Loader
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(7, 18)
-				.WithArguments("OnLoad");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("OnLoad");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Loader
@@ -220,13 +220,13 @@ class Loader
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task RuntimeInitializeOnLoadMethodFixParametersTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task RuntimeInitializeOnLoadMethodFixParametersTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Loader
@@ -238,13 +238,13 @@ class Loader
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(7, 25)
-				.WithArguments("OnLoad");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 25)
+			.WithArguments("OnLoad");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Loader
@@ -256,13 +256,13 @@ class Loader
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task RuntimeInitializeOnLoadMethodFixAllTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task RuntimeInitializeOnLoadMethodFixAllTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Loader
@@ -274,13 +274,13 @@ class Loader
     }
 }";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(7, 18)
-				.WithArguments("OnLoad");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("OnLoad");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Loader
@@ -292,7 +292,6 @@ class Loader
     }
 }";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

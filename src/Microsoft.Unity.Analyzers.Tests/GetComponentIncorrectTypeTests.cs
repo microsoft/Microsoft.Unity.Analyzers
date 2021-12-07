@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class GetComponentIncorrectTypeTests : BaseDiagnosticVerifierTest<GetComponentIncorrectTypeAnalyzer>
 {
-	public class GetComponentIncorrectTypeTests : BaseDiagnosticVerifierTest<GetComponentIncorrectTypeAnalyzer>
+	[Fact]
+	public async Task GetComponentInterfaceTypeTest()
 	{
-		[Fact]
-		public async Task GetComponentInterfaceTypeTest()
-		{
-			const string test = @"
+		const string test = @"
 using System;
 using UnityEngine;
 
@@ -28,13 +28,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task GetComponentCorrectTypeTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentCorrectTypeTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -48,13 +48,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task GetComponentIncorrectTypeTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentIncorrectTypeTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -68,17 +68,17 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 13)
-				.WithArguments("Int32");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 13)
+			.WithArguments("Int32");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 
-		[Fact]
-		public async Task GetComponentLegacyTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentLegacyTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -89,13 +89,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task GetGenericMethodComponentCorrectTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetGenericMethodComponentCorrectTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -106,13 +106,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task GetGenericMethodComponentIncorrectTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetGenericMethodComponentIncorrectTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -123,17 +123,17 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9)
-				.WithArguments("T");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 9)
+			.WithArguments("T");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 
-		[Fact]
-		public async Task GetGenericClassComponentCorrectTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetGenericClassComponentCorrectTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera<T> : MonoBehaviour where T : Component
@@ -144,13 +144,13 @@ class Camera<T> : MonoBehaviour where T : Component
     }
 }
 ";
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task GetGenericClassComponentIncorrectTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetGenericClassComponentIncorrectTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera<T> : MonoBehaviour
@@ -161,11 +161,10 @@ class Camera<T> : MonoBehaviour
     }
 }
 ";
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9)
-				.WithArguments("T");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 9)
+			.WithArguments("T");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}
 }

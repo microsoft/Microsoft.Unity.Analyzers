@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class MessageSuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
 {
-	public class MessageSuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
+	[Fact]
+	public async Task UnusedStaticMethodAndParametersSuppressed()
 	{
-		[Fact]
-		public async Task UnusedStaticMethodAndParametersSuppressed()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEditor;
 
 class Processor : AssetPostprocessor
@@ -24,19 +24,19 @@ class Processor : AssetPostprocessor
     }
 }";
 
-			var suppressors = new[] {
-				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(6, 27),
-				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 55),
-				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 68),
-			};
+		var suppressors = new[] {
+			ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(6, 27),
+			ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 55),
+			ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(6, 68),
+		};
 
-			await VerifyCSharpDiagnosticAsync(test, suppressors);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressors);
+	}
 
-		[Fact]
-		public async Task UnusedMethodSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task UnusedMethodSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 public class TestScript : MonoBehaviour
@@ -47,16 +47,16 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(MessageSuppressor.MethodRule)
-				.WithLocation(6, 18);
+		var suppressor = ExpectSuppressor(MessageSuppressor.MethodRule)
+			.WithLocation(6, 18);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task UnusedParameterSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task UnusedParameterSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 public class TestScript : MonoBehaviour
@@ -68,16 +68,16 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(MessageSuppressor.ParameterRule)
-				.WithLocation(6, 35);
+		var suppressor = ExpectSuppressor(MessageSuppressor.ParameterRule)
+			.WithLocation(6, 35);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task UnusedMethodScriptedImporterSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task UnusedMethodScriptedImporterSuppressed()
+	{
+		const string test = @"
 using System;
 using UnityEditor.AssetImporters;
 
@@ -107,14 +107,13 @@ internal class Test : ScriptedImporter
 }
 ";
 
-			var suppressors = new[] {
-				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(7, 18),
-				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(11, 29),
-				ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(11, 69),
-				ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(16, 18),
-			};
+		var suppressors = new[] {
+			ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(7, 18),
+			ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(11, 29),
+			ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(11, 69),
+			ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(16, 18),
+		};
 
-			await VerifyCSharpDiagnosticAsync(test, suppressors);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressors);
 	}
 }

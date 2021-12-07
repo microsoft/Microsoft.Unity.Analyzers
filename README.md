@@ -18,7 +18,7 @@ We also ship them on [NuGet](https://nuget.org/packages/Microsoft.Unity.Analyzer
 If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
 
 # Prerequisites
-For building and testing, you'll need **.NET 5 and Visual Studio version 16.8+ or Visual Studio for Mac 8.8+ (as we rely on C# 9).**
+For building and testing, you'll need **.NET 6 and Visual Studio 2022 or Visual Studio 2022 for Mac**.
 
 This project binaries are targeting **Visual Studio 2019 16.4+** and **Visual Studio for Mac 8.4+**.
 
