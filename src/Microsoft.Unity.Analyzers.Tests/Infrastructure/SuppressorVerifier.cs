@@ -53,6 +53,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CodeStyle.dll"));
 				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
 			}
+
 			if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.FxCop))
 			{
 				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.Analyzers.dll"));

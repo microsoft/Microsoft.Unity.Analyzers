@@ -12,7 +12,7 @@ namespace Microsoft.Unity.Analyzers
 	internal static class KnownMethods
 	{
 		internal static readonly HashSet<string> GetComponentNames = new(new[]
-{
+		{
 			nameof(UnityEngine.Component.GetComponent),
 			nameof(UnityEngine.Component.GetComponentInChildren),
 			nameof(UnityEngine.Component.GetComponentInParent),

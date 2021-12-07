@@ -68,7 +68,7 @@ namespace Microsoft.Unity.Analyzers
 			}
 
 			return named.Name == type.Name
-				&& named.ContainingNamespace?.ToDisplayString() == type.Namespace;
+			       && named.ContainingNamespace?.ToDisplayString() == type.Namespace;
 		}
 	}
 }

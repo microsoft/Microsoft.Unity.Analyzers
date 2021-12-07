@@ -10,7 +10,6 @@ namespace Microsoft.Unity.Analyzers.Tests
 {
 	public class CreateInstanceTests : BaseCodeFixVerifierTest<CreateInstanceAnalyzer, CreateInstanceCodeFix>
 	{
-
 		[Fact]
 		public async Task CreateComponentInstance()
 		{
@@ -47,7 +46,6 @@ class Camera : MonoBehaviour
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
-
 
 
 		[Fact]

@@ -18,7 +18,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 		// CS0414 - cf. IDE0051
 		public static AnalyzerVerificationContext Default = new(
 			ImmutableDictionary<string, string>.Empty,
-			new[] { "CS1701", "CS0414" }.ToImmutableArray(),
+			new[] {"CS1701", "CS0414"}.ToImmutableArray(),
 			LanguageVersion.Latest);
 
 		public AnalyzerVerificationContext(ImmutableDictionary<string, string> options, ImmutableArray<string> filters, LanguageVersion languageVersion) : this()

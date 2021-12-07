@@ -28,7 +28,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(6,18);
+			var diagnostic = ExpectDiagnostic().WithLocation(6, 18);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -69,7 +69,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(7,18);
+			var diagnostic = ExpectDiagnostic().WithLocation(7, 18);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
@@ -110,7 +110,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(6,25);
+			var diagnostic = ExpectDiagnostic().WithLocation(6, 25);
 
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 

@@ -148,7 +148,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic().WithLocation(9, 9);
-			
+
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
@@ -186,7 +186,7 @@ class Camera : MonoBehaviour
 ";
 
 			var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
-			
+
 			await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
 			const string fixedTest = @"
@@ -223,7 +223,7 @@ class Camera : MonoBehaviour
     }
 }
 ";
-		
+
 			await VerifyCSharpDiagnosticAsync(test);
 		}
 	}

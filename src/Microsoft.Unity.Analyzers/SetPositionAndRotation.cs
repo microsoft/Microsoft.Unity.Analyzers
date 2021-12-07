@@ -50,7 +50,7 @@ namespace Microsoft.Unity.Analyzers
 			if (context.Node is not AssignmentExpressionSyntax assignmentExpression)
 				return;
 
-			if (!GetNextAssignmentExpression(context.SemanticModel, assignmentExpression, out var nextAssignmentExpression)) 
+			if (!GetNextAssignmentExpression(context.SemanticModel, assignmentExpression, out var nextAssignmentExpression))
 				return;
 
 			// We know that both assignmentExpression.Left and nextAssignmentExpression.Left are MemberAccessExpressionSyntax
@@ -158,7 +158,7 @@ namespace Microsoft.Unity.Analyzers
 			if (model == null)
 				return document;
 
-			if (!SetPositionAndRotationAnalyzer.GetNextAssignmentExpression(model, assignmentExpression, out var nextAssignmentExpression)) 
+			if (!SetPositionAndRotationAnalyzer.GetNextAssignmentExpression(model, assignmentExpression, out var nextAssignmentExpression))
 				return document;
 
 			var property = SetPositionAndRotationAnalyzer.GetProperty(assignmentExpression);

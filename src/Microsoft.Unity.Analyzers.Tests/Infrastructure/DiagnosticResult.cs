@@ -17,7 +17,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 	/// </summary>
 	public readonly struct DiagnosticResult
 	{
-		private static readonly object[] EmptyArguments = new object[0];
+		private static readonly object[] EmptyArguments = Array.Empty<object>();
 
 		private readonly ImmutableArray<DiagnosticLocation> _spans;
 		private readonly bool _suppressMessage;
@@ -47,7 +47,7 @@ namespace Microsoft.Unity.Analyzers.Tests
 			LocalizableString messageFormat,
 			object[] messageArguments,
 			string suppressedId)
-			
+
 		{
 			_spans = spans;
 			_suppressMessage = suppressMessage;

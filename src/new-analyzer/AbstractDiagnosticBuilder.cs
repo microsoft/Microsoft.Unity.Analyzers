@@ -23,7 +23,7 @@ namespace NewAnalyzer
 
 		public void Build(string name)
 		{
-			Build(new Diagnostic { Id = GetNextId(), Name = name });
+			Build(new Diagnostic {Id = GetNextId(), Name = name});
 		}
 
 		public void Build(Diagnostic diagnostic)
@@ -141,6 +141,5 @@ namespace NewAnalyzer
 			var id = line[index..end];
 			return int.TryParse(id, out identifier);
 		}
-
 	}
 }

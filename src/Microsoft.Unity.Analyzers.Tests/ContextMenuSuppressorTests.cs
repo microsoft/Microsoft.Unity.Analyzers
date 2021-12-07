@@ -138,6 +138,5 @@ static class TestCode
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
-
 	}
 }

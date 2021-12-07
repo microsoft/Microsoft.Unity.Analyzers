@@ -49,6 +49,5 @@ class Loader
 
 			await VerifyCSharpDiagnosticAsync(test, suppressor);
 		}
-
 	}
 }

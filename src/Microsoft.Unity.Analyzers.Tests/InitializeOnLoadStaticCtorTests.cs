@@ -80,6 +80,5 @@ public sealed class Camera : MonoBehaviour
 ";
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
-
 	}
 }
