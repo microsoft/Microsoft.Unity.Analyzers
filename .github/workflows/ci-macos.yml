@@ -11,8 +11,8 @@ on:
     - release/*
 
 env:
-  UNITY_HASH: 41c4e627c95f
-  UNITY_FULL_VERSION: 2020.3.20f1
+  UNITY_HASH: 79c78de19888
+  UNITY_FULL_VERSION: 2020.3.24f1
   
 jobs:
   macos:
