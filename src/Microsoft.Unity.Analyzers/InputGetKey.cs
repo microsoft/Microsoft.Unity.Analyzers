@@ -64,7 +64,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			context.EnableConcurrentExecution();
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			
+
 			context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
 		}
 

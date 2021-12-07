@@ -67,7 +67,7 @@ namespace Microsoft.Unity.Analyzers
 				return;
 
 			if (IsReportableExpression(context, expr.Left)
-				|| IsReportableExpression(context, expr.Right))
+			    || IsReportableExpression(context, expr.Right))
 				context.ReportDiagnostic(Diagnostic.Create(Rule, expr.GetLocation()));
 		}
 
@@ -119,7 +119,7 @@ namespace Microsoft.Unity.Analyzers
 
 			var containingType = propertySymbol.ContainingType;
 			return propertySymbol.Name == nameof(UnityEngine.Component.tag)
-				&& (containingType.Matches(typeof(UnityEngine.GameObject)) || containingType.Matches(typeof(UnityEngine.Component)));
+			       && (containingType.Matches(typeof(UnityEngine.GameObject)) || containingType.Matches(typeof(UnityEngine.Component)));
 		}
 	}
 
@@ -261,6 +261,5 @@ namespace Microsoft.Unity.Analyzers
 							SyntaxFactory.SingletonSeparatedList(
 								SyntaxFactory.Argument(argument))));
 		}
-
 	}
 }

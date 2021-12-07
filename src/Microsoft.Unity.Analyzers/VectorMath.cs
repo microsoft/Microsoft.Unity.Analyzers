@@ -45,7 +45,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			context.EnableConcurrentExecution();
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			
+
 			context.RegisterSyntaxNodeAction(AnalyzeMultiplyExpression, SyntaxKind.MultiplyExpression);
 		}
 

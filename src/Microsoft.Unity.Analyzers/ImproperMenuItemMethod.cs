@@ -40,7 +40,6 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 		{
-
 			if (context.Node is not MethodDeclarationSyntax method)
 				return;
 

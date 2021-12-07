@@ -69,7 +69,7 @@ namespace Microsoft.Unity.Analyzers
 		private static bool IsInitializeOnLoadMethodAttributeType(ITypeSymbol type)
 		{
 			return type.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute))
-				   || type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute));
+			       || type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute));
 		}
 
 

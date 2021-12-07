@@ -97,7 +97,7 @@ namespace Microsoft.Unity.Analyzers
 
 			foreach (var modifier in declaration.Modifiers)
 			{
-				if (modifier.IsKind(SyntaxKind.PublicKeyword) || modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.InternalKeyword)) 
+				if (modifier.IsKind(SyntaxKind.PublicKeyword) || modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.InternalKeyword))
 					continue;
 
 				var kind = modifier.Kind();

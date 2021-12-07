@@ -8,10 +8,13 @@
     <PackageReference Include="MicroBuild.Core" Version="0.3.0" PrivateAssets="all" />
   </ItemGroup>
 
-  <Import Project="$(VstuDirectory)build\UnityVS.props" Condition="Exists('$(VstuDirectory)build\UnityVS.props')" />
-  <Import Project="$(VstuDirectory)build\UnityVS.Signing.props" Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.props')" />
+  <Import Project="$(VstuDirectory)build\UnityVS.props"
+          Condition="Exists('$(VstuDirectory)build\UnityVS.props')" />
+          
+  <Import Project="$(VstuDirectory)build\UnityVS.Signing.props"
+          Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.props')" />
 
-  <PropertyGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">  
+  <PropertyGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Configurations>Debug;Release;DebugRelease</Configurations>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -21,12 +24,12 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
-  
-  <ItemGroup>  
+
+  <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1 Condition="'$(PublicKey)' != ''">$(AssemblyName).Tests, PublicKey=$(PublicKey)</_Parameter1>
       <_Parameter1 Condition="'$(PublicKey)' == ''">$(AssemblyName).Tests</_Parameter1>
-    </AssemblyAttribute>  
+    </AssemblyAttribute>
   </ItemGroup>
 
   <ItemGroup Condition="Exists('$(VstuDirectory)libs\ProductInfo.cs')">

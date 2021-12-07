@@ -43,8 +43,8 @@ namespace Microsoft.Unity.Analyzers
 		}
 
 		// TODO we cannot add this to our stubs/KnownMethods so far (else they will be matched as Unity messages)
-		internal static readonly HashSet<string> InvokeMethodNames = new(new[] { "Invoke", "InvokeRepeating", "CancelInvoke" });
-		internal static readonly HashSet<string> CoroutineMethodNames = new(new[] { "StartCoroutine", "StopCoroutine" });
+		internal static readonly HashSet<string> InvokeMethodNames = new(new[] {"Invoke", "InvokeRepeating", "CancelInvoke"});
+		internal static readonly HashSet<string> CoroutineMethodNames = new(new[] {"StartCoroutine", "StopCoroutine"});
 
 		private static bool InvocationMatches(SyntaxNode node)
 		{
@@ -198,10 +198,10 @@ namespace Microsoft.Unity.Analyzers
 			const string nameof = "nameof";
 
 			var identifierName = IdentifierName(Identifier(TriviaList(),
-					SyntaxKind.NameOfKeyword,
-					nameof,
-					nameof,
-					TriviaList()));
+				SyntaxKind.NameOfKeyword,
+				nameof,
+				nameof,
+				TriviaList()));
 
 			return Argument(
 				InvocationExpression(identifierName)
