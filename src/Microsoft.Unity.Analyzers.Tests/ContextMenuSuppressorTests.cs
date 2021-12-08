@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class ContextMenuSuppressorTests : BaseSuppressorVerifierTest<ContextMenuSuppressor>
 {
-	public class ContextMenuSuppressorTests : BaseSuppressorVerifierTest<ContextMenuSuppressor>
+	[Fact]
+	public async Task ContextMenuSuppressed()
 	{
-		[Fact]
-		public async Task ContextMenuSuppressed()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Menu : MonoBehaviour
@@ -24,16 +24,16 @@ class Menu : MonoBehaviour
     }
 }";
 
-			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
-				.WithLocation(7, 18);
+		var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
+			.WithLocation(7, 18);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task MenuItemSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task MenuItemSuppressed()
+	{
+		const string test = @"
 using UnityEditor;
 using UnityEngine;
 
@@ -45,16 +45,16 @@ class Menu : MonoBehaviour
     }
 }";
 
-			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
-				.WithLocation(8, 25);
+		var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
+			.WithLocation(8, 25);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task ContextMenuItemReadonlySuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task ContextMenuItemReadonlySuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Menu : MonoBehaviour
@@ -68,16 +68,16 @@ class Menu : MonoBehaviour
     }
 }";
 
-			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemReadonlyRule)
-				.WithLocation(7, 20);
+		var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemReadonlyRule)
+			.WithLocation(7, 20);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task ContextMenuItemUnusedSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task ContextMenuItemUnusedSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Menu : MonoBehaviour
@@ -86,19 +86,19 @@ class Menu : MonoBehaviour
     string contextMenuString = """"; 
 }";
 
-			var context = AnalyzerVerificationContext.Default
-				.WithAnalyzerOption("dotnet_style_readonly_field", "false");
+		var context = AnalyzerVerificationContext.Default
+			.WithAnalyzerOption("dotnet_style_readonly_field", "false");
 
-			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
-				.WithLocation(7, 12);
+		var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuItemUnusedRule)
+			.WithLocation(7, 12);
 
-			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
+	}
 
-		[Fact]
-		public async Task ContextMenuItemReferenceUnusedSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task ContextMenuItemReferenceUnusedSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Menu : MonoBehaviour
@@ -112,16 +112,16 @@ class Menu : MonoBehaviour
     }
 }";
 
-			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
-				.WithLocation(9, 18);
+		var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
+			.WithLocation(9, 18);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task OutsideMonoBehaviourMenuItemSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task OutsideMonoBehaviourMenuItemSuppressed()
+	{
+		const string test = @"
 using UnityEditor;
 
 static class TestCode
@@ -133,10 +133,9 @@ static class TestCode
     }
 }";
 
-			var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
-				.WithLocation(7, 17);
+		var suppressor = ExpectSuppressor(ContextMenuSuppressor.ContextMenuRule)
+			.WithLocation(7, 17);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
 }

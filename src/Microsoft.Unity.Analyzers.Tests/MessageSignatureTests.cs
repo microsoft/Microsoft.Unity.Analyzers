@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class MessageSignatureTests : BaseCodeFixVerifierTest<MessageSignatureAnalyzer, MessageSignatureCodeFix>
 {
-	public class MessageSignatureTests : BaseCodeFixVerifierTest<MessageSignatureAnalyzer, MessageSignatureCodeFix>
+	[Fact]
+	public async Task MessageSignature()
 	{
-		[Fact]
-		public async Task MessageSignature()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -24,13 +24,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(6, 18)
-				.WithArguments("OnApplicationPause");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 18)
+			.WithArguments("OnApplicationPause");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -40,14 +40,14 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task MessageSignatureUnityLogic()
-		{
-			// Unity allows to specify less parameters if you don't need them
-			const string test = @"
+	[Fact]
+	public async Task MessageSignatureUnityLogic()
+	{
+		// Unity allows to specify less parameters if you don't need them
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -58,14 +58,14 @@ class Camera : MonoBehaviour
 }
 ";
 
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task MessageSignatureUnityLogicBadType()
-		{
-			// But we enforce proper type
-			const string test = @"
+	[Fact]
+	public async Task MessageSignatureUnityLogicBadType()
+	{
+		// But we enforce proper type
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -76,13 +76,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(6, 18)
-				.WithArguments("OnAnimatorIK");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 18)
+			.WithArguments("OnAnimatorIK");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -92,14 +92,14 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task MessageSignatureUnityLogicExtraParameters()
-		{
-			// And we prevent extra parameters
-			const string test = @"
+	[Fact]
+	public async Task MessageSignatureUnityLogicExtraParameters()
+	{
+		// And we prevent extra parameters
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -110,13 +110,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(6, 18)
-				.WithArguments("OnAnimatorIK");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 18)
+			.WithArguments("OnAnimatorIK");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -126,14 +126,14 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task MessageSignatureWithInheritance()
-		{
-			// two declarations for OnDestroy (one in EditorWindow and one in ScriptableObject) 
-			const string test = @"
+	[Fact]
+	public async Task MessageSignatureWithInheritance()
+	{
+		// two declarations for OnDestroy (one in EditorWindow and one in ScriptableObject) 
+		const string test = @"
 using UnityEditor;
 
 class TestWindow : EditorWindow
@@ -144,13 +144,13 @@ class TestWindow : EditorWindow
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(6, 18)
-				.WithArguments("OnDestroy");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 18)
+			.WithArguments("OnDestroy");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEditor;
 
 class TestWindow : EditorWindow
@@ -160,7 +160,6 @@ class TestWindow : EditorWindow
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

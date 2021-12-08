@@ -6,17 +6,16 @@
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 
-namespace Microsoft.Unity.Analyzers.Tests
-{
-	internal class AnalyzerAssemblyLoader : IAnalyzerAssemblyLoader
-	{
-		public Assembly LoadFromPath(string fullPath)
-		{
-			return Assembly.LoadFrom(fullPath);
-		}
+namespace Microsoft.Unity.Analyzers.Tests;
 
-		public void AddDependencyLocation(string fullPath)
-		{
-		}
+internal class AnalyzerAssemblyLoader : IAnalyzerAssemblyLoader
+{
+	public Assembly LoadFromPath(string fullPath)
+	{
+		return Assembly.LoadFrom(fullPath);
+	}
+
+	public void AddDependencyLocation(string fullPath)
+	{
 	}
 }

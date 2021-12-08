@@ -5,12 +5,11 @@
 
 using System;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+[Flags]
+public enum DiagnosticLocationOptions
 {
-	[Flags]
-	public enum DiagnosticLocationOptions
-	{
-		None = 0,
-		IgnoreLength = 1
-	}
+	None = 0,
+	IgnoreLength = 1
 }

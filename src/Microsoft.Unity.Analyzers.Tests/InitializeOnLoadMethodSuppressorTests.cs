@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class InitializeOnLoadMethodSuppressorTests : BaseSuppressorVerifierTest<InitializeOnLoadMethodSuppressor>
 {
-	public class InitializeOnLoadMethodSuppressorTests : BaseSuppressorVerifierTest<InitializeOnLoadMethodSuppressor>
+	[Fact]
+	public async Task InitializeOnLoadMethodTest()
 	{
-		[Fact]
-		public async Task InitializeOnLoadMethodTest()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEditor;
 
 class Loader
@@ -24,16 +24,16 @@ class Loader
 }
 ";
 
-			var suppressor = ExpectSuppressor(InitializeOnLoadMethodSuppressor.Rule)
-				.WithLocation(7, 25);
+		var suppressor = ExpectSuppressor(InitializeOnLoadMethodSuppressor.Rule)
+			.WithLocation(7, 25);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task RuntimeInitializeOnLoadMethodTest()
-		{
-			const string test = @"
+	[Fact]
+	public async Task RuntimeInitializeOnLoadMethodTest()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Loader
@@ -44,10 +44,9 @@ class Loader
 }
 ";
 
-			var suppressor = ExpectSuppressor(InitializeOnLoadMethodSuppressor.Rule)
-				.WithLocation(7, 25);
+		var suppressor = ExpectSuppressor(InitializeOnLoadMethodSuppressor.Rule)
+			.WithLocation(7, 25);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
 }

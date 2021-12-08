@@ -13,109 +13,108 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+[Flags]
+public enum SuppressorVerifierAnalyzers
 {
-	[Flags]
-	public enum SuppressorVerifierAnalyzers
+	CodeStyle = 1,
+	FxCop = 2
+}
+
+public abstract class SuppressorVerifier : DiagnosticVerifier
+{
+	protected virtual SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeStyle;
+
+	protected static DiagnosticResult ExpectSuppressor(SuppressionDescriptor descriptor)
 	{
-		CodeStyle = 1,
-		FxCop = 2
+		var result = new DiagnosticResult(descriptor.Id, DiagnosticSeverity.Hidden)
+			.WithMessageFormat(descriptor.Justification)
+			.WithSuppressedId(descriptor.SuppressedDiagnosticId);
+
+		return result;
 	}
 
-	public abstract class SuppressorVerifier : DiagnosticVerifier
+	private static IEnumerable<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
 	{
-		protected virtual SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeStyle;
+		var fullpath = Path.GetFullPath(assembly);
+		var reference = new AnalyzerFileReference(fullpath, new AnalyzerAssemblyLoader());
+		reference.AnalyzerLoadFailed += (_, e) => { Assert.True(false, e.Message); };
+		return reference.GetAnalyzers(LanguageNames.CSharp);
+	}
 
-		protected static DiagnosticResult ExpectSuppressor(SuppressionDescriptor descriptor)
+	protected override IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
+	{
+		var suppressor = (DiagnosticSuppressor)analyzer;
+
+		var analyzers = new List<DiagnosticAnalyzer>();
+		if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.CodeStyle))
 		{
-			var result = new DiagnosticResult(descriptor.Id, DiagnosticSeverity.Hidden)
-				.WithMessageFormat(descriptor.Justification)
-				.WithSuppressedId(descriptor.SuppressedDiagnosticId);
-
-			return result;
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CodeStyle.dll"));
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
 		}
 
-		private static IEnumerable<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
+		if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.FxCop))
 		{
-			var fullpath = Path.GetFullPath(assembly);
-			var reference = new AnalyzerFileReference(fullpath, new AnalyzerAssemblyLoader());
-			reference.AnalyzerLoadFailed += (_, e) => { Assert.True(false, e.Message); };
-			return reference.GetAnalyzers(LanguageNames.CSharp);
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.Analyzers.dll"));
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.CSharp.Analyzers.dll"));
 		}
 
-		protected override IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
-		{
-			var suppressor = (DiagnosticSuppressor)analyzer;
+		return analyzers
+			.Where(a => a.SupportedDiagnostics
+				.Any(s => suppressor.SupportedSuppressions
+					.Any(sp => sp.SuppressedDiagnosticId == s.Id)));
+	}
 
-			var analyzers = new List<DiagnosticAnalyzer>();
-			if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.CodeStyle))
-			{
-				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CodeStyle.dll"));
-				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
-			}
+	private static bool IsSuppressedBy(Diagnostic diagnostic, DiagnosticResult suppressor)
+	{
+		if (!diagnostic.IsSuppressed)
+			return false;
 
-			if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.FxCop))
-			{
-				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.Analyzers.dll"));
-				analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.CSharp.Analyzers.dll"));
-			}
+		if (string.IsNullOrEmpty(suppressor.SuppressedId))
+			return false;
 
-			return analyzers
-				.Where(a => a.SupportedDiagnostics
-					.Any(s => suppressor.SupportedSuppressions
-						.Any(sp => sp.SuppressedDiagnosticId == s.Id)));
-		}
+		if (diagnostic.Id != suppressor.SuppressedId)
+			return false;
 
-		private static bool IsSuppressedBy(Diagnostic diagnostic, DiagnosticResult suppressor)
-		{
-			if (!diagnostic.IsSuppressed)
-				return false;
+		// Internal Roslyn info
+		var psiProperty = diagnostic.GetType().GetProperty("ProgrammaticSuppressionInfo", BindingFlags.Instance | BindingFlags.NonPublic);
+		if (psiProperty == null)
+			return false;
 
-			if (string.IsNullOrEmpty(suppressor.SuppressedId))
-				return false;
+		var psi = psiProperty.GetValue(diagnostic);
+		if (psi == null)
+			return false;
 
-			if (diagnostic.Id != suppressor.SuppressedId)
-				return false;
+		var spProperty = psi.GetType().GetProperty("Suppressions");
+		if (spProperty == null)
+			return false;
 
-			// Internal Roslyn info
-			var psiProperty = diagnostic.GetType().GetProperty("ProgrammaticSuppressionInfo", BindingFlags.Instance | BindingFlags.NonPublic);
-			if (psiProperty == null)
-				return false;
+		var suppressions = (ImmutableHashSet<(string Id, LocalizableString Justification)>)spProperty.GetValue(psi);
+		Assert.NotNull(suppressions);
 
-			var psi = psiProperty.GetValue(diagnostic);
-			if (psi == null)
-				return false;
+		if (!suppressions.Any(t => t.Id == suppressor.Id && t.Justification.Equals(suppressor.MessageFormat)))
+			return false;
 
-			var spProperty = psi.GetType().GetProperty("Suppressions");
-			if (spProperty == null)
-				return false;
+		return suppressor.Spans.Any(sp => sp.Span.StartLinePosition == diagnostic.Location.GetLineSpan().StartLinePosition);
+	}
 
-			var suppressions = (ImmutableHashSet<(string Id, LocalizableString Justification)>)spProperty.GetValue(psi);
-			Assert.NotNull(suppressions);
+	protected override void VerifyDiagnosticResults(Diagnostic[] actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
+	{
+		var suppressed = actualResults
+			.Where(d => expectedResults.Any(s => IsSuppressedBy(d, s)))
+			.ToArray();
 
-			if (!suppressions.Any(t => t.Id == suppressor.Id && t.Justification.Equals(suppressor.MessageFormat)))
-				return false;
+		actualResults = actualResults
+			// Filter diagnostic with an effective suppression
+			.Where(d => !suppressed.Contains(d))
+			.ToArray();
 
-			return suppressor.Spans.Any(sp => sp.Span.StartLinePosition == diagnostic.Location.GetLineSpan().StartLinePosition);
-		}
+		expectedResults = expectedResults
+			// Filter suppressors effectively suppressing diagnostic
+			.Where(s => !suppressed.Any(d => IsSuppressedBy(d, s)))
+			.ToArray();
 
-		protected override void VerifyDiagnosticResults(Diagnostic[] actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
-		{
-			var suppressed = actualResults
-				.Where(d => expectedResults.Any(s => IsSuppressedBy(d, s)))
-				.ToArray();
-
-			actualResults = actualResults
-				// Filter diagnostic with an effective suppression
-				.Where(d => !suppressed.Contains(d))
-				.ToArray();
-
-			expectedResults = expectedResults
-				// Filter suppressors effectively suppressing diagnostic
-				.Where(s => !suppressed.Any(d => IsSuppressedBy(d, s)))
-				.ToArray();
-
-			base.VerifyDiagnosticResults(actualResults, analyzer, expectedResults);
-		}
+		base.VerifyDiagnosticResults(actualResults, analyzer, expectedResults);
 	}
 }

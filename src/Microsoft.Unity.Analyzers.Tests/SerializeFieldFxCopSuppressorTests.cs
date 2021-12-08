@@ -6,17 +6,17 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
-{
-	public class SerializeFieldFxCopSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
-	{
-		// Only load FxCop analyzers for those tests
-		protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.FxCop;
+namespace Microsoft.Unity.Analyzers.Tests;
 
-		[Fact]
-		public async Task PrivateFieldWithAttributeUnusedSuppressed()
-		{
-			const string test = @"
+public class SerializeFieldFxCopSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
+{
+	// Only load FxCop analyzers for those tests
+	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.FxCop;
+
+	[Fact]
+	public async Task PrivateFieldWithAttributeUnusedSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -26,10 +26,9 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedFxCopRule)
-				.WithLocation(7, 12);
+		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedFxCopRule)
+			.WithLocation(7, 12);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
 }

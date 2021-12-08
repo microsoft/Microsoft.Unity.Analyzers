@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <RootNamespace>NewAnalyzer</RootNamespace>
-    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
 </Project>

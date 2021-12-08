@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class ImproperMenuItemMethodTests : BaseCodeFixVerifierTest<ImproperMenuItemMethodAnalyzer, ImproperMenuItemMethodCodeFix>
 {
-	public class ImproperMenuItemMethodTests : BaseCodeFixVerifierTest<ImproperMenuItemMethodAnalyzer, ImproperMenuItemMethodCodeFix>
+	[Fact]
+	public async Task MissingStaticDeclaration()
 	{
-		[Fact]
-		public async Task MissingStaticDeclaration()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -26,11 +26,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(7, 5);
+		var diagnostic = ExpectDiagnostic().WithLocation(7, 5);
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -43,13 +43,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task MissingStaticDeclarationComments()
-		{
-			const string test = @"
+	[Fact]
+	public async Task MissingStaticDeclarationComments()
+	{
+		const string test = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -63,11 +63,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(8, 5);
+		var diagnostic = ExpectDiagnostic().WithLocation(8, 5);
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -81,13 +81,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task PreserveMenuCommand()
-		{
-			const string test = @"
+	[Fact]
+	public async Task PreserveMenuCommand()
+	{
+		const string test = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -100,11 +100,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic().WithLocation(7, 5);
+		var diagnostic = ExpectDiagnostic().WithLocation(7, 5);
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -117,7 +117,6 @@ class Camera : MonoBehaviour
 }
 ";
 
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

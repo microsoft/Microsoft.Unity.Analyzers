@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class SerializeFieldSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
 {
-	public class SerializeFieldSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
+	[Fact]
+	public async Task PrivateFieldWithAttributeNeverAssignedSuppressed()
 	{
-		[Fact]
-		public async Task PrivateFieldWithAttributeNeverAssignedSuppressed()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -27,20 +27,20 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			var context = AnalyzerVerificationContext.Default
-				.WithAnalyzerOption("dotnet_style_readonly_field", "false")
-				.WithAnalyzerFilter("IDE0051");
+		var context = AnalyzerVerificationContext.Default
+			.WithAnalyzerOption("dotnet_style_readonly_field", "false")
+			.WithAnalyzerFilter("IDE0051");
 
-			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
-				.WithLocation(7, 12);
+		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
+			.WithLocation(7, 12);
 
-			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
+	}
 
-		[Fact]
-		public async Task PrivateFieldWithAttributeReadonlySuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task PrivateFieldWithAttributeReadonlySuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -53,19 +53,19 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			var context = AnalyzerVerificationContext.Default
-				.WithAnalyzerFilter("IDE0051");
+		var context = AnalyzerVerificationContext.Default
+			.WithAnalyzerFilter("IDE0051");
 
-			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
-				.WithLocation(7, 20);
+		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
+			.WithLocation(7, 20);
 
-			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
+	}
 
-		[Fact]
-		public async Task PublicFieldInSerializableTypeNeverAssignedSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task PublicFieldInSerializableTypeNeverAssignedSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -74,35 +74,35 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
-				.WithLocation(6, 19);
+		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
+			.WithLocation(6, 19);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task PublicFieldInStandardTypeNeverAssigned()
-		{
-			const string test = @"
+	[Fact]
+	public async Task PublicFieldInStandardTypeNeverAssigned()
+	{
+		const string test = @"
 class Test : System.Object
 {
     public string someField;
 }
 ";
 
-			// We don't want to suppress 'never assigned' for standard types
-			var diagnostic = new DiagnosticResult(SerializeFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, DiagnosticSeverity.Warning)
-				.WithLocation(4, 19)
-				.WithMessage("Field 'Test.someField' is never assigned to, and will always have its default value null");
+		// We don't want to suppress 'never assigned' for standard types
+		var diagnostic = new DiagnosticResult(SerializeFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, DiagnosticSeverity.Warning)
+			.WithLocation(4, 19)
+			.WithMessage("Field 'Test.someField' is never assigned to, and will always have its default value null");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 
 
-		[Fact]
-		public async Task PrivateFieldWithAttributeUnusedSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task PrivateFieldWithAttributeUnusedSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -111,13 +111,12 @@ class Camera : MonoBehaviour
     string someField = ""default"";
 }
 ";
-			var context = AnalyzerVerificationContext.Default
-				.WithAnalyzerOption("dotnet_style_readonly_field", "false");
+		var context = AnalyzerVerificationContext.Default
+			.WithAnalyzerOption("dotnet_style_readonly_field", "false");
 
-			var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
-				.WithLocation(7, 12);
+		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
+			.WithLocation(7, 12);
 
-			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 	}
 }

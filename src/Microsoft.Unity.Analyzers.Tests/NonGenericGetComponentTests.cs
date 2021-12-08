@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class NonGenericGetComponentTests : BaseCodeFixVerifierTest<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>
 {
-	public class NonGenericGetComponentTests : BaseCodeFixVerifierTest<NonGenericGetComponentAnalyzer, NonGenericGetComponentCodeFix>
+	[Fact]
+	public async Task GetComponentAs()
 	{
-		[Fact]
-		public async Task GetComponentAs()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -27,13 +27,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 14)
-				.WithArguments("GetComponent");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 14)
+			.WithArguments("GetComponent");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -46,13 +46,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task GetComponentAsArgumentOrParenthesis()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentAsArgumentOrParenthesis()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -64,13 +64,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 18)
-				.WithArguments("GetComponent");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 18)
+			.WithArguments("GetComponent");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -81,13 +81,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task GetComponentAsComments()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentAsComments()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -103,13 +103,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(11, 26)
-				.WithArguments("GetComponent");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(11, 26)
+			.WithArguments("GetComponent");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -124,14 +124,14 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
 
-		[Fact]
-		public async Task CastGetComponent()
-		{
-			const string test = @"
+	[Fact]
+	public async Task CastGetComponent()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -145,13 +145,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(10, 25)
-				.WithArguments("GetComponent");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 25)
+			.WithArguments("GetComponent");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -164,13 +164,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task GetComponentsInChildrenBoolean()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentsInChildrenBoolean()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -182,13 +182,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(8, 9)
-				.WithArguments("GetComponentsInChildren");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 9)
+			.WithArguments("GetComponentsInChildren");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -199,13 +199,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task GetComponentTypeVariable()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentTypeVariable()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -218,15 +218,15 @@ class Camera : MonoBehaviour
 }
 ";
 
-			// We're assuming that using GetComponent with anything else than a typeof
-			// argument is from a computation that makes it impossible to use the generic form
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		// We're assuming that using GetComponent with anything else than a typeof
+		// argument is from a computation that makes it impossible to use the generic form
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task GetComponentGeneric()
-		{
-			const string test = @"
+	[Fact]
+	public async Task GetComponentGeneric()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -238,8 +238,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-			// Verify we're not misreporting an already generic usage
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		// Verify we're not misreporting an already generic usage
+		await VerifyCSharpDiagnosticAsync(test);
 	}
 }

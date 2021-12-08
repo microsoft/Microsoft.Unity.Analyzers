@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class NullableReferenceTypesSuppressorTest : BaseSuppressorVerifierTest<NullableReferenceTypesSuppressor>
 {
-	public class NullableReferenceTypesSuppressorTest : BaseSuppressorVerifierTest<NullableReferenceTypesSuppressor>
+	[Fact]
+	public async Task NullableReferenceTypesSuppressed()
 	{
-		[Fact]
-		public async Task NullableReferenceTypesSuppressed()
-		{
-			const string test = @"
+		const string test = @"
 #nullable enable
 
 using UnityEngine;
@@ -55,29 +55,28 @@ public class TestScript : MonoBehaviour
 	}
 }
 ";
-			DiagnosticResult[] suppressor =
-			{
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(8, 29), //field1
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(9, 21), //field2
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(10, 28), //field3
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 28), //Property1
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(14, 29), //property2Field
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(16, 38), //serializedField
+		DiagnosticResult[] suppressor =
+		{
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(8, 29), //field1
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(9, 21), //field2
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(10, 28), //field3
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 28), //Property1
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(14, 29), //property2Field
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(16, 38), //serializedField
 
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
 
-				DiagnosticResult.CompilerWarning("CS8618")
-					.WithMessage("Non-nullable field 'hiddenField' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.")
-					.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
+			DiagnosticResult.CompilerWarning("CS8618")
+				.WithMessage("Non-nullable field 'hiddenField' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.")
+				.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
 
-				ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)
-			};
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)
+		};
 
-			var context = AnalyzerVerificationContext.Default
-				.WithLanguageVersion(LanguageVersion.CSharp8)
-				.WithAnalyzerFilter("CS0169");
+		var context = AnalyzerVerificationContext.Default
+			.WithLanguageVersion(LanguageVersion.CSharp8)
+			.WithAnalyzerFilter("CS0169");
 
-			await VerifyCSharpDiagnosticAsync(context, test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
 	}
 }

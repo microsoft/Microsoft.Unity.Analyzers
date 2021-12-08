@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class InitializeOnLoadStaticCtorTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
 {
-	public class InitializeOnLoadStaticCtorTests : BaseCodeFixVerifierTest<InitializeOnLoadStaticCtorAnalyzer, InitializeOnLoadStaticCtorCodeFix>
+	[Fact]
+	public async Task InitializeOnLoadWithoutStaticCtor()
 	{
-		[Fact]
-		public async Task InitializeOnLoadWithoutStaticCtor()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -23,13 +23,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(6, 7)
-				.WithArguments("Camera");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 7)
+			.WithArguments("Camera");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -41,13 +41,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task InitializeOnLoadWithImplicitStaticCtor()
-		{
-			const string test = @"
+	[Fact]
+	public async Task InitializeOnLoadWithImplicitStaticCtor()
+	{
+		const string test = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -58,13 +58,13 @@ public sealed class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(6, 21)
-				.WithArguments("Camera");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 21)
+			.WithArguments("Camera");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 using UnityEditor;
 
@@ -78,7 +78,6 @@ public sealed class Camera : MonoBehaviour
     public static readonly int willGenerateImplicitStaticCtor = 666;
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }

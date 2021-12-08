@@ -6,14 +6,14 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class EmptyUnityMessageTests : BaseCodeFixVerifierTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
 {
-	public class EmptyUnityMessageTests : BaseCodeFixVerifierTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
+	[Fact]
+	public async Task EmptyFixedUpdate()
 	{
-		[Fact]
-		public async Task EmptyFixedUpdate()
-		{
-			const string test = @"
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -29,13 +29,13 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = ExpectDiagnostic()
-				.WithLocation(7, 18)
-				.WithArguments("FixedUpdate");
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("FixedUpdate");
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
-			const string fixedTest = @"
+		const string fixedTest = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -46,13 +46,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpFixAsync(test, fixedTest);
-		}
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 
-		[Fact]
-		public async Task FixedUpdateWithBody()
-		{
-			const string test = @"
+	[Fact]
+	public async Task FixedUpdateWithBody()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -67,13 +67,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task VirtualFixedUpdate()
-		{
-			const string test = @"
+	[Fact]
+	public async Task VirtualFixedUpdate()
+	{
+		const string test = @"
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -83,13 +83,13 @@ class Camera : MonoBehaviour
     }
 }
 ";
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task VirtualOverrideFixedUpdate()
-		{
-			const string test = @"
+	[Fact]
+	public async Task VirtualOverrideFixedUpdate()
+	{
+		const string test = @"
 using UnityEngine;
 
 class BaseBehaviour : MonoBehaviour
@@ -106,13 +106,13 @@ class Camera : BaseBehaviour
     }
 }
 ";
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 
-		[Fact]
-		public async Task AbstractOverrideFixedUpdate()
-		{
-			const string test = @"
+	[Fact]
+	public async Task AbstractOverrideFixedUpdate()
+	{
+		const string test = @"
 using UnityEngine;
 
 abstract class BaseBehaviour : MonoBehaviour
@@ -127,7 +127,6 @@ class Camera : BaseBehaviour
     }
 }
 ";
-			await VerifyCSharpDiagnosticAsync(test);
-		}
+		await VerifyCSharpDiagnosticAsync(test);
 	}
 }

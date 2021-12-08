@@ -3,15 +3,15 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-namespace NewAnalyzer
-{
-	internal class AnalyzerCodeFixDiagnosticBuilder : AbstractDiagnosticBuilder
-	{
-		protected override string IdPrefix => "UNT";
+namespace NewAnalyzer;
 
-		protected override string GetResourceTemplate()
-		{
-			return @"  <data name=""$(DiagnosticName)CodeFixTitle"" xml:space=""preserve"">
+internal class AnalyzerCodeFixDiagnosticBuilder : AbstractDiagnosticBuilder
+{
+	protected override string IdPrefix => "UNT";
+
+	protected override string GetResourceTemplate()
+	{
+		return @"  <data name=""$(DiagnosticName)CodeFixTitle"" xml:space=""preserve"">
     <value>TODO: Add code fix title</value>
   </data>
   <data name=""$(DiagnosticName)DiagnosticDescription"" xml:space=""preserve"">
@@ -24,11 +24,11 @@ namespace NewAnalyzer
     <value>TODO: Add title</value>
   </data>
 </root>";
-		}
+	}
 
-		protected override string GetCodeTemplate()
-		{
-			return @"/*--------------------------------------------------------------------------------------------
+	protected override string GetCodeTemplate()
+	{
+		return @"/*--------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
@@ -91,11 +91,11 @@ namespace Microsoft.Unity.Analyzers
 	}
 }
 ";
-		}
+	}
 
-		protected override string GetTestTemplate()
-		{
-			return @"/*--------------------------------------------------------------------------------------------
+	protected override string GetTestTemplate()
+	{
+		return @"/*--------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
@@ -135,6 +135,5 @@ class Camera : MonoBehaviour
 	}
 }
 ";
-		}
 	}
 }

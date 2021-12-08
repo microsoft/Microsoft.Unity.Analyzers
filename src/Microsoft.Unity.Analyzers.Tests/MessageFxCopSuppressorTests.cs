@@ -6,17 +6,17 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
-{
-	public class MessageFxCopSuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
-	{
-		// Only load FxCop analyzers for those tests
-		protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.FxCop;
+namespace Microsoft.Unity.Analyzers.Tests;
 
-		[Fact]
-		public async Task StaticMethodSuppressed()
-		{
-			const string test = @"
+public class MessageFxCopSuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
+{
+	// Only load FxCop analyzers for those tests
+	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.FxCop;
+
+	[Fact]
+	public async Task StaticMethodSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 public class TestScript : MonoBehaviour
@@ -27,16 +27,16 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(MessageSuppressor.MethodFxCopRule)
-				.WithLocation(6, 18);
+		var suppressor = ExpectSuppressor(MessageSuppressor.MethodFxCopRule)
+			.WithLocation(6, 18);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task UnusedParameterSuppressed()
-		{
-			const string test = @"
+	[Fact]
+	public async Task UnusedParameterSuppressed()
+	{
+		const string test = @"
 using UnityEngine;
 
 public class TestScript : MonoBehaviour
@@ -48,10 +48,9 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(MessageSuppressor.ParameterFxCopRule)
-				.WithLocation(6, 35);
+		var suppressor = ExpectSuppressor(MessageSuppressor.ParameterFxCopRule)
+			.WithLocation(6, 35);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
 }
