@@ -11,6 +11,48 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 public class NullableReferenceTypesSuppressorTest : BaseSuppressorVerifierTest<NullableReferenceTypesSuppressor>
 {
+	[Fact] async Task NonUnityClassIsExemptFromSuppressions()
+	{
+		const string test = @"
+#nullable enable
+using UnityEngine;
+
+namespace Assets.Scripts
+{
+    public class Test /* is not a Unity object */
+    {
+        private GameObject field1;
+        
+        private GameObject property1 { get; set; }
+
+        private void Start()
+        {
+            field1 = new GameObject();
+
+            property1 = new GameObject();
+        }
+    }
+}
+";
+	
+		var context = AnalyzerVerificationContext.Default
+			.WithLanguageVersion(LanguageVersion.CSharp8)
+			.WithAnalyzerFilter("CS0169");
+
+		DiagnosticResult[] diagnostics =
+		{
+			DiagnosticResult.CompilerWarning("CS8618")
+				.WithMessage("Non-nullable field 'field1' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.")
+				.WithLocation(9, 28), 
+
+			DiagnosticResult.CompilerWarning("CS8618")
+				.WithMessage("Non-nullable property 'property1' must contain a non-null value when exiting constructor. Consider declaring the property as nullable.")
+				.WithLocation(11, 28), 
+
+		};
+
+		await VerifyCSharpDiagnosticAsync(context, test, diagnostics);
+	}
 
 	[Fact]
 	public async Task NonUnityNullableReferenceTypesSuppressed()
