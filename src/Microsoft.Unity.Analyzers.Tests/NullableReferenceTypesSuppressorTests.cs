@@ -48,7 +48,6 @@ namespace Assets.Scripts
 			DiagnosticResult.CompilerWarning("CS8618")
 				.WithMessage("Non-nullable property 'property1' must contain a non-null value when exiting constructor. Consider declaring the property as nullable.")
 				.WithLocation(11, 28), 
-
 		};
 
 		await VerifyCSharpDiagnosticAsync(context, test, diagnostics);
