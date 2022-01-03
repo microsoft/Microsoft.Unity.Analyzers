@@ -111,12 +111,6 @@ namespace Microsoft.Unity.Analyzers
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 
-		private static ITypeSymbol? GetSymbol(CodeAnalysis.SyntaxTree tree, TypeSyntax type, SuppressionAnalysisContext context)
-		{
-			var model = context.GetSemanticModel(tree);
-			return model.GetSymbolInfo(type).Symbol as ITypeSymbol;
-		}
-
 		//analyze if a property is assigned inside a methodbody
 		private static bool IsAssignedTo(string identifier, IEnumerable<SyntaxNode> methodBodies)
 		{
