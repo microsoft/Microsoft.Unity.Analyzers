@@ -11,6 +11,45 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 public class NullableReferenceTypesSuppressorTest : BaseSuppressorVerifierTest<NullableReferenceTypesSuppressor>
 {
+
+	[Fact]
+	public async Task NonUnityNullableReferenceTypesSuppressed()
+	{
+		const string test = @"
+#nullable enable
+using UnityEngine;
+
+namespace Assets.Scripts
+{
+    public class Test : MonoBehaviour
+    {
+        private class NonUnityObject { }
+
+        private GameObject field;
+        private NonUnityObject field2;
+
+        private void Start()
+        {
+            field = new GameObject();
+            field2 = new NonUnityObject();
+        }
+    }
+}
+"; 
+
+		var context = AnalyzerVerificationContext.Default
+			.WithLanguageVersion(LanguageVersion.CSharp8)
+			.WithAnalyzerFilter("CS0169");
+
+		DiagnosticResult[] suppressors =
+		{
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(11, 28), //field
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 32), //field2
+		};
+
+		await VerifyCSharpDiagnosticAsync(context, test, suppressors);
+	}
+
 	[Fact]
 	public async Task NullableReferenceTypesSuppressed()
 	{
@@ -55,7 +94,7 @@ public class TestScript : MonoBehaviour
 	}
 }
 ";
-		DiagnosticResult[] suppressor =
+		DiagnosticResult[] suppressors =
 		{
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(8, 29), //field1
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(9, 21), //field2
@@ -77,6 +116,6 @@ public class TestScript : MonoBehaviour
 			.WithLanguageVersion(LanguageVersion.CSharp8)
 			.WithAnalyzerFilter("CS0169");
 
-		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
+		await VerifyCSharpDiagnosticAsync(context, test, suppressors);
 	}
 }
