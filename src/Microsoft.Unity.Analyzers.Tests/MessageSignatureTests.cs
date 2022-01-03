@@ -44,6 +44,76 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task IgnoreStaticMessageSignature()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public static void Start(int foo)
+    {
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task StaticMessageSignature()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static bool OnPreGeneratingCSProjectFiles(int foo)
+    {
+        return false;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 17)
+			.WithArguments("OnPreGeneratingCSProjectFiles");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static bool OnPreGeneratingCSProjectFiles()
+    {
+        return false;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task IgnoreInstanceMessageSignature()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    bool OnPreGeneratingCSProjectFiles(int foo)
+    {
+        return false;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
 	public async Task MessageSignatureUnityLogic()
 	{
 		// Unity allows to specify less parameters if you don't need them
