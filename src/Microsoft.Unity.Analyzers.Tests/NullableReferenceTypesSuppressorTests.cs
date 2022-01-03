@@ -25,13 +25,19 @@ namespace Assets.Scripts
     {
         private class NonUnityObject { }
 
-        private GameObject field;
+        private GameObject field1;
         private NonUnityObject field2;
+        
+        private GameObject property1 { get; set; }
+        private NonUnityObject property2 { get; set; }
 
         private void Start()
         {
-            field = new GameObject();
+            field1 = new GameObject();
             field2 = new NonUnityObject();
+
+            property1 = new GameObject();
+            property2 = new NonUnityObject();
         }
     }
 }
@@ -43,8 +49,10 @@ namespace Assets.Scripts
 
 		DiagnosticResult[] suppressors =
 		{
-			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(11, 28), //field
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(11, 28), //field1
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 32), //field2
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(14, 28), //property1
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(15, 32), //property2
 		};
 
 		await VerifyCSharpDiagnosticAsync(context, test, suppressors);
