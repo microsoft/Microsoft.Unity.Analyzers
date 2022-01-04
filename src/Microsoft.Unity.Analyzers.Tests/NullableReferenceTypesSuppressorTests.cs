@@ -11,7 +11,10 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 public class NullableReferenceTypesSuppressorTest : BaseSuppressorVerifierTest<NullableReferenceTypesSuppressor>
 {
-	[Fact] async Task NonUnityClassIsExemptFromSuppressions()
+	public const string WarningFormat = "Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider declaring the {0} as nullable.";
+
+	[Fact]
+	public async Task NonUnityClassIsExemptFromSuppressions()
 	{
 		const string test = @"
 #nullable enable
@@ -41,12 +44,14 @@ namespace Assets.Scripts
 
 		DiagnosticResult[] diagnostics =
 		{
-			DiagnosticResult.CompilerWarning("CS8618")
-				.WithMessage("Non-nullable field 'field1' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.")
+			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+				.WithMessageFormat(WarningFormat)
+				.WithArguments("field", "field1")
 				.WithLocation(9, 28), 
 
-			DiagnosticResult.CompilerWarning("CS8618")
-				.WithMessage("Non-nullable property 'property1' must contain a non-null value when exiting constructor. Consider declaring the property as nullable.")
+			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+				.WithMessageFormat(WarningFormat)
+				.WithArguments("property", "property1")
 				.WithLocation(11, 28), 
 		};
 
@@ -154,8 +159,9 @@ public class TestScript : MonoBehaviour
 
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
 
-			DiagnosticResult.CompilerWarning("CS8618")
-				.WithMessage("Non-nullable field 'hiddenField' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.")
+			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+				.WithMessageFormat(WarningFormat)
+				.WithArguments("field", "hiddenField")
 				.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
 
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)
