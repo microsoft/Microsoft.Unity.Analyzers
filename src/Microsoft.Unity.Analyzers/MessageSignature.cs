@@ -72,6 +72,11 @@ namespace Microsoft.Unity.Analyzers
 				if (scriptInfo.IsMessage(methodSymbol))
 					continue;
 
+				// Check static/instance compatibility
+				var namedMessages = messages[methodName];
+				if (namedMessages.All(m => m.IsStatic != methodSymbol.IsStatic))
+					continue;
+
 				context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), methodName));
 			}
 		}
