@@ -11,6 +11,99 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 public class NullableReferenceTypesSuppressorTest : BaseSuppressorVerifierTest<NullableReferenceTypesSuppressor>
 {
+	public const string WarningFormat = "Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider declaring the {0} as nullable.";
+
+	[Fact]
+	public async Task NonUnityClassIsExemptFromSuppressions()
+	{
+		const string test = @"
+#nullable enable
+using UnityEngine;
+
+namespace Assets.Scripts
+{
+    public class Test /* is not a Unity object */
+    {
+        private GameObject field1;
+        
+        private GameObject property1 { get; set; }
+
+        private void Start()
+        {
+            field1 = new GameObject();
+
+            property1 = new GameObject();
+        }
+    }
+}
+";
+	
+		var context = AnalyzerVerificationContext.Default
+			.WithLanguageVersion(LanguageVersion.CSharp8)
+			.WithAnalyzerFilter("CS0169");
+
+		DiagnosticResult[] diagnostics =
+		{
+			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+				.WithMessageFormat(WarningFormat)
+				.WithArguments("field", "field1")
+				.WithLocation(9, 28), 
+
+			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+				.WithMessageFormat(WarningFormat)
+				.WithArguments("property", "property1")
+				.WithLocation(11, 28), 
+		};
+
+		await VerifyCSharpDiagnosticAsync(context, test, diagnostics);
+	}
+
+	[Fact]
+	public async Task NonUnityNullableReferenceTypesSuppressed()
+	{
+		const string test = @"
+#nullable enable
+using UnityEngine;
+
+namespace Assets.Scripts
+{
+    public class Test : MonoBehaviour
+    {
+        private class NonUnityObject { }
+
+        private GameObject field1;
+        private NonUnityObject field2;
+        
+        private GameObject property1 { get; set; }
+        private NonUnityObject property2 { get; set; }
+
+        private void Start()
+        {
+            field1 = new GameObject();
+            field2 = new NonUnityObject();
+
+            property1 = new GameObject();
+            property2 = new NonUnityObject();
+        }
+    }
+}
+"; 
+
+		var context = AnalyzerVerificationContext.Default
+			.WithLanguageVersion(LanguageVersion.CSharp8)
+			.WithAnalyzerFilter("CS0169");
+
+		DiagnosticResult[] suppressors =
+		{
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(11, 28), //field1
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 32), //field2
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(14, 28), //property1
+			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(15, 32), //property2
+		};
+
+		await VerifyCSharpDiagnosticAsync(context, test, suppressors);
+	}
+
 	[Fact]
 	public async Task NullableReferenceTypesSuppressed()
 	{
@@ -55,7 +148,7 @@ public class TestScript : MonoBehaviour
 	}
 }
 ";
-		DiagnosticResult[] suppressor =
+		DiagnosticResult[] suppressors =
 		{
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(8, 29), //field1
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(9, 21), //field2
@@ -66,8 +159,9 @@ public class TestScript : MonoBehaviour
 
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
 
-			DiagnosticResult.CompilerWarning("CS8618")
-				.WithMessage("Non-nullable field 'hiddenField' must contain a non-null value when exiting constructor. Consider declaring the field as nullable.")
+			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+				.WithMessageFormat(WarningFormat)
+				.WithArguments("field", "hiddenField")
 				.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
 
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)
@@ -77,6 +171,6 @@ public class TestScript : MonoBehaviour
 			.WithLanguageVersion(LanguageVersion.CSharp8)
 			.WithAnalyzerFilter("CS0169");
 
-		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
+		await VerifyCSharpDiagnosticAsync(context, test, suppressors);
 	}
 }
