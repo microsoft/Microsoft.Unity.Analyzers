@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -804,6 +804,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string TagComparisonDiagnosticTitle {
             get {
                 return ResourceManager.GetString("TagComparisonDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use TryGetComponent instead.
+        /// </summary>
+        internal static string TryGetComponentCodeFixTitle {
+            get {
+                return ResourceManager.GetString("TryGetComponentCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TryGetComponent will not allocate memory in case it fails..
+        /// </summary>
+        internal static string TryGetComponentDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("TryGetComponentDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GetComponent allocates even if no component is found..
+        /// </summary>
+        internal static string TryGetComponentDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("TryGetComponentDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GetComponent always allocates.
+        /// </summary>
+        internal static string TryGetComponentDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("TryGetComponentDiagnosticTitle", resourceCulture);
             }
         }
         
