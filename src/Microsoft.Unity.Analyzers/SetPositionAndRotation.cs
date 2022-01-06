@@ -183,38 +183,19 @@ namespace Microsoft.Unity.Analyzers
 			if (baseExpression == null)
 				return document;
 
-			var trivia = MergeTrivia(assignmentExpression, nextAssignmentExpression);
-
 			var invocation = InvocationExpression(
 					MemberAccessExpression(
 						SyntaxKind.SimpleMemberAccessExpression,
 						baseExpression,
 						IdentifierName("SetPositionAndRotation")))
 				.WithArgumentList(argList)
-				.WithLeadingTrivia(trivia);
+				.WithLeadingTrivia(assignmentExpression.MergeLeadingTriviaWith(nextAssignmentExpression));
 
 			var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
 			documentEditor.RemoveNode(assignmentExpression.Parent, SyntaxRemoveOptions.KeepNoTrivia);
 			documentEditor.ReplaceNode(nextAssignmentExpression, invocation);
 
 			return documentEditor.GetChangedDocument();
-		}
-
-		private static SyntaxTriviaList MergeTrivia(CSharpSyntaxNode first, CSharpSyntaxNode second)
-		{
-			var merged = first.GetLeadingTrivia().AddRange(second.GetLeadingTrivia());
-			var result = SyntaxTriviaList.Empty;
-
-			SyntaxTrivia previous = new SyntaxTrivia();
-			foreach (var trivia in merged)
-			{
-				if (!trivia.IsEquivalentTo(previous))
-					result = result.Add(trivia);
-
-				previous = trivia;
-			}
-
-			return result;
 		}
 	}
 }

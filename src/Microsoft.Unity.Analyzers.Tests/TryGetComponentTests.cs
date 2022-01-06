@@ -49,6 +49,101 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpFixAsync(test, fixedTest);
 		}
+
+		[Fact]
+		public async Task VariableDeclarationScopeTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+		if (true) {
+            var rb = gameObject.GetComponent<Rigidbody>();
+            if (rb != null) {
+                Debug.Log(rb.name);
+            }
+            if (rb == null) {
+                Debug.Log(""null"");
+            }
+        }
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(9, 22);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+		if (true) {
+            if (gameObject.TryGetComponent<Rigidbody>(out var rb)) {
+                Debug.Log(rb.name);
+            }
+            if (rb == null) {
+                Debug.Log(""null"");
+            }
+        }
+    }
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
+		[Fact]
+		public async Task VariableDeclarationTriviaTest()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        // before assignment
+        var rb = gameObject.GetComponent<Rigidbody>();
+        // after assignment, before if
+        if (rb != null) {
+            Debug.Log(rb.name);
+        }
+    }
+}
+";
+
+			var diagnostic = ExpectDiagnostic()
+				.WithLocation(9, 18);
+
+			await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+			const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        // before assignment
+        // after assignment, before if
+        if (gameObject.TryGetComponent<Rigidbody>(out var rb)) {
+            Debug.Log(rb.name);
+        }
+    }
+}
+";
+
+			await VerifyCSharpFixAsync(test, fixedTest);
+		}
+
 		
 		[Fact]
 		public async Task VariableDeclarationNotNullConditionNoMemberAccessOnComponent()

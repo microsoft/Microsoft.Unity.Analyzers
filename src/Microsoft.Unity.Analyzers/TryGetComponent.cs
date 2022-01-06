@@ -67,16 +67,14 @@ namespace Microsoft.Unity.Analyzers
 
 	internal class TryGetComponentContext
 	{
-		public TryGetComponentContext(InvocationExpressionSyntax invocation, string targetIdentifier, bool isVariableDeclaration, IfStatementSyntax ifStatement, SyntaxKind conditionKind)
+		public TryGetComponentContext(string targetIdentifier, bool isVariableDeclaration, IfStatementSyntax ifStatement, SyntaxKind conditionKind)
 		{
-			Invocation = invocation;
 			TargetIdentifier = targetIdentifier;
 			IsVariableDeclaration = isVariableDeclaration;
 			IfStatement = ifStatement;
 			ConditionKind = conditionKind;
 		}
 
-		public InvocationExpressionSyntax Invocation { get; }
 		public string TargetIdentifier { get; }
 		public bool IsVariableDeclaration { get; }
 		public IfStatementSyntax IfStatement { get; }
@@ -105,7 +103,7 @@ namespace Microsoft.Unity.Analyzers
 			if (conditionIdentifier.Value.Text != targetIdentifier.Value.Text)
 				return null;
 
-			return new TryGetComponentContext(invocation, targetIdentifier.Value.Text, isVariableDeclaration, ifStatement, binaryExpression.Kind());
+			return new TryGetComponentContext(targetIdentifier.Value.Text, isVariableDeclaration, ifStatement, binaryExpression.Kind());
 		}
 
 		private static bool IsCompatibleGetComponent(InvocationExpressionSyntax invocation, SemanticModel model)
@@ -243,7 +241,7 @@ namespace Microsoft.Unity.Analyzers
 			if (context == null)
 				return document;
 
-			SyntaxNode assignNode = context.Invocation;
+			SyntaxNode assignNode = invocation;
 			while (assignNode.Parent != null && assignNode.Parent is not BlockSyntax)
 				assignNode = assignNode.Parent;
 			
@@ -273,6 +271,7 @@ namespace Microsoft.Unity.Analyzers
 					return document;
 			}
 
+			var targetIdentifier = context.TargetIdentifier;
 			var newArgument = context.IsVariableDeclaration switch
 			{
 				// Creating var argument
@@ -285,11 +284,9 @@ namespace Microsoft.Unity.Analyzers
 								"var", 
 								TriviaList())),
 						SingleVariableDesignation(
-							Identifier(
-								context.TargetIdentifier)))),
+							Identifier(targetIdentifier)))),
 				// Reusing the target identifier
-				false => Argument(
-					IdentifierName(context.TargetIdentifier))
+				false => Argument(IdentifierName(targetIdentifier))
 			};
 
 			// Add the 'out' component argument 
@@ -308,10 +305,12 @@ namespace Microsoft.Unity.Analyzers
 				_ => newInvocation
 			};
 
-			var newIfStatement = context.IfStatement
-				.WithCondition(newCondition);
+			var ifStatement = context.IfStatement;
+			var newIfStatement = ifStatement
+				.WithCondition(newCondition)
+				.WithLeadingTrivia(assignNode.MergeLeadingTriviaWith(ifStatement));
 
-			documentEditor.ReplaceNode(context.IfStatement, newIfStatement);
+			documentEditor.ReplaceNode(ifStatement, newIfStatement);
 
 			return documentEditor.GetChangedDocument();
 		}
