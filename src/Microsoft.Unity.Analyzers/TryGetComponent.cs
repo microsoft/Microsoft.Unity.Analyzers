@@ -59,7 +59,7 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsTryGetComponentSupported(SyntaxNodeAnalysisContext context)
 		{
-			// We need Unity 2019.1 for proper support
+			// We need Unity 2019.2+ for proper support
 			var goType = context.Compilation.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName);
 			return goType?.MemberNames.Contains(TryGetComponent) ?? false;
 		}
