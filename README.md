@@ -46,7 +46,7 @@ Running and debugging the tests is the easiest way to get started but sometimes 
 
 - Open the `Microsoft.Unity.Analyzers.Vsix.sln` solution.
 - Make sure `Microsoft.Unity.Analyzers.Vsix` is set as the startup project.
-- Hit play (Current Instance) to start debugging an experimental instance of Visual Studio 2019.
+- Hit play (Current Instance) to start debugging an experimental instance of Visual Studio 2022.
 - Load any Unity project in the Visual Studio experimental instance then put breakpoints in the `Microsoft.Unity.Analyzers` project.
 
 ## On macOS
