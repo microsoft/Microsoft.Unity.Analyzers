@@ -60,7 +60,7 @@ class Camera : MonoBehaviour
 {
     public void Update() 
     {
-		if (true) {
+        if (true) {
             var rb = gameObject.GetComponent<Rigidbody>();
             if (rb != null) {
                 Debug.Log(rb.name);
@@ -85,7 +85,7 @@ class Camera : MonoBehaviour
 {
     public void Update() 
     {
-		if (true) {
+        if (true) {
             if (gameObject.TryGetComponent<Rigidbody>(out var rb)) {
                 Debug.Log(rb.name);
             }
