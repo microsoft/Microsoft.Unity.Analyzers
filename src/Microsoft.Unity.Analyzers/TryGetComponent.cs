@@ -24,8 +24,6 @@ namespace Microsoft.Unity.Analyzers
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class TryGetComponentAnalyzer : DiagnosticAnalyzer
 	{
-		internal const string TryGetComponent = nameof(TryGetComponent);
-
 		internal static readonly DiagnosticDescriptor Rule = new(
 			id: "UNT0026",
 			title: Strings.TryGetComponentDiagnosticTitle,
@@ -61,7 +59,7 @@ namespace Microsoft.Unity.Analyzers
 		{
 			// We need Unity 2019.2+ for proper support
 			var goType = context.Compilation.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName);
-			return goType?.MemberNames.Contains(TryGetComponent) ?? false;
+			return goType?.MemberNames.Contains(nameof(UnityEngine.Component.TryGetComponent)) ?? false;
 		}
 	}
 
@@ -108,19 +106,15 @@ namespace Microsoft.Unity.Analyzers
 
 		private static bool IsCompatibleGetComponent(InvocationExpressionSyntax invocation, SemanticModel model)
 		{
-			var nameSyntax = invocation.GetMethodNameSyntax();
-			if (nameSyntax == null)
-				return false;
-
-			// We are looking for a GetComponent method
-			if (!KnownMethods.IsGetComponentName(nameSyntax))
+			// We are looking for the exact GetComponent method, not other derivatives, so we do not want to use KnownMethods.IsGetComponentName(nameSyntax)
+			if (invocation.GetMethodNameSyntax() is not {Identifier: {Text: nameof(UnityEngine.Component.GetComponent)}})
 				return false;
 
 			var symbol = model.GetSymbolInfo(invocation);
 			if (symbol.Symbol is not IMethodSymbol method)
 				return false;
 
-			// We want Component.GetComponent or GameObject.GetComponent
+			// We want Component.GetComponent or GameObject.GetComponent (given we already checked the exact name, we can use this one)
 			if (!KnownMethods.IsGetComponent(method))
 				return false;
 
@@ -249,7 +243,7 @@ namespace Microsoft.Unity.Analyzers
 			documentEditor.RemoveNode(assignNode, SyntaxRemoveOptions.KeepNoTrivia);
 
 			InvocationExpressionSyntax? newInvocation;
-			var identifier = Identifier(TryGetComponentAnalyzer.TryGetComponent);
+			var identifier = Identifier(nameof(UnityEngine.Component.TryGetComponent));
 
 			// Direct method invocation or through a member
 			switch (invocation.Expression)

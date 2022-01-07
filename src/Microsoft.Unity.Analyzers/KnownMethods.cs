@@ -20,8 +20,11 @@ namespace Microsoft.Unity.Analyzers
 			nameof(UnityEngine.Component.GetComponents),
 			nameof(UnityEngine.Component.GetComponentsInChildren),
 			nameof(UnityEngine.Component.GetComponentsInParent),
+
+			nameof(UnityEngine.Component.TryGetComponent),
 		});
 
+		// Be careful when using those helper methods, as GetComponentNames contains methods with different return types (Component, array or bool)
 		public static bool IsGetComponentName(SimpleNameSyntax name) => GetComponentNames.Contains(name.Identifier.Text);
 
 		public static bool IsGetComponent(IMethodSymbol method)

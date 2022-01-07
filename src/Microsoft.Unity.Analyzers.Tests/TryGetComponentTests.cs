@@ -396,5 +396,27 @@ class Camera : MonoBehaviour
 
 			await VerifyCSharpDiagnosticAsync(test);
 		}
+
+		[Fact]
+		public async Task NoGetComponentDerivatives()
+		{
+			const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        var rb = gameObject.GetComponentInChildren<Rigidbody>();
+        if (rb != null) {
+            Debug.Log(rb.name);
+        }
+    }
+}
+";
+
+			await VerifyCSharpDiagnosticAsync(test);
+		}
+
 	}
 }
