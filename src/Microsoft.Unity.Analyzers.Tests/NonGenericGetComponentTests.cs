@@ -241,4 +241,42 @@ class Camera : MonoBehaviour
 		// Verify we're not misreporting an already generic usage
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task TryGetComponent()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Start()
+    {
+        if (!TryGetComponent(typeof(Rigidbody), out var sb))
+            return;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 14)
+			.WithArguments("TryGetComponent");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Start()
+    {
+        if (!TryGetComponent<Rigidbody>(out var sb))
+            return;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
 }

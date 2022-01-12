@@ -76,6 +76,10 @@ namespace UnityEngine
 		public Component[] GetComponentsInChildren<T>(bool includeInactive = false) { return null; }
 		public Component[] GetComponentsInParent(Type type, bool includeInactive = false) { return null; }
 		public Component[] GetComponentsInParent<T>(bool includeInactive = false) { return null; }
+
+		// Unity 2019.2+
+		public bool TryGetComponent(Type type, out Component component) { component = null; return false; }
+		public bool TryGetComponent<T>(out Component component) { component = null; return false; }
 	}
 
 	class Transform

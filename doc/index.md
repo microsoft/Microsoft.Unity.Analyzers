@@ -27,6 +27,7 @@ ID | Title | Category
 [UNT0023](UNT0023.md) | Coalescing assignment on Unity objects | Correctness
 [UNT0024](UNT0024.md) | Give priority to scalar calculations over vector calculations | Performance
 [UNT0025](UNT0025.md) | Input.GetKey overloads with KeyCode argument | Correctness
+[UNT0026](UNT0026.md) | GetComponent always allocates | Performance
 
 # Diagnostic Suppressors
 

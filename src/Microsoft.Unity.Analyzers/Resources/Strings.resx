@@ -471,4 +471,16 @@
   <data name="InputGetKeyDiagnosticTitle" xml:space="preserve">
     <value>Input.GetKey overloads with KeyCode argument</value>
   </data>
+  <data name="TryGetComponentCodeFixTitle" xml:space="preserve">
+    <value>Use TryGetComponent instead</value>
+  </data>
+  <data name="TryGetComponentDiagnosticDescription" xml:space="preserve">
+    <value>TryGetComponent will not allocate memory in case it fails.</value>
+  </data>
+  <data name="TryGetComponentDiagnosticMessageFormat" xml:space="preserve">
+    <value>GetComponent allocates even if no component is found.</value>
+  </data>
+  <data name="TryGetComponentDiagnosticTitle" xml:space="preserve">
+    <value>GetComponent always allocates</value>
+  </data>
 </root>

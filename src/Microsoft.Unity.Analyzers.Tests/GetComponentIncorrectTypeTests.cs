@@ -76,6 +76,29 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task TryGetComponentIncorrectTypeTest()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private void Start()
+    {
+        if (!TryGetComponent<int>(out var i))
+            return;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 14)
+			.WithArguments("Int32");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
+
+	[Fact]
 	public async Task GetComponentLegacyTest()
 	{
 		const string test = @"
