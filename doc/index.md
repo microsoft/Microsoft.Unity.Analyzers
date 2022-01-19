@@ -48,5 +48,5 @@ ID | Suppressed ID | Justification
 [USP0013](USP0013.md) | CA1823 | Don't flag private fields with SerializeField or SerializeReference attributes as unused
 [USP0014](USP0014.md) | CA1822 | The Unity runtime invokes Unity messages
 [USP0015](USP0015.md) | CA1801 | The Unity runtime invokes Unity messages
-[USP0016](USP0016.md) | CS8618 | Initialization detection of types inheriting from UnityEngine.Object
+[USP0016](USP0016.md) | CS8618 | Initialization detection with nullable reference types
 [USP0017](USP0017.md) | IDE0074 | Unity objects should not use coalescing assignment
