@@ -71,6 +71,9 @@ jobs:
       run: xcopy /s /i /y /q "UnityCache\MonoBleedingEdge" "C:\Program Files\Unity\Editor\Data\MonoBleedingEdge"
       shell: cmd
 
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+
     - name: Build
       run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln /p:UseSharedCompilation=false
       env:
@@ -78,9 +81,6 @@ jobs:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
         DOTNET_NOLOGO: 1
       shell: cmd
-
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
       
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
