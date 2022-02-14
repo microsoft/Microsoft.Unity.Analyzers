@@ -77,6 +77,7 @@ jobs:
       
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+      
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
       run: echo "TEST_FILTER=." >> $GITHUB_ENV
