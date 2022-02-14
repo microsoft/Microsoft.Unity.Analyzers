@@ -22,12 +22,6 @@ jobs:
     - name: Checkout 
       uses: actions/checkout@v1
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-    
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -71,6 +65,18 @@ jobs:
       if: steps.cache-unity.outputs.cache-hit == 'true'
       run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
+    - name: Build
+      run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln
+      env:
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+        DOTNET_NOLOGO: 1
+    
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
       run: echo "TEST_FILTER=." >> $GITHUB_ENV
