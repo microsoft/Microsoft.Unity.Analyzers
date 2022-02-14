@@ -66,7 +66,7 @@ jobs:
       run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
     - name: Build
-      run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln
+      run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln /p:UseSharedCompilation=false
       env:
         DOTNET_CLI_TELEMETRY_OPTOUT: 1
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
