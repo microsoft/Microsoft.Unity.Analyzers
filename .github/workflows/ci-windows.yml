@@ -14,9 +14,11 @@ env:
   UNITY_HASH: f5400f52e03f
   UNITY_FULL_VERSION: 2020.3.28f1
 
+# Tracing builds with CodeQL is currently not supported on Windows 11 and Windows Server 2022. so use windows-2019 instead of windows-latest
+
 jobs:
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2019
     
     steps:
     - name: Checkout 
