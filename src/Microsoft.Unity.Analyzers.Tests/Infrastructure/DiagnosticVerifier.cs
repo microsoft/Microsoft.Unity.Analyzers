@@ -234,8 +234,8 @@ public abstract class DiagnosticVerifier
 			var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true);
 			var specificDiagnosticOptions = compilationOptions.SpecificDiagnosticOptions;
 
-			// Force all tested diagnostics to be enabled
-			foreach (var descriptor in analyzer.SupportedDiagnostics)
+			// Force all tested and related diagnostics to be enabled
+			foreach (var descriptor in analyzers.SelectMany(a => a.SupportedDiagnostics))
 				specificDiagnosticOptions = specificDiagnosticOptions.SetItem(descriptor.Id, ReportDiagnostic.Info);
 
 			var compilationWithAnalyzers = compilation

@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.3.1" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.1.0" GeneratePathProperty="true" />
@@ -27,7 +27,7 @@
       <Visible>False</Visible>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>  
-    <None Include="$(PkgMicrosoft_CodeQuality_Analyzers)\analyzers\dotnet\cs\*.dll">
+    <None Include="$(PkgMicrosoft_CodeAnalysis_NetAnalyzers)\analyzers\dotnet\cs\*.dll">
       <Visible>False</Visible>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>  

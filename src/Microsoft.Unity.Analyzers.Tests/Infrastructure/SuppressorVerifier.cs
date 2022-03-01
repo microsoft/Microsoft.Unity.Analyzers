@@ -18,8 +18,8 @@ namespace Microsoft.Unity.Analyzers.Tests;
 [Flags]
 public enum SuppressorVerifierAnalyzers
 {
-	CodeStyle = 1,
-	FxCop = 2
+	CodeStyle = 1,  // CSxxxx, IDExxxx
+	CodeQuality = 2 // CAxxxx
 }
 
 public abstract class SuppressorVerifier : DiagnosticVerifier
@@ -54,10 +54,10 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.CodeStyle.dll"));
 		}
 
-		if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.FxCop))
+		if (SuppressorVerifierAnalyzers.HasFlag(SuppressorVerifierAnalyzers.CodeQuality))
 		{
-			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.Analyzers.dll"));
-			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeQuality.CSharp.Analyzers.dll"));
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.NetAnalyzers.dll"));
+			analyzers.AddRange(LoadAnalyzers("Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll"));
 		}
 
 		return analyzers

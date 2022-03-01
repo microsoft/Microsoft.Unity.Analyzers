@@ -26,7 +26,7 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.UnusedSerializeFieldSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor UnusedFxCopRule = new(
+		internal static readonly SuppressionDescriptor UnusedCodeQualityRule = new(
 			id: "USP0013",
 			suppressedDiagnosticId: "CA1823",
 			justification: Strings.UnusedSerializeFieldSuppressorJustification);
@@ -36,7 +36,7 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "CS0649",
 			justification: Strings.NeverAssignedSerializeFieldSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(ReadonlyRule, UnusedRule, UnusedFxCopRule, NeverAssignedRule);
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(ReadonlyRule, UnusedRule, UnusedCodeQualityRule, NeverAssignedRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{

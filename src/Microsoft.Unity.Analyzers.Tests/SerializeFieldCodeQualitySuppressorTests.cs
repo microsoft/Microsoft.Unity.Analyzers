@@ -8,10 +8,10 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class SerializeFieldFxCopSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
+public class SerializeFieldCodeQualitySuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
 {
-	// Only load FxCop analyzers for those tests
-	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.FxCop;
+	// Only load CodeQuality analyzers for those tests
+	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeQuality;
 
 	[Fact]
 	public async Task PrivateFieldWithAttributeUnusedSuppressed()
@@ -26,7 +26,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedFxCopRule)
+		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedCodeQualityRule)
 			.WithLocation(7, 12);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
