@@ -8,10 +8,10 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class MessageFxCopSuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
+public class MessageCodeQualitySuppressorTests : BaseSuppressorVerifierTest<MessageSuppressor>
 {
-	// Only load FxCop analyzers for those tests
-	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.FxCop;
+	// Only load CodeQuality analyzers for those tests
+	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeQuality;
 
 	[Fact]
 	public async Task StaticMethodSuppressed()
@@ -27,7 +27,7 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-		var suppressor = ExpectSuppressor(MessageSuppressor.MethodFxCopRule)
+		var suppressor = ExpectSuppressor(MessageSuppressor.MethodCodeQualityRule)
 			.WithLocation(6, 18);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -48,9 +48,11 @@ public class TestScript : MonoBehaviour
 }
 ";
 
-		var suppressor = ExpectSuppressor(MessageSuppressor.ParameterFxCopRule)
-			.WithLocation(6, 35);
+		// This CA1801 rule has been deprecated in favor of IDE0060
+		// Disable this, as the current NetAnalyzers will not trigger a diagnostic anymore
+		// var suppressor = ExpectSuppressor(MessageSuppressor.ParameterCodeQualityRule)
+		//   .WithLocation(6, 35);
 
-		await VerifyCSharpDiagnosticAsync(test, suppressor);
+		await VerifyCSharpDiagnosticAsync(test /*, suppressor*/);
 	}
 }

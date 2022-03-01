@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using Microsoft.Win32;
 using Xunit;
 
@@ -23,7 +24,7 @@ internal static class UnityPath
 
 	static UnityPath()
 	{
-		if (OnWindows())
+		if (OperatingSystem.IsWindows())
 		{
 			RegisterRegistryInstallations();
 		}
@@ -51,6 +52,7 @@ internal static class UnityPath
 		RegisterUnityInstallation("/Applications/Unity/Unity.app/Contents");
 	}
 
+	[SupportedOSPlatform("windows")]
 	private static void RegisterRegistryInstallations()
 	{
 		var hive = Registry.CurrentUser;
@@ -91,15 +93,5 @@ internal static class UnityPath
 	{
 		if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
 			UnityInstallations.Add(path);
-	}
-
-	internal static bool OnWindows()
-	{
-		return Environment.OSVersion.Platform switch
-		{
-			PlatformID.Win32NT => true,
-			PlatformID.Win32Windows => true,
-			_ => false
-		};
 	}
 }

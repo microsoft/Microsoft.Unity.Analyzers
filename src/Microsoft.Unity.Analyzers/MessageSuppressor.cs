@@ -20,7 +20,7 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "IDE0051",
 			justification: Strings.MessageSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor MethodFxCopRule = new(
+		internal static readonly SuppressionDescriptor MethodCodeQualityRule = new(
 			id: "USP0014",
 			suppressedDiagnosticId: "CA1822",
 			justification: Strings.MessageSuppressorJustification);
@@ -30,12 +30,13 @@ namespace Microsoft.Unity.Analyzers
 			suppressedDiagnosticId: "IDE0060",
 			justification: Strings.MessageSuppressorJustification);
 
-		internal static readonly SuppressionDescriptor ParameterFxCopRule = new(
+		// This CA1801 rule has been deprecated in favor of IDE0060, keep it for legacy compatibility
+		internal static readonly SuppressionDescriptor ParameterCodeQualityRule = new(
 			id: "USP0015",
 			suppressedDiagnosticId: "CA1801",
 			justification: Strings.MessageSuppressorJustification);
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodFxCopRule, ParameterRule, ParameterFxCopRule);
+		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodCodeQualityRule, ParameterRule, ParameterCodeQualityRule);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{
