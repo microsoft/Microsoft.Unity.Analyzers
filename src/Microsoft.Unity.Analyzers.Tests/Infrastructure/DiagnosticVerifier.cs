@@ -314,7 +314,7 @@ public abstract class DiagnosticVerifier
 		var firstInstallationPath = UnityPath.FirstInstallation();
 		string installationFullPath = firstInstallationPath;
 
-		if (UnityPath.OnWindows())
+		if (OperatingSystem.IsWindows())
 		{
 			installationFullPath = Path.Combine(firstInstallationPath, "Editor", "Data");
 

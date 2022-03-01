@@ -262,15 +262,15 @@ public readonly struct DiagnosticResult
 		{
 			var location = Spans[0];
 			builder.Append(location.Span.Path == string.Empty ? "?" : location.Span.Path);
-			builder.Append("(");
+			builder.Append('(');
 			builder.Append(location.Span.StartLinePosition.Line + 1);
-			builder.Append(",");
+			builder.Append(',');
 			builder.Append(location.Span.StartLinePosition.Character + 1);
 			if (!location.Options.HasFlag(DiagnosticLocationOptions.IgnoreLength))
 			{
-				builder.Append(",");
+				builder.Append(',');
 				builder.Append(location.Span.EndLinePosition.Line + 1);
-				builder.Append(",");
+				builder.Append(',');
 				builder.Append(location.Span.EndLinePosition.Character + 1);
 			}
 
@@ -278,7 +278,7 @@ public readonly struct DiagnosticResult
 		}
 
 		builder.Append(Severity.ToString().ToLowerInvariant());
-		builder.Append(" ");
+		builder.Append(' ');
 		builder.Append(Id);
 
 		try
