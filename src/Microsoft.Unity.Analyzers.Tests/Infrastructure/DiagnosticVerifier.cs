@@ -343,6 +343,9 @@ public abstract class DiagnosticVerifier
 		var monolib = Path.Combine(installationFullPath, "MonoBleedingEdge", "lib", "mono", "4.7.1-api");
 		yield return Path.Combine(monolib, "mscorlib.dll");
 		yield return Path.Combine(monolib, "system.dll");
+
+		var facades = Path.Combine(monolib, "Facades");
+		yield return Path.Combine(facades, "netstandard.dll");
 	}
 
 	private static Project CreateProject(AnalyzerVerificationContext context, string[] sources)
