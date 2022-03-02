@@ -90,8 +90,12 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 		if (spProperty == null)
 			return false;
 
-		var suppressions = (ImmutableHashSet<(string Id, LocalizableString Justification)>)spProperty.GetValue(psi);
-		Assert.NotNull(suppressions);
+		var propertyValue = spProperty.GetValue(psi);
+		if (propertyValue is not ImmutableHashSet<(string Id, LocalizableString Justification)> suppressions)
+		{
+			Assert.True(false, "Unable to retrieve suppressions");
+			return false;
+		}
 
 		if (!suppressions.Any(t => t.Id == suppressor.Id && t.Justification.Equals(suppressor.MessageFormat)))
 			return false;

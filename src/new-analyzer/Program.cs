@@ -11,7 +11,7 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-		string name;
+		string? name;
 		if (args.Length == 0)
 		{
 			Console.Write("Diagnostic name: ");
@@ -26,6 +26,6 @@ internal class Program
 			new SuppressorDiagnosticBuilder() as AbstractDiagnosticBuilder :
 			new AnalyzerCodeFixDiagnosticBuilder();
 
-		builder.Build(name);
+		builder.Build(name ?? "Unknown");
 	}
 }

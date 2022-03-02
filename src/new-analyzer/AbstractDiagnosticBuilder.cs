@@ -11,6 +11,12 @@ namespace NewAnalyzer;
 internal class Diagnostic
 {
 	public string Id, Name;
+
+	public Diagnostic(string id, string name)
+	{
+		Id = id;
+		Name = name;
+	}
 }
 
 internal abstract class AbstractDiagnosticBuilder
@@ -23,7 +29,7 @@ internal abstract class AbstractDiagnosticBuilder
 
 	public void Build(string name)
 	{
-		Build(new Diagnostic {Id = GetNextId(), Name = name});
+		Build(new Diagnostic(GetNextId(), name));
 	}
 
 	public void Build(Diagnostic diagnostic)
@@ -111,7 +117,7 @@ internal abstract class AbstractDiagnosticBuilder
 		using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 		using var reader = new StreamReader(fs);
 
-		string line;
+		string? line;
 		while ((line = reader.ReadLine()) != null)
 		{
 			if (TryExtractIdentifier(line, out int id))
@@ -123,10 +129,13 @@ internal abstract class AbstractDiagnosticBuilder
 		return identifier != -1;
 	}
 
-	private bool TryExtractIdentifier(string line, out int identifier)
+	private bool TryExtractIdentifier(string? line, out int identifier)
 	{
 		var declarationStart = $"\"{IdPrefix}";
 		identifier = -1;
+
+		if (line == null)
+			return false;
 
 		var index = line.LastIndexOf(declarationStart, StringComparison.Ordinal);
 		if (index < 0)

@@ -72,7 +72,7 @@ internal static class UnityPath
 					continue;
 
 				// x64 is the default Unity installation
-				var unitypath = (string)subkey.GetValue("Location x64");
+				var unitypath = subkey.GetValue("Location x64") as string;
 				if (!string.IsNullOrEmpty(unitypath))
 					RegisterUnityInstallation(unitypath);
 			}

@@ -21,7 +21,7 @@ public readonly struct DiagnosticResult
 
 	private readonly ImmutableArray<DiagnosticLocation> _spans;
 	private readonly bool _suppressMessage;
-	private readonly string _message;
+	private readonly string? _message;
 
 	public DiagnosticResult(string id, DiagnosticSeverity severity)
 		: this()
@@ -41,12 +41,12 @@ public readonly struct DiagnosticResult
 	private DiagnosticResult(
 		ImmutableArray<DiagnosticLocation> spans,
 		bool suppressMessage,
-		string message,
+		string? message,
 		DiagnosticSeverity severity,
 		string id,
-		LocalizableString messageFormat,
-		object[] messageArguments,
-		string suppressedId)
+		LocalizableString? messageFormat,
+		object[]? messageArguments,
+		string? suppressedId)
 
 	{
 		_spans = spans;
@@ -64,9 +64,9 @@ public readonly struct DiagnosticResult
 	public DiagnosticSeverity Severity { get; }
 
 	public string Id { get; }
-	public string SuppressedId { get; }
+	public string? SuppressedId { get; }
 
-	public string Message
+	public string? Message
 	{
 		get
 		{
@@ -80,9 +80,9 @@ public readonly struct DiagnosticResult
 		}
 	}
 
-	public LocalizableString MessageFormat { get; }
+	public LocalizableString? MessageFormat { get; }
 
-	public object[] MessageArguments { get; }
+	public object[]? MessageArguments { get; }
 
 	public bool HasLocation => !Spans.IsEmpty;
 

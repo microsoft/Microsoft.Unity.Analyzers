@@ -82,10 +82,10 @@ internal class AnalyzerConfigOptionsLookup : AnalyzerConfigOptions
 
 	public override bool TryGetValue(string key, out string value)
 	{
-		if (_overrides.TryGetValue(key, out value))
+		if (_overrides.TryGetValue(key, out value!))
 			return true;
 
-		if (_default.TryGetValue(key, out value))
+		if (_default.TryGetValue(key, out value!))
 			return true;
 
 		throw new ArgumentException($"Unexpected analyzer option requested '{key}'");
