@@ -50,3 +50,4 @@ ID | Suppressed ID | Justification
 [USP0015](USP0015.md) | CA1801 | The Unity runtime invokes Unity messages
 [USP0016](USP0016.md) | CS8618 | Initialization detection with nullable reference types
 [USP0017](USP0017.md) | IDE0074 | Unity objects should not use coalescing assignment
+[USP0018](USP0018.md) | IDE0016 | Unity objects should not be used with throw expressions
