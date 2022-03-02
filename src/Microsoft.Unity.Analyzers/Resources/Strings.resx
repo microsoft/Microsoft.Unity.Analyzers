@@ -483,4 +483,7 @@
   <data name="TryGetComponentDiagnosticTitle" xml:space="preserve">
     <value>GetComponent always allocates</value>
   </data>
+  <data name="ThrowExpressionSuppressorJustification" xml:space="preserve">
+    <value>Do not use Throw expressions with Unity objects.</value>
+  </data>
 </root>

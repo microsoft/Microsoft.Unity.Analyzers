@@ -808,6 +808,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do not use Throw expressions with Unity objects..
+        /// </summary>
+        internal static string ThrowExpressionSuppressorJustification {
+            get {
+                return ResourceManager.GetString("ThrowExpressionSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use TryGetComponent instead.
         /// </summary>
         internal static string TryGetComponentCodeFixTitle {

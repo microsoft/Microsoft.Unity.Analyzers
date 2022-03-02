@@ -229,7 +229,10 @@ public abstract class DiagnosticVerifier
 
 			var optionsProvider = new AnalyzerOptionsProvider(context.Options);
 			var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
-			var analyzerOptions = new CompilationWithAnalyzersOptions(options, (e, _, _) => throw e, true, true, true);
+
+			// those exceptions and handler are thrown outside the scope of XUnit, so make sure we do not miss them
+			var analyzerExceptions = new List<Exception>();
+			var analyzerOptions = new CompilationWithAnalyzersOptions(options, (e, _, _) => analyzerExceptions.Add(e), true, true, true);
 
 			var compilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, reportSuppressedDiagnostics: true);
 			var specificDiagnosticOptions = compilationOptions.SpecificDiagnosticOptions;
@@ -245,9 +248,10 @@ public abstract class DiagnosticVerifier
 			var allDiagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync();
 			var errors = allDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
 			foreach (var error in errors)
-			{
 				Assert.True(false, $"Line {error.Location.GetLineSpan().StartLinePosition.Line}: {error.GetMessage()}");
-			}
+
+			foreach (var analyzerException in analyzerExceptions)
+				Assert.True(false, analyzerException.Message);
 
 			var diags = allDiagnostics
 				.Except(errors)

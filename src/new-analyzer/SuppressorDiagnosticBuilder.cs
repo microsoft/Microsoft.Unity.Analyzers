@@ -75,7 +75,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests
 {
-	public class $(DiagnosticName)Tests : BaseSuppressorVerifierTest<UnusedMethodSuppressor>
+	public class $(DiagnosticName)Tests : BaseSuppressorVerifierTest<$(DiagnosticName)>
 	{
 		[Fact]
 		public async Task Test()

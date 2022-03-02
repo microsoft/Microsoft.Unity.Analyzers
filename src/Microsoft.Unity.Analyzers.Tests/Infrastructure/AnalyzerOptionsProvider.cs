@@ -60,6 +60,7 @@ internal class AnalyzerConfigOptionsLookup : AnalyzerConfigOptions
 		_default.Add("dotnet_style_null_propagation", "true");
 		_default.Add("dotnet_style_readonly_field", "true:suggestion");
 		_default.Add("dotnet_style_prefer_compound_assignment", "true");
+		_default.Add("csharp_style_throw_expression", "true");
 
 		_default.Add("csharp_style_unused_value_expression_statement_preference", "discard_variable");
 		_default.Add("csharp_style_unused_value_assignment_preference", "discard_variable");
