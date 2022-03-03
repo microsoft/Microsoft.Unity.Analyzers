@@ -17,133 +17,132 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Editing;
 using Microsoft.Unity.Analyzers.Resources;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 {
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class MessageSignatureAnalyzer : DiagnosticAnalyzer
+	internal static readonly DiagnosticDescriptor Rule = new(
+		id: "UNT0006",
+		title: Strings.MessageSignatureDiagnosticTitle,
+		messageFormat: Strings.MessageSignatureDiagnosticMessageFormat,
+		category: DiagnosticCategory.TypeSafety,
+		defaultSeverity: DiagnosticSeverity.Info,
+		isEnabledByDefault: true,
+		description: Strings.MessageSignatureDiagnosticDescription);
+
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+
+	public override void Initialize(AnalysisContext context)
 	{
-		internal static readonly DiagnosticDescriptor Rule = new(
-			id: "UNT0006",
-			title: Strings.MessageSignatureDiagnosticTitle,
-			messageFormat: Strings.MessageSignatureDiagnosticMessageFormat,
-			category: DiagnosticCategory.TypeSafety,
-			defaultSeverity: DiagnosticSeverity.Info,
-			isEnabledByDefault: true,
-			description: Strings.MessageSignatureDiagnosticDescription);
-
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
-
-		public override void Initialize(AnalysisContext context)
-		{
-			context.EnableConcurrentExecution();
-			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
-		}
-
-		private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
-		{
-			if (context.Node is not ClassDeclarationSyntax classDeclaration)
-				return;
-
-			var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-			var scriptInfo = new ScriptInfo(typeSymbol);
-			if (!scriptInfo.HasMessages)
-				return;
-
-			var methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
-			var messages = scriptInfo
-				.GetMessages()
-				.ToLookup(m => m.Name);
-
-			foreach (var method in methods)
-			{
-				// Exclude explicit interface implementations, that will not be called by the Unity runtime
-				// scriptInfo.IsMessage is already handling this through fullname, but for this very specific task we are looking for bad signatures, so not relying on scriptInfo.IsMessage at this step
-				if (method.ExplicitInterfaceSpecifier != null)
-					continue;
-
-				var methodName = method.Identifier.Text;
-
-				if (!messages.Contains(methodName))
-					continue;
-
-				var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
-				// A message is detected, so the signature is correct
-				if (scriptInfo.IsMessage(methodSymbol))
-					continue;
-
-				// Check static/instance compatibility
-				var namedMessages = messages[methodName];
-				if (namedMessages.All(m => m.IsStatic != methodSymbol.IsStatic))
-					continue;
-
-				context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), methodName));
-			}
-		}
+		context.EnableConcurrentExecution();
+		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+		context.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp)]
-	public class MessageSignatureCodeFix : CodeFixProvider
+	private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageSignatureAnalyzer.Rule.Id);
+		if (context.Node is not ClassDeclarationSyntax classDeclaration)
+			return;
 
-		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+		var scriptInfo = new ScriptInfo(typeSymbol);
+		if (!scriptInfo.HasMessages)
+			return;
 
-		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+		var methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
+		var messages = scriptInfo
+			.GetMessages()
+			.ToLookup(m => m.Name);
+
+		foreach (var method in methods)
 		{
-			var methodDeclaration = await context.GetFixableNodeAsync<MethodDeclarationSyntax>();
-			if (methodDeclaration == null)
-				return;
+			// Exclude explicit interface implementations, that will not be called by the Unity runtime
+			// scriptInfo.IsMessage is already handling this through fullname, but for this very specific task we are looking for bad signatures, so not relying on scriptInfo.IsMessage at this step
+			if (method.ExplicitInterfaceSpecifier != null)
+				continue;
 
-			context.RegisterCodeFix(
-				CodeAction.Create(
-					Strings.MessageSignatureCodeFixTitle,
-					ct => FixMethodDeclarationSignatureAsync(context.Document, methodDeclaration, ct),
-					methodDeclaration.ToFullString()),
-				context.Diagnostics);
+			var methodName = method.Identifier.Text;
+
+			if (!messages.Contains(methodName))
+				continue;
+
+			var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+			// A message is detected, so the signature is correct
+			if (scriptInfo.IsMessage(methodSymbol))
+				continue;
+
+			// Check static/instance compatibility
+			var namedMessages = messages[methodName];
+			if (namedMessages.All(m => m.IsStatic != methodSymbol.IsStatic))
+				continue;
+
+			context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), methodName));
 		}
+	}
+}
 
-		private static async Task<Document> FixMethodDeclarationSignatureAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken ct)
-		{
-			var root = await document
-				.GetSyntaxRootAsync(ct)
-				.ConfigureAwait(false);
+[ExportCodeFixProvider(LanguageNames.CSharp)]
+public class MessageSignatureCodeFix : CodeFixProvider
+{
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageSignatureAnalyzer.Rule.Id);
 
-			var semanticModel = await document
-				.GetSemanticModelAsync(ct)
-				.ConfigureAwait(false);
+	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-			var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
-			var typeSymbol = methodSymbol.ContainingType;
+	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+	{
+		var methodDeclaration = await context.GetFixableNodeAsync<MethodDeclarationSyntax>();
+		if (methodDeclaration == null)
+			return;
 
-			var scriptInfo = new ScriptInfo(typeSymbol);
-			var message = scriptInfo
-				.GetMessages()
-				.FirstOrDefault(m => m.Name == methodSymbol.Name);
+		context.RegisterCodeFix(
+			CodeAction.Create(
+				Strings.MessageSignatureCodeFixTitle,
+				ct => FixMethodDeclarationSignatureAsync(context.Document, methodDeclaration, ct),
+				methodDeclaration.ToFullString()),
+			context.Diagnostics);
+	}
 
-			if (message == null)
-				return document;
+	private static async Task<Document> FixMethodDeclarationSignatureAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken ct)
+	{
+		var root = await document
+			.GetSyntaxRootAsync(ct)
+			.ConfigureAwait(false);
 
-			var syntaxGenerator = document.Project.LanguageServices.GetService<SyntaxGenerator>();
-			if (syntaxGenerator == null)
-				return document;
+		var semanticModel = await document
+			.GetSemanticModelAsync(ct)
+			.ConfigureAwait(false);
 
-			var builder = new MessageBuilder(syntaxGenerator);
-			var newMethodDeclaration = methodDeclaration
-				.WithParameterList(CreateParameterList(builder, message));
+		var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
+		var typeSymbol = methodSymbol.ContainingType;
 
-			var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
-			if (newRoot == null)
-				return document;
+		var scriptInfo = new ScriptInfo(typeSymbol);
+		var message = scriptInfo
+			.GetMessages()
+			.FirstOrDefault(m => m.Name == methodSymbol.Name);
 
-			return document.WithSyntaxRoot(newRoot);
-		}
+		if (message == null)
+			return document;
 
-		private static ParameterListSyntax CreateParameterList(MessageBuilder builder, MethodInfo message)
-		{
-			return SyntaxFactory
-				.ParameterList()
-				.AddParameters(builder.CreateParameters(message).OfType<ParameterSyntax>().ToArray());
-		}
+		var syntaxGenerator = document.Project.LanguageServices.GetService<SyntaxGenerator>();
+		if (syntaxGenerator == null)
+			return document;
+
+		var builder = new MessageBuilder(syntaxGenerator);
+		var newMethodDeclaration = methodDeclaration
+			.WithParameterList(CreateParameterList(builder, message));
+
+		var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+		if (newRoot == null)
+			return document;
+
+		return document.WithSyntaxRoot(newRoot);
+	}
+
+	private static ParameterListSyntax CreateParameterList(MessageBuilder builder, MethodInfo message)
+	{
+		return SyntaxFactory
+			.ParameterList()
+			.AddParameters(builder.CreateParameters(message).OfType<ParameterSyntax>().ToArray());
 	}
 }

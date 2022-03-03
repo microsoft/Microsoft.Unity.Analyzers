@@ -29,35 +29,34 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class $(DiagnosticName) : DiagnosticSuppressor
 {
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class $(DiagnosticName) : DiagnosticSuppressor
+	internal static readonly SuppressionDescriptor Rule = new(
+		id: ""$(DiagnosticId)"",
+		suppressedDiagnosticId: _FIXME_,
+		justification: Strings.$(DiagnosticName)Justification);
+
+	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{
-		internal static readonly SuppressionDescriptor Rule = new(
-			id: ""$(DiagnosticId)"",
-			suppressedDiagnosticId: _FIXME_,
-			justification: Strings.$(DiagnosticName)Justification);
-
-		public override void ReportSuppressions(SuppressionAnalysisContext context)
+		foreach (var diagnostic in context.ReportedDiagnostics)
 		{
-			foreach (var diagnostic in context.ReportedDiagnostics)
-			{
-				AnalyzeDiagnostic(diagnostic, context);
-			}
+			AnalyzeDiagnostic(diagnostic, context);
 		}
+	}
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
 
-		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
-		{
-			// var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic)
-			// if (node == null)
-			//   return;
+	private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+	{
+		// var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic)
+		// if (node == null)
+		//   return;
 
-			// TODO: context.ReportSuppression
-			// example: context.ReportSuppression(Suppression.Create(Rule, diagnostic));
-		}
+		// TODO: context.ReportSuppression
+		// example: context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 	}
 }
 ";
@@ -73,14 +72,14 @@ namespace Microsoft.Unity.Analyzers
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
+namespace Microsoft.Unity.Analyzers.Tests;
+
+public class $(DiagnosticName)Tests : BaseSuppressorVerifierTest<$(DiagnosticName)>
 {
-	public class $(DiagnosticName)Tests : BaseSuppressorVerifierTest<$(DiagnosticName)>
+	[Fact]
+	public async Task Test()
 	{
-		[Fact]
-		public async Task Test()
-		{
-			const string test = @""
+		const string test = @""
 using UnityEngine;
 
 class Camera : MonoBehaviour
@@ -88,10 +87,9 @@ class Camera : MonoBehaviour
 }
 "";
 
-			var suppressor = ExpectSuppressor($(DiagnosticName).Rule);
+		var suppressor = ExpectSuppressor($(DiagnosticName).Rule);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
 }
 ";

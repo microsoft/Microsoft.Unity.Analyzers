@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Xunit;
 
-namespace Microsoft.Unity.Analyzers.Tests
-{
-	public class ThrowExpressionSuppressorTests : BaseSuppressorVerifierTest<ThrowExpressionSuppressor>
-	{
-		protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeQuality | SuppressorVerifierAnalyzers.CodeStyle;
+namespace Microsoft.Unity.Analyzers.Tests;
 
-		[Fact]
-		public async Task SuppressThrowExpressionWithUnityObjects()
-		{
-			const string test = @"
+public class ThrowExpressionSuppressorTests : BaseSuppressorVerifierTest<ThrowExpressionSuppressor>
+{
+	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeQuality | SuppressorVerifierAnalyzers.CodeStyle;
+
+	[Fact]
+	public async Task SuppressThrowExpressionWithUnityObjects()
+	{
+		const string test = @"
 using System;
 using UnityEngine;
 
@@ -32,16 +32,16 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(ThrowExpressionSuppressor.Rule)
-				.WithLocation(10, 13);
+		var suppressor = ExpectSuppressor(ThrowExpressionSuppressor.Rule)
+			.WithLocation(10, 13);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task SuppressThrowExpressionWithUnityObjectsCodeBlock()
-		{
-			const string test = @"
+	[Fact]
+	public async Task SuppressThrowExpressionWithUnityObjectsCodeBlock()
+	{
+		const string test = @"
 using System;
 using UnityEngine;
 
@@ -58,16 +58,16 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var suppressor = ExpectSuppressor(ThrowExpressionSuppressor.Rule)
-				.WithLocation(10, 13);
+		var suppressor = ExpectSuppressor(ThrowExpressionSuppressor.Rule)
+			.WithLocation(10, 13);
 
-			await VerifyCSharpDiagnosticAsync(test, suppressor);
-		}
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
 
-		[Fact]
-		public async Task DoNotSuppressThrowExpressionWithNonUnityObjects()
-		{
-			const string test = @"
+	[Fact]
+	public async Task DoNotSuppressThrowExpressionWithNonUnityObjects()
+	{
+		const string test = @"
 using System;
 using UnityEngine;
 
@@ -83,12 +83,11 @@ class Camera : MonoBehaviour
 }
 ";
 
-			var diagnostic = DiagnosticResult.CompilerWarning(ThrowExpressionSuppressor.Rule.SuppressedDiagnosticId)
-				.WithSeverity(DiagnosticSeverity.Info)
-				.WithMessage("Null check can be simplified")
-				.WithLocation(10, 13); 
+		var diagnostic = DiagnosticResult.CompilerWarning(ThrowExpressionSuppressor.Rule.SuppressedDiagnosticId)
+			.WithSeverity(DiagnosticSeverity.Info)
+			.WithMessage("Null check can be simplified")
+			.WithLocation(10, 13); 
 
-			await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		}
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}
 }

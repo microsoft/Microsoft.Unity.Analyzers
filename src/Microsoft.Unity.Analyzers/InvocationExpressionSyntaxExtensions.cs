@@ -5,18 +5,17 @@
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+internal static class InvocationExpressionSyntaxExtensions
 {
-	internal static class InvocationExpressionSyntaxExtensions
+	public static SimpleNameSyntax? GetMethodNameSyntax(this InvocationExpressionSyntax expr)
 	{
-		public static SimpleNameSyntax? GetMethodNameSyntax(this InvocationExpressionSyntax expr)
+		return expr.Expression switch
 		{
-			return expr.Expression switch
-			{
-				MemberAccessExpressionSyntax mae => mae.Name,
-				SimpleNameSyntax sns => sns,
-				_ => null,
-			};
-		}
+			MemberAccessExpressionSyntax mae => mae.Name,
+			SimpleNameSyntax sns => sns,
+			_ => null,
+		};
 	}
 }

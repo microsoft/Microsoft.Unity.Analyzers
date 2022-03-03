@@ -9,116 +9,115 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+internal readonly struct ScriptInfo
 {
-	internal readonly struct ScriptInfo
+	internal static readonly Type[] Types =
 	{
-		internal static readonly Type[] Types =
-		{
-			typeof(UnityEngine.Networking.NetworkBehaviour),
-			typeof(UnityEngine.StateMachineBehaviour),
-			typeof(UnityEngine.EventSystems.UIBehaviour),
-			typeof(UnityEditor.ScriptableWizard),
-			typeof(UnityEditor.EditorWindow),
-			typeof(UnityEditor.Editor),
-			typeof(UnityEngine.ScriptableObject),
-			typeof(UnityEngine.MonoBehaviour),
-			typeof(UnityEditor.AssetPostprocessor),
-			typeof(UnityEditor.AssetImporters.ScriptedImporter)
-		};
+		typeof(UnityEngine.Networking.NetworkBehaviour),
+		typeof(UnityEngine.StateMachineBehaviour),
+		typeof(UnityEngine.EventSystems.UIBehaviour),
+		typeof(UnityEditor.ScriptableWizard),
+		typeof(UnityEditor.EditorWindow),
+		typeof(UnityEditor.Editor),
+		typeof(UnityEngine.ScriptableObject),
+		typeof(UnityEngine.MonoBehaviour),
+		typeof(UnityEditor.AssetPostprocessor),
+		typeof(UnityEditor.AssetImporters.ScriptedImporter)
+	};
 
-		private readonly ITypeSymbol _symbol;
+	private readonly ITypeSymbol _symbol;
 
-		public bool HasMessages => Metadata != null;
-		public Type? Metadata { get; }
+	public bool HasMessages => Metadata != null;
+	public Type? Metadata { get; }
 
-		public ScriptInfo(ITypeSymbol symbol)
-		{
-			_symbol = symbol;
-			Metadata = GetMatchingMetadata(symbol);
-		}
-
-		public static MethodInfo[] Messages { get; } = Types.SelectMany(GetMessages).ToArray();
-
-		public IEnumerable<MethodInfo> GetMessages()
-		{
-			if (Metadata == null)
-				yield break;
-
-			for (var type = Metadata; type != null && type != typeof(object); type = type.GetTypeInfo().BaseType)
-			{
-				foreach (var message in GetMessages(type))
-					yield return message;
-			}
-		}
-
-		public IEnumerable<MethodInfo> GetNotImplementedMessages(Accessibility? accessibility = null, ITypeSymbol? returnType = null)
-		{
-			foreach (var message in GetMessages())
-			{
-				if (IsImplemented(message))
-					continue;
-
-				if (accessibility.HasValue && !AccessibilityMatch(message, accessibility.Value))
-					continue;
-
-				if (returnType != null && !returnType.Matches(message.ReturnType))
-					continue;
-
-				yield return message;
-			}
-		}
-
-		private static bool AccessibilityMatch(MethodInfo message, Accessibility accessibility)
-		{
-			// If the message is declared as public or protected we need to honor it, other messages can be anything
-			if (message.IsPublic && message.IsVirtual)
-				return accessibility == Accessibility.Public;
-
-			if (message.IsFamily && message.IsVirtual)
-				return accessibility == Accessibility.Protected;
-
-			return true;
-		}
-
-		private bool IsImplemented(MethodInfo method)
-		{
-			foreach (var member in _symbol.GetMembers())
-			{
-				if (member is not IMethodSymbol methodSymbol)
-					continue;
-
-				if (methodSymbol.Matches(method))
-					return true;
-			}
-
-			return false;
-		}
-
-		public bool IsMessage(IMethodSymbol method)
-		{
-			return GetMessages().Any(method.Matches);
-		}
-
-		private static Type? GetMatchingMetadata(ITypeSymbol symbol)
-		{
-			for (; symbol != null; symbol = symbol.BaseType)
-			{
-				if (symbol.BaseType == null)
-					return null;
-
-				var baseType = symbol.BaseType;
-
-				foreach (var t in Types)
-				{
-					if (baseType.Matches(t))
-						return t;
-				}
-			}
-
-			return null;
-		}
-
-		private static IEnumerable<MethodInfo> GetMessages(Type type) => type.GetTypeInfo().DeclaredMethods;
+	public ScriptInfo(ITypeSymbol symbol)
+	{
+		_symbol = symbol;
+		Metadata = GetMatchingMetadata(symbol);
 	}
+
+	public static MethodInfo[] Messages { get; } = Types.SelectMany(GetMessages).ToArray();
+
+	public IEnumerable<MethodInfo> GetMessages()
+	{
+		if (Metadata == null)
+			yield break;
+
+		for (var type = Metadata; type != null && type != typeof(object); type = type.GetTypeInfo().BaseType)
+		{
+			foreach (var message in GetMessages(type))
+				yield return message;
+		}
+	}
+
+	public IEnumerable<MethodInfo> GetNotImplementedMessages(Accessibility? accessibility = null, ITypeSymbol? returnType = null)
+	{
+		foreach (var message in GetMessages())
+		{
+			if (IsImplemented(message))
+				continue;
+
+			if (accessibility.HasValue && !AccessibilityMatch(message, accessibility.Value))
+				continue;
+
+			if (returnType != null && !returnType.Matches(message.ReturnType))
+				continue;
+
+			yield return message;
+		}
+	}
+
+	private static bool AccessibilityMatch(MethodInfo message, Accessibility accessibility)
+	{
+		// If the message is declared as public or protected we need to honor it, other messages can be anything
+		if (message.IsPublic && message.IsVirtual)
+			return accessibility == Accessibility.Public;
+
+		if (message.IsFamily && message.IsVirtual)
+			return accessibility == Accessibility.Protected;
+
+		return true;
+	}
+
+	private bool IsImplemented(MethodInfo method)
+	{
+		foreach (var member in _symbol.GetMembers())
+		{
+			if (member is not IMethodSymbol methodSymbol)
+				continue;
+
+			if (methodSymbol.Matches(method))
+				return true;
+		}
+
+		return false;
+	}
+
+	public bool IsMessage(IMethodSymbol method)
+	{
+		return GetMessages().Any(method.Matches);
+	}
+
+	private static Type? GetMatchingMetadata(ITypeSymbol symbol)
+	{
+		for (; symbol != null; symbol = symbol.BaseType)
+		{
+			if (symbol.BaseType == null)
+				return null;
+
+			var baseType = symbol.BaseType;
+
+			foreach (var t in Types)
+			{
+				if (baseType.Matches(t))
+					return t;
+			}
+		}
+
+		return null;
+	}
+
+	private static IEnumerable<MethodInfo> GetMessages(Type type) => type.GetTypeInfo().DeclaredMethods;
 }

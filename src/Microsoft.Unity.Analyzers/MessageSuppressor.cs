@@ -10,70 +10,69 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class MessageSuppressor : DiagnosticSuppressor
 {
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class MessageSuppressor : DiagnosticSuppressor
+	internal static readonly SuppressionDescriptor MethodRule = new(
+		id: "USP0003",
+		suppressedDiagnosticId: "IDE0051",
+		justification: Strings.MessageSuppressorJustification);
+
+	internal static readonly SuppressionDescriptor MethodCodeQualityRule = new(
+		id: "USP0014",
+		suppressedDiagnosticId: "CA1822",
+		justification: Strings.MessageSuppressorJustification);
+
+	internal static readonly SuppressionDescriptor ParameterRule = new(
+		id: "USP0005",
+		suppressedDiagnosticId: "IDE0060",
+		justification: Strings.MessageSuppressorJustification);
+
+	// This CA1801 rule has been deprecated in favor of IDE0060, keep it for legacy compatibility
+	internal static readonly SuppressionDescriptor ParameterCodeQualityRule = new(
+		id: "USP0015",
+		suppressedDiagnosticId: "CA1801",
+		justification: Strings.MessageSuppressorJustification);
+
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodCodeQualityRule, ParameterRule, ParameterCodeQualityRule);
+
+	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{
-		internal static readonly SuppressionDescriptor MethodRule = new(
-			id: "USP0003",
-			suppressedDiagnosticId: "IDE0051",
-			justification: Strings.MessageSuppressorJustification);
-
-		internal static readonly SuppressionDescriptor MethodCodeQualityRule = new(
-			id: "USP0014",
-			suppressedDiagnosticId: "CA1822",
-			justification: Strings.MessageSuppressorJustification);
-
-		internal static readonly SuppressionDescriptor ParameterRule = new(
-			id: "USP0005",
-			suppressedDiagnosticId: "IDE0060",
-			justification: Strings.MessageSuppressorJustification);
-
-		// This CA1801 rule has been deprecated in favor of IDE0060, keep it for legacy compatibility
-		internal static readonly SuppressionDescriptor ParameterCodeQualityRule = new(
-			id: "USP0015",
-			suppressedDiagnosticId: "CA1801",
-			justification: Strings.MessageSuppressorJustification);
-
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodCodeQualityRule, ParameterRule, ParameterCodeQualityRule);
-
-		public override void ReportSuppressions(SuppressionAnalysisContext context)
+		foreach (var diagnostic in context.ReportedDiagnostics)
 		{
-			foreach (var diagnostic in context.ReportedDiagnostics)
-			{
-				AnalyzeDiagnostic(diagnostic, context);
-			}
+			AnalyzeDiagnostic(diagnostic, context);
+		}
+	}
+
+	private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+	{
+		var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is ParameterSyntax or MethodDeclarationSyntax);
+
+		if (node is ParameterSyntax)
+		{
+			node = node
+				.Ancestors()
+				.OfType<MethodDeclarationSyntax>()
+				.FirstOrDefault();
 		}
 
-		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+		if (node == null)
+			return;
+
+		var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+		if (model.GetDeclaredSymbol(node) is not IMethodSymbol methodSymbol)
+			return;
+
+		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
+		if (!scriptInfo.IsMessage(methodSymbol))
+			return;
+
+		foreach (var suppression in SupportedSuppressions)
 		{
-			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is ParameterSyntax or MethodDeclarationSyntax);
-
-			if (node is ParameterSyntax)
-			{
-				node = node
-					.Ancestors()
-					.OfType<MethodDeclarationSyntax>()
-					.FirstOrDefault();
-			}
-
-			if (node == null)
-				return;
-
-			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			if (model.GetDeclaredSymbol(node) is not IMethodSymbol methodSymbol)
-				return;
-
-			var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
-			if (!scriptInfo.IsMessage(methodSymbol))
-				return;
-
-			foreach (var suppression in SupportedSuppressions)
-			{
-				if (suppression.SuppressedDiagnosticId == diagnostic.Id)
-					context.ReportSuppression(Suppression.Create(suppression, diagnostic));
-			}
+			if (suppression.SuppressedDiagnosticId == diagnostic.Id)
+				context.ReportSuppression(Suppression.Create(suppression, diagnostic));
 		}
 	}
 }

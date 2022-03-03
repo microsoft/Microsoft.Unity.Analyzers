@@ -12,68 +12,67 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+[AttributeUsage(AttributeTargets.Method)]
+public class MethodUsageAttribute : Attribute
 {
-	[AttributeUsage(AttributeTargets.Method)]
-	public class MethodUsageAttribute : Attribute
+}
+
+public abstract class MethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : MethodUsageAttribute
+{
+	private static ILookup<string, MethodInfo>? _lookup;
+
+	public override void Initialize(AnalysisContext context)
 	{
+		context.EnableConcurrentExecution();
+		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+		context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
 	}
 
-	public abstract class MethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : MethodUsageAttribute
+	protected virtual bool IsReportable(IMethodSymbol method)
 	{
-		private static ILookup<string, MethodInfo>? _lookup;
+		_lookup ??= CollectMethods()
+			.Where(m => m.DeclaringType != null)
+			.ToLookup(m => m.DeclaringType!.FullName);
 
-		public override void Initialize(AnalysisContext context)
-		{
-			context.EnableConcurrentExecution();
-			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
-		}
+		// lookup returns an empty collection for nonexistent keys
+		var typename = method.ContainingType.ToDisplayString();
+		return _lookup[typename].Any(method.Matches);
+	}
 
-		protected virtual bool IsReportable(IMethodSymbol method)
-		{
-			_lookup ??= CollectMethods()
-				.Where(m => m.DeclaringType != null)
-				.ToLookup(m => m.DeclaringType!.FullName);
+	protected virtual IEnumerable<MethodInfo> CollectMethods()
+	{
+		return CollectMethods(GetType().Assembly);
+	}
 
-			// lookup returns an empty collection for nonexistent keys
-			var typename = method.ContainingType.ToDisplayString();
-			return _lookup[typename].Any(method.Matches);
-		}
+	protected static IEnumerable<MethodInfo> CollectMethods(params Type[] types)
+	{
+		return types
+			.SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+			.Where(m => m.GetCustomAttributes(typeof(T), true).Length > 0);
+	}
 
-		protected virtual IEnumerable<MethodInfo> CollectMethods()
-		{
-			return CollectMethods(GetType().Assembly);
-		}
+	protected static IEnumerable<MethodInfo> CollectMethods(Assembly assembly)
+	{
+		return CollectMethods(assembly.GetTypes());
+	}
 
-		protected static IEnumerable<MethodInfo> CollectMethods(params Type[] types)
-		{
-			return types
-				.SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
-				.Where(m => m.GetCustomAttributes(typeof(T), true).Length > 0);
-		}
+	private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
+	{
+		var invocation = (InvocationExpressionSyntax)context.Node;
 
-		protected static IEnumerable<MethodInfo> CollectMethods(Assembly assembly)
-		{
-			return CollectMethods(assembly.GetTypes());
-		}
+		if (invocation.Expression is not MemberAccessExpressionSyntax member)
+			return;
 
-		private void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
-		{
-			var invocation = (InvocationExpressionSyntax)context.Node;
+		var symbol = context.SemanticModel.GetSymbolInfo(member);
 
-			if (invocation.Expression is not MemberAccessExpressionSyntax member)
-				return;
+		if (symbol.Symbol is not IMethodSymbol method)
+			return;
 
-			var symbol = context.SemanticModel.GetSymbolInfo(member);
+		if (!IsReportable(method))
+			return;
 
-			if (symbol.Symbol is not IMethodSymbol method)
-				return;
-
-			if (!IsReportable(method))
-				return;
-
-			context.ReportDiagnostic(Diagnostic.Create(SupportedDiagnostics.First(), member.Name.GetLocation(), method.Name));
-		}
+		context.ReportDiagnostic(Diagnostic.Create(SupportedDiagnostics.First(), member.Name.GetLocation(), method.Name));
 	}
 }
