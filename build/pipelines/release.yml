@@ -43,9 +43,9 @@ steps:
     targetType: F
 
 - task: UseDotNet@2
-  displayName: 'Use .NET Core sdk 3.1.x'
+  displayName: 'Use .NET Core sdk 6.0.x'
   inputs:
-    version: 3.1.x
+    version: 6.0.x
 
 - task: MSBuild@1
   displayName: 'Build solution'
