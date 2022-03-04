@@ -32,11 +32,9 @@ public class ThrowExpressionSuppressor : DiagnosticSuppressor
 
 	private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
-		var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic);
-		if (node is not ThrowStatementSyntax)
-			return;
+		var node = context.GetSuppressibleNode<ThrowStatementSyntax>(diagnostic);
 
-		var ifStatement = node
+		var ifStatement = node?
 			.Ancestors()
 			.OfType<IfStatementSyntax>()
 			.FirstOrDefault();
