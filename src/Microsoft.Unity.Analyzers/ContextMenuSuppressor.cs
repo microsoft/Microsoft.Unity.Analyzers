@@ -10,102 +10,101 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class ContextMenuSuppressor : DiagnosticSuppressor
 {
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ContextMenuSuppressor : DiagnosticSuppressor
+	internal static readonly SuppressionDescriptor ContextMenuRule = new(
+		id: "USP0009",
+		suppressedDiagnosticId: "IDE0051",
+		justification: Strings.UnusedMethodContextMenuSuppressorJustification);
+
+	internal static readonly SuppressionDescriptor ContextMenuItemUnusedRule = new(
+		id: "USP0010",
+		suppressedDiagnosticId: "IDE0051",
+		justification: Strings.UnusedContextMenuItemJustification);
+
+	internal static readonly SuppressionDescriptor ContextMenuItemReadonlyRule = new(
+		id: "USP0011",
+		suppressedDiagnosticId: "IDE0044",
+		justification: Strings.ReadonlyContextMenuItemJustification);
+
+	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{
-		internal static readonly SuppressionDescriptor ContextMenuRule = new(
-			id: "USP0009",
-			suppressedDiagnosticId: "IDE0051",
-			justification: Strings.UnusedMethodContextMenuSuppressorJustification);
-
-		internal static readonly SuppressionDescriptor ContextMenuItemUnusedRule = new(
-			id: "USP0010",
-			suppressedDiagnosticId: "IDE0051",
-			justification: Strings.UnusedContextMenuItemJustification);
-
-		internal static readonly SuppressionDescriptor ContextMenuItemReadonlyRule = new(
-			id: "USP0011",
-			suppressedDiagnosticId: "IDE0044",
-			justification: Strings.ReadonlyContextMenuItemJustification);
-
-		public override void ReportSuppressions(SuppressionAnalysisContext context)
+		foreach (var diagnostic in context.ReportedDiagnostics)
 		{
-			foreach (var diagnostic in context.ReportedDiagnostics)
-			{
-				AnalyzeDiagnostic(diagnostic, context);
-			}
+			AnalyzeDiagnostic(diagnostic, context);
+		}
+	}
+
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions =>
+		ImmutableArray.Create(ContextMenuRule, ContextMenuItemUnusedRule, ContextMenuItemReadonlyRule);
+
+	private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+	{
+		var location = diagnostic.Location;
+		var model = context.GetSemanticModel(location.SourceTree);
+
+		var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax or VariableDeclaratorSyntax);
+		switch (node)
+		{
+			case MethodDeclarationSyntax method:
+				if (IsReportable(model.GetDeclaredSymbol(method)))
+					context.ReportSuppression(Suppression.Create(ContextMenuRule, diagnostic));
+				break;
+			case VariableDeclaratorSyntax vdec:
+				if (IsReportable(model.GetDeclaredSymbol(vdec)))
+					foreach (var descriptor in SupportedSuppressions)
+						if (descriptor.SuppressedDiagnosticId == diagnostic.Id)
+							context.ReportSuppression(Suppression.Create(descriptor, diagnostic));
+				break;
+		}
+	}
+
+	private static bool IsReportable(ISymbol symbol)
+	{
+		var containingType = symbol.ContainingType;
+
+		switch (symbol)
+		{
+			case IMethodSymbol methodSymbol:
+				if (methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu)) || a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
+					return true;
+				if (IsReferencedByContextMenuItem(methodSymbol, containingType))
+					return true;
+				break;
+			case IFieldSymbol fieldSymbol:
+				if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute))))
+					return true;
+				break;
 		}
 
-		public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions =>
-			ImmutableArray.Create(ContextMenuRule, ContextMenuItemUnusedRule, ContextMenuItemReadonlyRule);
+		return false;
+	}
 
-		private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+	private static bool IsReferencedByContextMenuItem(IMethodSymbol symbol, INamedTypeSymbol containingType)
+	{
+		foreach (var member in containingType.GetMembers())
 		{
-			var location = diagnostic.Location;
-			var model = context.GetSemanticModel(location.SourceTree);
+			if (member is not IFieldSymbol fieldSymbol)
+				continue;
 
-			var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax or VariableDeclaratorSyntax);
-			switch (node)
-			{
-				case MethodDeclarationSyntax method:
-					if (IsReportable(model.GetDeclaredSymbol(method)))
-						context.ReportSuppression(Suppression.Create(ContextMenuRule, diagnostic));
-					break;
-				case VariableDeclaratorSyntax vdec:
-					if (IsReportable(model.GetDeclaredSymbol(vdec)))
-						foreach (var descriptor in SupportedSuppressions)
-							if (descriptor.SuppressedDiagnosticId == diagnostic.Id)
-								context.ReportSuppression(Suppression.Create(descriptor, diagnostic));
-					break;
-			}
+			var attributes = fieldSymbol
+				.GetAttributes()
+				.Where(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute)))
+				.ToArray();
+
+			if (!attributes.Any())
+				continue;
+
+			// public ContextMenuItemAttribute(string name, string >>function<<)
+			const int methodNameIndex = 1;
+			return attributes
+				.Select(a => a.ConstructorArguments)
+				.Any(ca => ca.Length > methodNameIndex && symbol.Name == ca[methodNameIndex].Value?.ToString());
 		}
 
-		private static bool IsReportable(ISymbol symbol)
-		{
-			var containingType = symbol.ContainingType;
-
-			switch (symbol)
-			{
-				case IMethodSymbol methodSymbol:
-					if (methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu)) || a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
-						return true;
-					if (IsReferencedByContextMenuItem(methodSymbol, containingType))
-						return true;
-					break;
-				case IFieldSymbol fieldSymbol:
-					if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute))))
-						return true;
-					break;
-			}
-
-			return false;
-		}
-
-		private static bool IsReferencedByContextMenuItem(IMethodSymbol symbol, INamedTypeSymbol containingType)
-		{
-			foreach (var member in containingType.GetMembers())
-			{
-				if (member is not IFieldSymbol fieldSymbol)
-					continue;
-
-				var attributes = fieldSymbol
-					.GetAttributes()
-					.Where(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute)))
-					.ToArray();
-
-				if (!attributes.Any())
-					continue;
-
-				// public ContextMenuItemAttribute(string name, string >>function<<)
-				const int methodNameIndex = 1;
-				return attributes
-					.Select(a => a.ConstructorArguments)
-					.Any(ca => ca.Length > methodNameIndex && symbol.Name == ca[methodNameIndex].Value?.ToString());
-			}
-
-			return false;
-		}
+		return false;
 	}
 }

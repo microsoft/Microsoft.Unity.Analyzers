@@ -5,25 +5,24 @@
 
 using Microsoft.CodeAnalysis;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+internal static class SyntaxNodeExtensions
 {
-	internal static class SyntaxNodeExtensions
+	public static SyntaxTriviaList MergeLeadingTriviaWith(this SyntaxNode first, SyntaxNode second)
 	{
-		public static SyntaxTriviaList MergeLeadingTriviaWith(this SyntaxNode first, SyntaxNode second)
+		var merged = first.GetLeadingTrivia().AddRange(second.GetLeadingTrivia());
+		var result = SyntaxTriviaList.Empty;
+
+		SyntaxTrivia previous = new SyntaxTrivia();
+		foreach (var trivia in merged)
 		{
-			var merged = first.GetLeadingTrivia().AddRange(second.GetLeadingTrivia());
-			var result = SyntaxTriviaList.Empty;
+			if (!trivia.IsEquivalentTo(previous))
+				result = result.Add(trivia);
 
-			SyntaxTrivia previous = new SyntaxTrivia();
-			foreach (var trivia in merged)
-			{
-				if (!trivia.IsEquivalentTo(previous))
-					result = result.Add(trivia);
-
-				previous = trivia;
-			}
-
-			return result;
+			previous = trivia;
 		}
+
+		return result;
 	}
 }

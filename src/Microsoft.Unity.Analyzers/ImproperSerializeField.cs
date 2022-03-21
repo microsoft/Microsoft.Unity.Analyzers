@@ -11,137 +11,136 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 {
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
+	internal static readonly DiagnosticDescriptor Rule = new(
+		id: "UNT0013",
+		title: Strings.ImproperSerializeFieldDiagnosticTitle,
+		messageFormat: Strings.ImproperSerializeFieldDiagnosticMessageFormat,
+		category: DiagnosticCategory.Correctness,
+		defaultSeverity: DiagnosticSeverity.Info,
+		isEnabledByDefault: true,
+		description: Strings.ImproperSerializeFieldDiagnosticDescription);
+
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+
+	public override void Initialize(AnalysisContext context)
 	{
-		internal static readonly DiagnosticDescriptor Rule = new(
-			id: "UNT0013",
-			title: Strings.ImproperSerializeFieldDiagnosticTitle,
-			messageFormat: Strings.ImproperSerializeFieldDiagnosticMessageFormat,
-			category: DiagnosticCategory.Correctness,
-			defaultSeverity: DiagnosticSeverity.Info,
-			isEnabledByDefault: true,
-			description: Strings.ImproperSerializeFieldDiagnosticDescription);
-
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
-
-		public override void Initialize(AnalysisContext context)
-		{
-			context.EnableConcurrentExecution();
-			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.RegisterSyntaxNodeAction(AnalyzeMemberDeclaration, SyntaxKind.PropertyDeclaration);
-			context.RegisterSyntaxNodeAction(AnalyzeMemberDeclaration, SyntaxKind.FieldDeclaration);
-		}
-
-		private static void AnalyzeMemberDeclaration(SyntaxNodeAnalysisContext context)
-		{
-			var model = context.SemanticModel;
-			ISymbol symbol;
-
-			switch (context.Node)
-			{
-				case PropertyDeclarationSyntax pdec:
-					symbol = model.GetDeclaredSymbol(pdec);
-					break;
-				case FieldDeclarationSyntax fdec:
-					if (fdec.Declaration.Variables.Count == 0)
-						return;
-
-					// attributes are applied to all fields declaration symbols
-					// just get the first one
-					symbol = model.GetDeclaredSymbol(fdec.Declaration.Variables[0]);
-					break;
-				default:
-					// we only support field/property analysis
-					return;
-			}
-
-			if (!IsReportable(symbol))
-				return;
-
-			context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), symbol.Name));
-		}
-
-		private static bool IsReportable(ISymbol symbol)
-		{
-			if (!symbol.ContainingType.Extends(typeof(UnityEngine.Object)))
-				return false;
-
-			if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
-				return false;
-
-			return symbol switch
-			{
-				IFieldSymbol fieldSymbol => fieldSymbol.DeclaredAccessibility == Accessibility.Public || fieldSymbol.IsStatic || fieldSymbol.IsReadOnly, // redundant on public fields and invalid on static/readonly fields
-				IPropertySymbol => true, // Should never be on a property
-				_ => false,
-			};
-		}
+		context.EnableConcurrentExecution();
+		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+		context.RegisterSyntaxNodeAction(AnalyzeMemberDeclaration, SyntaxKind.PropertyDeclaration);
+		context.RegisterSyntaxNodeAction(AnalyzeMemberDeclaration, SyntaxKind.FieldDeclaration);
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp)]
-	public class ImproperSerializeFieldCodeFix : CodeFixProvider
+	private static void AnalyzeMemberDeclaration(SyntaxNodeAnalysisContext context)
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ImproperSerializeFieldAnalyzer.Rule.Id);
+		var model = context.SemanticModel;
+		ISymbol symbol;
 
-		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
-
-		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+		switch (context.Node)
 		{
-			var declaration = await context.GetFixableNodeAsync<MemberDeclarationSyntax>();
+			case PropertyDeclarationSyntax pdec:
+				symbol = model.GetDeclaredSymbol(pdec);
+				break;
+			case FieldDeclarationSyntax fdec:
+				if (fdec.Declaration.Variables.Count == 0)
+					return;
 
-			if (declaration is not (PropertyDeclarationSyntax or FieldDeclarationSyntax))
+				// attributes are applied to all fields declaration symbols
+				// just get the first one
+				symbol = model.GetDeclaredSymbol(fdec.Declaration.Variables[0]);
+				break;
+			default:
+				// we only support field/property analysis
 				return;
-
-			context.RegisterCodeFix(
-				CodeAction.Create(
-					Strings.ImproperSerializeFieldCodeFixTitle,
-					ct => RemoveSerializeFieldAttributeAsync(context.Document, declaration, ct),
-					declaration.ToFullString()),
-				context.Diagnostics);
 		}
 
-		private static async Task<Document> RemoveSerializeFieldAttributeAsync(Document document, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
+		if (!IsReportable(symbol))
+			return;
+
+		context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), symbol.Name));
+	}
+
+	private static bool IsReportable(ISymbol symbol)
+	{
+		if (!symbol.ContainingType.Extends(typeof(UnityEngine.Object)))
+			return false;
+
+		if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
+			return false;
+
+		return symbol switch
 		{
-			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-			var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+			IFieldSymbol fieldSymbol => fieldSymbol.DeclaredAccessibility == Accessibility.Public || fieldSymbol.IsStatic || fieldSymbol.IsReadOnly, // redundant on public fields and invalid on static/readonly fields
+			IPropertySymbol => true, // Should never be on a property
+			_ => false,
+		};
+	}
+}
 
-			var attributes = new SyntaxList<AttributeListSyntax>();
+[ExportCodeFixProvider(LanguageNames.CSharp)]
+public class ImproperSerializeFieldCodeFix : CodeFixProvider
+{
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ImproperSerializeFieldAnalyzer.Rule.Id);
 
-			foreach (var attributeList in declaration.AttributeLists)
+	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+
+	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+	{
+		var declaration = await context.GetFixableNodeAsync<MemberDeclarationSyntax>();
+
+		if (declaration is not (PropertyDeclarationSyntax or FieldDeclarationSyntax))
+			return;
+
+		context.RegisterCodeFix(
+			CodeAction.Create(
+				Strings.ImproperSerializeFieldCodeFixTitle,
+				ct => RemoveSerializeFieldAttributeAsync(context.Document, declaration, ct),
+				declaration.ToFullString()),
+			context.Diagnostics);
+	}
+
+	private static async Task<Document> RemoveSerializeFieldAttributeAsync(Document document, MemberDeclarationSyntax declaration, CancellationToken cancellationToken)
+	{
+		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+		var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+		var attributes = new SyntaxList<AttributeListSyntax>();
+
+		foreach (var attributeList in declaration.AttributeLists)
+		{
+			var nodes = new List<AttributeSyntax>();
+			foreach (var node in attributeList.Attributes)
 			{
-				var nodes = new List<AttributeSyntax>();
-				foreach (var node in attributeList.Attributes)
-				{
-					var attributeType = model.GetTypeInfo(node).Type;
-					if (attributeType == null)
-						continue;
+				var attributeType = model.GetTypeInfo(node).Type;
+				if (attributeType == null)
+					continue;
 
-					if (attributeType.Matches(typeof(UnityEngine.SerializeField)))
-						nodes.Add(node);
-				}
-
-				if (nodes.Any())
-				{
-					var newAttributes = attributeList.RemoveNodes(nodes, SyntaxRemoveOptions.KeepNoTrivia);
-					if (newAttributes.Attributes.Any())
-						attributes = attributes.Add(newAttributes);
-				}
-				else
-					attributes = attributes.Add(attributeList);
+				if (attributeType.Matches(typeof(UnityEngine.SerializeField)))
+					nodes.Add(node);
 			}
 
-			var newDeclaration = declaration
-				.WithAttributeLists(attributes)
-				.WithLeadingTrivia(declaration.GetLeadingTrivia());
-
-			var newRoot = root.ReplaceNode(declaration, newDeclaration);
-			if (newRoot == null)
-				return document;
-
-			return document.WithSyntaxRoot(newRoot);
+			if (nodes.Any())
+			{
+				var newAttributes = attributeList.RemoveNodes(nodes, SyntaxRemoveOptions.KeepNoTrivia);
+				if (newAttributes.Attributes.Any())
+					attributes = attributes.Add(newAttributes);
+			}
+			else
+				attributes = attributes.Add(attributeList);
 		}
+
+		var newDeclaration = declaration
+			.WithAttributeLists(attributes)
+			.WithLeadingTrivia(declaration.GetLeadingTrivia());
+
+		var newRoot = root.ReplaceNode(declaration, newDeclaration);
+		if (newRoot == null)
+			return document;
+
+		return document.WithSyntaxRoot(newRoot);
 	}
 }

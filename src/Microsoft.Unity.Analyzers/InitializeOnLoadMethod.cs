@@ -16,118 +16,117 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class InitializeOnLoadMethodAnalyzer : DiagnosticAnalyzer
 {
-	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class InitializeOnLoadMethodAnalyzer : DiagnosticAnalyzer
+	internal static readonly DiagnosticDescriptor Rule = new(
+		id: "UNT0015",
+		title: Strings.InitializeOnLoadMethodDiagnosticTitle,
+		messageFormat: Strings.InitializeOnLoadMethodDiagnosticMessageFormat,
+		category: DiagnosticCategory.TypeSafety,
+		defaultSeverity: DiagnosticSeverity.Info,
+		isEnabledByDefault: true,
+		description: Strings.InitializeOnLoadMethodDiagnosticDescription);
+
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+
+	public override void Initialize(AnalysisContext context)
 	{
-		internal static readonly DiagnosticDescriptor Rule = new(
-			id: "UNT0015",
-			title: Strings.InitializeOnLoadMethodDiagnosticTitle,
-			messageFormat: Strings.InitializeOnLoadMethodDiagnosticMessageFormat,
-			category: DiagnosticCategory.TypeSafety,
-			defaultSeverity: DiagnosticSeverity.Info,
-			isEnabledByDefault: true,
-			description: Strings.InitializeOnLoadMethodDiagnosticDescription);
-
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
-
-		public override void Initialize(AnalysisContext context)
-		{
-			context.EnableConcurrentExecution();
-			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-			context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
-		}
-
-		internal static bool MethodMatches(SyntaxNode? node, SemanticModel model, [NotNullWhen(true)] out MethodDeclarationSyntax? syntax, [NotNullWhen(true)] out IMethodSymbol? symbol)
-		{
-			syntax = null;
-			symbol = null;
-
-			if (node is not MethodDeclarationSyntax methodSyntax)
-				return false;
-
-			syntax = methodSyntax;
-
-			if (model.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
-				return false;
-
-			if (!IsDecorated(methodSymbol))
-				return false;
-
-			symbol = methodSymbol;
-			return true;
-		}
-
-		private static bool IsDecorated(ISymbol symbol)
-		{
-			return symbol
-				.GetAttributes()
-				.Any(a => IsInitializeOnLoadMethodAttributeType(a.AttributeClass));
-		}
-
-		private static bool IsInitializeOnLoadMethodAttributeType(ITypeSymbol type)
-		{
-			return type.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute))
-			       || type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute));
-		}
-
-
-		private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
-		{
-			if (!MethodMatches(context.Node, context.SemanticModel, out var syntax, out var symbol))
-				return;
-
-			if (symbol.IsStatic && symbol.Parameters.Length == 0)
-				return;
-
-			context.ReportDiagnostic(Diagnostic.Create(Rule, syntax.Identifier.GetLocation(), symbol.Name));
-		}
+		context.EnableConcurrentExecution();
+		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+		context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
 	}
 
-	[ExportCodeFixProvider(LanguageNames.CSharp)]
-	public class InitializeOnLoadMethodCodeFix : CodeFixProvider
+	internal static bool MethodMatches(SyntaxNode? node, SemanticModel model, [NotNullWhen(true)] out MethodDeclarationSyntax? syntax, [NotNullWhen(true)] out IMethodSymbol? symbol)
 	{
-		public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(InitializeOnLoadMethodAnalyzer.Rule.Id);
+		syntax = null;
+		symbol = null;
 
-		public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+		if (node is not MethodDeclarationSyntax methodSyntax)
+			return false;
 
-		public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+		syntax = methodSyntax;
+
+		if (model.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
+			return false;
+
+		if (!IsDecorated(methodSymbol))
+			return false;
+
+		symbol = methodSymbol;
+		return true;
+	}
+
+	private static bool IsDecorated(ISymbol symbol)
+	{
+		return symbol
+			.GetAttributes()
+			.Any(a => IsInitializeOnLoadMethodAttributeType(a.AttributeClass));
+	}
+
+	private static bool IsInitializeOnLoadMethodAttributeType(ITypeSymbol type)
+	{
+		return type.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute))
+		       || type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute));
+	}
+
+
+	private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
+	{
+		if (!MethodMatches(context.Node, context.SemanticModel, out var syntax, out var symbol))
+			return;
+
+		if (symbol.IsStatic && symbol.Parameters.Length == 0)
+			return;
+
+		context.ReportDiagnostic(Diagnostic.Create(Rule, syntax.Identifier.GetLocation(), symbol.Name));
+	}
+}
+
+[ExportCodeFixProvider(LanguageNames.CSharp)]
+public class InitializeOnLoadMethodCodeFix : CodeFixProvider
+{
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(InitializeOnLoadMethodAnalyzer.Rule.Id);
+
+	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+
+	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+	{
+		var methodDeclaration = await context.GetFixableNodeAsync<MethodDeclarationSyntax>();
+		if (methodDeclaration == null)
+			return;
+
+		context.RegisterCodeFix(
+			CodeAction.Create(
+				Strings.InitializeOnLoadMethodCodeFixTitle,
+				ct => FixMethodAsync(context.Document, methodDeclaration, ct),
+				methodDeclaration.ToFullString()),
+			context.Diagnostics);
+	}
+
+	private static async Task<Document> FixMethodAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken ct)
+	{
+		var root = await document
+			.GetSyntaxRootAsync(ct)
+			.ConfigureAwait(false);
+
+		var newMethodDeclaration = methodDeclaration
+			.WithParameterList(methodDeclaration
+				.ParameterList
+				.WithParameters(SyntaxFactory.SeparatedList<ParameterSyntax>()));
+
+		if (!methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
 		{
-			var methodDeclaration = await context.GetFixableNodeAsync<MethodDeclarationSyntax>();
-			if (methodDeclaration == null)
-				return;
-
-			context.RegisterCodeFix(
-				CodeAction.Create(
-					Strings.InitializeOnLoadMethodCodeFixTitle,
-					ct => FixMethodAsync(context.Document, methodDeclaration, ct),
-					methodDeclaration.ToFullString()),
-				context.Diagnostics);
+			newMethodDeclaration = newMethodDeclaration
+				.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 		}
 
-		private static async Task<Document> FixMethodAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken ct)
-		{
-			var root = await document
-				.GetSyntaxRootAsync(ct)
-				.ConfigureAwait(false);
+		var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+		if (newRoot == null)
+			return document;
 
-			var newMethodDeclaration = methodDeclaration
-				.WithParameterList(methodDeclaration
-					.ParameterList
-					.WithParameters(SyntaxFactory.SeparatedList<ParameterSyntax>()));
-
-			if (!methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
-			{
-				newMethodDeclaration = newMethodDeclaration
-					.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
-			}
-
-			var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
-			if (newRoot == null)
-				return document;
-
-			return document.WithSyntaxRoot(newRoot);
-		}
+		return document.WithSyntaxRoot(newRoot);
 	}
 }

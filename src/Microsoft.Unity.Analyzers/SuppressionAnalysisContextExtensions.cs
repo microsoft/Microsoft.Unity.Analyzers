@@ -8,26 +8,25 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Microsoft.Unity.Analyzers
+namespace Microsoft.Unity.Analyzers;
+
+internal static class SuppressionAnalysisContextExtensions
 {
-	internal static class SuppressionAnalysisContextExtensions
+	public static T? GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic) where T : SyntaxNode
 	{
-		public static T? GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic) where T : SyntaxNode
-		{
-			return GetSuppressibleNode<T>(context, diagnostic, _ => true);
-		}
+		return GetSuppressibleNode<T>(context, diagnostic, _ => true);
+	}
 
-		public static T? GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic, Func<T, bool> predicate) where T : SyntaxNode
-		{
-			var location = diagnostic.Location;
-			var sourceTree = location.SourceTree;
-			var root = sourceTree.GetRoot(context.CancellationToken);
+	public static T? GetSuppressibleNode<T>(this SuppressionAnalysisContext context, Diagnostic diagnostic, Func<T, bool> predicate) where T : SyntaxNode
+	{
+		var location = diagnostic.Location;
+		var sourceTree = location.SourceTree;
+		var root = sourceTree.GetRoot(context.CancellationToken);
 
-			return root?
-				.FindNode(location.SourceSpan)
-				.DescendantNodesAndSelf()
-				.OfType<T>()
-				.FirstOrDefault(predicate);
-		}
+		return root?
+			.FindNode(location.SourceSpan)
+			.DescendantNodesAndSelf()
+			.OfType<T>()
+			.FirstOrDefault(predicate);
 	}
 }
