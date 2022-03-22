@@ -329,8 +329,8 @@
   <data name="GetComponentIncorrectTypeDiagnosticTitle" xml:space="preserve">
     <value>Invalid type for call to GetComponent</value>
   </data>
-  <data name="InitializeOnLoadMethodSuppressorJustification" xml:space="preserve">
-    <value>Don't flag private methods decorated with InitializeOnLoadMethodAttribute as unused.</value>
+  <data name="LoadAttributeMethodSuppressorJustification" xml:space="preserve">
+    <value>Don't flag private methods decorated with InitializeOnLoadMethod, RuntimeInitializeOnLoadMethod or DidReloadScripts attribute as unused.</value>
   </data>
   <data name="MethodInvocationNameOfCodeFixTitle" xml:space="preserve">
     <value>Use nameof operator</value>
@@ -348,17 +348,17 @@
   <data name="MethodInvocationDirectCallCodeFixTitle" xml:space="preserve">
     <value>Use direct call</value>
   </data>
-  <data name="InitializeOnLoadMethodCodeFixTitle" xml:space="preserve">
+  <data name="LoadAttributeMethodCodeFixTitle" xml:space="preserve">
     <value>Fix method signature</value>
   </data>
-  <data name="InitializeOnLoadMethodDiagnosticDescription" xml:space="preserve">
-    <value>Unity needs a method decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute to be static and parameterless. Else either Unity won't call it or will throw NullReferenceException.</value>
+  <data name="LoadAttributeMethodDiagnosticDescription" xml:space="preserve">
+    <value>Unity needs a method decorated with InitializeOnLoadMethod, RuntimeInitializeOnLoadMethod or DidReloadScripts attribute to be static and parameterless. Else either Unity won't call it or will throw NullReferenceException.</value>
   </data>
-  <data name="InitializeOnLoadMethodDiagnosticMessageFormat" xml:space="preserve">
-    <value>Method '{0}' decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute must be static and parameterless.</value>
+  <data name="LoadAttributeMethodDiagnosticMessageFormat" xml:space="preserve">
+    <value>Method '{0}' decorated with InitializeOnLoadMethod, RuntimeInitializeOnLoadMethod or DidReloadScripts attribute must be static and parameterless.</value>
     <comment>{0} is an identifier declared with a *InitializeOnLoadMethod attribute</comment>
   </data>
-  <data name="InitializeOnLoadMethodDiagnosticTitle" xml:space="preserve">
+  <data name="LoadAttributeMethodDiagnosticTitle" xml:space="preserve">
     <value>Use a static and parameterless method</value>
   </data>
   <data name="SetPixelsMethodUsageDiagnosticDescription" xml:space="preserve">

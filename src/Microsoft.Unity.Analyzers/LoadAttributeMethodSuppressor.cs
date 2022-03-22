@@ -12,12 +12,12 @@ using Microsoft.Unity.Analyzers.Resources;
 namespace Microsoft.Unity.Analyzers
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class InitializeOnLoadMethodSuppressor : DiagnosticSuppressor
+	public class LoadAttributeMethodSuppressor : DiagnosticSuppressor
 	{
 		internal static readonly SuppressionDescriptor Rule = new(
 			id: "USP0012",
 			suppressedDiagnosticId: "IDE0051",
-			justification: Strings.InitializeOnLoadMethodSuppressorJustification);
+			justification: Strings.LoadAttributeMethodSuppressorJustification);
 
 		public override void ReportSuppressions(SuppressionAnalysisContext context)
 		{
@@ -32,8 +32,8 @@ namespace Microsoft.Unity.Analyzers
 			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
 			var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
 
-			// Reuse the same detection logic regarding decorated methods with *InitializeOnLoadMethodAttribute
-			if (InitializeOnLoadMethodAnalyzer.MethodMatches(methodDeclarationSyntax, model, out _, out _))
+			// Reuse the same detection logic regarding decorated methods with *InitializeOnLoadMethodAttribute or DidReloadScripts
+			if (LoadAttributeMethodAnalyzer.MethodMatches(methodDeclarationSyntax, model, out _, out _))
 				context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 		}
 	}

@@ -367,51 +367,6 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fix method signature.
-        /// </summary>
-        internal static string InitializeOnLoadMethodCodeFixTitle {
-            get {
-                return ResourceManager.GetString("InitializeOnLoadMethodCodeFixTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unity needs a method decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute to be static and parameterless. Else either Unity won&apos;t call it or will throw NullReferenceException..
-        /// </summary>
-        internal static string InitializeOnLoadMethodDiagnosticDescription {
-            get {
-                return ResourceManager.GetString("InitializeOnLoadMethodDiagnosticDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Method &apos;{0}&apos; decorated with InitializeOnLoadMethod or RuntimeInitializeOnLoadMethod attribute must be static and parameterless..
-        /// </summary>
-        internal static string InitializeOnLoadMethodDiagnosticMessageFormat {
-            get {
-                return ResourceManager.GetString("InitializeOnLoadMethodDiagnosticMessageFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use a static and parameterless method.
-        /// </summary>
-        internal static string InitializeOnLoadMethodDiagnosticTitle {
-            get {
-                return ResourceManager.GetString("InitializeOnLoadMethodDiagnosticTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with InitializeOnLoadMethodAttribute as unused..
-        /// </summary>
-        internal static string InitializeOnLoadMethodSuppressorJustification {
-            get {
-                return ResourceManager.GetString("InitializeOnLoadMethodSuppressorJustification", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add static constructor.
         /// </summary>
         internal static string InitializeOnLoadStaticCtorCodeFixTitle {
@@ -480,6 +435,51 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string InputGetKeyDiagnosticTitle {
             get {
                 return ResourceManager.GetString("InputGetKeyDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fix method signature.
+        /// </summary>
+        internal static string LoadAttributeMethodCodeFixTitle {
+            get {
+                return ResourceManager.GetString("LoadAttributeMethodCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity needs a method decorated with InitializeOnLoadMethod, RuntimeInitializeOnLoadMethod or DidReloadScripts attribute to be static and parameterless. Else either Unity won&apos;t call it or will throw NullReferenceException..
+        /// </summary>
+        internal static string LoadAttributeMethodDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("LoadAttributeMethodDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method &apos;{0}&apos; decorated with InitializeOnLoadMethod, RuntimeInitializeOnLoadMethod or DidReloadScripts attribute must be static and parameterless..
+        /// </summary>
+        internal static string LoadAttributeMethodDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("LoadAttributeMethodDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use a static and parameterless method.
+        /// </summary>
+        internal static string LoadAttributeMethodDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("LoadAttributeMethodDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with InitializeOnLoadMethod, RuntimeInitializeOnLoadMethod or DidReloadScripts attribute as unused..
+        /// </summary>
+        internal static string LoadAttributeMethodSuppressorJustification {
+            get {
+                return ResourceManager.GetString("LoadAttributeMethodSuppressorJustification", resourceCulture);
             }
         }
         
