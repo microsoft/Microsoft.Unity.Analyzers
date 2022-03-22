@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class InitializeOnLoadMethodTests : BaseCodeFixVerifierTest<InitializeOnLoadMethodAnalyzer, InitializeOnLoadMethodCodeFix>
+public class LoadAttributeMethodTests : BaseCodeFixVerifierTest<LoadAttributeMethodAnalyzer, LoadAttributeMethodCodeFix>
 {
 	[Fact]
 	public async Task InitializeOnLoadMethodTest()
@@ -294,4 +294,113 @@ class Loader
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task DidReloadScriptsMethodFixModifiersTest()
+	{
+		const string test = @"
+using UnityEditor.Callbacks;
+
+class Loader
+{
+    [DidReloadScripts]
+    private void OnLoad()
+    {
+        // keep
+    }
+}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("OnLoad");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEditor.Callbacks;
+
+class Loader
+{
+    [DidReloadScripts]
+    private static void OnLoad()
+    {
+        // keep
+    }
+}";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task DidReloadScriptsMethodFixParametersTest()
+	{
+		const string test = @"
+using UnityEditor.Callbacks;
+
+class Loader
+{
+    [DidReloadScripts]
+    private static void OnLoad(int foo, string bar)
+    {
+        // keep
+    }
+}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 25)
+			.WithArguments("OnLoad");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEditor.Callbacks;
+
+class Loader
+{
+    [DidReloadScripts]
+    private static void OnLoad()
+    {
+        // keep
+    }
+}";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task DidReloadScriptsMethodFixAllTest()
+	{
+		const string test = @"
+using UnityEditor.Callbacks;
+
+class Loader
+{
+    [DidReloadScripts]
+    private void OnLoad(int foo, string bar)
+    {
+        // keep
+    }
+}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("OnLoad");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEditor.Callbacks;
+
+class Loader
+{
+    [DidReloadScripts]
+    private static void OnLoad()
+    {
+        // keep
+    }
+}";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
 }

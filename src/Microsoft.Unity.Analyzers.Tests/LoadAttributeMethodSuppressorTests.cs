@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class InitializeOnLoadMethodSuppressorTests : BaseSuppressorVerifierTest<InitializeOnLoadMethodSuppressor>
+public class LoadAttributeMethodSuppressorTests : BaseSuppressorVerifierTest<LoadAttributeMethodSuppressor>
 {
 	[Fact]
 	public async Task InitializeOnLoadMethodTest()
@@ -24,7 +24,7 @@ class Loader
 }
 ";
 
-		var suppressor = ExpectSuppressor(InitializeOnLoadMethodSuppressor.Rule)
+		var suppressor = ExpectSuppressor(LoadAttributeMethodSuppressor.Rule)
 			.WithLocation(7, 25);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -44,7 +44,27 @@ class Loader
 }
 ";
 
-		var suppressor = ExpectSuppressor(InitializeOnLoadMethodSuppressor.Rule)
+		var suppressor = ExpectSuppressor(LoadAttributeMethodSuppressor.Rule)
+			.WithLocation(7, 25);
+
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
+
+	[Fact]
+	public async Task DidReloadScriptsMethodTest()
+	{
+		const string test = @"
+using UnityEditor.Callbacks;
+
+class Loader
+{
+    [DidReloadScripts]
+    private static void OnLoad() {
+    }
+}
+";
+
+		var suppressor = ExpectSuppressor(LoadAttributeMethodSuppressor.Rule)
 			.WithLocation(7, 25);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);

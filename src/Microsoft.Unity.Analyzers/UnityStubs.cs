@@ -632,6 +632,11 @@ namespace UnityEditor.AssetImporters
 	}
 }
 
+namespace UnityEditor.Callbacks
+{
+	class DidReloadScripts : Attribute { }
+}
+
 namespace UnityEditor
 {
 	using UnityEngine;

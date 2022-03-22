@@ -19,16 +19,16 @@ using Microsoft.Unity.Analyzers.Resources;
 namespace Microsoft.Unity.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class InitializeOnLoadMethodAnalyzer : DiagnosticAnalyzer
+public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 {
 	internal static readonly DiagnosticDescriptor Rule = new(
 		id: "UNT0015",
-		title: Strings.InitializeOnLoadMethodDiagnosticTitle,
-		messageFormat: Strings.InitializeOnLoadMethodDiagnosticMessageFormat,
+		title: Strings.LoadAttributeMethodDiagnosticTitle,
+		messageFormat: Strings.LoadAttributeMethodDiagnosticMessageFormat,
 		category: DiagnosticCategory.TypeSafety,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
-		description: Strings.InitializeOnLoadMethodDiagnosticDescription);
+		description: Strings.LoadAttributeMethodDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -63,12 +63,13 @@ public class InitializeOnLoadMethodAnalyzer : DiagnosticAnalyzer
 	{
 		return symbol
 			.GetAttributes()
-			.Any(a => IsInitializeOnLoadMethodAttributeType(a.AttributeClass));
+			.Any(a => IsLoadAttributeType(a.AttributeClass));
 	}
 
-	private static bool IsInitializeOnLoadMethodAttributeType(ITypeSymbol type)
+	private static bool IsLoadAttributeType(ITypeSymbol type)
 	{
 		return type.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute))
+		       || type.Matches(typeof(UnityEditor.Callbacks.DidReloadScripts))
 		       || type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute));
 	}
 
@@ -86,9 +87,9 @@ public class InitializeOnLoadMethodAnalyzer : DiagnosticAnalyzer
 }
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
-public class InitializeOnLoadMethodCodeFix : CodeFixProvider
+public class LoadAttributeMethodCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(InitializeOnLoadMethodAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(LoadAttributeMethodAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -100,7 +101,7 @@ public class InitializeOnLoadMethodCodeFix : CodeFixProvider
 
 		context.RegisterCodeFix(
 			CodeAction.Create(
-				Strings.InitializeOnLoadMethodCodeFixTitle,
+				Strings.LoadAttributeMethodCodeFixTitle,
 				ct => FixMethodAsync(context.Document, methodDeclaration, ct),
 				methodDeclaration.ToFullString()),
 			context.Diagnostics);
