@@ -5,12 +5,10 @@
 
 using System.Collections.Immutable;
 using System.Linq;
-using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
-using UnityEngine.Scripting;
 
 namespace Microsoft.Unity.Analyzers;
 
@@ -51,6 +49,6 @@ public class ImplicitUsageAttributeSuppressor : DiagnosticSuppressor
 	private bool IsSuppressable(IMethodSymbol methodSymbol)
 	{
 		// The Unity code stripper will consider any attribute with the exact name "PreserveAttribute", regardless of the namespace or assembly
-		return methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UsedImplicitlyAttribute)) || a.AttributeClass.Name == nameof(PreserveAttribute));
+		return methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(JetBrains.Annotations.UsedImplicitlyAttribute)) || a.AttributeClass.Name == nameof(UnityEngine.Scripting.PreserveAttribute));
 	}
 }
