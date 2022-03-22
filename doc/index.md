@@ -51,3 +51,4 @@ ID | Suppressed ID | Justification
 [USP0016](USP0016.md) | CS8618 | Initialization detection with nullable reference types
 [USP0017](USP0017.md) | IDE0074 | Unity objects should not use coalescing assignment
 [USP0018](USP0018.md) | IDE0016 | Unity objects should not be used with throw expressions
+[USP0019](USP0012.md) | IDE0051 | Don't flag private methods with PreserveAttribute or UsedImplicitlyAttribute as unused

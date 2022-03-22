@@ -259,6 +259,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with PreserveAttribute or UsedImplicitlyAttribute as unused..
+        /// </summary>
+        internal static string ImplicitUsageAttributeSuppressorJustification {
+            get {
+                return ResourceManager.GetString("ImplicitUsageAttributeSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use static method.
         /// </summary>
         internal static string ImproperMenuItemMethodCodeFixTitle {
