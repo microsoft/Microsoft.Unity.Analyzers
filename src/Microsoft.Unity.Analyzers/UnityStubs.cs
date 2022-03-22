@@ -618,6 +618,11 @@ namespace UnityEngine.UIElements
 	class VisualElement { }
 }
 
+namespace UnityEngine.Scripting
+{
+	class PreserveAttribute : Attribute { } 
+}
+
 namespace UnityEditor.AssetImporters
 {
 	class MaterialDescription { }
@@ -726,6 +731,11 @@ namespace UnityEditor
 		static string OnGeneratedCSProject(string path, string content) { return null; }
 	}
 
+}
+
+namespace JetBrains.Annotations
+{
+	class UsedImplicitlyAttribute : Attribute { }
 }
 
 #pragma warning enable

@@ -486,4 +486,7 @@
   <data name="ThrowExpressionSuppressorJustification" xml:space="preserve">
     <value>Do not use Throw expressions with Unity objects.</value>
   </data>
+  <data name="ImplicitUsageAttributeSuppressorJustification" xml:space="preserve">
+    <value>Don't flag private methods decorated with PreserveAttribute or UsedImplicitlyAttribute as unused.</value>
+  </data>
 </root>
