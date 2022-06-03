@@ -74,7 +74,7 @@ jobs:
       shell: cmd
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
 
     - name: Build
       run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln /p:UseSharedCompilation=false
@@ -85,7 +85,7 @@ jobs:
       shell: cmd
       
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2
 
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
