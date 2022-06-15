@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31410.414
+MinimumVisualStudioVersion = 17.0.31410.414
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Unity.Analyzers.Vsix", "Microsoft.Unity.Analyzers.Vsix\Microsoft.Unity.Analyzers.Vsix.csproj", "{537C1741-941F-489E-80BC-E06D081D86F3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Unity.Analyzers", "Microsoft.Unity.Analyzers\Microsoft.Unity.Analyzers.csproj", "{3352E64B-4789-46A3-A589-BDA698379164}"
