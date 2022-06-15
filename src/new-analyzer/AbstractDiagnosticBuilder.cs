@@ -117,8 +117,7 @@ internal abstract class AbstractDiagnosticBuilder
 		using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 		using var reader = new StreamReader(fs);
 
-		string? line;
-		while ((line = reader.ReadLine()) != null)
+		while (reader.ReadLine() is { } line)
 		{
 			if (TryExtractIdentifier(line, out int id))
 			{
