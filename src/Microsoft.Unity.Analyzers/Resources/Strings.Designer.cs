@@ -637,6 +637,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove PropertyDrawer.OnGUI() call.
+        /// </summary>
+        internal static string PropertyDrawerOnGUICodeFixTitle {
+            get {
+                return ResourceManager.GetString("PropertyDrawerOnGUICodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default implementation for PropertyDrawer.OnGUI() will display &quot;no GUI implemented&quot; in the inspector..
+        /// </summary>
+        internal static string PropertyDrawerOnGUIDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("PropertyDrawerOnGUIDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PropertyDrawer.OnGUI() will display &quot;no GUI implemented&quot; in the inspector..
+        /// </summary>
+        internal static string PropertyDrawerOnGUIDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("PropertyDrawerOnGUIDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not call PropertyDrawer.OnGUI().
+        /// </summary>
+        internal static string PropertyDrawerOnGUIDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("PropertyDrawerOnGUIDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Make Unity message protected.
         /// </summary>
         internal static string ProtectedUnityMessageCodeFixTitle {

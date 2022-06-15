@@ -28,6 +28,7 @@ ID | Title | Category
 [UNT0024](UNT0024.md) | Give priority to scalar calculations over vector calculations | Performance
 [UNT0025](UNT0025.md) | Input.GetKey overloads with KeyCode argument | Correctness
 [UNT0026](UNT0026.md) | GetComponent always allocates | Performance
+[UNT0027](UNT0027.md) | Do not call PropertyDrawer.OnGUI() | Correctness
 
 # Diagnostic Suppressors
 

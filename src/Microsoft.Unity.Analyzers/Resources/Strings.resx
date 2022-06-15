@@ -489,4 +489,16 @@
   <data name="ImplicitUsageAttributeSuppressorJustification" xml:space="preserve">
     <value>Don't flag private methods decorated with PreserveAttribute or UsedImplicitlyAttribute as unused.</value>
   </data>
+  <data name="PropertyDrawerOnGUICodeFixTitle" xml:space="preserve">
+    <value>Remove PropertyDrawer.OnGUI() call</value>
+  </data>
+  <data name="PropertyDrawerOnGUIDiagnosticDescription" xml:space="preserve">
+    <value>Default implementation for PropertyDrawer.OnGUI() will display "no GUI implemented" in the inspector.</value>
+  </data>
+  <data name="PropertyDrawerOnGUIDiagnosticMessageFormat" xml:space="preserve">
+    <value>PropertyDrawer.OnGUI() will display "no GUI implemented" in the inspector.</value>
+  </data>
+  <data name="PropertyDrawerOnGUIDiagnosticTitle" xml:space="preserve">
+    <value>Do not call PropertyDrawer.OnGUI()</value>
+  </data>
 </root>
