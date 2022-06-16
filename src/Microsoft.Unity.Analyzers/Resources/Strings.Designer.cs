@@ -637,6 +637,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Avoid using allocating versions of Physics functions..
+        /// </summary>
+        internal static string PhysicsAllocMethodUsageDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("PhysicsAllocMethodUsageDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compared to &apos;{0}&apos;, &apos;{1}&apos; is not allocating memory..
+        /// </summary>
+        internal static string PhysicsAllocMethodUsageDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("PhysicsAllocMethodUsageDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use non-allocating physics APIs.
+        /// </summary>
+        internal static string PhysicsAllocMethodUsageDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("PhysicsAllocMethodUsageDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove PropertyDrawer.OnGUI() call.
         /// </summary>
         internal static string PropertyDrawerOnGUICodeFixTitle {

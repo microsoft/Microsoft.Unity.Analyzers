@@ -73,6 +73,11 @@ public abstract class MethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : Meth
 		if (!IsReportable(method))
 			return;
 
+		ReportDiagnostic(context, member, method);
+	}
+
+	protected virtual void ReportDiagnostic(SyntaxNodeAnalysisContext context, MemberAccessExpressionSyntax member, IMethodSymbol method)
+	{
 		context.ReportDiagnostic(Diagnostic.Create(SupportedDiagnostics.First(), member.Name.GetLocation(), method.Name));
 	}
 }
