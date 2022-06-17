@@ -555,6 +555,48 @@ namespace UnityEngine
 		[KeyTextAttribute("joystick 8 button 18")] Joystick8Button18 = 508,
 		[KeyTextAttribute("joystick 8 button 19")] Joystick8Button19 = 509
 	}
+
+	class RaycastHit { }
+	enum QueryTriggerInteraction { }
+	struct Quaternion { }
+	struct Ray { }
+
+	class Physics
+	{
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Vector3 origin, Vector3 direction, float maxDistance, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Vector3 origin, Vector3 direction, float maxDistance, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Vector3 origin, Vector3 direction, float maxDistance) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Vector3 origin, Vector3 direction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Ray ray, float maxDistance, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Ray ray, float maxDistance, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Ray ray, float maxDistance) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] RaycastAll(Ray ray) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] CapsuleCastAll(Vector3 point1, Vector3 point2, float radius, Vector3 direction, float maxDistance, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] CapsuleCastAll(Vector3 point1, Vector3 point2, float radius, Vector3 direction, float maxDistance, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] CapsuleCastAll(Vector3 point1, Vector3 point2, float radius, Vector3 direction, float maxDistance) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] CapsuleCastAll(Vector3 point1, Vector3 point2, float radius, Vector3 direction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Vector3 origin, float radius, Vector3 direction, float maxDistance, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Vector3 origin, float radius, Vector3 direction, float maxDistance, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Vector3 origin, float radius, Vector3 direction, float maxDistance) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Vector3 origin, float radius, Vector3 direction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Ray ray, float radius, float maxDistance, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Ray ray, float radius, float maxDistance, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Ray ray, float radius, float maxDistance) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] SphereCastAll(Ray ray, float radius) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapCapsule(Vector3 point0, Vector3 point1, float radius, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapCapsule(Vector3 point0, Vector3 point1, float radius, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapCapsule(Vector3 point0, Vector3 point1, float radius) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapSphere(Vector3 position, float radius, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapSphere(Vector3 position, float radius, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapSphere(Vector3 position, float radius) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapBox(Vector3 center, Vector3 halfExtents, Quaternion orientation) { return null; }
+		[PhysicsAllocMethodUsage] static Collider[] OverlapBox(Vector3 center, Vector3 halfExtents) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] BoxCastAll(Vector3 center, Vector3 halfExtents, Vector3 direction, Quaternion orientation, float maxDistance, int layerMask, QueryTriggerInteraction queryTriggerInteraction) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] BoxCastAll(Vector3 center, Vector3 halfExtents, Vector3 direction, Quaternion orientation, float maxDistance, int layerMask) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] BoxCastAll(Vector3 center, Vector3 halfExtents, Vector3 direction, Quaternion orientation, float maxDistance) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] BoxCastAll(Vector3 center, Vector3 halfExtents, Vector3 direction, Quaternion orientation) { return null; }
+		[PhysicsAllocMethodUsage] static RaycastHit[] BoxCastAll(Vector3 center, Vector3 halfExtents, Vector3 direction) { return null; }
+	}
 }
 
 namespace UnityEngine.EventSystems

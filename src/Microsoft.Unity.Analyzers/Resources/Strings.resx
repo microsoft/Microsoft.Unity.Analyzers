@@ -501,4 +501,13 @@
   <data name="PropertyDrawerOnGUIDiagnosticTitle" xml:space="preserve">
     <value>Do not call PropertyDrawer.OnGUI()</value>
   </data>
+  <data name="PhysicsAllocMethodUsageDiagnosticDescription" xml:space="preserve">
+    <value>Avoid using allocating versions of Physics functions.</value>
+  </data>
+  <data name="PhysicsAllocMethodUsageDiagnosticMessageFormat" xml:space="preserve">
+    <value>Compared to '{0}', '{1}' is not allocating memory.</value>
+  </data>
+  <data name="PhysicsAllocMethodUsageDiagnosticTitle" xml:space="preserve">
+    <value>Use non-allocating physics APIs</value>
+  </data>
 </root>
