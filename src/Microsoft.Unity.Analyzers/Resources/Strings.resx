@@ -514,12 +514,12 @@
     <value>Use null comparison</value>
   </data>
   <data name="UnityObjectIsPatternDiagnosticDescription" xml:space="preserve">
-    <value>Unity overrides the null comparison operator for Unity objects, which is incompatible with pattern expression with null.</value>
+    <value>Unity overrides the null comparison operator for Unity objects, which is incompatible with pattern matching with null.</value>
   </data>
   <data name="UnityObjectIsPatternDiagnosticMessageFormat" xml:space="preserve">
-    <value>Unity objects should not use pattern expression with null.</value>
+    <value>Unity objects should not use pattern matching with null.</value>
   </data>
   <data name="UnityObjectIsPatternDiagnosticTitle" xml:space="preserve">
-    <value>Pattern expression with null on Unity objects</value>
+    <value>Pattern matching with null on Unity objects</value>
   </data>
 </root>
