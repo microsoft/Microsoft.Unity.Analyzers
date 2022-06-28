@@ -143,6 +143,9 @@ public class TagComparisonCodeFix : CodeFixProvider
 			_ => null
 		};
 
+		if (action == null)
+			return;
+
 		context.RegisterCodeFix(
 			CodeAction.Create(
 				Strings.TagComparisonCodeFixTitle,
@@ -161,7 +164,7 @@ public class TagComparisonCodeFix : CodeFixProvider
 		SortExpressions(model, expr, out var tagExpression, out var otherExpression);
 
 		var replacement = BuildReplacementNode(tagExpression, otherExpression);
-		var newRoot = root.ReplaceNode(expr, replacement);
+		var newRoot = root?.ReplaceNode(expr, replacement);
 		if (newRoot == null)
 			return document;
 
@@ -182,7 +185,7 @@ public class TagComparisonCodeFix : CodeFixProvider
 		if (expr.Kind() == SyntaxKind.NotEqualsExpression)
 			replacement = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, replacement);
 
-		var newRoot = root.ReplaceNode(expr, replacement);
+		var newRoot = root?.ReplaceNode(expr, replacement);
 		if (newRoot == null)
 			return document;
 

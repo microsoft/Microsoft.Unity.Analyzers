@@ -81,7 +81,12 @@ public class PropertyDrawerOnGUICodeFix : CodeFixProvider
 	private static async Task<Document> RemoveInvocationAsync(Document document, InvocationExpressionSyntax invocation, CancellationToken cancellationToken)
 	{
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-		var newRoot = root.RemoveNode(invocation.Parent, SyntaxRemoveOptions.KeepNoTrivia);
+
+		var parent = invocation.Parent;
+		if (parent == null)
+			return document;
+
+		var newRoot = root?.RemoveNode(parent, SyntaxRemoveOptions.KeepNoTrivia);
 		if (newRoot == null)
 			return document;
 

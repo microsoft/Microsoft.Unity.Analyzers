@@ -32,14 +32,17 @@ public class UnusedMethodSuppressor : DiagnosticSuppressor
 
 	private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
-		var sourceTree = diagnostic.Location.SourceTree;
-		var root = sourceTree.GetRoot(context.CancellationToken);
+		var syntaxTree = diagnostic.Location.SourceTree;
+		if (syntaxTree == null)
+			return;
+
+		var root = syntaxTree.GetRoot(context.CancellationToken);
 
 		var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
 		if (methodDeclarationSyntax == null)
 			return;
 
-		var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+		var model = context.GetSemanticModel(syntaxTree);
 		if (model.GetDeclaredSymbol(methodDeclarationSyntax) is not IMethodSymbol methodSymbol)
 			return;
 

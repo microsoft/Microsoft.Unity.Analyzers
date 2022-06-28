@@ -46,6 +46,9 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 			return;
 
 		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+		if (typeSymbol == null)
+			return;
+		
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return;
@@ -68,6 +71,9 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 				continue;
 
 			var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+			if (methodSymbol == null)
+				continue;
+			
 			// A message is detected, so the signature is correct
 			if (scriptInfo.IsMessage(methodSymbol))
 				continue;
@@ -114,6 +120,9 @@ public class MessageSignatureCodeFix : CodeFixProvider
 			.ConfigureAwait(false);
 
 		var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
+		if (methodSymbol == null)
+			return document;
+
 		var typeSymbol = methodSymbol.ContainingType;
 
 		var scriptInfo = new ScriptInfo(typeSymbol);
@@ -132,7 +141,7 @@ public class MessageSignatureCodeFix : CodeFixProvider
 		var newMethodDeclaration = methodDeclaration
 			.WithParameterList(CreateParameterList(builder, message));
 
-		var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+		var newRoot = root?.ReplaceNode(methodDeclaration, newMethodDeclaration);
 		if (newRoot == null)
 			return document;
 

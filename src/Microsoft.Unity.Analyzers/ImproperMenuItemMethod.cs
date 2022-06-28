@@ -46,7 +46,7 @@ public class ImproperMenuItemMethodAnalyzer : DiagnosticAnalyzer
 		if (context.SemanticModel.GetDeclaredSymbol(method) is not { } methodSymbol)
 			return;
 
-		if (!methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
+		if (!methodSymbol.GetAttributes().Any(a => a.AttributeClass != null && a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
 			return;
 
 		if (methodSymbol.IsStatic)
@@ -89,7 +89,7 @@ public class ImproperMenuItemMethodCodeFix : CodeFixProvider
 			newMethodDeclaration = newMethodDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 		}
 
-		var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+		var newRoot = root?.ReplaceNode(methodDeclaration, newMethodDeclaration);
 		if (newRoot == null)
 			return document;
 

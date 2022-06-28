@@ -80,8 +80,13 @@ public class SetPositionAndRotationAnalyzer : DiagnosticAnalyzer
 			return false;
 
 		var block = assignmentExpression.FirstAncestorOrSelf<BlockSyntax>();
+		if (block == null)
+			return false;
+
 		var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
 		var expression = assignmentExpression.FirstAncestorOrSelf<ExpressionStatementSyntax>();
+		if (expression == null)
+			return false;
 
 		var lastIndexOf = siblingsAndSelf.LastIndexOf(expression);
 		if (lastIndexOf == -1)

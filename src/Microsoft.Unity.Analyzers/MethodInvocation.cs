@@ -87,7 +87,7 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 		if (context.Node is not InvocationExpressionSyntax invocation)
 			return;
 
-		var options = invocation.SyntaxTree?.Options as CSharpParseOptions;
+		var options = invocation.SyntaxTree.Options as CSharpParseOptions;
 		if (options == null || options.LanguageVersion < LanguageVersion.CSharp6) // we want nameof support
 			return;
 
@@ -140,11 +140,20 @@ public abstract class BaseMethodInvocationCodeFix : CodeFixProvider
 	{
 		// for now we do not offer codefixes for mixed types
 		var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+		if (model == null)
+			return false;
 
 		if (invocation.Expression is not MemberAccessExpressionSyntax maes)
 			return true;
 
-		if (model.GetTypeInfo(maes.ChildNodes().FirstOrDefault()).Type is not INamedTypeSymbol typeInvocationContext)
+		var node = maes
+			.ChildNodes()
+			.FirstOrDefault();
+
+		if (node == null)
+			return false;
+
+		if (model.GetTypeInfo(node).Type is not INamedTypeSymbol typeInvocationContext)
 			return false;
 
 		var mdec = invocation
@@ -178,7 +187,7 @@ public abstract class BaseMethodInvocationCodeFix : CodeFixProvider
 				.ReplaceNode(argument, GetArgument(name)
 					.WithTrailingTrivia(argument.GetTrailingTrivia())));
 
-		var newRoot = root.ReplaceNode(invocation, newInvocation);
+		var newRoot = root?.ReplaceNode(invocation, newInvocation);
 		if (newRoot == null)
 			return document;
 

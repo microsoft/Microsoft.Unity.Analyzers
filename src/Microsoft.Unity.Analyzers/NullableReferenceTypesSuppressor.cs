@@ -28,20 +28,19 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 	{
 		foreach (var diagnostic in context.ReportedDiagnostics)
 		{
-			var root = diagnostic.Location.SourceTree.GetRoot();
-			if (root == null)
+			var syntaxTree = diagnostic.Location.SourceTree;
+			if (syntaxTree == null)
 				continue;
-
+			
+			var root = syntaxTree.GetRoot();
 			var node = root.FindNode(diagnostic.Location.SourceSpan);
-			if (node == null)
-				continue;
 
 			var classDeclaration = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 			if (classDeclaration is null)
 				continue;
 
-			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-			var symbol = model?.GetDeclaredSymbol(classDeclaration);
+			var model = context.GetSemanticModel(syntaxTree);
+			var symbol = model.GetDeclaredSymbol(classDeclaration);
 			if (symbol is null)
 				continue;
 
@@ -70,6 +69,8 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 	private static void AnalyzeFields(VariableDeclaratorSyntax declarator, Diagnostic diagnostic, SuppressionAnalysisContext context, SyntaxNode root)
 	{
 		var declarationSyntax = declarator.FirstAncestorOrSelf<FieldDeclarationSyntax>();
+		if (declarationSyntax == null)
+			return;
 
 		//suppress for fields that are not private and not static => statics cannot be set in editor and are not shown in the inspector and cannot be set there
 		if (!declarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.StaticKeyword))

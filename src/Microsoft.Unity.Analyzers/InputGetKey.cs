@@ -162,7 +162,7 @@ public class InputGetKeyCodeFix : CodeFixProvider
 				.ReplaceNode(argument, GetKeyCodeArgument(les)
 					.WithTrailingTrivia(argument.GetTrailingTrivia())));
 
-		var newRoot = root.ReplaceNode(invocation, newInvocation);
+		var newRoot = root?.ReplaceNode(invocation, newInvocation);
 		if (newRoot == null)
 			return document;
 
