@@ -115,7 +115,7 @@ public class DestroyTransformCodeFix : CodeFixProvider
 
 		if (!DestroyTransformAnalyzer.InvocationMatches(invocation, out var argument))
 			return;
-		
+
 		context.RegisterCodeFix(
 			CodeAction.Create(
 				Strings.DestroyTransformCodeFixTitle,
@@ -127,12 +127,12 @@ public class DestroyTransformCodeFix : CodeFixProvider
 	private async Task<Document> UseGameObjectAsync(Document document, ExpressionSyntax argument, CancellationToken cancellationToken)
 	{
 		var gameObject = SyntaxFactory.IdentifierName("gameObject");
-		var memberAccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, argument, gameObject);		
+		var memberAccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, argument, gameObject);
 
 		var root = await document
 			.GetSyntaxRootAsync(cancellationToken)
 			.ConfigureAwait(false);
-		
+
 		var newRoot = root?.ReplaceNode(argument, memberAccess);
 		return newRoot == null ? document : document.WithSyntaxRoot(newRoot);
 	}
