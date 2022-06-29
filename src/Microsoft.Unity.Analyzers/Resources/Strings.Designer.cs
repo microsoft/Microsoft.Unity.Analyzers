@@ -160,6 +160,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use gameObject instead.
+        /// </summary>
+        internal static string DestroyTransformCodeFixTitle {
+            get {
+                return ResourceManager.GetString("DestroyTransformCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot destroy a Transform component of a GameObject, but you can destroy the whole GameObject..
+        /// </summary>
+        internal static string DestroyTransformDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("DestroyTransformDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calling Destroy or DestroyImmediate on a Transform is not allowed..
+        /// </summary>
+        internal static string DestroyTransformDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("DestroyTransformDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calling Destroy or DestroyImmediate on a Transform.
+        /// </summary>
+        internal static string DestroyTransformDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("DestroyTransformDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove empty Unity message.
         /// </summary>
         internal static string EmptyUnityMessageCodeFixTitle {

@@ -31,6 +31,7 @@ ID | Title | Category
 [UNT0027](UNT0027.md) | Do not call PropertyDrawer.OnGUI() | Correctness
 [UNT0028](UNT0028.md) | Use non-allocating physics APIs | Performance
 [UNT0029](UNT0029.md) | Pattern matching with null on Unity objects | Correctness
+[UNT0030](UNT0030.md) | Calling Destroy or DestroyImmediate on a Transform | Correctness
 
 # Diagnostic Suppressors
 

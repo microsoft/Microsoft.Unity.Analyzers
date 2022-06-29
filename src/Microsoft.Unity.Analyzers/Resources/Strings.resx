@@ -522,4 +522,16 @@
   <data name="UnityObjectIsPatternDiagnosticTitle" xml:space="preserve">
     <value>Pattern matching with null on Unity objects</value>
   </data>
+  <data name="DestroyTransformCodeFixTitle" xml:space="preserve">
+    <value>Use gameObject instead</value>
+  </data>
+  <data name="DestroyTransformDiagnosticDescription" xml:space="preserve">
+    <value>You cannot destroy a Transform component of a GameObject, but you can destroy the whole GameObject.</value>
+  </data>
+  <data name="DestroyTransformDiagnosticMessageFormat" xml:space="preserve">
+    <value>Calling Destroy or DestroyImmediate on a Transform is not allowed.</value>
+  </data>
+  <data name="DestroyTransformDiagnosticTitle" xml:space="preserve">
+    <value>Calling Destroy or DestroyImmediate on a Transform</value>
+  </data>
 </root>
