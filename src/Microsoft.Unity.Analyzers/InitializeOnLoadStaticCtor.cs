@@ -44,10 +44,12 @@ public class InitializeOnLoadStaticCtorAnalyzer : DiagnosticAnalyzer
 			return;
 
 		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+		if (typeSymbol == null)
+			return;
 
 		var isInitOnLoad = typeSymbol
 			.GetAttributes()
-			.Any(a => a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadAttribute)));
+			.Any(a => a.AttributeClass != null && a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadAttribute)));
 
 		if (!isInitOnLoad)
 			return;
@@ -94,7 +96,7 @@ public class InitializeOnLoadStaticCtorCodeFix : CodeFixProvider
 		var newClassDeclaration = classDeclaration
 			.WithMembers(classDeclaration.Members.Insert(0, emptyStaticConstructor));
 
-		var newRoot = root.ReplaceNode(classDeclaration, newClassDeclaration);
+		var newRoot = root?.ReplaceNode(classDeclaration, newClassDeclaration);
 		if (newRoot == null)
 			return document;
 

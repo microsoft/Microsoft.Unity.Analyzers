@@ -152,7 +152,7 @@ public class CreateInstanceCodeFix : CodeFixProvider
 							SingletonSeparatedList<TypeSyntax>(
 								IdentifierName(typeInfo.Type.Name))))));
 
-		var newRoot = root.ReplaceNode(creation, invocation);
+		var newRoot = root?.ReplaceNode(creation, invocation);
 		if (newRoot == null)
 			return document;
 

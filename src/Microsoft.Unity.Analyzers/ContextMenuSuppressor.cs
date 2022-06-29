@@ -43,8 +43,11 @@ public class ContextMenuSuppressor : DiagnosticSuppressor
 
 	private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
-		var location = diagnostic.Location;
-		var model = context.GetSemanticModel(location.SourceTree);
+		var syntaxTree = diagnostic.Location.SourceTree;
+		if (syntaxTree == null)
+			return;
+
+		var model = context.GetSemanticModel(syntaxTree);
 
 		var node = context.GetSuppressibleNode<SyntaxNode>(diagnostic, n => n is MethodDeclarationSyntax or VariableDeclaratorSyntax);
 		switch (node)
@@ -69,13 +72,13 @@ public class ContextMenuSuppressor : DiagnosticSuppressor
 		switch (symbol)
 		{
 			case IMethodSymbol methodSymbol:
-				if (methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu)) || a.AttributeClass.Matches(typeof(UnityEditor.MenuItem))))
+				if (methodSymbol.GetAttributes().Any(a => a.AttributeClass != null && (a.AttributeClass.Matches(typeof(UnityEngine.ContextMenu)) || a.AttributeClass.Matches(typeof(UnityEditor.MenuItem)))))
 					return true;
 				if (IsReferencedByContextMenuItem(methodSymbol, containingType))
 					return true;
 				break;
 			case IFieldSymbol fieldSymbol:
-				if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute))))
+				if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass != null && a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute))))
 					return true;
 				break;
 		}
@@ -92,7 +95,7 @@ public class ContextMenuSuppressor : DiagnosticSuppressor
 
 			var attributes = fieldSymbol
 				.GetAttributes()
-				.Where(a => a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute)))
+				.Where(a => a.AttributeClass != null && a.AttributeClass.Matches(typeof(UnityEngine.ContextMenuItemAttribute)))
 				.ToArray();
 
 			if (!attributes.Any())

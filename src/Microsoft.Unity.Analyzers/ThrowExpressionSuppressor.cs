@@ -42,9 +42,11 @@ public class ThrowExpressionSuppressor : DiagnosticSuppressor
 		if (ifStatement?.Condition is not BinaryExpressionSyntax binaryExpression)
 			return;
 
-		var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
-		if (model == null)
+		var syntaxTree = diagnostic.Location.SourceTree;
+		if (syntaxTree == null)
 			return;
+		
+		var model = context.GetSemanticModel(syntaxTree);
 
 		if (ShouldReportSuppression(binaryExpression.Left, model) || ShouldReportSuppression(binaryExpression.Right, model))
 			context.ReportSuppression(Suppression.Create(Rule, diagnostic));

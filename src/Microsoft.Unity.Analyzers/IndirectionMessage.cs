@@ -87,7 +87,7 @@ public class IndirectionMessageCodeFix : CodeFixProvider
 	{
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 		var newExpression = access.Expression;
-		var newRoot = root.ReplaceNode(access, newExpression);
+		var newRoot = root?.ReplaceNode(access, newExpression);
 
 		if (newRoot == null)
 			return document;

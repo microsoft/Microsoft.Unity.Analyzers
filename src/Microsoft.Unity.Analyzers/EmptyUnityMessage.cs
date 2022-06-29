@@ -54,11 +54,17 @@ public class EmptyUnityMessageAnalyzer : DiagnosticAnalyzer
 			return;
 
 		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+		if (typeSymbol == null)
+			return;
+
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return;
 
 		var symbol = context.SemanticModel.GetDeclaredSymbol(method);
+		if (symbol == null)
+			return;
+
 		if (!scriptInfo.IsMessage(symbol))
 			return;
 
@@ -106,7 +112,7 @@ public class EmptyUnityMessageCodeFix : CodeFixProvider
 	private static async Task<Document> DeleteEmptyMessageAsync(Document document, MethodDeclarationSyntax declaration, CancellationToken cancellationToken)
 	{
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-		var newRoot = root.RemoveNode(declaration, SyntaxRemoveOptions.KeepNoTrivia);
+		var newRoot = root?.RemoveNode(declaration, SyntaxRemoveOptions.KeepNoTrivia);
 		if (newRoot == null)
 			return document;
 

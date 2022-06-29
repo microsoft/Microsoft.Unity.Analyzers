@@ -107,7 +107,7 @@ public class UnusedCoroutineReturnValueCodeFix : CodeFixProvider
 					SingletonSeparatedList(
 						Argument(invocation)))));
 
-		var newRoot = root.ReplaceNode(parent, newExpressionStatement);
+		var newRoot = root?.ReplaceNode(parent, newExpressionStatement);
 		if (newRoot == null)
 			return document;
 

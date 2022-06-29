@@ -36,7 +36,11 @@ public class ImplicitUsageAttributeSuppressor : DiagnosticSuppressor
 		if (methodDeclarationSyntax == null)
 			return;
 
-		var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+		var syntaxTree = diagnostic.Location.SourceTree;
+		if (syntaxTree == null)
+			return;
+
+		var model = context.GetSemanticModel(syntaxTree);
 		if (model.GetDeclaredSymbol(methodDeclarationSyntax) is not IMethodSymbol methodSymbol)
 			return;
 
@@ -49,6 +53,6 @@ public class ImplicitUsageAttributeSuppressor : DiagnosticSuppressor
 	private bool IsSuppressable(IMethodSymbol methodSymbol)
 	{
 		// The Unity code stripper will consider any attribute with the exact name "PreserveAttribute", regardless of the namespace or assembly
-		return methodSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(JetBrains.Annotations.UsedImplicitlyAttribute)) || a.AttributeClass.Name == nameof(UnityEngine.Scripting.PreserveAttribute));
+		return methodSymbol.GetAttributes().Any(a => a.AttributeClass != null && (a.AttributeClass.Matches(typeof(JetBrains.Annotations.UsedImplicitlyAttribute)) || a.AttributeClass.Name == nameof(UnityEngine.Scripting.PreserveAttribute)));
 	}
 }

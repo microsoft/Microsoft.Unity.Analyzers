@@ -63,7 +63,7 @@ public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 	{
 		return symbol
 			.GetAttributes()
-			.Any(a => IsLoadAttributeType(a.AttributeClass));
+			.Any(a => a.AttributeClass != null && IsLoadAttributeType(a.AttributeClass));
 	}
 
 	private static bool IsLoadAttributeType(ITypeSymbol type)
@@ -124,7 +124,7 @@ public class LoadAttributeMethodCodeFix : CodeFixProvider
 				.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 		}
 
-		var newRoot = root.ReplaceNode(methodDeclaration, newMethodDeclaration);
+		var newRoot = root?.ReplaceNode(methodDeclaration, newMethodDeclaration);
 		if (newRoot == null)
 			return document;
 

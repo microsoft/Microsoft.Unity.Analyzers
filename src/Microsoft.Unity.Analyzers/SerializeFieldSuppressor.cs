@@ -48,7 +48,7 @@ public class SerializeFieldSuppressor : DiagnosticSuppressor
 
 	private static bool IsSuppressable(IFieldSymbol fieldSymbol)
 	{
-		if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(SerializeField)) || a.AttributeClass.Matches(typeof(SerializeReference))))
+		if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass != null && (a.AttributeClass.Matches(typeof(SerializeField)) || a.AttributeClass.Matches(typeof(SerializeReference)))))
 			return true;
 
 		if (fieldSymbol.DeclaredAccessibility == Accessibility.Public && fieldSymbol.ContainingType.Extends(typeof(Object)))
@@ -63,7 +63,11 @@ public class SerializeFieldSuppressor : DiagnosticSuppressor
 		if (fieldDeclarationSyntax == null)
 			return;
 
-		var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+		var syntaxTree = diagnostic.Location.SourceTree;
+		if (syntaxTree == null)
+			return;
+
+		var model = context.GetSemanticModel(syntaxTree);
 		if (model.GetDeclaredSymbol(fieldDeclarationSyntax) is not IFieldSymbol fieldSymbol)
 			return;
 
