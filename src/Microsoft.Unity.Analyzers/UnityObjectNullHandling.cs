@@ -47,7 +47,21 @@ public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 		isEnabledByDefault: true,
 		description: Strings.UnityObjectCoalescingAssignmentDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule);
+	internal static readonly DiagnosticDescriptor IsPatternRule = new(
+		id: "UNT0029",
+		title: Strings.UnityObjectIsPatternDiagnosticTitle,
+		messageFormat: Strings.UnityObjectIsPatternDiagnosticMessageFormat,
+		category: DiagnosticCategory.Correctness,
+		defaultSeverity: DiagnosticSeverity.Info,
+		isEnabledByDefault: true,
+		description: Strings.UnityObjectIsPatternDiagnosticDescription);
+
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(
+		NullCoalescingRule,
+		NullPropagationRule,
+		CoalescingAssignmentRule,
+		IsPatternRule
+	);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -56,8 +70,25 @@ public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeCoalesceExpression, SyntaxKind.CoalesceExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeConditionalAccessExpression, SyntaxKind.ConditionalAccessExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeCoalesceAssignmentExpression, SyntaxKind.CoalesceAssignmentExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeIsPatternExpression, SyntaxKind.IsPatternExpression);
 	}
+	
+	private static void AnalyzeIsPatternExpression(SyntaxNodeAnalysisContext context)
+	{
+		var pattern = (IsPatternExpressionSyntax)context.Node;
 
+		switch (pattern.Pattern)
+		{
+			// obj is null
+			case ConstantPatternSyntax {Expression.RawKind: (int)SyntaxKind.NullLiteralExpression}:
+			
+			//obj is not null, we need roslyn 3.7.0 here for UnaryPatternSyntax type and SyntaxKind.NotPattern enum value
+			case UnaryPatternSyntax {RawKind: (int)SyntaxKind.NotPattern, Pattern: ConstantPatternSyntax {Expression.RawKind: (int)SyntaxKind.NullLiteralExpression} }:
+				AnalyzeExpression(pattern, pattern.Expression, context, IsPatternRule);
+				break;
+		}
+	}
+	
 	private static void AnalyzeCoalesceAssignmentExpression(SyntaxNodeAnalysisContext context)
 	{
 		var assignment = (AssignmentExpressionSyntax)context.Node;
@@ -92,13 +123,18 @@ public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnityObjectNullHandlingAnalyzer.NullCoalescingRule.Id, UnityObjectNullHandlingAnalyzer.NullPropagationRule.Id, UnityObjectNullHandlingAnalyzer.CoalescingAssignmentRule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(
+		UnityObjectNullHandlingAnalyzer.NullCoalescingRule.Id,
+		UnityObjectNullHandlingAnalyzer.NullPropagationRule.Id,
+		UnityObjectNullHandlingAnalyzer.CoalescingAssignmentRule.Id,
+		UnityObjectNullHandlingAnalyzer.IsPatternRule.Id
+	);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
 	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
-		var expression = await context.GetFixableNodeAsync<SyntaxNode>(c => c is BinaryExpressionSyntax || c is AssignmentExpressionSyntax || c is ConditionalAccessExpressionSyntax);
+		var expression = await context.GetFixableNodeAsync<SyntaxNode>(c => c is BinaryExpressionSyntax or AssignmentExpressionSyntax or ConditionalAccessExpressionSyntax or IsPatternExpressionSyntax);
 		if (expression == null)
 			return;
 
@@ -128,6 +164,15 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 
 				action = CodeAction.Create(Strings.UnityObjectCoalescingAssignmentCodeFixTitle, ct => ReplaceCoalescingAssignmentAsync(context.Document, aes, ct), aes.ToFullString());
 				break;
+
+			// Pattern expression
+			case IsPatternExpressionSyntax pes:
+				if (HasSideEffect(pes.Expression))
+					return;
+
+				action = CodeAction.Create(Strings.UnityObjectIsPatternCodeFixTitle, ct => ReplacePatternExpressionAsync(context.Document, pes, ct), pes.ToFullString());
+				break;
+
 			default:
 				return;
 		}
@@ -149,7 +194,7 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 	private static async Task<Document> ReplaceWithAsync(Document document, SyntaxNode source, SyntaxNode replacement, CancellationToken cancellationToken)
 	{
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-		var newRoot = root.ReplaceNode(source, replacement);
+		var newRoot = root?.ReplaceNode(source, replacement);
 		return newRoot == null ? document : document.WithSyntaxRoot(newRoot);
 	}
 
@@ -188,6 +233,15 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 			whenFalse: SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
 
 		return await ReplaceWithAsync(document, access, conditional, cancellationToken);
+	}
+
+	private static async Task<Document> ReplacePatternExpressionAsync(Document document, IsPatternExpressionSyntax pattern, CancellationToken cancellationToken)
+	{
+		// obj is null => obj == null, obj is not null => obj != null
+		var kind = pattern.Pattern is ConstantPatternSyntax ? SyntaxKind.EqualsExpression : SyntaxKind.NotEqualsExpression;
+		var binary = SyntaxFactory.BinaryExpression(kind, pattern.Expression, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
+
+		return await ReplaceWithAsync(document, pattern, binary, cancellationToken);
 	}
 }
 
@@ -246,8 +300,6 @@ public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 		}
 
 		var model = context.GetSemanticModel(binaryExpression.SyntaxTree);
-		if (model == null)
-			return;
 
 		var type = model.GetTypeInfo(binaryExpression.Left);
 		if (type.Type == null)

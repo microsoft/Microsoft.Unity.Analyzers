@@ -51,11 +51,17 @@ public class ProtectedUnityMessageAnalyzer : DiagnosticAnalyzer
 			return;
 
 		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+		if (typeSymbol == null)
+			return;
+
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return;
 
 		var symbol = context.SemanticModel.GetDeclaredSymbol(method);
+		if (symbol == null)
+			return;
+		
 		if (!scriptInfo.IsMessage(symbol))
 			return;
 
@@ -104,7 +110,7 @@ public class ProtectedUnityMessageCodeFix : CodeFixProvider
 			newDeclaration = newDeclaration.AddModifiers(SyntaxFactory.Token(kind));
 		}
 
-		var newRoot = root.ReplaceNode(declaration, newDeclaration);
+		var newRoot = root?.ReplaceNode(declaration, newDeclaration);
 		if (newRoot == null)
 			return document;
 

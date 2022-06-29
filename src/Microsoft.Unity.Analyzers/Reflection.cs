@@ -50,12 +50,17 @@ public class ReflectionAnalyzer : DiagnosticAnalyzer
 	private static bool IsCriticalMessage(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method)
 	{
 		var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+		if (methodSymbol == null)
+			return false;
 
 		var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 		if (classDeclaration == null)
 			return false;
 
 		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+		if (typeSymbol == null)
+			return false;
+
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return false;

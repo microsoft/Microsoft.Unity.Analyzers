@@ -58,7 +58,7 @@ public class TryGetComponentAnalyzer : DiagnosticAnalyzer
 	private static bool IsTryGetComponentSupported(SyntaxNodeAnalysisContext context)
 	{
 		// We need Unity 2019.2+ for proper support
-		var goType = context.Compilation.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName);
+		var goType = context.Compilation?.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName);
 		return goType?.MemberNames.Contains(nameof(UnityEngine.Component.TryGetComponent)) ?? false;
 	}
 }
@@ -86,6 +86,9 @@ internal class TryGetComponentContext
 
 		// We want an assignment or variable declaration with invocation as initializer
 		var invocationParent = invocation.Parent;
+		if (invocationParent == null)
+			return null;
+		
 		if (!TryGetTargetdentifier(model, invocationParent, out var targetIdentifier, out var isVariableDeclaration)) 
 			return null;
 

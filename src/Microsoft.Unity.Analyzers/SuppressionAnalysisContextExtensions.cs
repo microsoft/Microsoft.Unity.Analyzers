@@ -21,7 +21,7 @@ internal static class SuppressionAnalysisContextExtensions
 	{
 		var location = diagnostic.Location;
 		var sourceTree = location.SourceTree;
-		var root = sourceTree.GetRoot(context.CancellationToken);
+		var root = sourceTree?.GetRoot(context.CancellationToken);
 
 		return root?
 			.FindNode(location.SourceSpan)

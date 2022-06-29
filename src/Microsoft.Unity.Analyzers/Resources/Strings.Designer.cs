@@ -972,6 +972,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Use null comparison.
         /// </summary>
+        internal static string UnityObjectIsPatternCodeFixTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectIsPatternCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity overrides the null comparison operator for Unity objects, which is incompatible with pattern matching with null..
+        /// </summary>
+        internal static string UnityObjectIsPatternDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("UnityObjectIsPatternDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use pattern matching with null..
+        /// </summary>
+        internal static string UnityObjectIsPatternDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("UnityObjectIsPatternDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pattern matching with null on Unity objects.
+        /// </summary>
+        internal static string UnityObjectIsPatternDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("UnityObjectIsPatternDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use null comparison.
+        /// </summary>
         internal static string UnityObjectNullCoalescingCodeFixTitle {
             get {
                 return ResourceManager.GetString("UnityObjectNullCoalescingCodeFixTitle", resourceCulture);

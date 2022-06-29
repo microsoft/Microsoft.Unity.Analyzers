@@ -30,6 +30,7 @@ ID | Title | Category
 [UNT0026](UNT0026.md) | GetComponent always allocates | Performance
 [UNT0027](UNT0027.md) | Do not call PropertyDrawer.OnGUI() | Correctness
 [UNT0028](UNT0028.md) | Use non-allocating physics APIs | Performance
+[UNT0029](UNT0029.md) | Pattern matching with null on Unity objects | Correctness
 
 # Diagnostic Suppressors
 

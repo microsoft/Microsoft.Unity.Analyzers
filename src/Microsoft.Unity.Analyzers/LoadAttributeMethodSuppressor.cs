@@ -29,7 +29,11 @@ namespace Microsoft.Unity.Analyzers
 
 		private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 		{
-			var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+			var syntaxTree = diagnostic.Location.SourceTree;
+			if (syntaxTree == null)
+				return;
+
+			var model = context.GetSemanticModel(syntaxTree);
 			var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
 
 			// Reuse the same detection logic regarding decorated methods with *InitializeOnLoadMethodAttribute or DidReloadScripts

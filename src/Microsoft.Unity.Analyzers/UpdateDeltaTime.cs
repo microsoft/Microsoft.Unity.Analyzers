@@ -59,8 +59,13 @@ public class UpdateDeltaTimeAnalyzer : DiagnosticAnalyzer
 			return false;
 
 		var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+		if (methodSymbol == null)
+			return false;
 
 		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+		if (typeSymbol == null)
+			return false;
+
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return false;
@@ -143,7 +148,7 @@ public class UpdateDeltaTimeCodeFix : CodeFixProvider
 			.WithIdentifier(SyntaxFactory.Identifier(name))
 			.WithTriviaFrom(identifierName);
 
-		var newRoot = root.ReplaceNode(identifierName, newIdentifierName);
+		var newRoot = root?.ReplaceNode(identifierName, newIdentifierName);
 		if (newRoot == null)
 			return document;
 

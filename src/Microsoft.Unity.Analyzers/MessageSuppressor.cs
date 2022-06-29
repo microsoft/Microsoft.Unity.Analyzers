@@ -61,7 +61,11 @@ public class MessageSuppressor : DiagnosticSuppressor
 		if (node == null)
 			return;
 
-		var model = context.GetSemanticModel(diagnostic.Location.SourceTree);
+		var syntaxTree = diagnostic.Location.SourceTree;
+		if (syntaxTree == null)
+			return;
+
+		var model = context.GetSemanticModel(syntaxTree);
 		if (model.GetDeclaredSymbol(node) is not IMethodSymbol methodSymbol)
 			return;
 

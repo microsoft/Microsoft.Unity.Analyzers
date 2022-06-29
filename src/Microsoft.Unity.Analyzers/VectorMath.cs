@@ -63,8 +63,11 @@ public class VectorMathAnalyzer : DiagnosticAnalyzer
 		}
 	}
 
-	private static bool IsReportableExpression(SyntaxNodeAnalysisContext context, SyntaxNode node, Type vectorType)
+	private static bool IsReportableExpression(SyntaxNodeAnalysisContext context, SyntaxNode? node, Type vectorType)
 	{
+		if (node == null)
+			return false;
+
 		return IsSupportedExpression(context, node, vectorType)
 		       && NeedsOrdering(context, (ExpressionSyntax)node);
 	}
@@ -195,9 +198,6 @@ public class VectorMathCodeFix : CodeFixProvider
 			.WithTriviaFrom(node);
 
 		var newRoot = root.ReplaceNode(node, newNode);
-		if (newRoot == null)
-			return document;
-
 		return document.WithSyntaxRoot(newRoot);
 	}
 

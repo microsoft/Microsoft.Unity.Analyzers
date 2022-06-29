@@ -510,4 +510,16 @@
   <data name="PhysicsAllocMethodUsageDiagnosticTitle" xml:space="preserve">
     <value>Use non-allocating physics APIs</value>
   </data>
+  <data name="UnityObjectIsPatternCodeFixTitle" xml:space="preserve">
+    <value>Use null comparison</value>
+  </data>
+  <data name="UnityObjectIsPatternDiagnosticDescription" xml:space="preserve">
+    <value>Unity overrides the null comparison operator for Unity objects, which is incompatible with pattern matching with null.</value>
+  </data>
+  <data name="UnityObjectIsPatternDiagnosticMessageFormat" xml:space="preserve">
+    <value>Unity objects should not use pattern matching with null.</value>
+  </data>
+  <data name="UnityObjectIsPatternDiagnosticTitle" xml:space="preserve">
+    <value>Pattern matching with null on Unity objects</value>
+  </data>
 </root>

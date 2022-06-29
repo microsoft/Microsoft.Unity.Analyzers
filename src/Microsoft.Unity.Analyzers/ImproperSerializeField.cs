@@ -38,7 +38,7 @@ public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeMemberDeclaration(SyntaxNodeAnalysisContext context)
 	{
 		var model = context.SemanticModel;
-		ISymbol symbol;
+		ISymbol? symbol;
 
 		switch (context.Node)
 		{
@@ -58,6 +58,9 @@ public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 				return;
 		}
 
+		if (symbol == null)
+			return;
+
 		if (!IsReportable(symbol))
 			return;
 
@@ -69,7 +72,7 @@ public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 		if (!symbol.ContainingType.Extends(typeof(UnityEngine.Object)))
 			return false;
 
-		if (!symbol.GetAttributes().Any(a => a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
+		if (!symbol.GetAttributes().Any(a => a.AttributeClass != null && a.AttributeClass.Matches(typeof(UnityEngine.SerializeField))))
 			return false;
 
 		return symbol switch
@@ -126,7 +129,7 @@ public class ImproperSerializeFieldCodeFix : CodeFixProvider
 			if (nodes.Any())
 			{
 				var newAttributes = attributeList.RemoveNodes(nodes, SyntaxRemoveOptions.KeepNoTrivia);
-				if (newAttributes.Attributes.Any())
+				if (newAttributes != null && newAttributes.Attributes.Any())
 					attributes = attributes.Add(newAttributes);
 			}
 			else
@@ -137,7 +140,7 @@ public class ImproperSerializeFieldCodeFix : CodeFixProvider
 			.WithAttributeLists(attributes)
 			.WithLeadingTrivia(declaration.GetLeadingTrivia());
 
-		var newRoot = root.ReplaceNode(declaration, newDeclaration);
+		var newRoot = root?.ReplaceNode(declaration, newDeclaration);
 		if (newRoot == null)
 			return document;
 

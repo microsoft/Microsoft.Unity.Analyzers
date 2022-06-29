@@ -344,7 +344,6 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-
 	[Fact]
 	public async Task CoalescingAssignmentForRegularObjects()
 	{
@@ -359,6 +358,102 @@ class Camera : MonoBehaviour
     public System.Object NP()
     {
         return a ??= b;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task IsNullPatternExpression()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+
+    public void Update()
+    {
+        if (a is null) { }
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.IsPatternRule)
+			.WithLocation(10, 13);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+
+    public void Update()
+    {
+        if (a == null) { }
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task IsNotNullPatternExpression()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+
+    public void Update()
+    {
+        if (a is not null) { }
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.IsPatternRule)
+			.WithLocation(10, 13);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public Transform a = null;
+
+    public void Update()
+    {
+        if (a != null) { }
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task IsRegularPatternExpression()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public object a = null;
+
+    public void Update()
+    {
+        if (a is not null) { }
     }
 }
 ";
