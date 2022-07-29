@@ -11,8 +11,8 @@ on:
     - release/*
 
 env:
-  UNITY_HASH: cb45f9cae8b7
-  UNITY_FULL_VERSION: 2021.3.4f1
+  UNITY_HASH: 24e8595d6d43
+  UNITY_FULL_VERSION: 2021.3.7f1
   
 jobs:
   macos:
