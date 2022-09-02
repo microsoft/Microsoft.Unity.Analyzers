@@ -766,6 +766,7 @@ namespace UnityEditor
 		void OnPreprocessLightDescription(LightDescription description, Light light, AnimationClip[] clips) { }
 
 		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) { }
+		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload) { }
 
 		// undocumented static methods
 		static bool OnPreGeneratingCSProjectFiles() { return false; }
