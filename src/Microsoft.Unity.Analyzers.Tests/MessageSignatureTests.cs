@@ -232,4 +232,39 @@ class TestWindow : EditorWindow
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task MessageSignatureOverload()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+    {
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task MessageSignatureDidDomainReloadOverload()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
+    {
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
 }
