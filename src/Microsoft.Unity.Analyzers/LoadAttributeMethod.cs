@@ -59,18 +59,18 @@ public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 		return true;
 	}
 
-	private static bool IsDecorated(ISymbol symbol)
+	internal static bool IsDecorated(IMethodSymbol symbol, bool onlyEditorAttributes = false)
 	{
 		return symbol
 			.GetAttributes()
-			.Any(a => a.AttributeClass != null && IsLoadAttributeType(a.AttributeClass));
+			.Any(a => a.AttributeClass != null && IsLoadAttributeType(a.AttributeClass, onlyEditorAttributes));
 	}
 
-	private static bool IsLoadAttributeType(ITypeSymbol type)
+	private static bool IsLoadAttributeType(ITypeSymbol type, bool onlyEditorAttributes)
 	{
 		return type.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute))
 		       || type.Matches(typeof(UnityEditor.Callbacks.DidReloadScripts))
-		       || type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute));
+		       || (type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute)) && !onlyEditorAttributes);
 	}
 
 
