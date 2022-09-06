@@ -32,7 +32,7 @@ ID | Title | Category
 [UNT0028](UNT0028.md) | Use non-allocating physics APIs | Performance
 [UNT0029](UNT0029.md) | Pattern matching with null on Unity objects | Correctness
 [UNT0030](UNT0030.md) | Calling Destroy or DestroyImmediate on a Transform | Correctness
-[UNT0031](UNT0031.md) | Asset operations in LoadAttribute methods | Correctness
+[UNT0031](UNT0031.md) | Asset operations in LoadAttribute method | Correctness
 
 # Diagnostic Suppressors
 
