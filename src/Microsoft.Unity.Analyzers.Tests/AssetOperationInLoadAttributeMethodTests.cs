@@ -68,9 +68,9 @@ class Loader
 	}
 
 	[Fact]
-		public async Task TestStaticCtorAttribute()
-		{
-			const string test = @"
+	public async Task TestStaticCtorAttribute()
+	{
+		const string test = @"
 using UnityEditor;
 
 [InitializeOnLoad]
