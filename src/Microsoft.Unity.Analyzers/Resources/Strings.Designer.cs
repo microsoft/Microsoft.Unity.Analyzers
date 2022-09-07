@@ -61,6 +61,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Asset operations such as asset loading should be avoided in LoadAttribute method..
+        /// </summary>
+        internal static string AssetOperationInLoadAttributeMethodDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("AssetOperationInLoadAttributeMethodDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avoid Asset operations in LoadAttribute method..
+        /// </summary>
+        internal static string AssetOperationInLoadAttributeMethodDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("AssetOperationInLoadAttributeMethodDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asset operations in LoadAttribute method.
+        /// </summary>
+        internal static string AssetOperationInLoadAttributeMethodDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("AssetOperationInLoadAttributeMethodDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Correctness.
         /// </summary>
         internal static string CategoryCorrectness {

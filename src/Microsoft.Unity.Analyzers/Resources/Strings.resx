@@ -534,4 +534,13 @@
   <data name="DestroyTransformDiagnosticTitle" xml:space="preserve">
     <value>Calling Destroy or DestroyImmediate on a Transform</value>
   </data>
+  <data name="AssetOperationInLoadAttributeMethodDiagnosticDescription" xml:space="preserve">
+    <value>Asset operations such as asset loading should be avoided in LoadAttribute method.</value>
+  </data>
+  <data name="AssetOperationInLoadAttributeMethodDiagnosticMessageFormat" xml:space="preserve">
+    <value>Avoid Asset operations in LoadAttribute method.</value>
+  </data>
+  <data name="AssetOperationInLoadAttributeMethodDiagnosticTitle" xml:space="preserve">
+    <value>Asset operations in LoadAttribute method</value>
+  </data>
 </root>

@@ -690,6 +690,8 @@ namespace UnityEditor
 	using UnityEngine.UIElements;
 	using AssetImporters;
 
+	class AssetDatabase {}
+
 	class Editor : ScriptableObject
 	{
 		public virtual VisualElement CreateInspectorGUI() { return null; }

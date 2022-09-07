@@ -47,11 +47,7 @@ public class InitializeOnLoadStaticCtorAnalyzer : DiagnosticAnalyzer
 		if (typeSymbol == null)
 			return;
 
-		var isInitOnLoad = typeSymbol
-			.GetAttributes()
-			.Any(a => a.AttributeClass != null && a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadAttribute)));
-
-		if (!isInitOnLoad)
+		if (!IsDecorated(typeSymbol))
 			return;
 
 		// Beware of compiler-generated ctor with static field initializers
@@ -59,6 +55,13 @@ public class InitializeOnLoadStaticCtorAnalyzer : DiagnosticAnalyzer
 			return;
 
 		context.ReportDiagnostic(Diagnostic.Create(Rule, classDeclaration.Identifier.GetLocation(), typeSymbol.Name));
+	}
+
+	internal static bool IsDecorated(ITypeSymbol symbol)
+	{
+		return symbol
+			.GetAttributes()
+			.Any(a => a.AttributeClass != null && a.AttributeClass.Matches(typeof(UnityEditor.InitializeOnLoadAttribute)));
 	}
 }
 
