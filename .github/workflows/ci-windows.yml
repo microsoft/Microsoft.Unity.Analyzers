@@ -11,8 +11,8 @@ on:
     - release/*
 
 env:
-  UNITY_HASH: ad3870b89536
-  UNITY_FULL_VERSION: 2021.3.9f1
+  UNITY_HASH: 0a5ca18544bf
+  UNITY_FULL_VERSION: 2021.3.11f1
 
 # Tracing builds with CodeQL is currently not supported on Windows 11 and Windows Server 2022. so use windows-2019 instead of windows-latest
 
