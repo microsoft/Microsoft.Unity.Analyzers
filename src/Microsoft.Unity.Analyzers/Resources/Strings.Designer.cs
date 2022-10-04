@@ -844,6 +844,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use SetLocalPositionAndRotation() method.
+        /// </summary>
+        internal static string SetLocalPositionAndRotationCodeFixTitle {
+            get {
+                return ResourceManager.GetString("SetLocalPositionAndRotationCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prefer using SetLocalPositionAndRotation() method..
+        /// </summary>
+        internal static string SetLocalPositionAndRotationDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("SetLocalPositionAndRotationDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assigning localPosition and localRotation sequentially could be optimized..
+        /// </summary>
+        internal static string SetLocalPositionAndRotationDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("SetLocalPositionAndRotationDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inefficient localPosition/localRotation assignment.
+        /// </summary>
+        internal static string SetLocalPositionAndRotationDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("SetLocalPositionAndRotationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compared to SetPixels, SetPixels32 is much faster and uses less memory..
         /// </summary>
         internal static string SetPixelsMethodUsageDiagnosticDescription {

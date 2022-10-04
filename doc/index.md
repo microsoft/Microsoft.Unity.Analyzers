@@ -33,6 +33,7 @@ ID | Title | Category
 [UNT0029](UNT0029.md) | Pattern matching with null on Unity objects | Correctness
 [UNT0030](UNT0030.md) | Calling Destroy or DestroyImmediate on a Transform | Correctness
 [UNT0031](UNT0031.md) | Asset operations in LoadAttribute method | Correctness
+[UNT0032](UNT0032.md) | Inefficient method to set localPosition and localRotation | Performance
 
 # Diagnostic Suppressors
 

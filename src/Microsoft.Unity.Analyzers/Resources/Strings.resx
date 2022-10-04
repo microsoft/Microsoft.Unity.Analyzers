@@ -543,4 +543,16 @@
   <data name="AssetOperationInLoadAttributeMethodDiagnosticTitle" xml:space="preserve">
     <value>Asset operations in LoadAttribute method</value>
   </data>
+  <data name="SetLocalPositionAndRotationCodeFixTitle" xml:space="preserve">
+    <value>Use SetLocalPositionAndRotation() method</value>
+  </data>
+  <data name="SetLocalPositionAndRotationDiagnosticDescription" xml:space="preserve">
+    <value>Prefer using SetLocalPositionAndRotation() method.</value>
+  </data>
+  <data name="SetLocalPositionAndRotationDiagnosticMessageFormat" xml:space="preserve">
+    <value>Assigning localPosition and localRotation sequentially could be optimized.</value>
+  </data>
+  <data name="SetLocalPositionAndRotationDiagnosticTitle" xml:space="preserve">
+    <value>Inefficient localPosition/localRotation assignment</value>
+  </data>
 </root>
