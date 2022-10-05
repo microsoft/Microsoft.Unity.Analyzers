@@ -14,6 +14,7 @@ variables:
   BinLog: '$(OutputPath)/build.binlog'
   MSBuildArguments: '/restore /p:Features="pdb-path-determinism" /bl:$(BinLog)'
   TeamName: 'VSTU'
+  Codeql.Enabled: true
 
 steps:
 - checkout: self
