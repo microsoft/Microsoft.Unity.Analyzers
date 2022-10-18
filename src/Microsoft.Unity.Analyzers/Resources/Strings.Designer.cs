@@ -943,6 +943,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Static member assignment when Unity Editor is setup to disable domain reload..
+        /// </summary>
+        internal static string StaticMemberWithoutDomainReloadDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("StaticMemberWithoutDomainReloadDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Static member &apos;{0}&apos; is assigned with domain reload disabled..
+        /// </summary>
+        internal static string StaticMemberWithoutDomainReloadDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("StaticMemberWithoutDomainReloadDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Static member assignment while domain reload is disabled.
+        /// </summary>
+        internal static string StaticMemberWithoutDomainReloadDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("StaticMemberWithoutDomainReloadDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use CompareTag method.
         /// </summary>
         internal static string TagComparisonCodeFixTitle {

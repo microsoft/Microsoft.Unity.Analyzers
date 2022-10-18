@@ -361,7 +361,13 @@ public abstract class DiagnosticVerifier
 			.AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp);
 
 		solution = UnityAssemblies().Aggregate(solution, (current, dll) => current.AddMetadataReference(projectId, MetadataReference.CreateFromFile(dll)));
-		solution = solution.WithProjectParseOptions(projectId, new CSharpParseOptions(context.LanguageVersion));
+		
+		var parseOptions = CSharpParseOptions
+			.Default
+			.WithLanguageVersion(context.LanguageVersion)
+			.WithPreprocessorSymbols(context.PreprocessorSymbols);
+		
+		solution = solution.WithProjectParseOptions(projectId, parseOptions);
 
 		var count = 0;
 		foreach (var source in sources)
