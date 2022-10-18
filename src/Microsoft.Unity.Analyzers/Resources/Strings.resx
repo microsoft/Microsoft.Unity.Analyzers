@@ -559,8 +559,7 @@
     <value>Static member assignment when Unity Editor is setup to disable domain reload.</value>
   </data>
   <data name="StaticMemberWithoutDomainReloadDiagnosticMessageFormat" xml:space="preserve">
-    <value>Static member '{0}' is assigned with domain reload disabled.</value>
-    <comment>{0} is a member name (field or event)</comment>
+    <value>Static member is assigned with domain reload disabled.</value>
   </data>
   <data name="StaticMemberWithoutDomainReloadDiagnosticTitle" xml:space="preserve">
     <value>Static member assignment while domain reload is disabled</value>

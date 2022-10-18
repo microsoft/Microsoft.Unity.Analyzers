@@ -952,7 +952,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Static member &apos;{0}&apos; is assigned with domain reload disabled..
+        ///   Looks up a localized string similar to Static member is assigned with domain reload disabled..
         /// </summary>
         internal static string StaticMemberWithoutDomainReloadDiagnosticMessageFormat {
             get {
