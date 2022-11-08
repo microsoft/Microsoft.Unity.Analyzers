@@ -104,6 +104,19 @@ internal class TryGetComponentContext
 		if (conditionIdentifier.Value.Text != targetIdentifier.Value.Text)
 			return null;
 
+		// We allow inline ifs without else clause
+		var visitor = invocationParent;
+		while (visitor != null)
+		{
+			if (visitor is BlockSyntax)
+				break;
+
+			if (visitor is IfStatementSyntax {Else: { }})
+				return null;
+
+			visitor = visitor.Parent;
+		}
+
 		return new TryGetComponentContext(targetIdentifier.Value.Text, isVariableDeclaration, ifStatement, binaryExpression.Kind());
 	}
 
@@ -242,9 +255,6 @@ public class TryGetComponentCodeFix : CodeFixProvider
 		while (assignNode.Parent != null && assignNode.Parent is not BlockSyntax)
 			assignNode = assignNode.Parent;
 			
-		var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
-		documentEditor.RemoveNode(assignNode, SyntaxRemoveOptions.KeepNoTrivia);
-
 		InvocationExpressionSyntax? newInvocation;
 		var identifier = Identifier(nameof(UnityEngine.Component.TryGetComponent));
 
@@ -302,6 +312,17 @@ public class TryGetComponentCodeFix : CodeFixProvider
 			_ => newInvocation
 		};
 
+		// Reuse inline ifExpressions of the original assignment
+		var inlineIfAssignNode = assignNode;
+		while (inlineIfAssignNode is IfStatementSyntax inlineIfStatement)
+		{
+			newCondition = BinaryExpression(SyntaxKind.LogicalAndExpression, inlineIfStatement.Condition, newCondition);
+			inlineIfAssignNode = inlineIfStatement.Statement;
+		}
+
+		var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
+		documentEditor.RemoveNode(assignNode, SyntaxRemoveOptions.KeepNoTrivia);
+			
 		var ifStatement = context.IfStatement;
 		var newIfStatement = ifStatement
 			.WithCondition(newCondition)
