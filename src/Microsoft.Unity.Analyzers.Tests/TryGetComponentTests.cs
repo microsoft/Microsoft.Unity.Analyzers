@@ -418,4 +418,139 @@ class Camera : MonoBehaviour
 		await VerifyCSharpDiagnosticAsync(test);
 	}
 
+	[Fact]
+	public async Task InlineIfAssignment()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        Component hit = null, platform = null;
+
+        if (hit != null)
+            platform = hit.GetComponent<Component>();
+        if (platform != null)
+            transform.parent = platform.transform;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(11, 24);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        Component hit = null, platform = null;
+
+        if (hit != null && hit.TryGetComponent<Component>(out platform))
+            transform.parent = platform.transform;
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task BlockBreaksDetection()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        Component hit = null, platform = null;
+
+        if (hit != null) {
+            platform = hit.GetComponent<Component>();
+        }
+        if (platform != null)
+            transform.parent = platform.transform;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task InlineIfWithElseClauseBreaksDetection()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        Component hit = null, platform = null, foo = null;
+
+        if (hit != null)
+            platform = hit.GetComponent<Component>();
+        else
+            foo = foo ?? null;
+        if (platform != null)
+            transform.parent = platform.transform;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task DoubleInlineIfAssignment()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        Component hit = null, platform = null;
+
+        if (hit != null)
+            if (1 == 1)
+                platform = hit.GetComponent<Component>();
+        if (platform != null)
+            transform.parent = platform.transform;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(12, 28);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        Component hit = null, platform = null;
+
+        if (1 == 1 && hit != null && hit.TryGetComponent<Component>(out platform))
+            transform.parent = platform.transform;
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
