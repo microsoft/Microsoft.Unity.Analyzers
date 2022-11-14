@@ -118,7 +118,7 @@ public readonly struct DiagnosticResult
 			SuppressedId);
 	}
 
-	public DiagnosticResult WithMessage(string message)
+	public DiagnosticResult WithMessage(string? message)
 	{
 		return new(
 			_spans,

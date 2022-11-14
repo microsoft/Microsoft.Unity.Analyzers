@@ -37,7 +37,7 @@ public class ConsistencyTests
 				var rule = fieldInfo.GetValue(null) as T;
 				Assert.NotNull(rule);
 
-				var id = reader(rule!);
+				var id = reader(rule);
 				var prefix = id[..3];
 				var num = int.Parse(id[3..]);
 

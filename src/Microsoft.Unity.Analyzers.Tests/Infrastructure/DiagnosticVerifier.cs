@@ -181,7 +181,7 @@ public abstract class DiagnosticVerifier
 					var syntaxTree = diagnostics[i].Location.SourceTree;
 					Assert.NotNull(syntaxTree);
 
-					var resultMethodName = syntaxTree!.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
+					var resultMethodName = syntaxTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
 					var linePosition = diagnostics[i].Location.GetLineSpan().StartLinePosition;
 
 					builder.AppendFormat("{0}({1}, {2}, {3}.{4})",
@@ -241,7 +241,7 @@ public abstract class DiagnosticVerifier
 			foreach (var descriptor in analyzers.SelectMany(a => a.SupportedDiagnostics))
 				specificDiagnosticOptions = specificDiagnosticOptions.SetItem(descriptor.Id, ReportDiagnostic.Info);
 
-			var compilationWithAnalyzers = compilation!
+			var compilationWithAnalyzers = compilation
 				.WithOptions(compilationOptions.WithSpecificDiagnosticOptions(specificDiagnosticOptions))
 				.WithAnalyzers(analyzers, analyzerOptions);
 
