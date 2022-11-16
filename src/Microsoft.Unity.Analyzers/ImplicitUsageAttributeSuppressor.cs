@@ -30,7 +30,7 @@ public class ImplicitUsageAttributeSuppressor : DiagnosticSuppressor
 
 	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
 
-	private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+	private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
 		var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
 		if (methodDeclarationSyntax == null)
@@ -50,7 +50,7 @@ public class ImplicitUsageAttributeSuppressor : DiagnosticSuppressor
 		context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 	}
 
-	private bool IsSuppressable(IMethodSymbol methodSymbol)
+	private static bool IsSuppressable(IMethodSymbol methodSymbol)
 	{
 		// The Unity code stripper will consider any attribute with the exact name "PreserveAttribute", regardless of the namespace or assembly
 		return methodSymbol.GetAttributes().Any(a => a.AttributeClass != null && (a.AttributeClass.Matches(typeof(JetBrains.Annotations.UsedImplicitlyAttribute)) || a.AttributeClass.Name == nameof(UnityEngine.Scripting.PreserveAttribute)));

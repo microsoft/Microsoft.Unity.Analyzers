@@ -124,7 +124,7 @@ public class DestroyTransformCodeFix : CodeFixProvider
 			context.Diagnostics);
 	}
 
-	private async Task<Document> UseGameObjectAsync(Document document, ExpressionSyntax argument, CancellationToken cancellationToken)
+	private static async Task<Document> UseGameObjectAsync(Document document, ExpressionSyntax argument, CancellationToken cancellationToken)
 	{
 		var gameObject = SyntaxFactory.IdentifierName("gameObject");
 		var memberAccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, argument, gameObject);

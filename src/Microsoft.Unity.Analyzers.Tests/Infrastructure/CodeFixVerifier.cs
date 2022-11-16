@@ -67,12 +67,12 @@ public abstract class CodeFixVerifier : DiagnosticVerifier
 				var root = await document.GetSyntaxRootAsync();
 				Assert.NotNull(root);
 
-				document = document.WithSyntaxRoot(Formatter.Format(root!, Formatter.Annotation, document.Project.Solution.Workspace));
+				document = document.WithSyntaxRoot(Formatter.Format(root, Formatter.Annotation, document.Project.Solution.Workspace));
 				newCompilerDiagnostics = GetNewDiagnostics(context, compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 
 				var diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
 
-				var newDoc = root!.ToFullString();
+				var newDoc = root.ToFullString();
 				Assert.True(false, $"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{newDoc}\r\n");
 			}
 
@@ -124,7 +124,7 @@ public abstract class CodeFixVerifier : DiagnosticVerifier
 		var model = await document.GetSemanticModelAsync();
 		Assert.NotNull(model);
 
-		return model!.GetDiagnostics();
+		return model.GetDiagnostics();
 	}
 
 	private static async Task<string> GetStringFromDocumentAsync(Document document)
@@ -133,7 +133,7 @@ public abstract class CodeFixVerifier : DiagnosticVerifier
 		var root = await simplifiedDoc.GetSyntaxRootAsync();
 		Assert.NotNull(root);
 
-		root = Formatter.Format(root!, Formatter.Annotation, simplifiedDoc.Project.Solution.Workspace);
+		root = Formatter.Format(root, Formatter.Annotation, simplifiedDoc.Project.Solution.Workspace);
 		return root.GetText().ToString();
 	}
 }
