@@ -555,4 +555,13 @@
   <data name="SetLocalPositionAndRotationDiagnosticTitle" xml:space="preserve">
     <value>Inefficient localPosition/localRotation assignment</value>
   </data>
+  <data name="StaticMemberWithoutDomainReloadDiagnosticDescription" xml:space="preserve">
+    <value>Static member assignment when Unity Editor is setup to disable domain reload.</value>
+  </data>
+  <data name="StaticMemberWithoutDomainReloadDiagnosticMessageFormat" xml:space="preserve">
+    <value>Static member is assigned with domain reload disabled.</value>
+  </data>
+  <data name="StaticMemberWithoutDomainReloadDiagnosticTitle" xml:space="preserve">
+    <value>Static member assignment while domain reload is disabled</value>
+  </data>
 </root>

@@ -347,6 +347,7 @@ public abstract class DiagnosticVerifier
 		var monolib = Path.Combine(installationFullPath, "MonoBleedingEdge", "lib", "mono", "4.7.1-api");
 		yield return Path.Combine(monolib, "mscorlib.dll");
 		yield return Path.Combine(monolib, "system.dll");
+		yield return Path.Combine(monolib, "System.Core.dll");
 
 		var facades = Path.Combine(monolib, "Facades");
 		yield return Path.Combine(facades, "netstandard.dll");
@@ -361,7 +362,13 @@ public abstract class DiagnosticVerifier
 			.AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp);
 
 		solution = UnityAssemblies().Aggregate(solution, (current, dll) => current.AddMetadataReference(projectId, MetadataReference.CreateFromFile(dll)));
-		solution = solution.WithProjectParseOptions(projectId, new CSharpParseOptions(context.LanguageVersion));
+		
+		var parseOptions = CSharpParseOptions
+			.Default
+			.WithLanguageVersion(context.LanguageVersion)
+			.WithPreprocessorSymbols(context.PreprocessorSymbols);
+		
+		solution = solution.WithProjectParseOptions(projectId, parseOptions);
 
 		var count = 0;
 		foreach (var source in sources)
