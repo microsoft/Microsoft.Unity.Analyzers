@@ -367,6 +367,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fix message case.
+        /// </summary>
+        internal static string ImproperMessageCaseCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ImproperMessageCaseCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This Unity message uses an incorrect method case.
+        /// </summary>
+        internal static string ImproperMessageCaseDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ImproperMessageCaseDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Unity message &apos;{0}&apos; has an incorrect case.
+        /// </summary>
+        internal static string ImproperMessageCaseDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ImproperMessageCaseDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incorrect message case.
+        /// </summary>
+        internal static string ImproperMessageCaseDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ImproperMessageCaseDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove SerializeField attribute.
         /// </summary>
         internal static string ImproperSerializeFieldCodeFixTitle {

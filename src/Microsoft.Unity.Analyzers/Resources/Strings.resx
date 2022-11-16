@@ -209,6 +209,7 @@
   </data>
   <data name="MessageSignatureDiagnosticMessageFormat" xml:space="preserve">
     <value>The Unity message '{0}' has an incorrect signature.</value>
+    <comment>{0} is a method name</comment>
   </data>
   <data name="MessageSignatureDiagnosticTitle" xml:space="preserve">
     <value>Incorrect message signature</value>
@@ -554,5 +555,18 @@
   </data>
   <data name="SetLocalPositionAndRotationDiagnosticTitle" xml:space="preserve">
     <value>Inefficient localPosition/localRotation assignment</value>
+  </data>
+  <data name="ImproperMessageCaseCodeFixTitle" xml:space="preserve">
+    <value>Fix message case</value>
+  </data>
+  <data name="ImproperMessageCaseDiagnosticDescription" xml:space="preserve">
+    <value>This Unity message uses an incorrect method case</value>
+  </data>
+  <data name="ImproperMessageCaseDiagnosticMessageFormat" xml:space="preserve">
+    <value>The Unity message '{0}' has an incorrect case</value>
+    <comment>{0} is a method name</comment>
+  </data>
+  <data name="ImproperMessageCaseDiagnosticTitle" xml:space="preserve">
+    <value>Incorrect message case</value>
   </data>
 </root>
