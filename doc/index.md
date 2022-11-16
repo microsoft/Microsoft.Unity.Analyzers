@@ -34,6 +34,7 @@ ID | Title | Category
 [UNT0030](UNT0030.md) | Calling Destroy or DestroyImmediate on a Transform | Correctness
 [UNT0031](UNT0031.md) | Asset operations in LoadAttribute method | Correctness
 [UNT0032](UNT0032.md) | Inefficient method to set localPosition and localRotation | Performance
+[UNT0033](UNT0033.md) | Incorrect message case | Correctness
 
 # Diagnostic Suppressors
 

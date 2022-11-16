@@ -43,7 +43,7 @@ public class EmptyUnityMessageAnalyzer : DiagnosticAnalyzer
 		if (method?.Body == null)
 			return;
 
-		if (HasPolymorphicModifier(method))
+		if (method.HasPolymorphicModifier())
 			return;
 
 		if (method.Body.Statements.Count > 0)
@@ -69,22 +69,6 @@ public class EmptyUnityMessageAnalyzer : DiagnosticAnalyzer
 			return;
 
 		context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), symbol.Name));
-	}
-
-	private static bool HasPolymorphicModifier(MethodDeclarationSyntax method)
-	{
-		foreach (var modifier in method.Modifiers)
-		{
-			switch (modifier.Kind())
-			{
-				case SyntaxKind.AbstractKeyword:
-				case SyntaxKind.VirtualKeyword:
-				case SyntaxKind.OverrideKeyword:
-					return true;
-			}
-		}
-
-		return false;
 	}
 }
 
