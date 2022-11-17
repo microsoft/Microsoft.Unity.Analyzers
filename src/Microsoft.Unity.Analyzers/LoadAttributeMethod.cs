@@ -26,7 +26,7 @@ public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 		title: Strings.LoadAttributeMethodDiagnosticTitle,
 		messageFormat: Strings.LoadAttributeMethodDiagnosticMessageFormat,
 		category: DiagnosticCategory.TypeSafety,
-		defaultSeverity: DiagnosticSeverity.Info,
+		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
 		description: Strings.LoadAttributeMethodDiagnosticDescription);
 
