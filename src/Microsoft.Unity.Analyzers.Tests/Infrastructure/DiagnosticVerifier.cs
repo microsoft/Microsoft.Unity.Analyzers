@@ -239,7 +239,7 @@ public abstract class DiagnosticVerifier
 
 			// Force all tested and related diagnostics to be enabled
 			foreach (var descriptor in analyzers.SelectMany(a => a.SupportedDiagnostics))
-				specificDiagnosticOptions = specificDiagnosticOptions.SetItem(descriptor.Id, ReportDiagnostic.Info);
+				specificDiagnosticOptions = specificDiagnosticOptions.SetItem(descriptor.Id, GetReportDiagnostic(descriptor));
 
 			var compilationWithAnalyzers = compilation
 				.WithOptions(compilationOptions.WithSpecificDiagnosticOptions(specificDiagnosticOptions))
@@ -281,6 +281,17 @@ public abstract class DiagnosticVerifier
 		var results = SortDiagnostics(FilterDiagnostics(diagnostics, context.Filters));
 		diagnostics.Clear();
 		return results;
+	}
+
+	private static ReportDiagnostic GetReportDiagnostic(DiagnosticDescriptor descriptor)
+	{
+		return descriptor.DefaultSeverity switch
+		{
+			DiagnosticSeverity.Error => ReportDiagnostic.Error,
+			DiagnosticSeverity.Warning => ReportDiagnostic.Warn,
+			DiagnosticSeverity.Info or DiagnosticSeverity.Hidden => ReportDiagnostic.Info,
+			_ => throw new ArgumentOutOfRangeException()
+		};
 	}
 
 	protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, ImmutableArray<string> filters)

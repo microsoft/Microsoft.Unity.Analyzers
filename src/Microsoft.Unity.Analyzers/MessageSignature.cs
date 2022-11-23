@@ -27,7 +27,7 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 		title: Strings.MessageSignatureDiagnosticTitle,
 		messageFormat: Strings.MessageSignatureDiagnosticMessageFormat,
 		category: DiagnosticCategory.TypeSafety,
-		defaultSeverity: DiagnosticSeverity.Info,
+		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
 		description: Strings.MessageSignatureDiagnosticDescription);
 

@@ -28,7 +28,7 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 		title: Strings.ImproperMessageCaseDiagnosticTitle,
 		messageFormat: Strings.ImproperMessageCaseDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
-		defaultSeverity: DiagnosticSeverity.Info,
+		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
 		description: Strings.ImproperMessageCaseDiagnosticDescription);
 
