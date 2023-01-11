@@ -79,7 +79,7 @@ public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 		if (!MethodMatches(context.Node, context.SemanticModel, out var syntax, out var symbol))
 			return;
 
-		if (symbol.IsStatic && symbol.Parameters.Length == 0)
+		if (symbol is { IsStatic: true, Parameters.Length: 0 })
 			return;
 
 		context.ReportDiagnostic(Diagnostic.Create(Rule, syntax.Identifier.GetLocation(), symbol.Name));

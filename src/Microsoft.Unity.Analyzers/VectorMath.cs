@@ -138,10 +138,7 @@ public class VectorMathAnalyzer : DiagnosticAnalyzer
 
 			// Else we want a matrix-like item
 			var type = typeInfo.Type;
-			if (type != null && type.Matches(vectorType))
-				return true;
-
-			return false;
+			return type != null && type.Matches(vectorType);
 		}
 
 		if (!node.IsKind(SyntaxKind.MultiplyExpression))
@@ -204,10 +201,7 @@ public class VectorMathCodeFix : CodeFixProvider
 	private static int GetTypePriority((ExpressionSyntax, TypeInfo) item)
 	{
 		var (_, typeInfo) = item;
-		if (VectorMathAnalyzer.IsFloatType(typeInfo))
-			return 0;
-
-		return 1;
+		return VectorMathAnalyzer.IsFloatType(typeInfo) ? 0 : 1;
 	}
 
 	private static string GetSyntaxPriority((ExpressionSyntax, TypeInfo) item)
@@ -221,15 +215,10 @@ public class VectorMathCodeFix : CodeFixProvider
 		var first = operands.First();
 		operands.RemoveAt(0);
 
-		if (operands.Count == 1)
-			return SyntaxFactory.BinaryExpression(
+		return SyntaxFactory
+			.BinaryExpression(
 				SyntaxKind.MultiplyExpression,
 				first.WithoutTrivia(),
-				operands.Last().WithoutTrivia());
-
-		return SyntaxFactory.BinaryExpression(
-			SyntaxKind.MultiplyExpression,
-			first.WithoutTrivia(),
-			BuildMultiplyExpression(operands));
+				operands.Count == 1 ? operands.Last().WithoutTrivia() : BuildMultiplyExpression(operands));
 	}
 }
