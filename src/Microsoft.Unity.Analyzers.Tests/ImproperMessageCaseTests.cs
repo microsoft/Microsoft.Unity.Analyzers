@@ -111,5 +111,22 @@ class App : AssetPostprocessor
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
-	
+
+	[Fact]
+	public async Task OverloadedMessageTest()
+	{
+		// OnPostprocessAllAssets is also overloaded with an additional bool parameter.
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+	static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
+    {
+    }
+}
+";
+		await VerifyCSharpDiagnosticAsync(test);
+
+	}
 }

@@ -65,7 +65,7 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 				continue;
 
 			if (method.HasPolymorphicModifier())
-				continue;			
+				continue;
 
 			var methodName = method.Identifier.Text;
 			var key = methodName.ToLower();
@@ -78,8 +78,8 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 				continue;
 
 			var namedMessages = notImplementedMessages[key];
-			if (namedMessages.All(m => m.IsStatic != methodSymbol.IsStatic))
-				continue;	
+			if (namedMessages.All(m => m.IsStatic != methodSymbol.IsStatic || !methodSymbol.ParametersMatch(m)))
+				continue;
 
 			// We can't use SymbolFinder.FindReferencesAsync() to find possible references, given we do not have access to the solution here yet
 			context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), methodName));
@@ -115,7 +115,7 @@ public class ImproperMessageCaseCodeFix : CodeFixProvider
 		var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 		if (model == null)
 			return solution;
-		
+
 		var methodSymbol = model.GetDeclaredSymbol(declaration);
 		if (methodSymbol == null)
 			return solution;

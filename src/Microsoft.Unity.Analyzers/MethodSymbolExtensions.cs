@@ -18,6 +18,11 @@ internal static class MethodSymbolExtensions
 		if (!symbol.ReturnType.Matches(method.ReturnType))
 			return false;
 
+		return symbol.ParametersMatch(method);
+	}
+
+	public static bool ParametersMatch(this IMethodSymbol symbol, MethodInfo method)
+	{
 		var parameters = method.GetParameters();
 		if (parameters.Length < symbol.Parameters.Length)
 			return false;
