@@ -106,7 +106,7 @@ public class BaseSetPositionAndRotationContext
 
 public abstract class BaseSetPositionAndRotationAnalyzer : DiagnosticAnalyzer
 {
-	private BaseSetPositionAndRotationContext ExpressionContext { get; }
+	internal BaseSetPositionAndRotationContext ExpressionContext { get; }
 
 	protected BaseSetPositionAndRotationAnalyzer(BaseSetPositionAndRotationContext expressionContext)
 	{

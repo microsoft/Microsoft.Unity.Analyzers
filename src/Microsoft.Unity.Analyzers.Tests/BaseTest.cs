@@ -3,10 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
+using Xunit.Sdk;
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods",
 	Justification = "Tests",
@@ -39,7 +43,7 @@ class Failure : MonoBehaviour, IFailure {
 		await VerifyCSharpDiagnosticAsync(InterfaceTest);
 	}
 
-	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	protected override TAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
 		return new TAnalyzer();
 	}
@@ -54,7 +58,7 @@ public abstract class BaseSuppressorVerifierTest<TAnalyzer> : SuppressorVerifier
 		await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 	}
 
-	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	protected override TAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
 		return new TAnalyzer();
 	}
@@ -70,13 +74,32 @@ public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVeri
 		await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 	}
 
-	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	protected override TAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
 		return new TAnalyzer();
 	}
 
-	protected override CodeFixProvider GetCSharpCodeFixProvider()
+	protected override TCodeFix GetCSharpCodeFixProvider()
 	{
 		return new TCodeFix();
+	}
+
+	protected bool MethodExists(string typeName, string methodName, string assenblyNameFilter = "")
+	{
+		foreach (var assemblyFile in UnityAssemblies().Where(n => n.Contains(assenblyNameFilter)))
+		{
+			var assembly = Assembly.LoadFile(assemblyFile);
+			var type = assembly.GetType(typeName, false);
+			if (type == null)
+				continue;
+
+			var method = type.GetMethod(methodName);
+			if (method == null)
+				continue;
+
+			return true;
+		}
+
+		return false;
 	}
 }

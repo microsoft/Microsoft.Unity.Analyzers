@@ -324,7 +324,7 @@ public abstract class DiagnosticVerifier
 		return CreateProject(context, new[] {source}).Documents.First();
 	}
 
-	private static IEnumerable<string> UnityAssemblies()
+	protected static IEnumerable<string> UnityAssemblies()
 	{
 		var firstInstallationPath = UnityPath.FirstInstallation();
 		string installationFullPath = firstInstallationPath;
