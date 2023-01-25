@@ -15,7 +15,7 @@ env:
   UNITY_FULL_VERSION: 2021.3.16f1
   
 jobs:
-  macos:
+  linux:
     runs-on: ubuntu-latest
     
     steps:
