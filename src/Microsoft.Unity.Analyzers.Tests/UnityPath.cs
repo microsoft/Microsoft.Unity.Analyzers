@@ -25,61 +25,52 @@ internal static class UnityPath
 	static UnityPath()
 	{
 		if (OperatingSystem.IsWindows())
-		{
-			RegisterRegistryInstallations();
-		}
-		else if (OperatingSystem.IsMacOS())
-		{
-			RegisterApplicationsInstallations();
-		}
-		else if (OperatingSystem.IsLinux())
-		{
-			RegisterLinuxInstallations();
-		}
-		else
-		{
-			throw new NotImplementedException("operating system not supported");
-		}
+			RegisterWindowsInstallations();
 
-		if (UnityInstallations.Count == 0) throw new Exception("could not locate a unity installation");
+		if (OperatingSystem.IsMacOS())
+			RegisterMacOsInstallations();
+
+		if (OperatingSystem.IsLinux())
+			RegisterLinuxInstallations();
+
+		if (UnityInstallations.Count == 0)
+			throw new Exception("Could not locate a Unity installation");
 	}
 
-	private static void RegisterApplicationsInstallations()
+	private static void RegisterHubInstallations(string hubBasePath, string editorSubFolder = "Editor", string dataSubFolder = "Data")
 	{
-		const string hub = "/Applications/Unity/Hub/Editor";
-		if (Directory.Exists(hub))
-		{
-			var directories = Directory.EnumerateDirectories(hub)
-				.OrderByDescending(n => n)
-				.Select(n => Path.Combine(n, "Unity.app"));
+		var hubPath = Path.Combine(hubBasePath, "Unity", "Hub", "Editor");
+		if (!Directory.Exists(hubPath))
+			return;
 
-			foreach (var name in directories)
-			{
-				RegisterUnityInstallation(Path.Combine(name, "Contents"));
-			}
-		}
+		var directories = Directory.EnumerateDirectories(hubPath)
+			.OrderByDescending(n => n)
+			.Select(n => Path.Combine(n, editorSubFolder));
 
-		RegisterUnityInstallation("/Applications/Unity/Unity.app/Contents");
+		foreach (var name in directories)
+			RegisterUnityInstallation(Path.Combine(name, dataSubFolder));
+	}
+
+	private static void RegisterMacOsInstallations()
+	{
+		RegisterHubInstallations(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Unity.app", "Contents");
+		RegisterUnityInstallation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Unity/Unity.app/Contents"));
 	}
 
 	private static void RegisterLinuxInstallations()
 	{
-		string hub = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Unity/Hub/Editor");
-		if (Directory.Exists(hub))
-		{
-			var directories = Directory.EnumerateDirectories(hub)
-				.OrderByDescending(n => n)
-				.Select(n => Path.Combine(n, "Editor"));
+		RegisterHubInstallations(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+		RegisterUnityInstallation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Unity/Editor/Data"));
+	}
 
-			foreach (var name in directories)
-			{
-				RegisterUnityInstallation(Path.Combine(name,"Data"));
-			}
-		}
-		else
-		{
-			throw new DirectoryNotFoundException($"could not locate unity hub at '{hub}'");
-		}
+	[SupportedOSPlatform("windows")]
+	private static void RegisterWindowsInstallations()
+	{
+		var programFiles = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
+
+		RegisterHubInstallations(programFiles);
+		RegisterUnityInstallation(Path.Combine(programFiles, @"Unity\Editor\Data"));
+		RegisterRegistryInstallations();
 	}
 
 	[SupportedOSPlatform("windows")]
@@ -104,18 +95,12 @@ internal static class UnityPath
 				// x64 is the default Unity installation
 				var unitypath = subkey.GetValue("Location x64") as string;
 				if (!string.IsNullOrEmpty(unitypath))
-					RegisterUnityInstallation(unitypath);
+					RegisterUnityInstallation(Path.Combine(unitypath, @"Editor\Data"));
 			}
 		}
 		catch (Exception e)
 		{
 			Assert.True(false, e.ToString());
-		}
-		finally
-		{
-			// default fallback, newer Unity are all x64, so we always want the 'real' program files, even in x64 or AnyCPU targets
-			var programFiles = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
-			RegisterUnityInstallation(Path.Combine(programFiles, "Unity"));
 		}
 	}
 
