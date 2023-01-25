@@ -36,7 +36,7 @@ jobs:
     # - When Unity is not installed, our detection logic will fallback to C:\Program Files\Unity given we miss registry keys      
     - name: Enable Unity Cache Support
       id: cache-unity
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-unitycache-${{ env.UNITY_FULL_VERSION }}
         path: UnityCache

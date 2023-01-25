@@ -326,36 +326,16 @@ public abstract class DiagnosticVerifier
 
 	private static IEnumerable<string> UnityAssemblies()
 	{
-		var firstInstallationPath = UnityPath.FirstInstallation();
-		string installationFullPath = firstInstallationPath;
+		var installation = UnityPath.FirstInstallation();
 
-		if (OperatingSystem.IsWindows())
-		{
-			installationFullPath = Path.Combine(firstInstallationPath, "Editor", "Data");
-
-			// Unity installation might be within the Hub directory for Unity Hub installations
-			if (!Directory.Exists(installationFullPath))
-			{
-				string installationHubDirectory = Path.Combine(firstInstallationPath, "Hub", "Editor");
-				if (Directory.Exists(installationHubDirectory))
-				{
-					var editorVersion = Directory.GetDirectories(installationHubDirectory).FirstOrDefault();
-					if (editorVersion != null)
-					{
-						installationFullPath = Path.Combine(installationHubDirectory, editorVersion, "Editor", "Data");
-					}
-				}
-			}
-		}
-
-		if (!Directory.Exists(installationFullPath))
+		if (!Directory.Exists(installation))
 			yield break;
 
-		var managed = Path.Combine(installationFullPath, "Managed");
+		var managed = Path.Combine(installation, "Managed");
 		yield return Path.Combine(managed, "UnityEditor.dll");
 		yield return Path.Combine(managed, "UnityEngine.dll");
 
-		var monolib = Path.Combine(installationFullPath, "MonoBleedingEdge", "lib", "mono", "4.7.1-api");
+		var monolib = Path.Combine(installation, "MonoBleedingEdge", "lib", "mono", "4.7.1-api");
 		yield return Path.Combine(monolib, "mscorlib.dll");
 		yield return Path.Combine(monolib, "System.dll");
 
