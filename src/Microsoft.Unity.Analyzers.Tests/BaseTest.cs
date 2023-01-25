@@ -5,7 +5,7 @@
 
 using System.IO;
 using System.Linq;
-using System.Runtime.Loader;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -85,24 +85,20 @@ public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVeri
 
 	protected bool MethodExists(string assemblyName, string typeName, string methodName)
 	{
-		var assemblyFilePath = UnityAssemblies().First(f => Path.GetFileNameWithoutExtension(f) == assemblyName);
-		var ctx = new AssemblyLoadContext(assemblyName, isCollectible: true);
+		var unityAssemblies = UnityAssemblies().ToArray();
+		var assemblyFilePath = unityAssemblies.First(f => Path.GetFileNameWithoutExtension(f) == assemblyName);
 
-		try
-		{
-			var assembly = ctx.LoadFromAssemblyPath(assemblyFilePath);
-			Assert.NotNull(assembly);
+		var resolver = new PathAssemblyResolver(unityAssemblies);
+		var ctx = new MetadataLoadContext(resolver);
 
-			var type = assembly.GetType(typeName, throwOnError: false);
-			if (type == null)
-				return false;
+		var assembly = ctx.LoadFromAssemblyPath(assemblyFilePath);
+		Assert.NotNull(assembly);
 
-			var method = type.GetMethod(methodName);
-			return method != null;
-		}
-		finally
-		{
-			ctx.Unload();
-		}
+		var type = assembly.GetType(typeName, throwOnError: false);
+		if (type == null)
+			return false;
+
+		var method = type.GetMethod(methodName);
+		return method != null;
 	}
 }
