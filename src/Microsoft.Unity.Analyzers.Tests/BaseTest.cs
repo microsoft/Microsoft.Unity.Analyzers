@@ -3,14 +3,13 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System;
+using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
-using Xunit.Sdk;
 
 [module: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods",
 	Justification = "Tests",
@@ -84,22 +83,26 @@ public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVeri
 		return new TCodeFix();
 	}
 
-	protected bool MethodExists(string typeName, string methodName, string assenblyNameFilter = "")
+	protected bool MethodExists(string assemblyName, string typeName, string methodName)
 	{
-		foreach (var assemblyFile in UnityAssemblies().Where(n => n.Contains(assenblyNameFilter)))
+		var assemblyFilePath = UnityAssemblies().First(f => Path.GetFileNameWithoutExtension(f) == assemblyName);
+		var ctx = new AssemblyLoadContext(assemblyName, isCollectible: true);
+
+		try
 		{
-			var assembly = Assembly.LoadFile(assemblyFile);
-			var type = assembly.GetType(typeName, false);
+			var assembly = ctx.LoadFromAssemblyPath(assemblyFilePath);
+			Assert.NotNull(assembly);
+
+			var type = assembly.GetType(typeName, throwOnError: false);
 			if (type == null)
-				continue;
+				return false;
 
 			var method = type.GetMethod(methodName);
-			if (method == null)
-				continue;
-
-			return true;
+			return method != null;
 		}
-
-		return false;
+		finally
+		{
+			ctx.Unload();
+		}
 	}
 }

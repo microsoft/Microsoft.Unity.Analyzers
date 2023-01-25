@@ -30,7 +30,7 @@ class Camera : MonoBehaviour
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.SetPositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Transform);
 
-		Skip.IfNot(MethodExists(type.FullName!, method, type.Namespace!), $"This Unity version does not support {type}.{method}");
+		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(8, 9);
 
