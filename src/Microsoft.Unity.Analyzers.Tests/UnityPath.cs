@@ -28,10 +28,20 @@ internal static class UnityPath
 		{
 			RegisterRegistryInstallations();
 		}
-		else
+		else if (OperatingSystem.IsMacOS())
 		{
 			RegisterApplicationsInstallations();
 		}
+		else if (OperatingSystem.IsLinux())
+		{
+			RegisterLinuxInstallations();
+		}
+		else
+		{
+			throw new NotImplementedException("operating system not supported");
+		}
+
+		if (UnityInstallations.Count == 0) throw new Exception("could not locate a unity installation");
 	}
 
 	private static void RegisterApplicationsInstallations()
@@ -50,6 +60,26 @@ internal static class UnityPath
 		}
 
 		RegisterUnityInstallation("/Applications/Unity/Unity.app/Contents");
+	}
+
+	private static void RegisterLinuxInstallations()
+	{
+		string hub = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Unity/Hub/Editor");
+		if (Directory.Exists(hub))
+		{
+			var directories = Directory.EnumerateDirectories(hub)
+				.OrderByDescending(n => n)
+				.Select(n => Path.Combine(n, "Editor"));
+
+			foreach (var name in directories)
+			{
+				RegisterUnityInstallation(Path.Combine(name,"Data"));
+			}
+		}
+		else
+		{
+			throw new DirectoryNotFoundException($"could not locate unity hub at '{hub}'");
+		}
 	}
 
 	[SupportedOSPlatform("windows")]
