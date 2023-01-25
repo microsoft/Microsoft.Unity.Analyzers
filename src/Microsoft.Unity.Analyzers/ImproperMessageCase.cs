@@ -55,9 +55,14 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 			return;
 
 		var methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
+
+		var allMessages = scriptInfo
+			.GetMessages()
+			.ToLookup(m => m.Name); // case sensitive indexing
+
 		var notImplementedMessages = scriptInfo
 			.GetNotImplementedMessages()
-			.ToLookup(m => m.Name.ToLower());
+			.ToLookup(m => m.Name.ToLower()); // case insensitive indexing
 
 		foreach (var method in methods)
 		{
@@ -68,8 +73,11 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 				continue;			
 
 			var methodName = method.Identifier.Text;
-			var key = methodName.ToLower();
+			// We have a valid case match here, so stop further inspection (This will prevent false positive for possible overloads, when one of them is still in the notImplementedMessages lookup)
+			if (allMessages.Contains(methodName))
+				continue;
 
+			var key = methodName.ToLower();
 			if (!notImplementedMessages.Contains(key))
 				continue;
 

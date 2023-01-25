@@ -111,5 +111,105 @@ class App : AssetPostprocessor
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
-	
+
+	[Fact]
+	public async Task ProperlyCasedOnPostprocessAllAssets()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+    {
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task ProperlyCasedOnPostprocessAllAssetsOverload()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
+    {
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task ImproperlyCasedPostprocessAllAssets()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostPROCESSAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+    {
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 17)
+			.WithArguments("OnPostPROCESSAllAssets");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+    {
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task ImproperlyCasedOnPostprocessAllAssetsOverload()
+	{
+		const string test = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostProcessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
+    {
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 17)
+			.WithArguments("OnPostProcessAllAssets");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
+    {
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
 }
