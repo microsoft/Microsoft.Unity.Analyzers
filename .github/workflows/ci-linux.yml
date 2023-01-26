@@ -31,9 +31,9 @@ jobs:
     # So far we need Unity assemblies (Managed) and framework 4.7.1 reference assemblies (MonoBleedingEdge/lib/mono/4.7.1-api) for testing
     # We don't need to download/install Unity every run, we just need to cache those managed assemblies
     # But we have to deal with the following:
-    # - the cache only works under the GITHUB_WORKSPACE folder (so we cannot cache /Applications/Unity/Unity.app/Contents)
+    # - the cache only works under the GITHUB_WORKSPACE folder
     # - the cache is linited to 400M per run (so we cannot cache the full Unity installation)
-    # - When Unity is not installed, our detection logic will fallback to /Applications/Unity/Unity.app/Contents
+    # - When Unity is not installed, our detection logic will fallback to ~/Unity/Editor/Data
     - name: Enable Unity Cache Support
       id: cache-unity
       uses: actions/cache@v3
@@ -51,11 +51,11 @@ jobs:
 
     - name: Prepare Managed Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: cp -Rp ~/Unity/Editor/Data/Managed/ UnityCache/
+      run: mkdir -p UnityCache && cp -Rp ~/Unity/Editor/Data/Managed/ UnityCache/Managed/
 
     - name: Prepare MonoBleedingEdge Cache
       if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: cp -Rp ~/Unity/Editor/Data/MonoBleedingEdge UnityCache/
+      run: mkdir -p UnityCache && cp -Rp ~/Unity/Editor/Data/MonoBleedingEdge/ UnityCache/MonoBleedingEdge/
 
     - name: Restore Managed Cache
       if: steps.cache-unity.outputs.cache-hit == 'true'
