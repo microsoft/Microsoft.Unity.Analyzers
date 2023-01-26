@@ -3,6 +3,9 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -39,7 +42,7 @@ class Failure : MonoBehaviour, IFailure {
 		await VerifyCSharpDiagnosticAsync(InterfaceTest);
 	}
 
-	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	protected override TAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
 		return new TAnalyzer();
 	}
@@ -54,7 +57,7 @@ public abstract class BaseSuppressorVerifierTest<TAnalyzer> : SuppressorVerifier
 		await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 	}
 
-	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	protected override TAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
 		return new TAnalyzer();
 	}
@@ -70,13 +73,32 @@ public abstract class BaseCodeFixVerifierTest<TAnalyzer, TCodeFix> : CodeFixVeri
 		await VerifyCSharpDiagnosticAsync(BaseDiagnosticVerifierTest<TAnalyzer>.InterfaceTest);
 	}
 
-	protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	protected override TAnalyzer GetCSharpDiagnosticAnalyzer()
 	{
 		return new TAnalyzer();
 	}
 
-	protected override CodeFixProvider GetCSharpCodeFixProvider()
+	protected override TCodeFix GetCSharpCodeFixProvider()
 	{
 		return new TCodeFix();
+	}
+
+	protected bool MethodExists(string assemblyName, string typeName, string methodName)
+	{
+		var unityAssemblies = UnityAssemblies().ToArray();
+		var assemblyFilePath = unityAssemblies.First(f => Path.GetFileNameWithoutExtension(f) == assemblyName);
+
+		var resolver = new PathAssemblyResolver(unityAssemblies);
+		var ctx = new MetadataLoadContext(resolver);
+
+		var assembly = ctx.LoadFromAssemblyPath(assemblyFilePath);
+		Assert.NotNull(assembly);
+
+		var type = assembly.GetType(typeName, throwOnError: false);
+		if (type == null)
+			return false;
+
+		var method = type.GetMethod(methodName);
+		return method != null;
 	}
 }

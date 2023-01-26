@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests;
 public class SetLocalPositionAndRotationTests : BaseCodeFixVerifierTest<SetLocalPositionAndRotationAnalyzer, SetLocalPositionAndRotationCodeFix>
 {
 	// For extensive testing, see SetPositionAndRotationTests.cs
-	[Fact]
+	[SkippableFact]
 	public async Task UpdateLocalPositionAndRotationMethod()
 	{
 		const string test = @"
@@ -26,6 +26,11 @@ class Camera : MonoBehaviour
     }
 }
 ";
+
+		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.SetPositionAndRotationMethodName;
+		var type = typeof(UnityEngine.Transform);
+
+		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(8, 9);
 
