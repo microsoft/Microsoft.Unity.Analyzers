@@ -17,7 +17,7 @@
     <Owners></Owners> <!-- Do not populate this field in the package nuspec file. This should be managed on nuget.org -->
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright> <!-- Mandatory value for Nuget uploads -->
     <RepositoryUrl>https://github.com/microsoft/Microsoft.Unity.Analyzers</RepositoryUrl>
-    <VersionPrefix>1.15.0</VersionPrefix>
+    <VersionPrefix>1.16.0</VersionPrefix>
     <PackageTags>Unity3d analyzers csharp</PackageTags>
     <Description>Roslyn analyzers for Unity game developers</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -29,12 +29,14 @@
     <None Include="$(MSBuildThisFileDirectory)..\tools\*install.ps1" CopyToOutputDirectory="Always" />
     <Content Include="$(OutputPath)\*install.ps1" CopyToOutputDirectory="Always" PackagePath="tools" />
     <Content Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-  </ItemGroup>  
-  
+  </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.0.0" PrivateAssets="All"/>
-    <PackageReference Include="MicroBuild.Core" Version="0.3.0" PrivateAssets="All"/>
-  </ItemGroup>    
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+    <PackageVersion Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" PrivateAssets="All"/>
+  </ItemGroup>
  
 </Project>
