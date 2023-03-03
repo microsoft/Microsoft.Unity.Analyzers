@@ -20,6 +20,11 @@ public class MessageSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "IDE0051",
 		justification: Strings.MessageSuppressorJustification);
 
+	internal static readonly SuppressionDescriptor MethodCrefRule = new(
+		id: "USP0020",
+		suppressedDiagnosticId: "IDE0052",
+		justification: Strings.MessageSuppressorJustification);
+
 	internal static readonly SuppressionDescriptor MethodCodeQualityRule = new(
 		id: "USP0014",
 		suppressedDiagnosticId: "CA1822",
@@ -36,7 +41,7 @@ public class MessageSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "CA1801",
 		justification: Strings.MessageSuppressorJustification);
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodCodeQualityRule, ParameterRule, ParameterCodeQualityRule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodCrefRule, MethodCodeQualityRule, ParameterRule, ParameterCodeQualityRule);
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{
