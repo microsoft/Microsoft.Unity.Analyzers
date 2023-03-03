@@ -59,3 +59,4 @@ ID | Suppressed ID | Justification
 [USP0017](USP0017.md) | IDE0074 | Unity objects should not use coalescing assignment
 [USP0018](USP0018.md) | IDE0016 | Unity objects should not be used with throw expressions
 [USP0019](USP0012.md) | IDE0051 | Don't flag private methods with PreserveAttribute or UsedImplicitlyAttribute as unused
+[USP0003](USP0020.md) | IDE0052 | The Unity runtime invokes Unity messages

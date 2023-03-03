@@ -54,6 +54,31 @@ public class TestScript : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task UnusedMethodWithCrefSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+public class TestScript : MonoBehaviour
+{
+    private void Start()
+    {
+    }
+
+	/// <summary>
+	/// IDE0052 should be suppressed <see cref=""Start"" />
+	/// </summary>
+	public float speed = 0f;
+}
+";
+
+		var suppressor = ExpectSuppressor(MessageSuppressor.MethodCrefRule)
+			.WithLocation(6, 18);
+
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
+
+	[Fact]
 	public async Task UnusedParameterSuppressed()
 	{
 		const string test = @"
