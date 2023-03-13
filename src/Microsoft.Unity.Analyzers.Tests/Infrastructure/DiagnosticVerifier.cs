@@ -290,7 +290,7 @@ public abstract class DiagnosticVerifier
 			DiagnosticSeverity.Error => ReportDiagnostic.Error,
 			DiagnosticSeverity.Warning => ReportDiagnostic.Warn,
 			DiagnosticSeverity.Info or DiagnosticSeverity.Hidden => ReportDiagnostic.Info,
-			_ => throw new ArgumentOutOfRangeException()
+			_ => throw new ArgumentOutOfRangeException(nameof(descriptor))
 		};
 	}
 
