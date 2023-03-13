@@ -250,10 +250,14 @@ class Camera : MonoBehaviour
 }
 ";
 
+		var context = AnalyzerVerificationContext
+			.Default                       // see https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Scripting/UnityEngineObject.bindings.cs
+			.WithAnalyzerFilter("CS0618"); // ignore Unity 2023.x warning CS0618 for now: 'Object.FindObjectOfType<T>()' is obsolete'
+
 		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
 			.WithLocation(8, 9);
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(context, test, diagnostic);
 
 		// we cannot fix with side-effects
 		await VerifyCSharpFixAsync(test, test);
