@@ -59,8 +59,11 @@ steps:
 - task: RoslynAnalyzers@3
   displayName: 'Run RoslynAnalyzers'
   inputs:
-    userProvideBuildInfo: 'auto'
+    userProvideBuildInfo: 'msBuildInfo'
+    msBuildCommandLine: 'msbuild $(BuildSolution) /p:Configuration=$(BuildConfiguration) $(MSBuildArguments)'
     rulesetName: 'Required'
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   condition: and(succeeded(), eq(variables['SignType'], 'Test'))
 
 - task: MSBuild@1
