@@ -44,9 +44,9 @@ steps:
     targetType: F
 
 - task: UseDotNet@2
-  displayName: 'Use .NET Core sdk 6.0.x'
+  displayName: 'Use .NET Core sdk 7.0.x'
   inputs:
-    version: 6.0.x
+    version: 7.0.x
 
 - task: MSBuild@1
   displayName: 'Build solution'
@@ -59,8 +59,7 @@ steps:
 - task: RoslynAnalyzers@3
   displayName: 'Run RoslynAnalyzers'
   inputs:
-    userProvideBuildInfo: 'msBuildInfo'
-    msBuildCommandLine: 'msbuild $(BuildSolution) /p:Configuration=$(BuildConfiguration) $(MSBuildArguments)'
+    userProvideBuildInfo: 'auto'
     rulesetName: 'Required'
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
