@@ -32,13 +32,13 @@ steps:
   inputs:
     scriptName: tools/buildinfos.ps1
 
-- task: CredScan@2
+- task: CredScan@3
   displayName: 'Run CredScan'
   inputs:
     toolMajorVersion: V2
     debugMode: false
 
-- task: PoliCheck@1
+- task: PoliCheck@2
   displayName: 'Run PoliCheck'
   inputs:
     targetType: F
@@ -56,7 +56,7 @@ steps:
     msbuildArguments: '$(MSBuildArguments)'
     clean: true
 
-- task: RoslynAnalyzers@2
+- task: RoslynAnalyzers@3
   displayName: 'Run RoslynAnalyzers'
   inputs:
     userProvideBuildInfo: 'auto'
@@ -70,10 +70,10 @@ steps:
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/t:Pack'
 
-- task: PublishSecurityAnalysisLogs@2
+- task: PublishSecurityAnalysisLogs@3
   displayName: 'Publish Security Analysis Logs'
 
-- task: PostAnalysis@1
+- task: PostAnalysis@2
   displayName: 'Post Analysis'
   inputs:
     CredScan: true
