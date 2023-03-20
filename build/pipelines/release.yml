@@ -32,21 +32,21 @@ steps:
   inputs:
     scriptName: tools/buildinfos.ps1
 
-- task: CredScan@2
+- task: CredScan@3
   displayName: 'Run CredScan'
   inputs:
     toolMajorVersion: V2
     debugMode: false
 
-- task: PoliCheck@1
+- task: PoliCheck@2
   displayName: 'Run PoliCheck'
   inputs:
     targetType: F
 
 - task: UseDotNet@2
-  displayName: 'Use .NET Core sdk 6.0.x'
+  displayName: 'Use .NET Core sdk 7.0.x'
   inputs:
-    version: 6.0.x
+    version: 7.0.x
 
 - task: MSBuild@1
   displayName: 'Build solution'
@@ -56,11 +56,13 @@ steps:
     msbuildArguments: '$(MSBuildArguments)'
     clean: true
 
-- task: RoslynAnalyzers@2
+- task: RoslynAnalyzers@3
   displayName: 'Run RoslynAnalyzers'
   inputs:
     userProvideBuildInfo: 'auto'
     rulesetName: 'Required'
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   condition: and(succeeded(), eq(variables['SignType'], 'Test'))
 
 - task: MSBuild@1
@@ -70,16 +72,16 @@ steps:
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/t:Pack'
 
-- task: PublishSecurityAnalysisLogs@2
-  displayName: 'Publish Security Analysis Logs'
-
-- task: PostAnalysis@1
+- task: PostAnalysis@2
   displayName: 'Post Analysis'
   inputs:
-    CredScan: true
-    PoliCheck: true
-    RoslynAnalyzers: true
-    RoslynAnalyzersBreakOn: 'Error'
+    GdnBreakAllTools: true
+    #GdnBreakSuppressionFiles: '$(Build.SourcesDirectory)\build\pipelines\suppressions.gdnsuppress'
+    GdnBreakOutputSuppressionFile: 'output-suppressions'
+
+- task: PublishSecurityAnalysisLogs@3
+  displayName: 'Publish Security Analysis Logs'
+  condition: succeededOrFailed()
 
 - task: ComponentGovernanceComponentDetection@0
   displayName: 'Component Detection'
