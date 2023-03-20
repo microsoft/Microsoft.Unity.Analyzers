@@ -72,16 +72,16 @@ steps:
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/t:Pack'
 
-- task: PublishSecurityAnalysisLogs@3
-  displayName: 'Publish Security Analysis Logs'
-
 - task: PostAnalysis@2
   displayName: 'Post Analysis'
   inputs:
-    CredScan: true
-    PoliCheck: true
-    RoslynAnalyzers: true
-    RoslynAnalyzersBreakOn: 'Error'
+    GdnBreakAllTools: true
+    #GdnBreakSuppressionFiles: '$(Build.SourcesDirectory)\build\pipelines\suppressions.gdnsuppress'
+    GdnBreakOutputSuppressionFile: 'output-suppressions'
+
+- task: PublishSecurityAnalysisLogs@3
+  displayName: 'Publish Security Analysis Logs'
+  condition: succeededOrFailed()
 
 - task: ComponentGovernanceComponentDetection@0
   displayName: 'Component Detection'
