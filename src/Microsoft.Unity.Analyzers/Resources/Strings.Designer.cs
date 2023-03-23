@@ -1339,6 +1339,78 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use built-in conversion.
+        /// </summary>
+        internal static string Vector2ConversionCodeFixTitle {
+            get {
+                return ResourceManager.GetString("Vector2ConversionCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Vector2 can be converted into a Vector3. (The z is set to 0)..
+        /// </summary>
+        internal static string Vector2ConversionDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("Vector2ConversionDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Vector2 can be converted into a Vector3..
+        /// </summary>
+        internal static string Vector2ConversionDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("Vector2ConversionDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Vector2 can be converted into a Vector3..
+        /// </summary>
+        internal static string Vector2ConversionDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("Vector2ConversionDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use built-in conversion.
+        /// </summary>
+        internal static string Vector3ConversionCodeFixTitle {
+            get {
+                return ResourceManager.GetString("Vector3ConversionCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Vector3 can be converted into a Vector2. (The z is discarded)..
+        /// </summary>
+        internal static string Vector3ConversionDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("Vector3ConversionDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Vector3 can be converted into a Vector2..
+        /// </summary>
+        internal static string Vector3ConversionDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("Vector3ConversionDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Vector3 can be converted into a Vector2..
+        /// </summary>
+        internal static string Vector3ConversionDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("Vector3ConversionDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Re-order operands.
         /// </summary>
         internal static string VectorMathCodeFixTitle {

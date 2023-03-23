@@ -569,4 +569,28 @@
   <data name="ImproperMessageCaseDiagnosticTitle" xml:space="preserve">
     <value>Incorrect message case</value>
   </data>
+  <data name="Vector3ConversionCodeFixTitle" xml:space="preserve">
+    <value>Use built-in conversion</value>
+  </data>
+  <data name="Vector3ConversionDiagnosticDescription" xml:space="preserve">
+    <value>A Vector3 can be converted into a Vector2. (The z is discarded).</value>
+  </data>
+  <data name="Vector3ConversionDiagnosticMessageFormat" xml:space="preserve">
+    <value>A Vector3 can be converted into a Vector2.</value>
+  </data>
+  <data name="Vector3ConversionDiagnosticTitle" xml:space="preserve">
+    <value>A Vector3 can be converted into a Vector2.</value>
+  </data>
+  <data name="Vector2ConversionCodeFixTitle" xml:space="preserve">
+    <value>Use built-in conversion</value>
+  </data>
+  <data name="Vector2ConversionDiagnosticDescription" xml:space="preserve">
+    <value>A Vector2 can be converted into a Vector3. (The z is set to 0).</value>
+  </data>
+  <data name="Vector2ConversionDiagnosticMessageFormat" xml:space="preserve">
+    <value>A Vector2 can be converted into a Vector3.</value>
+  </data>
+  <data name="Vector2ConversionDiagnosticTitle" xml:space="preserve">
+    <value>A Vector2 can be converted into a Vector3.</value>
+  </data>
 </root>
