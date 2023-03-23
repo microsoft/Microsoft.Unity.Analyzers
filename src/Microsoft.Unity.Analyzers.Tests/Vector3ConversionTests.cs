@@ -41,7 +41,7 @@ class Camera : MonoBehaviour
     {
         Vector3 v3 = Vector3.zero;
         Vector2 v2 = Vector2.zero;
-        var distance = Vector2.Distance(v2, (Vector2)v3);
+        var distance = Vector2.Distance(v2, v3);
     }
 }
 ";

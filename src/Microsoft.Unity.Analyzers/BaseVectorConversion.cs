@@ -115,6 +115,14 @@ public abstract class BaseVectorConversionCodeFix : CodeFixProvider
 			context.Diagnostics);
 	}
 
+	private bool IsCastRequired(IObjectCreationOperation ocSyntax)
+	{
+		if (ocSyntax.Parent is not IArgumentOperation argOperation)
+			return true;
+
+		return !argOperation.Parameter.Type.Matches(CastType);
+	}
+
 	private async Task<Document> SimplifyObjectCreationAsync(Document document, ObjectCreationExpressionSyntax ocSyntax, CancellationToken ct)
 	{
 		var root = await document
@@ -133,11 +141,7 @@ public abstract class BaseVectorConversionCodeFix : CodeFixProvider
 			return document;
 
 		var typeSyntax = SyntaxFactory.ParseTypeName(CastType.Name);
-		
-		// Tag the syntax node with the Simplifier annotation, to remove the redundant cast when possible.
-		var castedSyntax = SyntaxFactory
-			.CastExpression(typeSyntax, identifierNameSyntax)
-			.WithAdditionalAnnotations(Simplifier.Annotation);
+		SyntaxNode castedSyntax = IsCastRequired(ocOperation) ? SyntaxFactory.CastExpression(typeSyntax, identifierNameSyntax) : identifierNameSyntax;
 		
 		var newRoot = root?.ReplaceNode(ocSyntax, castedSyntax);
 		if (newRoot == null)
