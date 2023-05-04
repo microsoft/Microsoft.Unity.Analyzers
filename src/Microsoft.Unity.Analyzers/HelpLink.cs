@@ -5,7 +5,7 @@
 
 namespace Microsoft.Unity.Analyzers;
 
-internal class HelpLink
+internal static class HelpLink
 {
 	public static string ForDiagnosticId(string ruleId)
 	{
