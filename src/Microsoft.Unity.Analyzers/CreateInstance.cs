@@ -31,6 +31,7 @@ public class CreateInstanceAnalyzer : DiagnosticAnalyzer
 		category: DiagnosticCategory.TypeSafety,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(ComponentId),
 		description: Strings.CreateMonoBehaviourInstanceDiagnosticDescription);
 
 	public const string ScriptableObjectId = "UNT0011";
@@ -42,6 +43,7 @@ public class CreateInstanceAnalyzer : DiagnosticAnalyzer
 		category: DiagnosticCategory.TypeSafety,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(ScriptableObjectId),
 		description: Strings.CreateScriptableObjectInstanceDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ComponentIdRule, ScriptableObjectRule);

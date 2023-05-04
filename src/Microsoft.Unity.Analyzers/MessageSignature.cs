@@ -22,13 +22,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0006";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0006",
+		id: RuleId,
 		title: Strings.MessageSignatureDiagnosticTitle,
 		messageFormat: Strings.MessageSignatureDiagnosticMessageFormat,
 		category: DiagnosticCategory.TypeSafety,
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.MessageSignatureDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

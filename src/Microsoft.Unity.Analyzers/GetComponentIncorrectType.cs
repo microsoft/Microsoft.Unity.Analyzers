@@ -16,13 +16,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class GetComponentIncorrectTypeAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0014";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0014",
+		id: RuleId,
 		title: Strings.GetComponentIncorrectTypeDiagnosticTitle,
 		messageFormat: Strings.GetComponentIncorrectTypeDiagnosticMessageFormat,
 		category: DiagnosticCategory.TypeSafety,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.GetComponentIncorrectTypeDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

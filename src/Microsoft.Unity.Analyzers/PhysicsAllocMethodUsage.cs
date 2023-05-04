@@ -21,13 +21,16 @@ public class PhysicsAllocMethodUsageAttribute : MethodUsageAttribute
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class PhysicsAllocMethodUsageAnalyzer : MethodUsageAnalyzer<PhysicsAllocMethodUsageAttribute>
 {
+	private const string RuleId = "UNT0028";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0028",
+		id: RuleId,
 		title: Strings.PhysicsAllocMethodUsageDiagnosticTitle,
 		messageFormat: Strings.PhysicsAllocMethodUsageDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.PhysicsAllocMethodUsageDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

@@ -30,6 +30,7 @@ public class UpdateDeltaTimeAnalyzer : DiagnosticAnalyzer
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(UpdateId),
 		description: Strings.UpdateWithoutFixedDeltaTimeDiagnosticDescription);
 
 	internal const string FixedUpdateId = "UNT0005";
@@ -41,6 +42,7 @@ public class UpdateDeltaTimeAnalyzer : DiagnosticAnalyzer
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: false, // see https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/26
+		helpLinkUri: HelpLink.ForDiagnosticId(FixedUpdateId),
 		description: Strings.FixedUpdateWithoutDeltaTimeDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(UpdateRule, FixedUpdateRule);

@@ -18,13 +18,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class Vector2ConversionAnalyzer : BaseVectorConversionAnalyzer
 {
+	private const string RuleId = "UNT0035";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0035",
+		id: RuleId,
 		title: Strings.Vector3ConversionDiagnosticTitle,
 		messageFormat: Strings.Vector3ConversionDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.Vector3ConversionDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

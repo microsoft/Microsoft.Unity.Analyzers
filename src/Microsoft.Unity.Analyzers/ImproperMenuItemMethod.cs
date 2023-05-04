@@ -20,13 +20,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ImproperMenuItemMethodAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0020";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0020",
+		id: RuleId,
 		title: Strings.ImproperMenuItemMethodDiagnosticTitle,
 		messageFormat: Strings.ImproperMenuItemMethodDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ImproperMenuItemMethodDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

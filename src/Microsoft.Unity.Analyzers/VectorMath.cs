@@ -23,13 +23,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class VectorMathAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0024";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0024",
+		id: RuleId,
 		title: Strings.VectorMathDiagnosticTitle,
 		messageFormat: Strings.VectorMathDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.VectorMathDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

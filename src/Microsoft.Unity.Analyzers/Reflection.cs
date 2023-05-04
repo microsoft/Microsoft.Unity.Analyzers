@@ -17,13 +17,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ReflectionAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0018";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0018",
+		id: RuleId,
 		title: Strings.ReflectionDiagnosticTitle,
 		messageFormat: Strings.ReflectionDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ReflectionDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

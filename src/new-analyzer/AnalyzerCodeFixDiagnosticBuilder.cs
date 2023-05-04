@@ -45,13 +45,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class $(DiagnosticName)Analyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = ""$(DiagnosticId)"";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: ""$(DiagnosticId)"",
+		id: RuleId,
 		title: Strings.$(DiagnosticName)DiagnosticTitle,
 		messageFormat: Strings.$(DiagnosticName)DiagnosticMessageFormat,
 		category: DiagnosticCategory._FIXME_,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.$(DiagnosticName)DiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

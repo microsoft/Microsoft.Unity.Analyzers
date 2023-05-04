@@ -24,13 +24,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class InputGetKeyAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0025";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0025",
+		id: RuleId,
 		title: Strings.InputGetKeyDiagnosticTitle,
 		messageFormat: Strings.InputGetKeyDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.InputGetKeyDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
