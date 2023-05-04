@@ -20,13 +20,16 @@ public class SetPixelsMethodUsageAttribute : MethodUsageAttribute
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class SetPixelsMethodUsageAnalyzer : MethodUsageAnalyzer<SetPixelsMethodUsageAttribute>
 {
+	private const string RuleId = "UNT0017";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0017",
+		id: RuleId,
 		title: Strings.SetPixelsMethodUsageDiagnosticTitle,
 		messageFormat: Strings.SetPixelsMethodUsageDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.SetPixelsMethodUsageDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

@@ -15,13 +15,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class AssetOperationInLoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0031";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0031",
+		id: RuleId,
 		title: Strings.AssetOperationInLoadAttributeMethodDiagnosticTitle,
 		messageFormat: Strings.AssetOperationInLoadAttributeMethodDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.AssetOperationInLoadAttributeMethodDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

@@ -21,13 +21,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class DestroyTransformAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0030";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0030",
+		id: RuleId,
 		title: Strings.DestroyTransformDiagnosticTitle,
 		messageFormat: Strings.DestroyTransformDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.DestroyTransformDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

@@ -20,13 +20,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class InitializeOnLoadStaticCtorAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0009";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0009",
+		id: RuleId,
 		title: Strings.InitializeOnLoadStaticCtorDiagnosticTitle,
 		messageFormat: Strings.InitializeOnLoadStaticCtorDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.InitializeOnLoadStaticCtorDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

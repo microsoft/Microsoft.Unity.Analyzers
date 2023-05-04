@@ -20,40 +20,49 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 {
+	private const string NullCoalescingRuleId = "UNT0007";
+	private const string NullPropagationRuleId = "UNT0008";
+	private const string CoalescingAssignmentRuleId = "UNT0023";
+	private const string IsPatternRuleId = "UNT0029";
+
 	internal static readonly DiagnosticDescriptor NullCoalescingRule = new(
-		id: "UNT0007",
+		id: NullCoalescingRuleId,
 		title: Strings.UnityObjectNullCoalescingDiagnosticTitle,
 		messageFormat: Strings.UnityObjectNullCoalescingDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(NullCoalescingRuleId),
 		description: Strings.UnityObjectNullCoalescingDiagnosticDescription);
 
 	internal static readonly DiagnosticDescriptor NullPropagationRule = new(
-		id: "UNT0008",
+		id: NullPropagationRuleId,
 		title: Strings.UnityObjectNullPropagationDiagnosticTitle,
 		messageFormat: Strings.UnityObjectNullPropagationDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(NullPropagationRuleId),
 		description: Strings.UnityObjectNullPropagationDiagnosticDescription);
 
 	internal static readonly DiagnosticDescriptor CoalescingAssignmentRule = new(
-		id: "UNT0023",
+		id: CoalescingAssignmentRuleId,
 		title: Strings.UnityObjectCoalescingAssignmentDiagnosticTitle,
 		messageFormat: Strings.UnityObjectCoalescingAssignmentDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(CoalescingAssignmentRuleId),
 		description: Strings.UnityObjectCoalescingAssignmentDiagnosticDescription);
 
 	internal static readonly DiagnosticDescriptor IsPatternRule = new(
-		id: "UNT0029",
+		id: IsPatternRuleId,
 		title: Strings.UnityObjectIsPatternDiagnosticTitle,
 		messageFormat: Strings.UnityObjectIsPatternDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(IsPatternRuleId),
 		description: Strings.UnityObjectIsPatternDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(

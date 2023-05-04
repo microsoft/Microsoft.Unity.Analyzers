@@ -23,13 +23,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0033";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0033",
+		id: RuleId,
 		title: Strings.ImproperMessageCaseDiagnosticTitle,
 		messageFormat: Strings.ImproperMessageCaseDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ImproperMessageCaseDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

@@ -16,13 +16,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UnusedCoroutineReturnValueAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0012";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0012",
+		id: RuleId,
 		title: Strings.UnusedCoroutineReturnValueDiagnosticTitle,
 		messageFormat: Strings.UnusedCoroutineReturnValueDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.UnusedCoroutineReturnValueDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

@@ -16,13 +16,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0013";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0013",
+		id: RuleId,
 		title: Strings.ImproperSerializeFieldDiagnosticTitle,
 		messageFormat: Strings.ImproperSerializeFieldDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ImproperSerializeFieldDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

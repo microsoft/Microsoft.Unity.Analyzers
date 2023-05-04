@@ -19,13 +19,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ProtectedUnityMessageAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0021";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0021",
+		id: RuleId,
 		title: Strings.ProtectedUnityMessageDiagnosticTitle,
 		messageFormat: Strings.ProtectedUnityMessageDiagnosticMessageFormat,
 		category: DiagnosticCategory.Correctness,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: false,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ProtectedUnityMessageDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

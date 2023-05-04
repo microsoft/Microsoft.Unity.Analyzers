@@ -19,13 +19,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class IndirectionMessageAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0019";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0019",
+		id: RuleId,
 		title: Strings.IndirectionMessageDiagnosticTitle,
 		messageFormat: Strings.IndirectionMessageDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.IndirectionMessageDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

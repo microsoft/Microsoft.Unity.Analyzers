@@ -21,13 +21,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class TagComparisonAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0002";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0002",
+		id: RuleId,
 		title: Strings.TagComparisonDiagnosticTitle,
 		messageFormat: Strings.TagComparisonDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.TagComparisonDiagnosticDescription);
 
 	public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

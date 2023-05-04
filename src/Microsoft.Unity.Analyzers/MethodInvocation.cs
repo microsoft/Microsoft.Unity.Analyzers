@@ -24,13 +24,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0016";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0016",
+		id: RuleId,
 		title: Strings.MethodInvocationDiagnosticTitle,
 		messageFormat: Strings.MethodInvocationDiagnosticMessageFormat,
 		category: DiagnosticCategory.TypeSafety,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.MethodInvocationDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

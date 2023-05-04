@@ -22,13 +22,16 @@ public class SetLocalPositionAndRotationContext : BaseSetPositionAndRotationCont
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class SetLocalPositionAndRotationAnalyzer : BaseSetPositionAndRotationAnalyzer
 {
+	private const string RuleId = "UNT0032";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0032",
+		id: RuleId,
 		title: Strings.SetLocalPositionAndRotationDiagnosticTitle,
 		messageFormat: Strings.SetLocalPositionAndRotationDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.SetLocalPositionAndRotationDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

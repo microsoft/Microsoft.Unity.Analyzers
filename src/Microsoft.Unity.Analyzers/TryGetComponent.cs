@@ -24,13 +24,16 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class TryGetComponentAnalyzer : DiagnosticAnalyzer
 {
+	private const string RuleId = "UNT0026";
+
 	internal static readonly DiagnosticDescriptor Rule = new(
-		id: "UNT0026",
+		id: RuleId,
 		title: Strings.TryGetComponentDiagnosticTitle,
 		messageFormat: Strings.TryGetComponentDiagnosticMessageFormat,
 		category: DiagnosticCategory.Performance,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
+		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.TryGetComponentDiagnosticDescription);
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
