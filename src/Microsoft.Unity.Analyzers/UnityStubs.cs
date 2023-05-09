@@ -713,6 +713,8 @@ namespace UnityEditor
 		void OnSelectionChange() { }
 		void Update() { }
 		void CreateGUI() { }
+		void OnBecameVisible() { }
+		void OnBecameInvisible() { }
 	}
 
 	class ScriptableWizard : EditorWindow
