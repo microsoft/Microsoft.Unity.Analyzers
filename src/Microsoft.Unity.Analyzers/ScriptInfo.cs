@@ -71,14 +71,13 @@ internal readonly struct ScriptInfo
 
 	private static bool AccessibilityMatch(MethodInfo message, Accessibility accessibility)
 	{
-		// If the message is declared as public or protected we need to honor it, other messages can be anything
-		if (message.IsPublic && message.IsVirtual)
-			return accessibility == Accessibility.Public;
-
-		if (message.IsFamily && message.IsVirtual)
-			return accessibility == Accessibility.Protected;
-
-		return true;
+		return message switch
+		{
+			// If the message is declared as public or protected we need to honor it, other messages can be anything
+			{ IsPublic: true, IsVirtual: true } => accessibility == Accessibility.Public,
+			{ IsFamily: true, IsVirtual: true } => accessibility == Accessibility.Protected,
+			_ => true
+		};
 	}
 
 	private bool IsImplemented(MethodInfo method)
