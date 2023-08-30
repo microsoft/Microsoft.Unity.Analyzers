@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.Win32.Registry" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="4.6.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" />

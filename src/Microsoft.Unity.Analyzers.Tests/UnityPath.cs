@@ -100,7 +100,7 @@ internal static class UnityPath
 		}
 		catch (Exception e)
 		{
-			Assert.True(false, e.ToString());
+			Assert.Fail(e.ToString());
 		}
 	}
 
