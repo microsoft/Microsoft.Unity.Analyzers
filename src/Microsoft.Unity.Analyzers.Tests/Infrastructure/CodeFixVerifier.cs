@@ -73,7 +73,7 @@ public abstract class CodeFixVerifier : DiagnosticVerifier
 				var diagnostics = string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString()));
 
 				var newDoc = root.ToFullString();
-				Assert.True(false, $"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{newDoc}\r\n");
+				Assert.Fail($"Fix introduced new compiler diagnostics:\r\n{diagnostics}\r\n\r\nNew document:\r\n{newDoc}\r\n");
 			}
 
 			//check if there are analyzer diagnostics left after the code fix

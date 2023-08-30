@@ -39,7 +39,7 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 	{
 		var fullpath = Path.GetFullPath(assembly);
 		var reference = new AnalyzerFileReference(fullpath, new AnalyzerAssemblyLoader());
-		reference.AnalyzerLoadFailed += (_, e) => { Assert.True(false, e.Message); };
+		reference.AnalyzerLoadFailed += (_, e) => { Assert.Fail(e.Message); };
 		return reference.GetAnalyzers(LanguageNames.CSharp);
 	}
 
@@ -93,7 +93,7 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 		var propertyValue = spProperty.GetValue(psi);
 		if (propertyValue is not ImmutableHashSet<(string Id, LocalizableString Justification)> suppressions)
 		{
-			Assert.True(false, "Unable to retrieve suppressions");
+			Assert.Fail("Unable to retrieve suppressions");
 			return false;
 		}
 

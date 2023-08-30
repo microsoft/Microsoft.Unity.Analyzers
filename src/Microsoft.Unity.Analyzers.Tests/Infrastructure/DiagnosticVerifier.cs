@@ -91,7 +91,7 @@ public abstract class DiagnosticVerifier
 		{
 			var diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer, actualResults.ToArray()) : "    NONE.";
 
-			Assert.True(false, $"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
+			Assert.Fail($"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
 		}
 
 		for (var i = 0; i < expectedResults.Length; i++)
@@ -103,7 +103,7 @@ public abstract class DiagnosticVerifier
 			{
 				if (actual.Location != Location.None)
 				{
-					Assert.True(false, $"Expected:\nA project diagnostic with No location\nActual:\n{FormatDiagnostics(analyzer, actual)}");
+					Assert.Fail($"Expected:\nA project diagnostic with No location\nActual:\n{FormatDiagnostics(analyzer, actual)}");
 				}
 			}
 			else
@@ -113,17 +113,17 @@ public abstract class DiagnosticVerifier
 
 			if (actual.Id != expected.Id)
 			{
-				Assert.True(false, $"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, actual)}\r\n");
+				Assert.Fail($"Expected diagnostic id to be \"{expected.Id}\" was \"{actual.Id}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, actual)}\r\n");
 			}
 
 			if (actual.Severity != expected.Severity)
 			{
-				Assert.True(false, $"Expected diagnostic severity to be \"{expected.Severity}\" was \"{actual.Severity}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, actual)}\r\n");
+				Assert.Fail($"Expected diagnostic severity to be \"{expected.Severity}\" was \"{actual.Severity}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, actual)}\r\n");
 			}
 
 			if (actual.GetMessage() != expected.Message)
 			{
-				Assert.True(false, $"Expected diagnostic message to be \"{expected.Message}\" was \"{actual.GetMessage()}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, actual)}\r\n");
+				Assert.Fail($"Expected diagnostic message to be \"{expected.Message}\" was \"{actual.GetMessage()}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, actual)}\r\n");
 			}
 		}
 	}
@@ -140,7 +140,7 @@ public abstract class DiagnosticVerifier
 		{
 			if (actualLinePosition.Line != expected.Span.StartLinePosition.Line)
 			{
-				Assert.True(false, $"Expected diagnostic to be on line \"{expected.Span.StartLinePosition.Line + 1}\" was actually on line \"{actualLinePosition.Line + 1}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
+				Assert.Fail($"Expected diagnostic to be on line \"{expected.Span.StartLinePosition.Line + 1}\" was actually on line \"{actualLinePosition.Line + 1}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
 			}
 		}
 
@@ -149,7 +149,7 @@ public abstract class DiagnosticVerifier
 		{
 			if (actualLinePosition.Character != expected.Span.StartLinePosition.Character)
 			{
-				Assert.True(false, $"Expected diagnostic to start at column \"{expected.Span.StartLinePosition.Character + 1}\" was actually at column \"{actualLinePosition.Character + 1}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
+				Assert.Fail($"Expected diagnostic to start at column \"{expected.Span.StartLinePosition.Character + 1}\" was actually at column \"{actualLinePosition.Character + 1}\"\r\n\r\nDiagnostic:\r\n    {FormatDiagnostics(analyzer, diagnostic)}\r\n");
 			}
 		}
 	}
@@ -248,10 +248,10 @@ public abstract class DiagnosticVerifier
 			var allDiagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync();
 			var errors = allDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
 			foreach (var error in errors)
-				Assert.True(false, $"Line {error.Location.GetLineSpan().StartLinePosition.Line}: {error.GetMessage()}");
+				Assert.Fail($"Line {error.Location.GetLineSpan().StartLinePosition.Line}: {error.GetMessage()}");
 
 			foreach (var analyzerException in analyzerExceptions)
-				Assert.True(false, analyzerException.Message);
+				Assert.Fail(analyzerException.Message);
 
 			var diags = allDiagnostics
 				.Except(errors)
