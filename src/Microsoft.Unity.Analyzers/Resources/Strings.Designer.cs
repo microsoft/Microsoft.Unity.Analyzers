@@ -1231,6 +1231,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prefer reference equality.
+        /// </summary>
+        internal static string UnityObjectUseIsNullSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnityObjectUseIsNullSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t flag fields with a ContextMenuItem attribute as unused..
         /// </summary>
         internal static string UnusedContextMenuItemJustification {

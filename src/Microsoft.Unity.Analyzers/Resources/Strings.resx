@@ -593,4 +593,7 @@
   <data name="Vector2ConversionDiagnosticTitle" xml:space="preserve">
     <value>A Vector2 can be converted into a Vector3.</value>
   </data>
+  <data name="UnityObjectUseIsNullSuppressorJustification" xml:space="preserve">
+    <value>Prefer reference equality</value>
+  </data>
 </root>
