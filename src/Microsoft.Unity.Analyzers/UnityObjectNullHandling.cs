@@ -267,12 +267,17 @@ public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "IDE0031",
 		justification: Strings.UnityObjectNullPropagationSuppressorJustification);
 
+	internal static readonly SuppressionDescriptor UseIsNullRule = new(
+		id: "USP0021",
+		suppressedDiagnosticId: "IDE0041",
+		justification: Strings.UnityObjectUseIsNullSuppressorJustification);
+
 	internal static readonly SuppressionDescriptor CoalescingAssignmentRule = new(
 		id: "USP0017",
 		suppressedDiagnosticId: "IDE0074",
 		justification: Strings.UnityObjectCoalescingAssignmentSuppressorJustification);
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule, UseIsNullRule);
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{
@@ -284,11 +289,40 @@ public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 
 	private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
-		var binaryExpression = context.GetSuppressibleNode<BinaryExpressionSyntax>(diagnostic);
-		if (binaryExpression == null)
+		if (diagnostic.Id == UseIsNullRule.SuppressedDiagnosticId)
+		{
+			var identifierName = context.GetSuppressibleNode<IdentifierNameSyntax>(diagnostic);
+			if (identifierName != null)
+				AnalyzeIdentifier(diagnostic, context, identifierName);
+		}
+		else
+		{
+			var binaryExpression = context.GetSuppressibleNode<BinaryExpressionSyntax>(diagnostic);
+			if (binaryExpression != null)
+				AnalyzeBinaryExpression(diagnostic, context, binaryExpression);
+		}
+	}
+
+	private void AnalyzeIdentifier(Diagnostic diagnostic, SuppressionAnalysisContext context, IdentifierNameSyntax identifier)
+	{
+		if (identifier.Identifier.Text != nameof(ReferenceEquals))
 			return;
 
-		AnalyzeBinaryExpression(diagnostic, context, binaryExpression);
+		var invocation = identifier
+			.Ancestors()
+			.OfType<InvocationExpressionSyntax>()
+			.FirstOrDefault();
+
+		if (invocation == null)
+			return;
+
+		var model = context.GetSemanticModel(invocation.SyntaxTree);
+
+		foreach (var argument in invocation.ArgumentList.Arguments) 
+		{
+			var typeInfo = model.GetTypeInfo(argument.Expression);
+			ReportSuppressionOnUnityObject(diagnostic, context, typeInfo.Type);
+		}
 	}
 
 	private void AnalyzeBinaryExpression(Diagnostic diagnostic, SuppressionAnalysisContext context, BinaryExpressionSyntax binaryExpression)
@@ -309,12 +343,17 @@ public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 		}
 
 		var model = context.GetSemanticModel(binaryExpression.SyntaxTree);
+		var typeInfo = model.GetTypeInfo(binaryExpression.Left);
 
-		var type = model.GetTypeInfo(binaryExpression.Left);
-		if (type.Type == null)
+		ReportSuppressionOnUnityObject(diagnostic, context, typeInfo.Type);
+	}
+
+	private void ReportSuppressionOnUnityObject(Diagnostic diagnostic, SuppressionAnalysisContext context, ITypeSymbol? type)
+	{
+		if (type == null)
 			return;
 
-		if (!type.Type.Extends(typeof(UnityEngine.Object)))
+		if (!type.Extends(typeof(UnityEngine.Object)))
 			return;
 
 		var rule = SupportedSuppressions.FirstOrDefault(r => r.SuppressedDiagnosticId == diagnostic.Id);

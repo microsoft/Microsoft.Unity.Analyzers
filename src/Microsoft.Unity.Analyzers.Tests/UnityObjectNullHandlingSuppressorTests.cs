@@ -196,4 +196,71 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}
+
+	[Fact]
+	public async Task UseIsNullSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update()
+    {
+        if (ReferenceEquals(this, null))
+            return;
+    }
+}
+";
+
+		var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.UseIsNullRule)
+			.WithLocation(8, 13);
+
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
+
+	[Fact]
+	public async Task UseIsNullFromObjectSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update()
+    {
+        if (Object.ReferenceEquals(null, transform))
+            return;
+    }
+}
+";
+
+		var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.UseIsNullRule)
+			.WithLocation(8, 20);
+
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
+
+	[Fact]
+	public async Task LegitUseIsNullNotSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update()
+    {
+        if (ReferenceEquals(0, null))
+            return;
+    }
+}
+";
+		var context = AnalyzerVerificationContext
+			.Default
+			.WithAnalyzerFilter(UnityObjectNullHandlingSuppressor.UseIsNullRule.SuppressedDiagnosticId);
+
+		await VerifyCSharpDiagnosticAsync(context, test);
+	}
+
 }
