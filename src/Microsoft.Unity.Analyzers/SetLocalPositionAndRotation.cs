@@ -13,14 +13,14 @@ using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers;
 
-public class SetLocalPositionAndRotationContext : BaseSetPositionAndRotationContext
+public class SetLocalPositionAndRotationContext : BasePositionAndRotationContext
 {
-	public static Lazy<BaseSetPositionAndRotationContext> Instance => new(() => new SetLocalPositionAndRotationContext());
+	public static Lazy<BasePositionAndRotationContext> Instance => new(() => new SetLocalPositionAndRotationContext());
 	private SetLocalPositionAndRotationContext() : base("localPosition", "localRotation", "SetLocalPositionAndRotation") { }
 }
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class SetLocalPositionAndRotationAnalyzer : BaseSetPositionAndRotationAnalyzer
+public class SetLocalPositionAndRotationAnalyzer : BasePositionAndRotationAnalyzer
 {
 	private const string RuleId = "UNT0032";
 
@@ -45,7 +45,7 @@ public class SetLocalPositionAndRotationAnalyzer : BaseSetPositionAndRotationAna
 }
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
-public class SetLocalPositionAndRotationCodeFix : BaseSetPositionAndRotationCodeFix
+public class SetLocalPositionAndRotationCodeFix : BasePositionAndRotationCodeFix
 {
 	protected override string CodeFixTitle => Strings.SetLocalPositionAndRotationCodeFixTitle;
 	

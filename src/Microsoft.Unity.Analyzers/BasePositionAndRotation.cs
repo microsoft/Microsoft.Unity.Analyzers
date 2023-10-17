@@ -21,44 +21,55 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers;
 
-public class BaseSetPositionAndRotationContext
+public class BasePositionAndRotationContext
 {
 	public string PositionPropertyName { get; }
 	public string RotationPropertyName { get; }
-	public string SetPositionAndRotationMethodName { get; }
+	public string PositionAndRotationMethodName { get; }
 
-	protected BaseSetPositionAndRotationContext(string positionPropertyName, string rotationPropertyName, string setPositionAndRotationMethodName)
+	protected BasePositionAndRotationContext(string positionPropertyName, string rotationPropertyName, string positionAndRotationMethodName)
 	{
 		PositionPropertyName = positionPropertyName;
 		RotationPropertyName = rotationPropertyName;
-		SetPositionAndRotationMethodName = setPositionAndRotationMethodName;
+		PositionAndRotationMethodName = positionAndRotationMethodName;
 	}
 
-	private bool IsSetPositionOrRotation(SemanticModel model, AssignmentExpressionSyntax assignmentExpression)
+	public MemberAccessExpressionSyntax? TryGetPropertyExpression(AssignmentExpressionSyntax assignmentExpression)
 	{
-		var property = GetProperty(assignmentExpression);
+		return assignmentExpression.Left as MemberAccessExpressionSyntax;
+	}
+
+	public ArgumentSyntax GetArgumentExpression(AssignmentExpressionSyntax assignmentExpression)
+	{
+		return Argument(assignmentExpression.Right);
+	}
+
+	private bool IsPositionOrRotationCandidate(SemanticModel model, AssignmentExpressionSyntax assignmentExpression)
+	{
+		var property = GetPropertyName(assignmentExpression);
 		if (property != PositionPropertyName && property != RotationPropertyName)
 			return false;
 
-		if (assignmentExpression.Left is not MemberAccessExpressionSyntax left)
+		if (TryGetPropertyExpression(assignmentExpression) is not { } syntax)
 			return false;
 
-		var leftSymbol = model.GetSymbolInfo(left);
-		if (leftSymbol.Symbol is not IPropertySymbol)
+		var symbolInfo = model.GetSymbolInfo(syntax);
+		if (symbolInfo.Symbol is not IPropertySymbol)
 			return false;
 		
-		var leftExpressionTypeInfo = model.GetTypeInfo(left.Expression);
-		if (leftExpressionTypeInfo.Type == null)
+		var expressionTypeInfo = model.GetTypeInfo(syntax.Expression);
+		if (expressionTypeInfo.Type == null)
 			return false;
 
-		return leftExpressionTypeInfo.Type.Extends(typeof(UnityEngine.Transform));
+		return expressionTypeInfo.Type.Extends(typeof(UnityEngine.Transform))
+			|| expressionTypeInfo.Type.Extends(typeof(UnityEngine.Jobs.TransformAccess));
 	}
 
 	public bool GetNextAssignmentExpression(SemanticModel model, AssignmentExpressionSyntax assignmentExpression, [NotNullWhen(true)] out AssignmentExpressionSyntax? assignmentExpressionSyntax)
 	{
 		assignmentExpressionSyntax = null;
 
-		if (!IsSetPositionOrRotation(model, assignmentExpression))
+		if (!IsPositionOrRotationCandidate(model, assignmentExpression))
 			return false;
 
 		if (assignmentExpression.FirstAncestorOrSelf<BlockSyntax>() == null)
@@ -88,27 +99,27 @@ public class BaseSetPositionAndRotationContext
 		if (statement is not ExpressionStatementSyntax {Expression: AssignmentExpressionSyntax nextAssignmentExpression})
 			return false;
 
-		if (!IsSetPositionOrRotation(model, nextAssignmentExpression))
+		if (!IsPositionOrRotationCandidate(model, nextAssignmentExpression))
 			return false;
 
 		assignmentExpressionSyntax = nextAssignmentExpression;
 		return true;
 	}
 
-	public static string GetProperty(AssignmentExpressionSyntax assignmentExpression)
+	public string GetPropertyName(AssignmentExpressionSyntax assignmentExpression)
 	{
-		if (assignmentExpression.Left is not MemberAccessExpressionSyntax left)
+		if (TryGetPropertyExpression(assignmentExpression) is not { } syntax)
 			return string.Empty;
 
-		return left.Name.ToString();
+		return syntax.Name.ToString();
 	}
 }
 
-public abstract class BaseSetPositionAndRotationAnalyzer : DiagnosticAnalyzer
+public abstract class BasePositionAndRotationAnalyzer : DiagnosticAnalyzer
 {
-	internal BaseSetPositionAndRotationContext ExpressionContext { get; }
+	internal BasePositionAndRotationContext ExpressionContext { get; }
 
-	protected BaseSetPositionAndRotationAnalyzer(BaseSetPositionAndRotationContext expressionContext)
+	protected BasePositionAndRotationAnalyzer(BasePositionAndRotationContext expressionContext)
 	{
 		ExpressionContext = expressionContext;
 	}
@@ -118,6 +129,7 @@ public abstract class BaseSetPositionAndRotationAnalyzer : DiagnosticAnalyzer
 		context.EnableConcurrentExecution();
 		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 		context.RegisterSyntaxNodeAction(AnalyzeAssignment, SyntaxKind.SimpleAssignmentExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeAssignment, SyntaxKind.VariableDeclaration);
 	}
 
 	private void AnalyzeAssignment(SyntaxNodeAnalysisContext context)
@@ -128,23 +140,24 @@ public abstract class BaseSetPositionAndRotationAnalyzer : DiagnosticAnalyzer
 		if (!ExpressionContext.GetNextAssignmentExpression(context.SemanticModel, assignmentExpression, out var nextAssignmentExpression))
 			return;
 
-		// We know that both assignmentExpression.Left and nextAssignmentExpression.Left are MemberAccessExpressionSyntax
-		// cf. GetNextAssignmentExpression calling IsSetPositionOrRotation
-		var left = (MemberAccessExpressionSyntax)assignmentExpression.Left;
-		var nextLeft = (MemberAccessExpressionSyntax)nextAssignmentExpression.Left;
-		
-		if (left.Expression.ToString() != nextLeft.Expression.ToString())
+		if (ExpressionContext.TryGetPropertyExpression(assignmentExpression) is not { } syntax)
 			return;
 
-		var property = BaseSetPositionAndRotationContext.GetProperty(assignmentExpression);
-		var nextProperty = BaseSetPositionAndRotationContext.GetProperty(nextAssignmentExpression);
+		if (ExpressionContext.TryGetPropertyExpression(nextAssignmentExpression) is not { } nextSyntax)
+			return;
+		
+		if (syntax.Expression.ToString() != nextSyntax.Expression.ToString())
+			return;
+
+		var property = ExpressionContext.GetPropertyName(assignmentExpression);
+		var nextProperty = ExpressionContext.GetPropertyName(nextAssignmentExpression);
 		if (property == nextProperty)
 			return;
 
-		// Check that the replacement method exists on Transform in the current Unity version
+		// Check that the replacement method exists on target type in the current Unity version
 		var model = context.SemanticModel;
-		var type = model.GetTypeInfo(left.Expression).Type;
-		if (type == null || !type.GetMembers().Any(m => m is IMethodSymbol && m.Name == ExpressionContext.SetPositionAndRotationMethodName))
+		var type = model.GetTypeInfo(syntax.Expression).Type;
+		if (type == null || !type.GetMembers().Any(m => m is IMethodSymbol && m.Name == ExpressionContext.PositionAndRotationMethodName))
 			return;
 
 		OnPatternFound(context, assignmentExpression);
@@ -153,13 +166,13 @@ public abstract class BaseSetPositionAndRotationAnalyzer : DiagnosticAnalyzer
 	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, AssignmentExpressionSyntax assignmentExpressionSyntax);
 }
 
-public abstract class BaseSetPositionAndRotationCodeFix : CodeFixProvider
+public abstract class BasePositionAndRotationCodeFix : CodeFixProvider
 {
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-	private BaseSetPositionAndRotationContext ExpressionContext { get; }
+	private BasePositionAndRotationContext ExpressionContext { get; }
 
-	protected BaseSetPositionAndRotationCodeFix(BaseSetPositionAndRotationContext expressionContext)
+	protected BasePositionAndRotationCodeFix(BasePositionAndRotationContext expressionContext)
 	{
 		ExpressionContext = expressionContext;
 	}
@@ -189,12 +202,14 @@ public abstract class BaseSetPositionAndRotationCodeFix : CodeFixProvider
 		if (!ExpressionContext.GetNextAssignmentExpression(model, assignmentExpression, out var nextAssignmentExpression))
 			return document;
 
-		var property = BaseSetPositionAndRotationContext.GetProperty(assignmentExpression);
+		var property = ExpressionContext.GetPropertyName(assignmentExpression);
 		var arguments = new[]
 		{
-			Argument(assignmentExpression.Right)
+			ExpressionContext
+				.GetArgumentExpression(assignmentExpression)
 				.WithLeadingTrivia(assignmentExpression.OperatorToken.TrailingTrivia),
-			Argument(nextAssignmentExpression.Right)
+			ExpressionContext
+				.GetArgumentExpression(nextAssignmentExpression)
 				.WithLeadingTrivia(nextAssignmentExpression.OperatorToken.TrailingTrivia)
 		};
 
@@ -204,8 +219,7 @@ public abstract class BaseSetPositionAndRotationCodeFix : CodeFixProvider
 		var argList = ArgumentList()
 			.AddArguments(arguments);
 
-		var baseExpression = assignmentExpression
-			.Left
+		var baseExpression = ExpressionContext.TryGetPropertyExpression(assignmentExpression)?
 			.FirstAncestorOrSelf<MemberAccessExpressionSyntax>()?.Expression;
 
 		if (baseExpression == null)
@@ -215,7 +229,7 @@ public abstract class BaseSetPositionAndRotationCodeFix : CodeFixProvider
 				MemberAccessExpression(
 					SyntaxKind.SimpleMemberAccessExpression,
 					baseExpression,
-					IdentifierName(ExpressionContext.SetPositionAndRotationMethodName)))
+					IdentifierName(ExpressionContext.PositionAndRotationMethodName)))
 			.WithArgumentList(argList)
 			.WithLeadingTrivia(assignmentExpression.MergeLeadingTriviaWith(nextAssignmentExpression));
 

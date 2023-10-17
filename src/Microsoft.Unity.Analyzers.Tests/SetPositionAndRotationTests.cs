@@ -45,6 +45,51 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
+	[SkippableFact]
+	public async Task UpdatePositionAndRotationMethodTransformAccess()
+	{
+		const string test = @"
+using UnityEngine;
+using UnityEngine.Jobs;
+
+class Context
+{
+    void Method()
+    {
+        var stub = new TransformAccess();
+        stub.position = new Vector3(0.0f, 1.0f, 0.0f);
+        stub.rotation = stub.rotation;
+    }
+}
+";
+
+		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
+		var type = typeof(UnityEngine.Jobs.TransformAccess);
+
+		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+
+		var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+using UnityEngine.Jobs;
+
+class Context
+{
+    void Method()
+    {
+        var stub = new TransformAccess();
+        stub.SetPositionAndRotation(new Vector3(0.0f, 1.0f, 0.0f), stub.rotation);
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+
 	[Fact]
 	public async Task UpdatePositionAndRotationMethodComments()
 	{
