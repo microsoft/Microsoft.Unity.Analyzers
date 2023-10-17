@@ -84,10 +84,8 @@ namespace UnityEngine
 
 	class Transform
 	{
-		void position() { }
-		void rotation() { }
-		void SetPositionAndRotation() { }
 	}
+
 	class ScriptableObject
 	{
 		void Awake() { }
@@ -778,6 +776,13 @@ namespace UnityEditor
 		static string OnGeneratedCSProject(string path, string content) { return null; }
 	}
 
+}
+
+namespace UnityEngine.Jobs
+{
+	struct TransformAccess
+	{
+	}
 }
 
 namespace JetBrains.Annotations
