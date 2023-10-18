@@ -35,7 +35,7 @@ public abstract class BasePositionAndRotationContext
 	}
 
 	public abstract bool TryGetPropertyExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out MemberAccessExpressionSyntax? result);
-	public abstract ArgumentSyntax? TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression);
+	public abstract bool TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ArgumentSyntax? result);
 
 	private bool IsPositionOrRotationCandidate(SemanticModel model, ExpressionSyntax expression)
 	{
@@ -46,7 +46,7 @@ public abstract class BasePositionAndRotationContext
 		if (!TryGetPropertyExpression(model, expression, out var syntax))
 			return false;
 
-		if (TryGetArgumentExpression(model, expression) is null)
+		if (!TryGetArgumentExpression(model, expression, out _))
 			return false;
 
 		var symbolInfo = model.GetSymbolInfo(syntax);
@@ -217,11 +217,14 @@ public abstract class BasePositionAndRotationCodeFix : CodeFixProvider
 			return document;
 
 		var property = ExpressionContext.GetPropertyName(model, expression);
-		var arguments = new[]
-		{
-			ExpressionContext.TryGetArgumentExpression(model, expression)!,
-			ExpressionContext.TryGetArgumentExpression(model, nextExpression)!
-		};
+
+		if (!ExpressionContext.TryGetArgumentExpression(model, expression, out var argument))
+			return document;
+
+		if (!ExpressionContext.TryGetArgumentExpression(model, nextExpression, out var nextArgument))
+			return document;
+
+		var arguments = new[] { argument, nextArgument };
 
 		if (property != ExpressionContext.PositionPropertyName)
 			Array.Reverse(arguments);

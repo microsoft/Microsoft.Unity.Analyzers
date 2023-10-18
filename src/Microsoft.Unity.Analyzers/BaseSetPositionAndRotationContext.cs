@@ -27,12 +27,16 @@ public class BaseSetPositionAndRotationContext : BasePositionAndRotationContext
 		return result != null;
 	}
 
-	public override ArgumentSyntax? TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression)
+	public override bool TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ArgumentSyntax? result)
 	{
-		if (expression is not AssignmentExpressionSyntax assignment)
-			return null;
+		result = null;
 
-		return Argument(assignment.Right)
+		if (expression is not AssignmentExpressionSyntax assignment)
+			return false;
+
+		result = Argument(assignment.Right)
 			.WithLeadingTrivia(assignment.OperatorToken.TrailingTrivia);
+
+		return true;
 	}
 }

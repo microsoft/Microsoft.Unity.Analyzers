@@ -27,23 +27,27 @@ public class BaseGetPositionAndRotationContext : BasePositionAndRotationContext
 		return result != null;
 	}
 
-	public override ArgumentSyntax? TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression)
+	public override bool TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ArgumentSyntax? result)
 	{
+		result = null;
+
 		if (expression is AssignmentExpressionSyntax assignment)
 		{
 			expression = assignment.Left;
 
 			// We need to check for compatibility here with 'out' keyword
 			if (model.GetSymbolInfo(expression).Symbol is not ILocalSymbol)
-				return null;
+				return false;
 
-			return Argument(expression)
+			result = Argument(expression)
 				.WithRefOrOutKeyword(Token(SyntaxKind.OutKeyword))
 				.WithLeadingTrivia(assignment.OperatorToken.TrailingTrivia);
+
+			return true;
 		}
 
 		if (expression.FirstAncestorOrSelf<VariableDeclarationSyntax>() is not { } declaration)
-			return null;
+			return false;
 
 		var declarator = declaration.Variables.First();
 		var type = declaration.Type;
@@ -51,9 +55,11 @@ public class BaseGetPositionAndRotationContext : BasePositionAndRotationContext
 
 		var typeIdentifierName = type.IsVar ? IdentifierName(Identifier(TriviaList(), SyntaxKind.VarKeyword, typeString, typeString, TriviaList())) : IdentifierName(typeString);
 
-		return Argument(DeclarationExpression(typeIdentifierName, SingleVariableDesignation(Identifier(declarator.Identifier.Text))))
+		result = Argument(DeclarationExpression(typeIdentifierName, SingleVariableDesignation(Identifier(declarator.Identifier.Text))))
 			.WithRefOrOutKeyword(Token(SyntaxKind.OutKeyword))
 			.WithLeadingTrivia(declarator.ParentTrivia);
+
+		return true;
 	}
 
 	public override bool TryGetExpression(SyntaxNode node, [NotNullWhen(true)] out ExpressionSyntax? result)
