@@ -13,7 +13,7 @@ using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers;
 
-public class SetPositionAndRotationContext : BasePositionAndRotationContext
+public class SetPositionAndRotationContext : BaseSetPositionAndRotationContext
 {
 	public static Lazy<BasePositionAndRotationContext> Instance => new(() => new SetPositionAndRotationContext());
 	private SetPositionAndRotationContext() : base("position", "rotation", "SetPositionAndRotation") { }
@@ -36,9 +36,9 @@ public class SetPositionAndRotationAnalyzer : BasePositionAndRotationAnalyzer
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	protected override void OnPatternFound(SyntaxNodeAnalysisContext context, AssignmentExpressionSyntax assignmentExpression)
+	protected override void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement)
 	{
-		context.ReportDiagnostic(Diagnostic.Create(Rule, assignmentExpression.GetLocation()));
+		context.ReportDiagnostic(Diagnostic.Create(Rule, statement.GetLocation()));
 	}
 
 	public SetPositionAndRotationAnalyzer() : base(SetPositionAndRotationContext.Instance.Value) { }

@@ -37,6 +37,8 @@ ID | Title | Category
 [UNT0033](UNT0033.md) | Incorrect message case | Correctness
 [UNT0034](UNT0034.md) | A Vector3 can be converted into a Vector2 | Performance
 [UNT0035](UNT0035.md) | A Vector2 can be converted into a Vector3 | Performance
+[UNT0036](UNT0036.md) | Inefficient method to get position and rotation | Performance
+[UNT0037](UNT0037.md) | Inefficient method to get localPosition and localRotation | Performance
 
 # Diagnostic Suppressors
 

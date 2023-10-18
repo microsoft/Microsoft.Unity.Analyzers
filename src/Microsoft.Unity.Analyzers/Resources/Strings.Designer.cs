@@ -322,6 +322,78 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use GetLocalPositionAndRotation() method.
+        /// </summary>
+        internal static string GetLocalPositionAndRotationCodeFixTitle {
+            get {
+                return ResourceManager.GetString("GetLocalPositionAndRotationCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prefer using GetLocalPositionAndRotation() method..
+        /// </summary>
+        internal static string GetLocalPositionAndRotationDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("GetLocalPositionAndRotationDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading localPosition and localRotation sequentially could be optimized..
+        /// </summary>
+        internal static string GetLocalPositionAndRotationDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("GetLocalPositionAndRotationDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inefficient localPosition/localRotation read.
+        /// </summary>
+        internal static string GetLocalPositionAndRotationDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("GetLocalPositionAndRotationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use GetPositionAndRotation() method.
+        /// </summary>
+        internal static string GetPositionAndRotationCodeFixTitle {
+            get {
+                return ResourceManager.GetString("GetPositionAndRotationCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prefer using GetPositionAndRotation() method..
+        /// </summary>
+        internal static string GetPositionAndRotationDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("GetPositionAndRotationDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading position and rotation sequentially could be optimized..
+        /// </summary>
+        internal static string GetPositionAndRotationDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("GetPositionAndRotationDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inefficient position/rotation read.
+        /// </summary>
+        internal static string GetPositionAndRotationDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("GetPositionAndRotationDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with PreserveAttribute or UsedImplicitlyAttribute as unused..
         /// </summary>
         internal static string ImplicitUsageAttributeSuppressorJustification {
