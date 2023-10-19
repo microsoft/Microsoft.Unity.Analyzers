@@ -36,8 +36,6 @@ public class UnusedMethodSuppressor : DiagnosticSuppressor
 		if (syntaxTree == null)
 			return;
 
-		var root = syntaxTree.GetRoot(context.CancellationToken);
-
 		var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
 		if (methodDeclarationSyntax == null)
 			return;
@@ -54,8 +52,8 @@ public class UnusedMethodSuppressor : DiagnosticSuppressor
 			typeSymbol = typeSymbol.ContainingType;
 
 		var report = typeSymbol.Locations
-			.Select(location => root.FindNode(location.SourceSpan))
-			.SelectMany(typeNode => typeNode.DescendantNodes())
+			.Select(location => location.SourceTree?.GetRoot(context.CancellationToken).FindNode(location.SourceSpan))
+			.SelectMany(typeNode => typeNode?.DescendantNodes())
 			.OfType<InvocationExpressionSyntax>()
 			.Any(e => MethodInvocationAnalyzer.InvocationMatches(e, out string? argument) && argument == methodSymbol.Name);
 
