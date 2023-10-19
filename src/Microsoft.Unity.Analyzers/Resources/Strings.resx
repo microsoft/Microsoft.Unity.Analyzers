@@ -596,4 +596,28 @@
   <data name="UnityObjectUseIsNullSuppressorJustification" xml:space="preserve">
     <value>Prefer reference equality</value>
   </data>
+  <data name="GetPositionAndRotationCodeFixTitle" xml:space="preserve">
+    <value>Use GetPositionAndRotation() method</value>
+  </data>
+  <data name="GetPositionAndRotationDiagnosticDescription" xml:space="preserve">
+    <value>Prefer using GetPositionAndRotation() method.</value>
+  </data>
+  <data name="GetPositionAndRotationDiagnosticMessageFormat" xml:space="preserve">
+    <value>Reading position and rotation sequentially could be optimized.</value>
+  </data>
+  <data name="GetPositionAndRotationDiagnosticTitle" xml:space="preserve">
+    <value>Inefficient position/rotation read</value>
+  </data>
+  <data name="GetLocalPositionAndRotationCodeFixTitle" xml:space="preserve">
+    <value>Use GetLocalPositionAndRotation() method</value>
+  </data>
+  <data name="GetLocalPositionAndRotationDiagnosticDescription" xml:space="preserve">
+    <value>Prefer using GetLocalPositionAndRotation() method.</value>
+  </data>
+  <data name="GetLocalPositionAndRotationDiagnosticMessageFormat" xml:space="preserve">
+    <value>Reading localPosition and localRotation sequentially could be optimized.</value>
+  </data>
+  <data name="GetLocalPositionAndRotationDiagnosticTitle" xml:space="preserve">
+    <value>Inefficient localPosition/localRotation read</value>
+  </data>
 </root>

@@ -21,7 +21,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers;
 
-public class BasePositionAndRotationContext
+public abstract class BasePositionAndRotationContext
 {
 	public string PositionPropertyName { get; }
 	public string RotationPropertyName { get; }
@@ -34,23 +34,19 @@ public class BasePositionAndRotationContext
 		PositionAndRotationMethodName = positionAndRotationMethodName;
 	}
 
-	public MemberAccessExpressionSyntax? TryGetPropertyExpression(AssignmentExpressionSyntax assignmentExpression)
-	{
-		return assignmentExpression.Left as MemberAccessExpressionSyntax;
-	}
+	public abstract bool TryGetPropertyExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out MemberAccessExpressionSyntax? result);
+	public abstract bool TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ArgumentSyntax? result);
 
-	public ArgumentSyntax GetArgumentExpression(AssignmentExpressionSyntax assignmentExpression)
+	private bool IsPositionOrRotationCandidate(SemanticModel model, ExpressionSyntax expression)
 	{
-		return Argument(assignmentExpression.Right);
-	}
-
-	private bool IsPositionOrRotationCandidate(SemanticModel model, AssignmentExpressionSyntax assignmentExpression)
-	{
-		var property = GetPropertyName(assignmentExpression);
+		var property = GetPropertyName(model, expression);
 		if (property != PositionPropertyName && property != RotationPropertyName)
 			return false;
 
-		if (TryGetPropertyExpression(assignmentExpression) is not { } syntax)
+		if (!TryGetPropertyExpression(model, expression, out var syntax))
+			return false;
+
+		if (!TryGetArgumentExpression(model, expression, out _))
 			return false;
 
 		var symbolInfo = model.GetSymbolInfo(syntax);
@@ -65,29 +61,39 @@ public class BasePositionAndRotationContext
 			|| expressionTypeInfo.Type.Extends(typeof(UnityEngine.Jobs.TransformAccess));
 	}
 
-	public bool GetNextAssignmentExpression(SemanticModel model, AssignmentExpressionSyntax assignmentExpression, [NotNullWhen(true)] out AssignmentExpressionSyntax? assignmentExpressionSyntax)
+	public virtual bool TryGetExpression(SyntaxNode node, [NotNullWhen(true)] out ExpressionSyntax? result)
 	{
-		assignmentExpressionSyntax = null;
+		if (node is ExpressionStatementSyntax statement)
+			node = statement.Expression;
 
-		if (!IsPositionOrRotationCandidate(model, assignmentExpression))
+		result = node as AssignmentExpressionSyntax;
+		return result != null;
+	}
+
+	public bool TryGetNextExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ExpressionSyntax? nextExpression)
+	{
+		nextExpression = null;
+
+		if (!IsPositionOrRotationCandidate(model, expression))
 			return false;
 
-		if (assignmentExpression.FirstAncestorOrSelf<BlockSyntax>() == null)
+		if (expression.FirstAncestorOrSelf<BlockSyntax>() == null)
 			return false;
 
-		if (assignmentExpression.FirstAncestorOrSelf<ExpressionStatementSyntax>() == null)
+		if (expression.FirstAncestorOrSelf<StatementSyntax>() == null)
 			return false;
 
-		var block = assignmentExpression.FirstAncestorOrSelf<BlockSyntax>();
+		var block = expression.FirstAncestorOrSelf<BlockSyntax>();
 		if (block == null)
 			return false;
 
 		var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
-		var expression = assignmentExpression.FirstAncestorOrSelf<ExpressionStatementSyntax>();
-		if (expression == null)
+
+		var candidate = expression.FirstAncestorOrSelf<StatementSyntax>();
+		if (candidate == null)
 			return false;
 
-		var lastIndexOf = siblingsAndSelf.LastIndexOf(expression);
+		var lastIndexOf = siblingsAndSelf.LastIndexOf(candidate);
 		if (lastIndexOf == -1)
 			return false;
 
@@ -96,19 +102,19 @@ public class BasePositionAndRotationContext
 			return false;
 
 		var statement = siblingsAndSelf[nextIndex];
-		if (statement is not ExpressionStatementSyntax {Expression: AssignmentExpressionSyntax nextAssignmentExpression})
+		if (!TryGetExpression(statement, out var nextExpressionCandidate))
 			return false;
 
-		if (!IsPositionOrRotationCandidate(model, nextAssignmentExpression))
+		if (!IsPositionOrRotationCandidate(model, nextExpressionCandidate))
 			return false;
 
-		assignmentExpressionSyntax = nextAssignmentExpression;
+		nextExpression = nextExpressionCandidate;
 		return true;
 	}
 
-	public string GetPropertyName(AssignmentExpressionSyntax assignmentExpression)
+	public string GetPropertyName(SemanticModel model, ExpressionSyntax expression)
 	{
-		if (TryGetPropertyExpression(assignmentExpression) is not { } syntax)
+		if (!TryGetPropertyExpression(model, expression, out var syntax))
 			return string.Empty;
 
 		return syntax.Name.ToString();
@@ -128,42 +134,44 @@ public abstract class BasePositionAndRotationAnalyzer : DiagnosticAnalyzer
 	{
 		context.EnableConcurrentExecution();
 		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-		context.RegisterSyntaxNodeAction(AnalyzeAssignment, SyntaxKind.SimpleAssignmentExpression);
-		context.RegisterSyntaxNodeAction(AnalyzeAssignment, SyntaxKind.VariableDeclaration);
+		context.RegisterSyntaxNodeAction(AnalyzeExpression, SyntaxKind.SimpleAssignmentExpression);
 	}
 
-	private void AnalyzeAssignment(SyntaxNodeAnalysisContext context)
+	protected void AnalyzeExpression(SyntaxNodeAnalysisContext context)
 	{
-		if (context.Node is not AssignmentExpressionSyntax assignmentExpression)
+		if (!ExpressionContext.TryGetExpression(context.Node, out var expression))
 			return;
 
-		if (!ExpressionContext.GetNextAssignmentExpression(context.SemanticModel, assignmentExpression, out var nextAssignmentExpression))
+		var model = context.SemanticModel;
+		if (!ExpressionContext.TryGetNextExpression(model, expression, out var nextExpression))
 			return;
 
-		if (ExpressionContext.TryGetPropertyExpression(assignmentExpression) is not { } syntax)
+		if (!ExpressionContext.TryGetPropertyExpression(model, expression, out var syntax))
 			return;
 
-		if (ExpressionContext.TryGetPropertyExpression(nextAssignmentExpression) is not { } nextSyntax)
+		if (!ExpressionContext.TryGetPropertyExpression(model, nextExpression, out var nextSyntax))
 			return;
 		
 		if (syntax.Expression.ToString() != nextSyntax.Expression.ToString())
 			return;
 
-		var property = ExpressionContext.GetPropertyName(assignmentExpression);
-		var nextProperty = ExpressionContext.GetPropertyName(nextAssignmentExpression);
+		var property = ExpressionContext.GetPropertyName(model, expression);
+		var nextProperty = ExpressionContext.GetPropertyName(model, nextExpression);
 		if (property == nextProperty)
 			return;
 
 		// Check that the replacement method exists on target type in the current Unity version
-		var model = context.SemanticModel;
 		var type = model.GetTypeInfo(syntax.Expression).Type;
 		if (type == null || !type.GetMembers().Any(m => m is IMethodSymbol && m.Name == ExpressionContext.PositionAndRotationMethodName))
 			return;
 
-		OnPatternFound(context, assignmentExpression);
+		if (expression.FirstAncestorOrSelf<StatementSyntax>() is not { } statement)
+			return;
+
+		OnPatternFound(context, statement);
 	}
 
-	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, AssignmentExpressionSyntax assignmentExpressionSyntax);
+	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement);
 }
 
 public abstract class BasePositionAndRotationCodeFix : CodeFixProvider
@@ -181,37 +189,42 @@ public abstract class BasePositionAndRotationCodeFix : CodeFixProvider
 	
 	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
-		var expression = await context.GetFixableNodeAsync<AssignmentExpressionSyntax>();
-		if (expression == null)
+		var statement = await context.GetFixableNodeAsync<StatementSyntax>();
+		if (statement == null)
 			return;
 
 		context.RegisterCodeFix(
 			CodeAction.Create(
 				CodeFixTitle,
-				ct => ReplaceWithInvocationAsync(context.Document, expression, ct),
-				expression.ToFullString()),
+				ct => ReplaceWithInvocationAsync(context.Document, statement, ct),
+				statement.ToFullString()),
 			context.Diagnostics);
 	}
 
-	private async Task<Document> ReplaceWithInvocationAsync(Document document, AssignmentExpressionSyntax assignmentExpression, CancellationToken cancellationToken)
+	private async Task<Document> ReplaceWithInvocationAsync(Document document, StatementSyntax statement, CancellationToken cancellationToken)
 	{
 		var model = await document.GetSemanticModelAsync(cancellationToken);
 		if (model == null)
 			return document;
 
-		if (!ExpressionContext.GetNextAssignmentExpression(model, assignmentExpression, out var nextAssignmentExpression))
+		if (!ExpressionContext.TryGetExpression(statement, out var expression))
 			return document;
 
-		var property = ExpressionContext.GetPropertyName(assignmentExpression);
-		var arguments = new[]
-		{
-			ExpressionContext
-				.GetArgumentExpression(assignmentExpression)
-				.WithLeadingTrivia(assignmentExpression.OperatorToken.TrailingTrivia),
-			ExpressionContext
-				.GetArgumentExpression(nextAssignmentExpression)
-				.WithLeadingTrivia(nextAssignmentExpression.OperatorToken.TrailingTrivia)
-		};
+		if (!ExpressionContext.TryGetNextExpression(model, expression, out var nextExpression))
+			return document;
+
+		if (nextExpression.FirstAncestorOrSelf<StatementSyntax>() is not { } nextStatement)
+			return document;
+
+		var property = ExpressionContext.GetPropertyName(model, expression);
+
+		if (!ExpressionContext.TryGetArgumentExpression(model, expression, out var argument))
+			return document;
+
+		if (!ExpressionContext.TryGetArgumentExpression(model, nextExpression, out var nextArgument))
+			return document;
+
+		var arguments = new[] { argument, nextArgument };
 
 		if (property != ExpressionContext.PositionPropertyName)
 			Array.Reverse(arguments);
@@ -219,23 +232,24 @@ public abstract class BasePositionAndRotationCodeFix : CodeFixProvider
 		var argList = ArgumentList()
 			.AddArguments(arguments);
 
-		var baseExpression = ExpressionContext.TryGetPropertyExpression(assignmentExpression)?
-			.FirstAncestorOrSelf<MemberAccessExpressionSyntax>()?.Expression;
+		if (!ExpressionContext.TryGetPropertyExpression(model, expression, out var syntax))
+			return document;
 
-		if (baseExpression == null)
+		var invocationInstance = syntax.FirstAncestorOrSelf<MemberAccessExpressionSyntax>()?.Expression;
+		if (invocationInstance == null)
 			return document;
 
 		var invocation = InvocationExpression(
 				MemberAccessExpression(
 					SyntaxKind.SimpleMemberAccessExpression,
-					baseExpression,
+					invocationInstance,
 					IdentifierName(ExpressionContext.PositionAndRotationMethodName)))
 			.WithArgumentList(argList)
-			.WithLeadingTrivia(assignmentExpression.MergeLeadingTriviaWith(nextAssignmentExpression));
+			.WithLeadingTrivia(statement.MergeLeadingTriviaWith(nextStatement));
 
 		var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
-		documentEditor.RemoveNode(assignmentExpression.Parent, SyntaxRemoveOptions.KeepNoTrivia);
-		documentEditor.ReplaceNode(nextAssignmentExpression, invocation);
+		documentEditor.RemoveNode(statement, SyntaxRemoveOptions.KeepNoTrivia);
+		documentEditor.ReplaceNode(nextStatement, ExpressionStatement(invocation));
 
 		return documentEditor.GetChangedDocument();
 	}
