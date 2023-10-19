@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using UnityEngine;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers;
@@ -27,6 +28,24 @@ public class BaseGetPositionAndRotationContext : BasePositionAndRotationContext
 		return result != null;
 	}
 
+	private static bool IsOutRefCompatible(SemanticModel model, ExpressionSyntax expression)
+	{
+		return model.GetSymbolInfo(expression).Symbol is ILocalSymbol symbol
+		       && IsOutRefCompatible(symbol.Type);
+	}
+
+	private static bool IsOutRefCompatible(SemanticModel model, TypeSyntax type)
+	{
+		return model.GetSymbolInfo(type).Symbol is ITypeSymbol symbol
+		       && IsOutRefCompatible(symbol);
+	}
+
+	private static bool IsOutRefCompatible(ITypeSymbol type)
+	{
+		return type.Matches(typeof(Vector3))
+		       || type.Matches(typeof(Quaternion));
+	}
+
 	public override bool TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ArgumentSyntax? result)
 	{
 		result = null;
@@ -35,8 +54,7 @@ public class BaseGetPositionAndRotationContext : BasePositionAndRotationContext
 		{
 			expression = assignment.Left;
 
-			// We need to check for compatibility here with 'out' keyword
-			if (model.GetSymbolInfo(expression).Symbol is not ILocalSymbol)
+			if (!IsOutRefCompatible(model, expression))
 				return false;
 
 			result = Argument(expression)
@@ -47,6 +65,9 @@ public class BaseGetPositionAndRotationContext : BasePositionAndRotationContext
 		}
 
 		if (expression.FirstAncestorOrSelf<VariableDeclarationSyntax>() is not { } declaration)
+			return false;
+
+		if (!IsOutRefCompatible(model, declaration.Type))
 			return false;
 
 		var declarator = declaration.Variables.First();

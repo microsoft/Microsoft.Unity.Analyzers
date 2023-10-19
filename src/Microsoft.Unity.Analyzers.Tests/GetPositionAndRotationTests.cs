@@ -186,5 +186,60 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
+	[Fact]
+	public async Task ImplicitConversionExplicitVariableDeclaration()
+	{
+		const string test = @"
+using UnityEngine;
 
+struct float3
+{
+    public static implicit operator Vector3(float3 v) { return Vector3.up; }
+    public static implicit operator float3(Vector3 v) { return new float3(); }
+}
+
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        float3 position = transform.position;
+        Quaternion rotation = transform.rotation;
+    }
+}
+";
+
+		// Implicit conversion incompatible with 'out'
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task ImplicitConversionAssignment()
+	{
+		const string test = @"
+using UnityEngine;
+
+struct float3
+{
+    public static implicit operator Vector3(float3 v) { return Vector3.up; }
+    public static implicit operator float3(Vector3 v) { return new float3(); }
+}
+
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        float3 position;
+        Quaternion rotation;
+
+        position = transform.position;
+        rotation = transform.rotation;
+    }
+}
+";
+
+		// Implicit conversion incompatible with 'out'
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 }

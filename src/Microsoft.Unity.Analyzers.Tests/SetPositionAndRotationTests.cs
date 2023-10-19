@@ -271,4 +271,58 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task ImplicitConversion()
+	{
+		const string test = @"
+using UnityEngine;
+
+struct float3
+{
+    public static implicit operator Vector3(float3 v) { return Vector3.up; }
+    public static implicit operator float3(Vector3 v) { return new float3(); }
+}
+
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        float3 position;
+
+        transform.position = position;
+        transform.rotation = transform.rotation;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic().WithLocation(17, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+struct float3
+{
+    public static implicit operator Vector3(float3 v) { return Vector3.up; }
+    public static implicit operator float3(Vector3 v) { return new float3(); }
+}
+
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        float3 position;
+
+        transform.SetPositionAndRotation(position, transform.rotation);
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
 }
