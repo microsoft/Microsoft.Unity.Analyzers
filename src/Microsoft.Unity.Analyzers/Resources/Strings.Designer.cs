@@ -88,33 +88,6 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Correctness.
-        /// </summary>
-        internal static string CategoryCorrectness {
-            get {
-                return ResourceManager.GetString("CategoryCorrectness", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Performance.
-        /// </summary>
-        internal static string CategoryPerformance {
-            get {
-                return ResourceManager.GetString("CategoryPerformance", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Type Safety.
-        /// </summary>
-        internal static string CategoryTypeSafety {
-            get {
-                return ResourceManager.GetString("CategoryTypeSafety", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Component &apos;{0}&apos; should not be instantiated directly..
         /// </summary>
         internal static string CreateComponentInstanceDiagnosticMessageFormat {
