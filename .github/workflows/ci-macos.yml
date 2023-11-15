@@ -26,7 +26,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
         include-prerelease: false
 
     # So far we need Unity assemblies (Managed) and framework 4.7.1 reference assemblies (MonoBleedingEdge/lib/mono/4.7.1-api) for testing
