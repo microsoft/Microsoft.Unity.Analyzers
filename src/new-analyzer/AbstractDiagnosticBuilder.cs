@@ -8,15 +8,10 @@ using System.IO;
 
 namespace NewAnalyzer;
 
-internal class Diagnostic
+internal class Diagnostic(string id, string name)
 {
-	public string Id, Name;
-
-	public Diagnostic(string id, string name)
-	{
-		Id = id;
-		Name = name;
-	}
+	public readonly string Id = id;
+	public readonly string Name = name;
 }
 
 internal abstract class AbstractDiagnosticBuilder
@@ -142,7 +137,7 @@ internal abstract class AbstractDiagnosticBuilder
 
 		index++; // "
 
-		var end = line.IndexOf("\"", ++index, StringComparison.Ordinal);
+		var end = line.IndexOf('"', ++index);
 
 		index += 3;
 
