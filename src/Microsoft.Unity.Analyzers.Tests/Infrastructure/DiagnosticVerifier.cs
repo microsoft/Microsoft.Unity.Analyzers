@@ -73,7 +73,7 @@ public abstract class DiagnosticVerifier
 
 	protected Task VerifyCSharpDiagnosticAsync(AnalyzerVerificationContext context, string source, params DiagnosticResult[] expected)
 	{
-		return VerifyDiagnosticsAsync(context, new[] {source}, GetCSharpDiagnosticAnalyzer(), expected);
+		return VerifyDiagnosticsAsync(context, [source], GetCSharpDiagnosticAnalyzer(), expected);
 	}
 
 	private async Task VerifyDiagnosticsAsync(AnalyzerVerificationContext context, string[] sources, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
@@ -89,7 +89,7 @@ public abstract class DiagnosticVerifier
 
 		if (expectedCount != actualCount)
 		{
-			var diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer, actualResults.ToArray()) : "    NONE.";
+			var diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer, [.. actualResults]) : "    NONE.";
 
 			Assert.Fail($"Mismatch between number of diagnostics returned, expected \"{expectedCount}\" actual \"{actualCount}\"\r\n\r\nDiagnostics:\r\n{diagnosticsOutput}\r\n");
 		}
@@ -228,7 +228,7 @@ public abstract class DiagnosticVerifier
 			Assert.NotNull(compilation);
 
 			var optionsProvider = new AnalyzerOptionsProvider(context.Options);
-			var options = new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty, optionsProvider);
+			var options = new AnalyzerOptions([], optionsProvider);
 
 			// those exceptions and handler are thrown outside the scope of XUnit, so make sure we do not miss them
 			var analyzerExceptions = new List<Exception>();
@@ -303,7 +303,7 @@ public abstract class DiagnosticVerifier
 
 	private static Diagnostic[] SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
 	{
-		return diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
+		return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start)];
 	}
 
 	private static Document[] GetDocuments(AnalyzerVerificationContext context, string[] sources)
@@ -321,7 +321,7 @@ public abstract class DiagnosticVerifier
 
 	protected static Document CreateDocument(AnalyzerVerificationContext context, string source)
 	{
-		return CreateProject(context, new[] {source}).Documents.First();
+		return CreateProject(context, [source]).Documents.First();
 	}
 
 	protected static IEnumerable<string> UnityAssemblies()

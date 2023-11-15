@@ -43,7 +43,7 @@ namespace Assets.Scripts
 			.WithAnalyzerFilter("CS0169");
 
 		DiagnosticResult[] diagnostics =
-		{
+		[
 			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
 				.WithMessageFormat(WarningFormat)
 				.WithArguments("field", "field1")
@@ -53,7 +53,7 @@ namespace Assets.Scripts
 				.WithMessageFormat(WarningFormat)
 				.WithArguments("property", "property1")
 				.WithLocation(11, 28), 
-		};
+		];
 
 		await VerifyCSharpDiagnosticAsync(context, test, diagnostics);
 	}
@@ -94,12 +94,12 @@ namespace Assets.Scripts
 			.WithAnalyzerFilter("CS0169");
 
 		DiagnosticResult[] suppressors =
-		{
+		[
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(11, 28), //field1
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(12, 32), //field2
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(14, 28), //property1
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(15, 32), //property2
-		};
+		];
 
 		await VerifyCSharpDiagnosticAsync(context, test, suppressors);
 	}
@@ -149,7 +149,7 @@ public class TestScript : MonoBehaviour
 }
 ";
 		DiagnosticResult[] suppressors =
-		{
+		[
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(8, 29), //field1
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(9, 21), //field2
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(10, 28), //field3
@@ -165,7 +165,7 @@ public class TestScript : MonoBehaviour
 				.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
 
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(21, 38)
-		};
+		];
 
 		var context = AnalyzerVerificationContext.Default
 			.WithLanguageVersion(LanguageVersion.CSharp8)

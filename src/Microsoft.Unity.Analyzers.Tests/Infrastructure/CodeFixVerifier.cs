@@ -34,7 +34,7 @@ public abstract class CodeFixVerifier : DiagnosticVerifier
 	private async Task VerifyFixAsync(AnalyzerVerificationContext context, DiagnosticAnalyzer analyzer, CodeFixProvider codeFixProvider, string oldSource, string newSource, int? codeFixIndex, bool allowNewCompilerDiagnostics)
 	{
 		var document = CreateDocument(context, oldSource);
-		var analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, new[] {document});
+		var analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, [document]);
 		var compilerDiagnostics = (await GetCompilerDiagnosticsAsync(document)).ToList();
 		var attempts = analyzerDiagnostics.Length;
 
@@ -56,7 +56,7 @@ public abstract class CodeFixVerifier : DiagnosticVerifier
 			}
 
 			document = await ApplyFixAsync(document, actions.ElementAt(0));
-			analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, new[] {document});
+			analyzerDiagnostics = await GetSortedDiagnosticsFromDocumentsAsync(context, analyzer, [document]);
 
 			var newCompilerDiagnostics = GetNewDiagnostics(context, compilerDiagnostics, await GetCompilerDiagnosticsAsync(document));
 

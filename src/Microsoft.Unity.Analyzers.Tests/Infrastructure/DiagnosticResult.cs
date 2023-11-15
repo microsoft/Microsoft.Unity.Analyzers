@@ -17,7 +17,7 @@ namespace Microsoft.Unity.Analyzers.Tests;
 /// </summary>
 public readonly struct DiagnosticResult
 {
-	private static readonly object[] EmptyArguments = Array.Empty<object>();
+	private static readonly object[] EmptyArguments = [];
 
 	private readonly ImmutableArray<DiagnosticLocation> _spans;
 	private readonly bool _suppressMessage;
@@ -59,7 +59,7 @@ public readonly struct DiagnosticResult
 		SuppressedId = suppressedId;
 	}
 
-	public ImmutableArray<DiagnosticLocation> Spans => _spans.IsDefault ? ImmutableArray<DiagnosticLocation>.Empty : _spans;
+	public ImmutableArray<DiagnosticLocation> Spans => _spans.IsDefault ? [] : _spans;
 
 	public DiagnosticSeverity Severity { get; }
 
@@ -147,7 +147,7 @@ public readonly struct DiagnosticResult
 	public DiagnosticResult WithNoLocation()
 	{
 		return new(
-			ImmutableArray<DiagnosticLocation>.Empty,
+			[],
 			_suppressMessage,
 			_message,
 			Severity,
