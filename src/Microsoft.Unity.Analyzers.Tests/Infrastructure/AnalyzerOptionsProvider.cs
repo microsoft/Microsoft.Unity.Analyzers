@@ -10,14 +10,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-internal class AnalyzerOptionsProvider : AnalyzerConfigOptionsProvider
+internal class AnalyzerOptionsProvider(IDictionary<string, string> overrides) : AnalyzerConfigOptionsProvider
 {
-	private readonly AnalyzerConfigOptionsLookup _lookup;
-
-	public AnalyzerOptionsProvider(IDictionary<string, string> overrides)
-	{
-		_lookup = new AnalyzerConfigOptionsLookup(overrides);
-	}
+	private readonly AnalyzerConfigOptionsLookup _lookup = new(overrides);
 
 	public override AnalyzerConfigOptions GetOptions(CodeAnalysis.SyntaxTree tree)
 	{

@@ -66,20 +66,12 @@ public class TryGetComponentAnalyzer : DiagnosticAnalyzer
 	}
 }
 
-internal class TryGetComponentContext
+internal class TryGetComponentContext(string targetIdentifier, bool isVariableDeclaration, IfStatementSyntax ifStatement, SyntaxKind conditionKind)
 {
-	public TryGetComponentContext(string targetIdentifier, bool isVariableDeclaration, IfStatementSyntax ifStatement, SyntaxKind conditionKind)
-	{
-		TargetIdentifier = targetIdentifier;
-		IsVariableDeclaration = isVariableDeclaration;
-		IfStatement = ifStatement;
-		ConditionKind = conditionKind;
-	}
-
-	public string TargetIdentifier { get; }
-	public bool IsVariableDeclaration { get; }
-	public IfStatementSyntax IfStatement { get; }
-	public SyntaxKind ConditionKind { get; }
+	public string TargetIdentifier { get; } = targetIdentifier;
+	public bool IsVariableDeclaration { get; } = isVariableDeclaration;
+	public IfStatementSyntax IfStatement { get; } = ifStatement;
+	public SyntaxKind ConditionKind { get; } = conditionKind;
 
 	public static TryGetComponentContext? GetContext(InvocationExpressionSyntax invocation, SemanticModel model)
 	{

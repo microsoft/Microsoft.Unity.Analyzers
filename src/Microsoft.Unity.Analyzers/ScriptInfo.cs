@@ -11,10 +11,10 @@ using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Unity.Analyzers;
 
-internal readonly struct ScriptInfo
+internal readonly struct ScriptInfo(ITypeSymbol symbol)
 {
 	internal static readonly Type[] Types =
-	{
+	[
 		typeof(UnityEngine.Networking.NetworkBehaviour),
 		typeof(UnityEngine.StateMachineBehaviour),
 		typeof(UnityEngine.EventSystems.UIBehaviour),
@@ -25,18 +25,10 @@ internal readonly struct ScriptInfo
 		typeof(UnityEngine.MonoBehaviour),
 		typeof(UnityEditor.AssetPostprocessor),
 		typeof(UnityEditor.AssetImporters.ScriptedImporter)
-	};
-
-	private readonly ITypeSymbol _symbol;
+	];
 
 	public bool HasMessages => Metadata != null;
-	public Type? Metadata { get; }
-
-	public ScriptInfo(ITypeSymbol symbol)
-	{
-		_symbol = symbol;
-		Metadata = GetMatchingMetadata(symbol);
-	}
+	public Type? Metadata { get; } = GetMatchingMetadata(symbol);
 
 	public static MethodInfo[] Messages { get; } = Types.SelectMany(GetMessages).ToArray();
 
@@ -82,7 +74,7 @@ internal readonly struct ScriptInfo
 
 	private bool IsImplemented(MethodInfo method)
 	{
-		foreach (var member in _symbol.GetMembers())
+		foreach (var member in symbol.GetMembers())
 		{
 			if (member is not IMethodSymbol methodSymbol)
 				continue;

@@ -6,8 +6,7 @@
 namespace System.Diagnostics.CodeAnalysis;
 
 [AttributeUsage(AttributeTargets.Parameter)]
-internal sealed class NotNullWhenAttribute : Attribute
+internal sealed class NotNullWhenAttribute(bool returnValue) : Attribute
 {
-	public NotNullWhenAttribute(bool returnValue) => ReturnValue = returnValue;
-	public bool ReturnValue { get; }
+	public bool ReturnValue { get; } = returnValue;
 }
