@@ -13,15 +13,8 @@ using Microsoft.CodeAnalysis.Editing;
 
 namespace Microsoft.Unity.Analyzers;
 
-internal readonly struct MessageBuilder
+internal readonly struct MessageBuilder(SyntaxGenerator generator)
 {
-	private readonly SyntaxGenerator _generator;
-
-	public MessageBuilder(SyntaxGenerator generator)
-	{
-		_generator = generator;
-	}
-
 	public SyntaxNode[] CreateParameters(MethodInfo message)
 	{
 		var parameters = message.GetParameters();
@@ -30,7 +23,7 @@ internal readonly struct MessageBuilder
 		for (int i = 0; i < parameters.Length; i++)
 		{
 			var parameter = parameters[i];
-			nodes[i] = _generator.ParameterDeclaration(name: parameter.Name, type: CreateTypeReference(parameter.ParameterType));
+			nodes[i] = generator.ParameterDeclaration(name: parameter.Name, type: CreateTypeReference(parameter.ParameterType));
 		}
 
 		return nodes;
@@ -42,10 +35,10 @@ internal readonly struct MessageBuilder
 			return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword));
 
 		if (type.IsArray)
-			return _generator.ArrayTypeExpression(CreateTypeReference(type.GetElementType()!));
+			return generator.ArrayTypeExpression(CreateTypeReference(type.GetElementType()!));
 
 		if (type.IsConstructedGenericType)
-			return _generator.WithTypeArguments(
+			return generator.WithTypeArguments(
 				CreateTypeReference(type.GetGenericTypeDefinition()),
 				type.GetGenericArguments().Select(CreateTypeReference));
 
@@ -54,11 +47,11 @@ internal readonly struct MessageBuilder
 			switch (Type.GetTypeCode(type))
 			{
 				case TypeCode.Boolean:
-					return _generator.TypeExpression(SpecialType.System_Boolean);
+					return generator.TypeExpression(SpecialType.System_Boolean);
 				case TypeCode.Int32:
-					return _generator.TypeExpression(SpecialType.System_Int32);
+					return generator.TypeExpression(SpecialType.System_Int32);
 				case TypeCode.Single:
-					return _generator.TypeExpression(SpecialType.System_Single);
+					return generator.TypeExpression(SpecialType.System_Single);
 			}
 		}
 

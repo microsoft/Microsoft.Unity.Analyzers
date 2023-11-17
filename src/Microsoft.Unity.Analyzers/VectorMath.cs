@@ -38,11 +38,11 @@ public class VectorMathAnalyzer : DiagnosticAnalyzer
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	internal Type[] SupportedTypes =
-	{
+	[
 		typeof(Vector2),
 		typeof(Vector3),
 		typeof(Vector4)
-	};
+	];
 
 	public override void Initialize(AnalysisContext context)
 	{
