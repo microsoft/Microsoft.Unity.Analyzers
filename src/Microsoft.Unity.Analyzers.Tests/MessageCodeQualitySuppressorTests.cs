@@ -53,6 +53,10 @@ public class TestScript : MonoBehaviour
 		// var suppressor = ExpectSuppressor(MessageSuppressor.ParameterCodeQualityRule)
 		//   .WithLocation(6, 35);
 
-		await VerifyCSharpDiagnosticAsync(test /*, suppressor*/);
+		var context = AnalyzerVerificationContext
+			.Default
+			.WithAnalyzerFilter(MessageSuppressor.MethodCodeQualityRule.SuppressedDiagnosticId);
+
+		await VerifyCSharpDiagnosticAsync(context, test /*, suppressor*/);
 	}
 }
