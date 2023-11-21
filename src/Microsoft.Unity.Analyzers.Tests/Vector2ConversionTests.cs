@@ -130,4 +130,29 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task NoAmbiguousMethodCallTest()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Foo(Vector3 bar) {
+    }
+
+    void Foo(Vector2 bar) {
+    }
+
+    void Update()
+    {
+        Vector2 v2 = Vector2.zero;
+        Foo(new Vector3(v2.x, v2.y, 0));
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 }

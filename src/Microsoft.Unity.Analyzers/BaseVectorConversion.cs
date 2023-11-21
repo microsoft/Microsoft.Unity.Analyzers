@@ -46,7 +46,25 @@ public abstract class BaseVectorConversionAnalyzer : DiagnosticAnalyzer
 		if (!CheckArguments(ocOperation))
 			return;
 
+		if (!CheckForNonAmbiguousReplacement(ocOperation, model))
+			return;
+
 		ReportDiagnostic(context, ocSyntax.GetLocation());
+	}
+
+	protected virtual bool CheckForNonAmbiguousReplacement(IObjectCreationOperation ocOperation, SemanticModel model)
+	{
+		if (ocOperation.Parent is not IArgumentOperation arOperation)
+			return true;
+
+		if (arOperation.Parent is not IInvocationOperation inOperation)
+			return true;
+
+		if (inOperation.Syntax is not InvocationExpressionSyntax invocation)
+			return true;
+
+		var overloads = model.GetMemberGroup(invocation.Expression);
+		return overloads.Length == 1;
 	}
 
 	protected virtual bool CheckArguments(IObjectCreationOperation ocOperation)
