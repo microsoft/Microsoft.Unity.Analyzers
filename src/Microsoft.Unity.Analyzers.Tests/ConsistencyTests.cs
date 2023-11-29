@@ -63,14 +63,14 @@ public class ConsistencyTests
 				.Select(y => y.Key)
 				.ToList();
 
-			Assert.True(!duplicates.Any(), $"{prefix} IDs are not unique: {string.Join(",", duplicates)}");
+			Assert.False(duplicates.Any(), $"{prefix} IDs are not unique: {string.Join(",", duplicates)}");
 
 			var difference = Enumerable
 				.Range(1, list.Count)
 				.Except(list)
 				.ToList();
 
-			Assert.True(!difference.Any(), $"{prefix} IDs are not contiguous: {string.Join(",", difference)}");
+			Assert.False(difference.Any(), $"{prefix} IDs are not contiguous: {string.Join(",", difference)}");
 		}
 	}
 
