@@ -21,7 +21,7 @@ public class GetLocalPositionAndRotationContext : BaseGetPositionAndRotationCont
 }
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class GetLocalPositionAndRotationAnalyzer : BasePositionAndRotationAnalyzer
+public class GetLocalPositionAndRotationAnalyzer() : BasePositionAndRotationAnalyzer(GetLocalPositionAndRotationContext.Instance.Value)
 {
 	private const string RuleId = "UNT0037";
 
@@ -49,15 +49,12 @@ public class GetLocalPositionAndRotationAnalyzer : BasePositionAndRotationAnalyz
 	{
 		context.ReportDiagnostic(Diagnostic.Create(Rule, statement.GetLocation()));
 	}
-
-	public GetLocalPositionAndRotationAnalyzer() : base(GetLocalPositionAndRotationContext.Instance.Value) { }
 }
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
-public class GetLocalPositionAndRotationCodeFix : BasePositionAndRotationCodeFix
+public class GetLocalPositionAndRotationCodeFix() : BasePositionAndRotationCodeFix(GetLocalPositionAndRotationContext.Instance.Value)
 {
 	protected override string CodeFixTitle => Strings.GetLocalPositionAndRotationCodeFixTitle;
 
 	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(GetLocalPositionAndRotationAnalyzer.Rule.Id);
-	public GetLocalPositionAndRotationCodeFix() : base(GetLocalPositionAndRotationContext.Instance.Value) { }
 }

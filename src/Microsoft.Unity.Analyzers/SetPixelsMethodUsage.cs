@@ -13,9 +13,7 @@ using UnityEngine;
 
 namespace Microsoft.Unity.Analyzers;
 
-public class SetPixelsMethodUsageAttribute : MethodUsageAttribute
-{
-}
+public class SetPixelsMethodUsageAttribute : MethodUsageAttribute;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class SetPixelsMethodUsageAnalyzer : MethodUsageAnalyzer<SetPixelsMethodUsageAttribute>

@@ -20,7 +20,7 @@ public class SetPositionAndRotationContext : BaseSetPositionAndRotationContext
 }
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class SetPositionAndRotationAnalyzer : BasePositionAndRotationAnalyzer
+public class SetPositionAndRotationAnalyzer() : BasePositionAndRotationAnalyzer(SetPositionAndRotationContext.Instance.Value)
 {
 	private const string RuleId = "UNT0022";
 
@@ -40,15 +40,12 @@ public class SetPositionAndRotationAnalyzer : BasePositionAndRotationAnalyzer
 	{
 		context.ReportDiagnostic(Diagnostic.Create(Rule, statement.GetLocation()));
 	}
-
-	public SetPositionAndRotationAnalyzer() : base(SetPositionAndRotationContext.Instance.Value) { }
 }
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
-public class SetPositionAndRotationCodeFix : BasePositionAndRotationCodeFix
+public class SetPositionAndRotationCodeFix() : BasePositionAndRotationCodeFix(SetPositionAndRotationContext.Instance.Value)
 {
 	protected override string CodeFixTitle => Strings.SetPositionAndRotationCodeFixTitle;
 
 	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(SetPositionAndRotationAnalyzer.Rule.Id);
-	public SetPositionAndRotationCodeFix() : base(SetPositionAndRotationContext.Instance.Value) { }
 }

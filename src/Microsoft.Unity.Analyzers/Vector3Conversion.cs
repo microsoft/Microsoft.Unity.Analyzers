@@ -56,9 +56,8 @@ public class Vector3ConversionCodeFix : BaseVectorConversionCodeFix
 
 	protected override Type CastType => typeof(Vector2);
 
-	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+	public sealed override Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
-		await RegisterCodeFixesAsync(context, Strings.Vector3ConversionCodeFixTitle)
-			.ConfigureAwait(false);
+		return RegisterCodeFixesAsync(context, Strings.Vector3ConversionCodeFixTitle);
 	}
 }

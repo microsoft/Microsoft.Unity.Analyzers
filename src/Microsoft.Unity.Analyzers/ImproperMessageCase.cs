@@ -61,11 +61,11 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 
 		var allMessages = scriptInfo
 			.GetMessages()
-			.ToLookup(m => m.Name); // case sensitive indexing
+			.ToLookup(m => m.Name); // case-sensitive indexing
 
 		var notImplementedMessages = scriptInfo
 			.GetNotImplementedMessages()
-			.ToLookup(m => m.Name.ToLower()); // case insensitive indexing
+			.ToLookup(m => m.Name.ToLower()); // case-insensitive indexing
 
 		foreach (var method in methods)
 		{

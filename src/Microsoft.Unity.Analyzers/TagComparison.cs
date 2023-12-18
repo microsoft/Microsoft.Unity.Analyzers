@@ -211,7 +211,7 @@ public class TagComparisonCodeFix : CodeFixProvider
 
 	private static void SortExpressions(SemanticModel model, InvocationExpressionSyntax expr, out ExpressionSyntax tagExpression, out ExpressionSyntax otherExpression)
 	{
-		if (expr.Expression is MemberAccessExpressionSyntax mae && expr.ArgumentList.Arguments.Count == 1)
+		if (expr is { Expression: MemberAccessExpressionSyntax mae, ArgumentList.Arguments.Count: 1 })
 		{
 			if (TagComparisonAnalyzer.IsReportableExpression(model, mae.Expression))
 			{
