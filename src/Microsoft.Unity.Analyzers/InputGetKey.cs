@@ -89,7 +89,7 @@ public class InputGetKeyAnalyzer : DiagnosticAnalyzer
 		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
 	}
 
-	internal static bool IsInvocationSupported(InvocationExpressionSyntax invocation)
+	private static bool IsInvocationSupported(InvocationExpressionSyntax invocation)
 	{
 		if (invocation.ArgumentList.Arguments.Count != 1)
 			return false;

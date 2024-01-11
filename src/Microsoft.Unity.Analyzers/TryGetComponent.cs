@@ -61,7 +61,7 @@ public class TryGetComponentAnalyzer : DiagnosticAnalyzer
 	private static bool IsTryGetComponentSupported(SyntaxNodeAnalysisContext context)
 	{
 		// We need Unity 2019.2+ for proper support
-		var goType = context.Compilation?.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName);
+		var goType = context.Compilation?.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName!);
 		return goType?.MemberNames.Contains(nameof(UnityEngine.Component.TryGetComponent)) ?? false;
 	}
 }

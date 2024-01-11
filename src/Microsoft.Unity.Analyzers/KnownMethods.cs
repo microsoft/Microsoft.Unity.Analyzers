@@ -11,18 +11,16 @@ namespace Microsoft.Unity.Analyzers;
 
 internal static class KnownMethods
 {
-	internal static readonly HashSet<string> GetComponentNames = new(new[]
-	{
+	internal static readonly HashSet<string> GetComponentNames =
+	[
 		nameof(UnityEngine.Component.GetComponent),
 		nameof(UnityEngine.Component.GetComponentInChildren),
 		nameof(UnityEngine.Component.GetComponentInParent),
-
 		nameof(UnityEngine.Component.GetComponents),
 		nameof(UnityEngine.Component.GetComponentsInChildren),
 		nameof(UnityEngine.Component.GetComponentsInParent),
-
 		nameof(UnityEngine.Component.TryGetComponent),
-	});
+	];
 
 	// Be careful when using those helper methods, as GetComponentNames contains methods with different return types (Component, array or bool)
 	public static bool IsGetComponentName(SimpleNameSyntax name) => GetComponentNames.Contains(name.Identifier.Text);

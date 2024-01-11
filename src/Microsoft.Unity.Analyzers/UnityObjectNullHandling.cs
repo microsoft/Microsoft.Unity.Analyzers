@@ -207,7 +207,7 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 		return newRoot == null ? document : document.WithSyntaxRoot(newRoot);
 	}
 
-	private static async Task<Document> ReplaceNullCoalescingAsync(Document document, BinaryExpressionSyntax coalescing, CancellationToken cancellationToken)
+	private static Task<Document> ReplaceNullCoalescingAsync(Document document, BinaryExpressionSyntax coalescing, CancellationToken cancellationToken)
 	{
 		// obj ?? foo -> obj != null ? obj : foo
 		var conditional = SyntaxFactory.ConditionalExpression(
@@ -215,10 +215,10 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 			whenTrue: coalescing.Left,
 			whenFalse: coalescing.Right);
 
-		return await ReplaceWithAsync(document, coalescing, conditional, cancellationToken);
+		return ReplaceWithAsync(document, coalescing, conditional, cancellationToken);
 	}
 
-	private static async Task<Document> ReplaceCoalescingAssignmentAsync(Document document, AssignmentExpressionSyntax coalescing, CancellationToken cancellationToken)
+	private static Task<Document> ReplaceCoalescingAssignmentAsync(Document document, AssignmentExpressionSyntax coalescing, CancellationToken cancellationToken)
 	{
 		// obj ??= foo -> obj = obj != null ? obj : foo
 		var conditional = SyntaxFactory.ConditionalExpression(
@@ -227,7 +227,7 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 			whenFalse: coalescing.Right);
 
 		var assignment = SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, coalescing.Left, conditional);
-		return await ReplaceWithAsync(document, coalescing, assignment, cancellationToken);
+		return ReplaceWithAsync(document, coalescing, assignment, cancellationToken);
 	}
 
 	private static async Task<Document> ReplaceNullPropagationAsync(Document document, ConditionalAccessExpressionSyntax access, CancellationToken cancellationToken)
@@ -244,13 +244,13 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 		return await ReplaceWithAsync(document, access, conditional, cancellationToken);
 	}
 
-	private static async Task<Document> ReplacePatternExpressionAsync(Document document, IsPatternExpressionSyntax pattern, CancellationToken cancellationToken)
+	private static Task<Document> ReplacePatternExpressionAsync(Document document, IsPatternExpressionSyntax pattern, CancellationToken cancellationToken)
 	{
 		// obj is null => obj == null, obj is not null => obj != null
 		var kind = pattern.Pattern is ConstantPatternSyntax ? SyntaxKind.EqualsExpression : SyntaxKind.NotEqualsExpression;
 		var binary = SyntaxFactory.BinaryExpression(kind, pattern.Expression, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
 
-		return await ReplaceWithAsync(document, pattern, binary, cancellationToken);
+		return ReplaceWithAsync(document, pattern, binary, cancellationToken);
 	}
 }
 

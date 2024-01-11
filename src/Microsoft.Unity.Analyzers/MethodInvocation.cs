@@ -46,8 +46,8 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 	}
 
 	// TODO we cannot add this to our stubs/KnownMethods so far (else they will be matched as Unity messages)
-	internal static readonly HashSet<string> InvokeMethodNames = new(new[] {"Invoke", "InvokeRepeating", "CancelInvoke"});
-	internal static readonly HashSet<string> CoroutineMethodNames = new(new[] {"StartCoroutine", "StopCoroutine"});
+	internal static readonly HashSet<string> InvokeMethodNames = ["Invoke", "InvokeRepeating", "CancelInvoke"];
+	internal static readonly HashSet<string> CoroutineMethodNames = ["StartCoroutine", "StopCoroutine"];
 
 	private static bool InvocationMatches(SyntaxNode node)
 	{
@@ -109,15 +109,8 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 	}
 }
 
-public abstract class BaseMethodInvocationCodeFix : CodeFixProvider
+public abstract class BaseMethodInvocationCodeFix(string title) : CodeFixProvider
 {
-	public string Title { get; }
-
-	protected BaseMethodInvocationCodeFix(string title)
-	{
-		Title = title;
-	}
-
 	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MethodInvocationAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
@@ -133,7 +126,7 @@ public abstract class BaseMethodInvocationCodeFix : CodeFixProvider
 
 		context.RegisterCodeFix(
 			CodeAction.Create(
-				Title,
+				title,
 				ct => ChangeArgumentAsync(context.Document, invocation, ct),
 				invocation.ToFullString()),
 			context.Diagnostics);
@@ -141,7 +134,7 @@ public abstract class BaseMethodInvocationCodeFix : CodeFixProvider
 
 	protected virtual async Task<bool> IsRegistrableAsync(CodeFixContext context, InvocationExpressionSyntax invocation)
 	{
-		// for now we do not offer codefixes for mixed types
+		// for now, we do not offer code-fixes for mixed types
 		var model = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
 		if (model == null)
 			return false;
@@ -199,12 +192,8 @@ public abstract class BaseMethodInvocationCodeFix : CodeFixProvider
 }
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
-public class MethodInvocationNameOfCodeFix : BaseMethodInvocationCodeFix
+public class MethodInvocationNameOfCodeFix() : BaseMethodInvocationCodeFix(Strings.MethodInvocationNameOfCodeFixTitle)
 {
-	public MethodInvocationNameOfCodeFix() : base(Strings.MethodInvocationNameOfCodeFixTitle)
-	{
-	}
-
 	protected override ArgumentSyntax GetArgument(string name)
 	{
 		const string nameof = "nameof";
@@ -226,12 +215,8 @@ public class MethodInvocationNameOfCodeFix : BaseMethodInvocationCodeFix
 }
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
-public class MethodInvocationDirectCallCodeFix : BaseMethodInvocationCodeFix
+public class MethodInvocationDirectCallCodeFix() : BaseMethodInvocationCodeFix(Strings.MethodInvocationDirectCallCodeFixTitle)
 {
-	public MethodInvocationDirectCallCodeFix() : base(Strings.MethodInvocationDirectCallCodeFixTitle)
-	{
-	}
-
 	protected override async Task<bool> IsRegistrableAsync(CodeFixContext context, InvocationExpressionSyntax invocation)
 	{
 		if (!await base.IsRegistrableAsync(context, invocation))

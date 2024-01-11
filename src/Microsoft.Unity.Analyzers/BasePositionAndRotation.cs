@@ -21,18 +21,11 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers;
 
-public abstract class BasePositionAndRotationContext
+public abstract class BasePositionAndRotationContext(string positionPropertyName, string rotationPropertyName, string positionAndRotationMethodName)
 {
-	public string PositionPropertyName { get; }
-	public string RotationPropertyName { get; }
-	public string PositionAndRotationMethodName { get; }
-
-	protected BasePositionAndRotationContext(string positionPropertyName, string rotationPropertyName, string positionAndRotationMethodName)
-	{
-		PositionPropertyName = positionPropertyName;
-		RotationPropertyName = rotationPropertyName;
-		PositionAndRotationMethodName = positionAndRotationMethodName;
-	}
+	public string PositionPropertyName { get; } = positionPropertyName;
+	public string RotationPropertyName { get; } = rotationPropertyName;
+	public string PositionAndRotationMethodName { get; } = positionAndRotationMethodName;
 
 	public abstract bool TryGetPropertyExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out MemberAccessExpressionSyntax? result);
 	public abstract bool TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ArgumentSyntax? result);
@@ -121,14 +114,9 @@ public abstract class BasePositionAndRotationContext
 	}
 }
 
-public abstract class BasePositionAndRotationAnalyzer : DiagnosticAnalyzer
+public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationContext expressionContext) : DiagnosticAnalyzer
 {
-	internal BasePositionAndRotationContext ExpressionContext { get; }
-
-	protected BasePositionAndRotationAnalyzer(BasePositionAndRotationContext expressionContext)
-	{
-		ExpressionContext = expressionContext;
-	}
+	internal BasePositionAndRotationContext ExpressionContext { get; } = expressionContext;
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -174,16 +162,11 @@ public abstract class BasePositionAndRotationAnalyzer : DiagnosticAnalyzer
 	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement);
 }
 
-public abstract class BasePositionAndRotationCodeFix : CodeFixProvider
+public abstract class BasePositionAndRotationCodeFix(BasePositionAndRotationContext expressionContext) : CodeFixProvider
 {
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-	private BasePositionAndRotationContext ExpressionContext { get; }
-
-	protected BasePositionAndRotationCodeFix(BasePositionAndRotationContext expressionContext)
-	{
-		ExpressionContext = expressionContext;
-	}
+	private BasePositionAndRotationContext ExpressionContext { get; } = expressionContext;
 
 	protected abstract string CodeFixTitle { get;}
 	

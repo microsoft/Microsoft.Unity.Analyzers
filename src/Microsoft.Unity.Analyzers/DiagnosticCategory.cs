@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using Microsoft.Unity.Analyzers.Resources;
-
 namespace Microsoft.Unity.Analyzers;
 
 public static class DiagnosticCategory

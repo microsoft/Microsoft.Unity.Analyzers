@@ -42,7 +42,7 @@ public class DestroyTransformAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
 	}
 
-	internal static readonly HashSet<string> DestroyMethodNames = new(new[] {"Destroy", "DestroyImmediate"});
+	internal static readonly HashSet<string> DestroyMethodNames = ["Destroy", "DestroyImmediate"];
 
 	private static bool InvocationMatches(SyntaxNode node)
 	{

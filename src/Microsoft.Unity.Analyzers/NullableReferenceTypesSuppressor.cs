@@ -50,7 +50,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 
 			var propertyDeclaration = node.FirstAncestorOrSelf<PropertyDeclarationSyntax>();
 
-			//handle properties before fields to minimize double checking of potential backing fields
+			//handle properties before fields to minimize double-checking of potential backing fields
 			if (propertyDeclaration is not null)
 			{
 				AnalyzeProperties(propertyDeclaration, diagnostic, context, root);
@@ -80,7 +80,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 			return;
 		}
 
-		//check for serializefield attribute => variable could be set in editor
+		//check for SerializeField attribute => variable could be set in editor
 		if (declarationSyntax.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == nameof(UnityEngine.SerializeField))))
 		{
 			context.ReportSuppression(Suppression.Create(Rule, diagnostic));
@@ -112,7 +112,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 			context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 	}
 
-	//analyze if a property is assigned inside a methodbody
+	//analyze if a property is assigned inside a MethodBody
 	private static bool IsAssignedTo(string identifier, IEnumerable<SyntaxNode> methodBodies)
 	{
 		return methodBodies.Select(node => node.DescendantNodes()
@@ -153,7 +153,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 		};
 	}
 
-	//get all explicit backingfields of assigned properties
+	//get all explicit backing fields of assigned properties
 	private static IEnumerable<string> AssignedProperties(SyntaxNode root, IEnumerable<SyntaxNode> methodBodies)
 	{
 		return root.DescendantNodes().OfType<PropertyDeclarationSyntax>()

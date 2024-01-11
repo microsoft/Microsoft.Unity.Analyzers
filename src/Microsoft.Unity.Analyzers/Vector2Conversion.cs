@@ -63,10 +63,9 @@ public class Vector2ConversionCodeFix : BaseVectorConversionCodeFix
 {
 	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(Vector2ConversionAnalyzer.Rule.Id);
 
-	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+	public sealed override Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
-		await RegisterCodeFixesAsync(context, Strings.Vector2ConversionCodeFixTitle)
-			.ConfigureAwait(false);
+		return RegisterCodeFixesAsync(context, Strings.Vector2ConversionCodeFixTitle);
 	}
 
 	protected override Type CastType => typeof(Vector3);
