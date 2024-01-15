@@ -168,7 +168,7 @@ public class VectorMathCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.VectorMathCodeFixTitle,
 				ct => FixOperandOrderAsync(context.Document, node, ct),
-				node.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

@@ -85,7 +85,7 @@ public class InitializeOnLoadStaticCtorCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.InitializeOnLoadStaticCtorCodeFixTitle,
 				ct => CreateStaticCtorAsync(context.Document, classDeclaration, ct),
-				classDeclaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

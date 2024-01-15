@@ -115,7 +115,7 @@ public class ImproperMessageCaseCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.ImproperMessageCaseCodeFixTitle,
 				ct => FixMessageCaseAsync(context.Document, declaration, ct),
-				declaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

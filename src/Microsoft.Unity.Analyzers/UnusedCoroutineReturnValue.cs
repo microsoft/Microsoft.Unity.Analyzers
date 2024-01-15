@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -92,7 +93,7 @@ public class UnusedCoroutineReturnValueCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.UnusedCoroutineReturnValueCodeFixTitle,
 				ct => WrapWithStartCoroutineAsync(context.Document, parent, invocation, ct),
-				invocation.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

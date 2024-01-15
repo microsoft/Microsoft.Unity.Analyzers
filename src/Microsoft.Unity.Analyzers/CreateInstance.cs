@@ -105,7 +105,7 @@ public class CreateInstanceCodeFix : CodeFixProvider
 					CodeAction.Create(
 						Strings.CreateScriptableObjectInstanceCodeFixTitle,
 						ct => ReplaceWithInvocationAsync(context.Document, creation, "ScriptableObject", "CreateInstance", ct),
-						creation.ToFullString()),
+						diagnostic.Id), // using DiagnosticId as equivalence key for BatchFixer
 					context.Diagnostics);
 				break;
 			case CreateInstanceAnalyzer.ComponentId when !IsInsideComponent(creation, model):
@@ -115,7 +115,7 @@ public class CreateInstanceCodeFix : CodeFixProvider
 					CodeAction.Create(
 						Strings.CreateMonoBehaviourInstanceCodeFixTitle,
 						ct => ReplaceWithInvocationAsync(context.Document, creation, "gameObject", "AddComponent", ct),
-						creation.ToFullString()),
+						diagnostic.Id), // using DiagnosticId as equivalence key for BatchFixer
 					context.Diagnostics);
 				break;
 		}

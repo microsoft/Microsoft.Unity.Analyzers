@@ -146,7 +146,7 @@ public class InputGetKeyCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.InputGetKeyCodeFixTitle,
 				ct => UseKeyCodeMemberAsArgumentAsync(context.Document, invocation, ct),
-				invocation.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

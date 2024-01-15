@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -77,7 +78,7 @@ public class PropertyDrawerOnGUICodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.PropertyDrawerOnGUICodeFixTitle,
 				ct => RemoveInvocationAsync(context.Document, invocation, ct),
-				invocation.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

@@ -20,10 +20,10 @@ namespace Microsoft.Unity.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 {
-	private const string NullCoalescingRuleId = "UNT0007";
-	private const string NullPropagationRuleId = "UNT0008";
-	private const string CoalescingAssignmentRuleId = "UNT0023";
-	private const string IsPatternRuleId = "UNT0029";
+	internal const string NullCoalescingRuleId = "UNT0007";
+	internal const string NullPropagationRuleId = "UNT0008";
+	internal const string CoalescingAssignmentRuleId = "UNT0023";
+	internal const string IsPatternRuleId = "UNT0029";
 
 	internal static readonly DiagnosticDescriptor NullCoalescingRule = new(
 		id: NullCoalescingRuleId,
@@ -155,7 +155,10 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 				if (HasSideEffect(bes.Left))
 					return;
 
-				action = CodeAction.Create(Strings.UnityObjectNullCoalescingCodeFixTitle, ct => ReplaceNullCoalescingAsync(context.Document, bes, ct), bes.ToFullString());
+				action = CodeAction.Create(
+					Strings.UnityObjectNullCoalescingCodeFixTitle,
+					ct => ReplaceNullCoalescingAsync(context.Document, bes, ct),
+					UnityObjectNullHandlingAnalyzer.NullCoalescingRuleId); // using DiagnosticId as equivalence key for BatchFixer
 				break;
 
 			// Null propagation
@@ -163,7 +166,10 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 				if (HasSideEffect(caes.Expression))
 					return;
 
-				action = CodeAction.Create(Strings.UnityObjectNullPropagationCodeFixTitle, ct => ReplaceNullPropagationAsync(context.Document, caes, ct), caes.ToFullString());
+				action = CodeAction.Create(
+					Strings.UnityObjectNullPropagationCodeFixTitle,
+					ct => ReplaceNullPropagationAsync(context.Document, caes, ct),
+					UnityObjectNullHandlingAnalyzer.NullPropagationRuleId); // using DiagnosticId as equivalence key for BatchFixer
 				break;
 
 			// Coalescing assignment
@@ -171,7 +177,10 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 				if (HasSideEffect(aes.Left))
 					return;
 
-				action = CodeAction.Create(Strings.UnityObjectCoalescingAssignmentCodeFixTitle, ct => ReplaceCoalescingAssignmentAsync(context.Document, aes, ct), aes.ToFullString());
+				action = CodeAction.Create(
+					Strings.UnityObjectCoalescingAssignmentCodeFixTitle,
+					ct => ReplaceCoalescingAssignmentAsync(context.Document, aes, ct),
+					UnityObjectNullHandlingAnalyzer.CoalescingAssignmentRuleId); // using DiagnosticId as equivalence key for BatchFixer
 				break;
 
 			// Pattern expression
@@ -179,7 +188,10 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 				if (HasSideEffect(pes.Expression))
 					return;
 
-				action = CodeAction.Create(Strings.UnityObjectIsPatternCodeFixTitle, ct => ReplacePatternExpressionAsync(context.Document, pes, ct), pes.ToFullString());
+				action = CodeAction.Create(
+					Strings.UnityObjectIsPatternCodeFixTitle,
+					ct => ReplacePatternExpressionAsync(context.Document, pes, ct),
+					UnityObjectNullHandlingAnalyzer.IsPatternRuleId); // using DiagnosticId as equivalence key for BatchFixer
 				break;
 
 			default:

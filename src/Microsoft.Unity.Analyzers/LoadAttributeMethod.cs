@@ -106,7 +106,7 @@ public class LoadAttributeMethodCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.LoadAttributeMethodCodeFixTitle,
 				ct => FixMethodAsync(context.Document, methodDeclaration, ct),
-				methodDeclaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

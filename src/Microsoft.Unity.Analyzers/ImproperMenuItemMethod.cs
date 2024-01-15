@@ -76,7 +76,7 @@ public class ImproperMenuItemMethodCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.ImproperMenuItemMethodCodeFixTitle,
 				ct => AddStaticDeclarationAsync(context.Document, declaration, ct),
-				declaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

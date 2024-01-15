@@ -128,7 +128,7 @@ public abstract class BaseVectorConversionCodeFix : CodeFixProvider
 			CodeAction.Create(
 				title,
 				ct => SimplifyObjectCreationAsync(context.Document, ocSyntax, ct),
-				ocSyntax.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

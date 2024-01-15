@@ -128,7 +128,7 @@ public abstract class BaseMethodInvocationCodeFix(string title) : CodeFixProvide
 			CodeAction.Create(
 				title,
 				ct => ChangeArgumentAsync(context.Document, invocation, ct),
-				invocation.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 
