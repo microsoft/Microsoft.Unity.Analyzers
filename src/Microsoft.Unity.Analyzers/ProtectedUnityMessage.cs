@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -93,7 +94,7 @@ public class ProtectedUnityMessageCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.ProtectedUnityMessageCodeFixTitle,
 				ct => MakeMessageProtectedAsync(context.Document, declaration, ct),
-				declaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 
