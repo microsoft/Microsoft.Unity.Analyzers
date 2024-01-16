@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -105,7 +106,7 @@ public class NonGenericGetComponentCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.NonGenericGetComponentCodeFixTitle,
 				ct => UseGenericGetComponentAsync(context.Document, invocation, ct),
-				invocation.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

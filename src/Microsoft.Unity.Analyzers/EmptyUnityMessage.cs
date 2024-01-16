@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -92,7 +93,7 @@ public class EmptyUnityMessageCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.EmptyUnityMessageCodeFixTitle,
 				ct => DeleteEmptyMessageAsync(context.Document, declaration, ct),
-				declaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

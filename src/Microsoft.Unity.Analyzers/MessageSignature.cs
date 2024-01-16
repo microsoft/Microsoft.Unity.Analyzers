@@ -108,7 +108,7 @@ public class MessageSignatureCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.MessageSignatureCodeFixTitle,
 				ct => FixMethodDeclarationSignatureAsync(context.Document, methodDeclaration, ct),
-				methodDeclaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

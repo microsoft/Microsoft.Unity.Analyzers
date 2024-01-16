@@ -126,7 +126,7 @@ public class UpdateDeltaTimeCodeFix : CodeFixProvider
 					CodeAction.Create(
 						Strings.UpdateWithoutFixedDeltaTimeCodeFixTitle,
 						ct => ReplaceDeltaTimeIdentifierAsync(context.Document, identifierName, "deltaTime", ct),
-						identifierName.ToFullString()),
+						diagnostic.Id), // using DiagnosticId as equivalence key for BatchFixer
 					context.Diagnostics);
 				break;
 			case UpdateDeltaTimeAnalyzer.FixedUpdateId:
@@ -134,7 +134,7 @@ public class UpdateDeltaTimeCodeFix : CodeFixProvider
 					CodeAction.Create(
 						Strings.FixedUpdateWithoutDeltaTimeCodeFixTitle,
 						ct => ReplaceDeltaTimeIdentifierAsync(context.Document, identifierName, "fixedDeltaTime", ct),
-						identifierName.ToFullString()),
+						diagnostic.Id), // using DiagnosticId as equivalence key for BatchFixer
 					context.Diagnostics);
 				break;
 		}

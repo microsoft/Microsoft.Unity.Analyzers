@@ -232,7 +232,8 @@ public class TryGetComponentCodeFix : CodeFixProvider
 		context.RegisterCodeFix(
 			CodeAction.Create(
 				Strings.TryGetComponentCodeFixTitle,
-				ct => ReplaceWithTryGetComponentAsync(context.Document, invocation, ct), invocation.ToFullString()),
+				ct => ReplaceWithTryGetComponentAsync(context.Document, invocation, ct),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

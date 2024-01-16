@@ -180,7 +180,7 @@ public abstract class BasePositionAndRotationCodeFix(BasePositionAndRotationCont
 			CodeAction.Create(
 				CodeFixTitle,
 				ct => ReplaceWithInvocationAsync(context.Document, statement, ct),
-				statement.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

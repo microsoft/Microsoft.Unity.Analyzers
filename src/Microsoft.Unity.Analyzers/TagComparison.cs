@@ -153,7 +153,7 @@ public class TagComparisonCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.TagComparisonCodeFixTitle,
 				action,
-				node.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

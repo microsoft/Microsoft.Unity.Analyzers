@@ -105,7 +105,7 @@ public class ImproperSerializeFieldCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.ImproperSerializeFieldCodeFixTitle,
 				ct => RemoveSerializeFieldAttributeAsync(context.Document, declaration, ct),
-				declaration.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

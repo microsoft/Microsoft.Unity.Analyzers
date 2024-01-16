@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -82,7 +83,7 @@ public class IndirectionMessageCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.IndirectionMessageCodeFixTitle,
 				ct => DeleteIndirectionAsync(context.Document, access, ct),
-				access.Expression.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 
