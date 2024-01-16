@@ -14,9 +14,7 @@ using UnityEngine;
 
 namespace Microsoft.Unity.Analyzers;
 
-public class PhysicsAllocMethodUsageAttribute : MethodUsageAttribute
-{
-}
+public class PhysicsAllocMethodUsageAttribute : MethodUsageAttribute;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class PhysicsAllocMethodUsageAnalyzer : MethodUsageAnalyzer<PhysicsAllocMethodUsageAttribute>

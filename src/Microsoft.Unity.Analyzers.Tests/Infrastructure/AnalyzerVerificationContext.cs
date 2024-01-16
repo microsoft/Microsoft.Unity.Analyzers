@@ -8,11 +8,11 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public readonly struct AnalyzerVerificationContext
+public readonly struct AnalyzerVerificationContext(ImmutableDictionary<string, string> options, ImmutableArray<string> filters, LanguageVersion languageVersion)
 {
-	public ImmutableDictionary<string, string> Options { get; }
-	public ImmutableArray<string> Filters { get; }
-	public LanguageVersion LanguageVersion { get; }
+	public ImmutableDictionary<string, string> Options { get; } = options;
+	public ImmutableArray<string> Filters { get; } = filters;
+	public LanguageVersion LanguageVersion { get; } = languageVersion;
 
 	// CS1701 - Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
 	// CS0414 - cf. IDE0051
@@ -20,13 +20,6 @@ public readonly struct AnalyzerVerificationContext
 		ImmutableDictionary<string, string>.Empty,
 		["CS1701", "CS0414"],
 		LanguageVersion.Latest);
-
-	public AnalyzerVerificationContext(ImmutableDictionary<string, string> options, ImmutableArray<string> filters, LanguageVersion languageVersion) : this()
-	{
-		Options = options;
-		Filters = filters;
-		LanguageVersion = languageVersion;
-	}
 
 	public AnalyzerVerificationContext WithAnalyzerOption(string key, string value)
 	{

@@ -35,7 +35,7 @@ internal class AnalyzerOptionsProvider(IDictionary<string, string> overrides) : 
 
 internal class AnalyzerConfigOptionsLookup : AnalyzerConfigOptions
 {
-	private readonly Dictionary<string, string> _default = new();
+	private readonly Dictionary<string, string> _default = [];
 	private readonly IDictionary<string, string> _overrides;
 
 	public AnalyzerConfigOptionsLookup(IDictionary<string, string> overrides)
