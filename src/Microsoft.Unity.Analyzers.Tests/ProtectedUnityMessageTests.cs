@@ -51,6 +51,48 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task FixDefaultUnityMessageComments()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // comment with a space
+    void Start() /* comment with space */
+    {
+    }
+
+    void Foo()
+    {
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic().WithLocation(7, 10);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // comment with a space
+    protected void Start() /* comment with space */
+    {
+    }
+
+    void Foo()
+    {
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
 	public async Task FixPrivateUnityMessageComments()
 	{
 		const string test = @"

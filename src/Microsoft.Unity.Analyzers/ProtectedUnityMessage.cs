@@ -100,9 +100,13 @@ public class ProtectedUnityMessageCodeFix : CodeFixProvider
 	private static async Task<Document> MakeMessageProtectedAsync(Document document, MethodDeclarationSyntax declaration, CancellationToken cancellationToken)
 	{
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+
+		// Use two steps to preserve trivia, because WithModifiers will not behave the same if we already have modifiers or not
+		var trivia = declaration.GetLeadingTrivia();
 		var newDeclaration = declaration
+			.WithLeadingTrivia()
 			.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword)))
-			.WithLeadingTrivia(declaration.GetLeadingTrivia());
+			.WithLeadingTrivia(trivia);
 
 		foreach (var modifier in declaration.Modifiers)
 		{
