@@ -15,9 +15,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Microsoft.Unity.Analyzers;
 
 [AttributeUsage(AttributeTargets.Method)]
-public class MethodUsageAttribute : Attribute
-{
-}
+public class MethodUsageAttribute : Attribute;
 
 public abstract class MethodUsageAnalyzer<T> : DiagnosticAnalyzer where T : MethodUsageAttribute
 {
