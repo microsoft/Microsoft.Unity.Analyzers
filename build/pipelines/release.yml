@@ -25,7 +25,7 @@ steps:
   inputs:
     signType: '$(SignType)'
 
-- task: NuGetAuthenticate@0
+- task: NuGetAuthenticate@1
 
 - task: PowerShell@1
   displayName: 'Build infos'
