@@ -266,5 +266,4 @@ class App : AssetPostprocessor
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
-
 }

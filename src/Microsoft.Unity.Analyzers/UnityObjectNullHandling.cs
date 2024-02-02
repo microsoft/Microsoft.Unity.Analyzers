@@ -81,7 +81,7 @@ public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeCoalesceAssignmentExpression, SyntaxKind.CoalesceAssignmentExpression);
 		context.RegisterSyntaxNodeAction(AnalyzeIsPatternExpression, SyntaxKind.IsPatternExpression);
 	}
-	
+
 	private static void AnalyzeIsPatternExpression(SyntaxNodeAnalysisContext context)
 	{
 		var pattern = (IsPatternExpressionSyntax)context.Node;
@@ -89,15 +89,15 @@ public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 		switch (pattern.Pattern)
 		{
 			// obj is null
-			case ConstantPatternSyntax {Expression.RawKind: (int)SyntaxKind.NullLiteralExpression}:
-			
+			case ConstantPatternSyntax { Expression.RawKind: (int)SyntaxKind.NullLiteralExpression }:
+
 			//obj is not null, we need roslyn 3.7.0 here for UnaryPatternSyntax type and SyntaxKind.NotPattern enum value
-			case UnaryPatternSyntax {RawKind: (int)SyntaxKind.NotPattern, Pattern: ConstantPatternSyntax {Expression.RawKind: (int)SyntaxKind.NullLiteralExpression} }:
+			case UnaryPatternSyntax { RawKind: (int)SyntaxKind.NotPattern, Pattern: ConstantPatternSyntax { Expression.RawKind: (int)SyntaxKind.NullLiteralExpression } }:
 				AnalyzeExpression(pattern, pattern.Expression, context, IsPatternRule);
 				break;
 		}
 	}
-	
+
 	private static void AnalyzeCoalesceAssignmentExpression(SyntaxNodeAnalysisContext context)
 	{
 		var assignment = (AssignmentExpressionSyntax)context.Node;
@@ -330,7 +330,7 @@ public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 
 		var model = context.GetSemanticModel(invocation.SyntaxTree);
 
-		foreach (var argument in invocation.ArgumentList.Arguments) 
+		foreach (var argument in invocation.ArgumentList.Arguments)
 		{
 			var typeInfo = model.GetTypeInfo(argument.Expression);
 			ReportSuppressionOnUnityObject(diagnostic, context, typeInfo.Type);

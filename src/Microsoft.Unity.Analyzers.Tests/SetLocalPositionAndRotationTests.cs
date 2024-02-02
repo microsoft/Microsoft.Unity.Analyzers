@@ -94,5 +94,4 @@ class Context
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
-
 }

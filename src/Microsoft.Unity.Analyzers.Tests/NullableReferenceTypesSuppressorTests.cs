@@ -37,7 +37,7 @@ namespace Assets.Scripts
     }
 }
 ";
-	
+
 		var context = AnalyzerVerificationContext.Default
 			.WithLanguageVersion(LanguageVersion.CSharp8)
 			.WithAnalyzerFilter("CS0169");
@@ -47,12 +47,12 @@ namespace Assets.Scripts
 			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
 				.WithMessageFormat(WarningFormat)
 				.WithArguments("field", "field1")
-				.WithLocation(9, 28), 
+				.WithLocation(9, 28),
 
 			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
 				.WithMessageFormat(WarningFormat)
 				.WithArguments("property", "property1")
-				.WithLocation(11, 28), 
+				.WithLocation(11, 28),
 		];
 
 		await VerifyCSharpDiagnosticAsync(context, test, diagnostics);
@@ -87,7 +87,7 @@ namespace Assets.Scripts
         }
     }
 }
-"; 
+";
 
 		var context = AnalyzerVerificationContext.Default
 			.WithLanguageVersion(LanguageVersion.CSharp8)

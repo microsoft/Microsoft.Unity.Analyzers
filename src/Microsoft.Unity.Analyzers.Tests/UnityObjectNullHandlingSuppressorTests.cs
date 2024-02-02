@@ -262,5 +262,4 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(context, test);
 	}
-
 }

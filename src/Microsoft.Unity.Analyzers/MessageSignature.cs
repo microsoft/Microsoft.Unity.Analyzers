@@ -51,7 +51,7 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
 		if (typeSymbol == null)
 			return;
-		
+
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return;
@@ -76,7 +76,7 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 			var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
 			if (methodSymbol == null)
 				continue;
-			
+
 			// A message is detected, so the signature is correct
 			if (scriptInfo.IsMessage(methodSymbol))
 				continue;

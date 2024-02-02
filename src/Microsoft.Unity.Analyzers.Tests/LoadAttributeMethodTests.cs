@@ -402,5 +402,4 @@ class Loader
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
-
 }

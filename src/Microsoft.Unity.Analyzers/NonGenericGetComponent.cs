@@ -17,7 +17,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.Unity.Analyzers.Resources;
-
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers;
@@ -120,19 +119,19 @@ public class NonGenericGetComponentCodeFix : CodeFixProvider
 		var argumentSyntax = syntaxList.FirstOrDefault();
 		if (argumentSyntax == null)
 			return document;
-		
+
 		var typeOf = (TypeOfExpressionSyntax)argumentSyntax.Expression;
 		var identifierSyntax = (IdentifierNameSyntax)invocation.Expression;
 
 		var newArgumentList = invocationArgumentList.RemoveNode(argumentSyntax, SyntaxRemoveOptions.KeepNoTrivia);
 		if (newArgumentList == null)
 			return document;
-		
+
 		var newInvocation = invocation
 			.WithExpression(GenericName(
 				identifierSyntax.Identifier,
 				TypeArgumentList(
-					SeparatedList(new[] {typeOf.Type}))))
+					SeparatedList(new[] { typeOf.Type }))))
 			.WithArgumentList(newArgumentList);
 
 		// If we're casting the GetComponent result, remove the cast as the returned value is now type safe

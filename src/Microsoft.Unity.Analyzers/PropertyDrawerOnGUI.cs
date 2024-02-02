@@ -46,7 +46,7 @@ public class PropertyDrawerOnGUIAnalyzer : DiagnosticAnalyzer
 	{
 		var invocation = (InvocationExpressionSyntax)context.Node;
 		var name = invocation.GetMethodNameSyntax();
-		if (name is not {Identifier.Text: "OnGUI"})
+		if (name is not { Identifier.Text: "OnGUI" })
 			return;
 
 		var symbol = context.SemanticModel.GetSymbolInfo(invocation);

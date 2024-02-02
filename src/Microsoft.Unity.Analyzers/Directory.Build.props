@@ -10,7 +10,7 @@
 
   <Import Project="$(VstuDirectory)build\UnityVS.props"
           Condition="Exists('$(VstuDirectory)build\UnityVS.props')" />
-          
+
   <Import Project="$(VstuDirectory)build\UnityVS.Signing.props"
           Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.props')" />
 

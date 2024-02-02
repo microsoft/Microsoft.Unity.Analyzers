@@ -31,7 +31,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 			var syntaxTree = diagnostic.Location.SourceTree;
 			if (syntaxTree == null)
 				continue;
-			
+
 			var root = syntaxTree.GetRoot();
 			var node = root.FindNode(diagnostic.Location.SourceSpan);
 
@@ -137,7 +137,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 			methodBodies = methodBodies.Concat(methods
 				.Where(syntax => methodSyntax.DescendantNodes().OfType<InvocationExpressionSyntax>()
 					.Any(invocationSyntax => invocationSyntax.Expression.ToString() == syntax.Identifier.Text))
-				.Concat(new[] {methodSyntax})
+				.Concat(new[] { methodSyntax })
 				.Select(method => method.Body ?? method.ExpressionBody as SyntaxNode))!;
 		}
 

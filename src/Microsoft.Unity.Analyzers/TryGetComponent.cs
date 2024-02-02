@@ -16,7 +16,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Editing;
 using Microsoft.Unity.Analyzers.Resources;
-
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Microsoft.Unity.Analyzers;
@@ -83,8 +82,8 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 		var invocationParent = invocation.Parent;
 		if (invocationParent == null)
 			return null;
-		
-		if (!TryGetTargetdentifier(model, invocationParent, out var targetIdentifier, out var isVariableDeclaration)) 
+
+		if (!TryGetTargetdentifier(model, invocationParent, out var targetIdentifier, out var isVariableDeclaration))
 			return null;
 
 		// We want the next line to be an if statement
@@ -106,7 +105,7 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 			if (visitor is BlockSyntax)
 				break;
 
-			if (visitor is IfStatementSyntax {Else: { }})
+			if (visitor is IfStatementSyntax { Else: { } })
 				return null;
 
 			visitor = visitor.Parent;
@@ -143,7 +142,7 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 		foundIfStatement = null;
 		conditionIdentifier = null;
 
-		if (ifNode is not IfStatementSyntax {Condition: BinaryExpressionSyntax binaryExpression} ifStatement)
+		if (ifNode is not IfStatementSyntax { Condition: BinaryExpressionSyntax binaryExpression } ifStatement)
 			return false;
 
 		foundBinaryExpression = binaryExpression;
@@ -157,8 +156,8 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 		// We want IdentifierNameSyntax and null as operands
 		conditionIdentifier = binaryExpression.Left switch
 		{
-			IdentifierNameSyntax leftIdentifierName when binaryExpression.Right is LiteralExpressionSyntax {RawKind: (int) SyntaxKind.NullLiteralExpression} => leftIdentifierName.Identifier,
-			LiteralExpressionSyntax {RawKind: (int) SyntaxKind.NullLiteralExpression} when binaryExpression.Right is IdentifierNameSyntax rightIdentifierName => rightIdentifierName.Identifier,
+			IdentifierNameSyntax leftIdentifierName when binaryExpression.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } => leftIdentifierName.Identifier,
+			LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } when binaryExpression.Right is IdentifierNameSyntax rightIdentifierName => rightIdentifierName.Identifier,
 			_ => null
 		};
 
@@ -172,12 +171,12 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 
 		switch (invocationParent)
 		{
-			case EqualsValueClauseSyntax {Parent: VariableDeclaratorSyntax variableDeclarator}:
+			case EqualsValueClauseSyntax { Parent: VariableDeclaratorSyntax variableDeclarator }:
 				isVariableDeclaration = true;
 				targetIdentifier = variableDeclarator.Identifier;
 				break;
 
-			case AssignmentExpressionSyntax {Left: IdentifierNameSyntax identifierName}:
+			case AssignmentExpressionSyntax { Left: IdentifierNameSyntax identifierName }:
 			{
 				// With an assignment, we want to work only with a field or local variable ('out' constraint)
 				var symbol = model.GetSymbolInfo(identifierName);
@@ -250,7 +249,7 @@ public class TryGetComponentCodeFix : CodeFixProvider
 		SyntaxNode assignNode = invocation;
 		while (assignNode.Parent != null && assignNode.Parent is not BlockSyntax)
 			assignNode = assignNode.Parent;
-			
+
 		InvocationExpressionSyntax? newInvocation;
 		var identifier = Identifier(nameof(UnityEngine.Component.TryGetComponent));
 
@@ -263,7 +262,7 @@ public class TryGetComponentCodeFix : CodeFixProvider
 				newInvocation = invocation.WithExpression(newNameSyntax);
 				break;
 			}
-			case MemberAccessExpressionSyntax {Name: GenericNameSyntax indirectNameSyntax} memberAccessExpression:
+			case MemberAccessExpressionSyntax { Name: GenericNameSyntax indirectNameSyntax } memberAccessExpression:
 			{
 				var newNameSyntax = indirectNameSyntax.WithIdentifier(identifier);
 				var newMemberAccessExpression = memberAccessExpression.WithName(newNameSyntax);
@@ -281,10 +280,10 @@ public class TryGetComponentCodeFix : CodeFixProvider
 			true => Argument(
 				DeclarationExpression(
 					IdentifierName(
-						Identifier(TriviaList(), 
-							SyntaxKind.VarKeyword, 
-							"var", 
-							"var", 
+						Identifier(TriviaList(),
+							SyntaxKind.VarKeyword,
+							"var",
+							"var",
 							TriviaList())),
 					SingleVariableDesignation(
 						Identifier(targetIdentifier)))),
@@ -318,7 +317,7 @@ public class TryGetComponentCodeFix : CodeFixProvider
 
 		var documentEditor = await DocumentEditor.CreateAsync(document, cancellationToken);
 		documentEditor.RemoveNode(assignNode, SyntaxRemoveOptions.KeepNoTrivia);
-			
+
 		var ifStatement = context.IfStatement;
 		var newIfStatement = ifStatement
 			.WithCondition(newCondition)
