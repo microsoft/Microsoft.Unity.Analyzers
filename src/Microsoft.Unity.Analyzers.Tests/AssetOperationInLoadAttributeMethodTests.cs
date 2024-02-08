@@ -10,7 +10,6 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 public class AssetOperationInLoadAttributeMethodTests : BaseDiagnosticVerifierTest<AssetOperationInLoadAttributeMethodAnalyzer>
 {
-
 	[Fact]
 	public async Task TestValidMethodUsage()
 	{

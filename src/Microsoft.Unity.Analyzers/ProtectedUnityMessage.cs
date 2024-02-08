@@ -65,7 +65,7 @@ public class ProtectedUnityMessageAnalyzer : DiagnosticAnalyzer
 		var symbol = context.SemanticModel.GetDeclaredSymbol(method);
 		if (symbol == null)
 			return;
-		
+
 		if (!scriptInfo.IsMessage(symbol))
 			return;
 

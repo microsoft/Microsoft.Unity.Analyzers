@@ -86,7 +86,7 @@ class Camera : MonoBehaviour
 		var diagnostic = DiagnosticResult.CompilerWarning(ThrowExpressionSuppressor.Rule.SuppressedDiagnosticId)
 			.WithSeverity(DiagnosticSeverity.Info)
 			.WithMessage("Null check can be simplified")
-			.WithLocation(10, 13); 
+			.WithLocation(10, 13);
 
 		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}

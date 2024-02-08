@@ -46,6 +46,6 @@ public class SetLocalPositionAndRotationAnalyzer() : BasePositionAndRotationAnal
 public class SetLocalPositionAndRotationCodeFix() : BasePositionAndRotationCodeFix(SetLocalPositionAndRotationContext.Instance.Value)
 {
 	protected override string CodeFixTitle => Strings.SetLocalPositionAndRotationCodeFixTitle;
-	
+
 	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(SetLocalPositionAndRotationAnalyzer.Rule.Id);
 }

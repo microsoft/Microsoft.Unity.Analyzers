@@ -144,7 +144,7 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-		
+
 	[Fact]
 	public async Task VariableDeclarationNotNullConditionNoMemberAccessOnComponent()
 	{

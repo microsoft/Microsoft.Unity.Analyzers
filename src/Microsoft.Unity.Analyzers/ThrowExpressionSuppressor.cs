@@ -45,7 +45,7 @@ public class ThrowExpressionSuppressor : DiagnosticSuppressor
 		var syntaxTree = diagnostic.Location.SourceTree;
 		if (syntaxTree == null)
 			return;
-		
+
 		var model = context.GetSemanticModel(syntaxTree);
 
 		if (ShouldReportSuppression(binaryExpression.Left, model) || ShouldReportSuppression(binaryExpression.Right, model))

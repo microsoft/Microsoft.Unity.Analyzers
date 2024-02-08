@@ -76,7 +76,7 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
-	
+
 	[Fact]
 	public async Task ImproperlyCasedRealStaticMessage()
 	{
@@ -211,5 +211,4 @@ class App : AssetPostprocessor
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
-
 }
