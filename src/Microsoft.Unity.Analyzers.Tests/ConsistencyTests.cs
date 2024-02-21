@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class ConsistencyTests
+public class ConsistencyTests(ITestOutputHelper output)
 {
 	private static Dictionary<string, List<int>> CollectIds<T>(Func<T, string> reader) where T : class
 	{
@@ -42,7 +42,7 @@ public class ConsistencyTests
 				var num = int.Parse(id[3..]);
 
 				if (!lookup.TryGetValue(prefix, out _))
-					lookup.Add(prefix, new List<int>());
+					lookup.Add(prefix, []);
 
 				lookup[prefix].Add(num);
 			}
@@ -74,19 +74,12 @@ public class ConsistencyTests
 		}
 	}
 
-	private readonly ITestOutputHelper _output;
-
-	public ConsistencyTests(ITestOutputHelper output)
-	{
-		_output = output;
-	}
-
 	[Fact]
 	public void CheckAnalyzerIds()
 	{
 		CheckLookup(CollectIds<DiagnosticDescriptor>(d =>
 		{
-			_output.WriteLine($"Scanning diagnostic {d.Id}: {d.Description}");
+			output.WriteLine($"Scanning diagnostic {d.Id}: {d.Description}");
 			return d.Id;
 		}));
 	}
@@ -96,7 +89,7 @@ public class ConsistencyTests
 	{
 		CheckLookup(CollectIds<SuppressionDescriptor>(d =>
 		{
-			_output.WriteLine($"Scanning suppressor {d.Id} for {d.SuppressedDiagnosticId}: {d.Justification}");
+			output.WriteLine($"Scanning suppressor {d.Id} for {d.SuppressedDiagnosticId}: {d.Justification}");
 			return d.Id;
 		}));
 	}
