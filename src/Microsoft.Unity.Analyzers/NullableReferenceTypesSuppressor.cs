@@ -137,7 +137,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 			methodBodies = methodBodies.Concat(methods
 				.Where(syntax => methodSyntax.DescendantNodes().OfType<InvocationExpressionSyntax>()
 					.Any(invocationSyntax => invocationSyntax.Expression.ToString() == syntax.Identifier.Text))
-				.Concat(new[] { methodSyntax })
+				.Append(methodSyntax)
 				.Select(method => method.Body ?? method.ExpressionBody as SyntaxNode))!;
 		}
 
