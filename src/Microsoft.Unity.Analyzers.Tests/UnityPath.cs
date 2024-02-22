@@ -15,11 +15,11 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 internal static class UnityPath
 {
-	private static readonly List<string> UnityInstallations = new();
+	private static readonly List<string> _unityInstallations = [];
 
 	public static string FirstInstallation()
 	{
-		return UnityInstallations.First();
+		return _unityInstallations.First();
 	}
 
 	static UnityPath()
@@ -33,7 +33,7 @@ internal static class UnityPath
 		if (OperatingSystem.IsLinux())
 			RegisterLinuxInstallations();
 
-		if (UnityInstallations.Count == 0)
+		if (_unityInstallations.Count == 0)
 			throw new Exception("Could not locate a Unity installation");
 	}
 
@@ -107,6 +107,6 @@ internal static class UnityPath
 	private static void RegisterUnityInstallation(string path)
 	{
 		if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
-			UnityInstallations.Add(path);
+			_unityInstallations.Add(path);
 	}
 }

@@ -17,8 +17,6 @@ namespace Microsoft.Unity.Analyzers.Tests;
 /// </summary>
 public readonly struct DiagnosticResult
 {
-	private static readonly object[] EmptyArguments = [];
-
 	private readonly ImmutableArray<DiagnosticLocation> _spans;
 	private readonly bool _suppressMessage;
 	private readonly string? _message;
@@ -74,7 +72,7 @@ public readonly struct DiagnosticResult
 
 			if (_message != null) return _message;
 
-			if (MessageFormat != null) return string.Format(MessageFormat.ToString(), MessageArguments ?? EmptyArguments);
+			if (MessageFormat != null) return string.Format(MessageFormat.ToString(), MessageArguments ?? []);
 
 			return null;
 		}
