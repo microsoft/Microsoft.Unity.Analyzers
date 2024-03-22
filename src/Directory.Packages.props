@@ -13,7 +13,7 @@
 
     <!-- Analyzers -->
     <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.9.28" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.8.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.9.2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" />
 
     <!-- MPack -->
