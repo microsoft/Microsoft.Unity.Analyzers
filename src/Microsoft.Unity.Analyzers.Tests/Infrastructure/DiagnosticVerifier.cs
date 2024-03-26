@@ -341,6 +341,13 @@ public abstract class DiagnosticVerifier
 
 		var facades = Path.Combine(monolib, "Facades");
 		yield return Path.Combine(facades, "netstandard.dll");
+
+		// Use the 2D template to get additional assemblies, normally acquired through Package Manager
+		var libcache = Path.Combine(installation, "Resources", "PackageManager", "ProjectTemplates", "libcache");
+		var template2d = Directory.GetDirectories(libcache, "com.unity.template.2d-*").Single();
+		var template2dScriptAssemblies = Path.Combine(template2d, "ScriptAssemblies");
+
+		yield return Path.Combine(template2dScriptAssemblies, "Unity.Mathematics.dll");
 	}
 
 	private static Project CreateProject(AnalyzerVerificationContext context, string[] sources)

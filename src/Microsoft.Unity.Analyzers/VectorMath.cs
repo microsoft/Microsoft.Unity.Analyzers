@@ -16,6 +16,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Microsoft.Unity.Analyzers;
@@ -41,7 +42,10 @@ public class VectorMathAnalyzer : DiagnosticAnalyzer
 	[
 		typeof(Vector2),
 		typeof(Vector3),
-		typeof(Vector4)
+		typeof(Vector4),
+		typeof(float2),
+		typeof(float3),
+		typeof(float4),
 	];
 
 	public override void Initialize(AnalysisContext context)
