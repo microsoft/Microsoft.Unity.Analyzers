@@ -36,42 +36,11 @@ jobs:
         dotnet-version: '8.0.x'
         include-prerelease: false
 
-    # So far we need Unity assemblies (Managed) and framework 4.7.1 reference assemblies (MonoBleedingEdge/lib/mono/4.7.1-api) for testing
-    # We don't need to download/install Unity every run, we just need to cache those managed assemblies
-    # But we have to deal with the following:
-    # - the cache only works under the GITHUB_WORKSPACE folder (so we cannot cache /Applications/Unity/Unity.app/Contents)
-    # - the cache is linited to 400M per run (so we cannot cache the full Unity installation)
-    # - When Unity is not installed, our detection logic will fallback to /Applications/Unity/Unity.app/Contents
-    - name: Enable Unity Cache Support
-      id: cache-unity
-      uses: actions/cache@v3
-      with:
-        key: ${{ runner.os }}-unitycache-${{ env.UNITY_FULL_VERSION }}
-        path: UnityCache
-
     - name: Download Unity
-      if: steps.cache-unity.outputs.cache-hit != 'true'
       run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/${{ env.UNITY_HASH }}/MacEditorInstaller/Unity.pkg
 
     - name: Install Unity
-      if: steps.cache-unity.outputs.cache-hit != 'true'
       run: sudo installer -package unity.pkg -target /
-
-    - name: Prepare Managed Cache
-      if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: sudo ditto /Applications/Unity/Unity.app/Contents/Managed/ UnityCache/Managed
-
-    - name: Prepare MonoBleedingEdge Cache
-      if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: sudo ditto /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/ UnityCache/MonoBleedingEdge
-
-    - name: Restore Managed Cache
-      if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: sudo ditto UnityCache/Managed/ /Applications/Unity/Unity.app/Contents/Managed/
-
-    - name: Restore MonoBleedingEdge Cache
-      if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: sudo ditto UnityCache/MonoBleedingEdge/ /Applications/Unity/Unity.app/Contents/MonoBleedingEdge/
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
