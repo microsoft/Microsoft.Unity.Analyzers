@@ -778,6 +778,13 @@ namespace UnityEditor
 
 }
 
+namespace Unity.Mathematics
+{
+	public struct float2 { }
+	public struct float3 { }
+	public struct float4 { }
+}
+
 namespace UnityEngine.Jobs
 {
 	struct TransformAccess

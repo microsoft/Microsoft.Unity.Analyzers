@@ -4,27 +4,38 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
+using Unity.Mathematics;
 using UnityEngine;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class Vector2MathTests: VectorMathTests<Vector2> {}
-public class Vector3MathTests: VectorMathTests<Vector3> {}
-public class Vector4MathTests: VectorMathTests<Vector4> {}
+public class Vector2MathTests: VectorMathTests<Vector2>;
+public class Vector3MathTests: VectorMathTests<Vector3>;
+public class Vector4MathTests: VectorMathTests<Vector4>;
+public class Float2MathTests: VectorMathTests<float2>;
+public class Float3MathTests: VectorMathTests<float3>;
+public class Float4MathTests: VectorMathTests<float4>;
 
 public abstract class VectorMathTests<T> : BaseCodeFixVerifierTest<VectorMathAnalyzer, VectorMathCodeFix>
 {
+	private readonly AnalyzerVerificationContext _context = AnalyzerVerificationContext
+		.Default
+		.WithAnalyzerFilter("CS8019"); // Unnecessary using directive
+
+	private static readonly string _typeName = typeof(T).Name;
+
 	[Fact]
 	public async Task AlreadySorted()
 	{
 		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -33,7 +44,7 @@ class Camera : MonoBehaviour
 }}
 ";
 
-		await VerifyCSharpDiagnosticAsync(test);
+		await VerifyCSharpDiagnosticAsync(_context, test);
 	}
 
 	[Fact]
@@ -41,11 +52,12 @@ class Camera : MonoBehaviour
 	{
 		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -54,17 +66,18 @@ class Camera : MonoBehaviour
 }}
 ";
 		var diagnostic = ExpectDiagnostic()
-			.WithLocation(11, 22);
+			.WithLocation(12, 22);
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(_context, test, diagnostic);
 
 		string fixedTest = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -72,7 +85,7 @@ class Camera : MonoBehaviour
     }}
 }}
 ";
-		await VerifyCSharpFixAsync(test, fixedTest);
+		await VerifyCSharpFixAsync(_context, test, fixedTest);
 	}
 
 	[Fact]
@@ -80,11 +93,12 @@ class Camera : MonoBehaviour
 	{
 		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -93,17 +107,18 @@ class Camera : MonoBehaviour
 }}
 ";
 		var diagnostic = ExpectDiagnostic()
-			.WithLocation(11, 33);
+			.WithLocation(12, 33);
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(_context, test, diagnostic);
 
 		string fixedTest = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -111,7 +126,7 @@ class Camera : MonoBehaviour
     }}
 }}
 ";
-		await VerifyCSharpFixAsync(test, fixedTest);
+		await VerifyCSharpFixAsync(_context, test, fixedTest);
 	}
 
 	[Fact]
@@ -119,38 +134,40 @@ class Camera : MonoBehaviour
 	{
 		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
-        {typeof(T).Name}.zero.Equals(b * x * a);
+        {_typeName}.zero.Equals(b * x * a);
     }}
 }}
 ";
 		var diagnostic = ExpectDiagnostic()
-			.WithLocation(11, 29);
+			.WithLocation(12, 22 + _typeName.Length);
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(_context, test, diagnostic);
 
 		string fixedTest = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
-        {typeof(T).Name}.zero.Equals(a * b * x);
+        {_typeName}.zero.Equals(a * b * x);
     }}
 }}
 ";
-		await VerifyCSharpFixAsync(test, fixedTest);
+		await VerifyCSharpFixAsync(_context, test, fixedTest);
 	}
 
 	[Fact]
@@ -158,11 +175,12 @@ class Camera : MonoBehaviour
 	{
 		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -171,17 +189,18 @@ class Camera : MonoBehaviour
 }}
 ";
 		var diagnostic = ExpectDiagnostic()
-			.WithLocation(11, 27);
+			.WithLocation(12, 27);
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(_context, test, diagnostic);
 
 		string fixedTest = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -189,7 +208,7 @@ class Camera : MonoBehaviour
     }}
 }}
 ";
-		await VerifyCSharpFixAsync(test, fixedTest);
+		await VerifyCSharpFixAsync(_context, test, fixedTest);
 	}
 
 	[Fact]
@@ -197,11 +216,12 @@ class Camera : MonoBehaviour
 	{
 		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -211,20 +231,21 @@ class Camera : MonoBehaviour
 ";
 		var diagnostics = new[]
 		{
-			ExpectDiagnostic().WithLocation(11, 22),
-			ExpectDiagnostic().WithLocation(11, 41),
-			ExpectDiagnostic().WithLocation(11, 53)
+			ExpectDiagnostic().WithLocation(12, 22),
+			ExpectDiagnostic().WithLocation(12, 41),
+			ExpectDiagnostic().WithLocation(12, 53)
 		};
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostics);
+		await VerifyCSharpDiagnosticAsync(_context, test, diagnostics);
 
 		string fixedTest = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
 {{
     void Update() {{
-        var x = {typeof(T).Name}.zero;
+        var x = {_typeName}.zero;
         var a = 12;
         var b = 42;
 
@@ -232,66 +253,63 @@ class Camera : MonoBehaviour
     }}
 }}
 ";
-		await VerifyCSharpFixAsync(test, fixedTest);
+		await VerifyCSharpFixAsync(_context, test, fixedTest);
 	}
 
 	[Fact]
 	public async Task OnlyMultiplyExpression()
 	{
-		string test = @"
+		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
-{
-    void Update() {
+{{
+    void Update() {{
         float curAngle = 0, preAngle = 0, rev = 0;
-        Transform target = transform;
-        Vector3 offsetPerRound = Vector3.up;
-
-        target.position += offsetPerRound * (curAngle - preAngle) / 360 * rev;
-    }
-}
+        {_typeName} offsetPerRound = {_typeName}.zero;
+        {_typeName} result = offsetPerRound * (curAngle - preAngle) / 360 * rev;
+    }}
+}}
 ";
 
-		await VerifyCSharpDiagnosticAsync(test);
+		await VerifyCSharpDiagnosticAsync(_context, test);
 	}
 
 	[Fact]
 	public async Task WhenMultiplyExpressionUsed()
 	{
-		string test = @"
+		string test = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
-{
-    void Update() {
+{{
+    void Update() {{
         float curAngle = 0, preAngle = 0, rev = 0;
-        Transform target = transform;
-        Vector3 offsetPerRound = Vector3.up;
-
-        target.position += offsetPerRound * (curAngle - preAngle) * 360 * rev;
-    }
-}
+        {_typeName} offsetPerRound = {_typeName}.zero;
+        {_typeName} result = offsetPerRound * (curAngle - preAngle) * 360 * rev;
+    }}
+}}
 ";
 		var diagnostic = ExpectDiagnostic()
-			.WithLocation(11, 28);
+			.WithLocation(10, 19 + _typeName.Length);
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(_context, test, diagnostic);
 
-		string fixedTest = @"
+		string fixedTest = $@"
 using UnityEngine;
+using Unity.Mathematics;
 
 class Camera : MonoBehaviour
-{
-    void Update() {
+{{
+    void Update() {{
         float curAngle = 0, preAngle = 0, rev = 0;
-        Transform target = transform;
-        Vector3 offsetPerRound = Vector3.up;
-
-        target.position += (curAngle - preAngle) * 360 * rev * offsetPerRound;
-    }
-}
+        {_typeName} offsetPerRound = {_typeName}.zero;
+        {_typeName} result = (curAngle - preAngle) * 360 * rev * offsetPerRound;
+    }}
+}}
 ";
-		await VerifyCSharpFixAsync(test, fixedTest);
+		await VerifyCSharpFixAsync(_context, test, fixedTest);
 	}
 }

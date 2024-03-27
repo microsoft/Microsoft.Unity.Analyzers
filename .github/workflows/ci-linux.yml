@@ -36,42 +36,11 @@ jobs:
         dotnet-version: '8.0.x'
         include-prerelease: false
 
-    # So far we need Unity assemblies (Managed) and framework 4.7.1 reference assemblies (MonoBleedingEdge/lib/mono/4.7.1-api) for testing
-    # We don't need to download/install Unity every run, we just need to cache those managed assemblies
-    # But we have to deal with the following:
-    # - the cache only works under the GITHUB_WORKSPACE folder
-    # - the cache is linited to 400M per run (so we cannot cache the full Unity installation)
-    # - When Unity is not installed, our detection logic will fallback to ~/Unity/Editor/Data
-    - name: Enable Unity Cache Support
-      id: cache-unity
-      uses: actions/cache@v3
-      with:
-        key: ${{ runner.os }}-unitycache-${{ env.UNITY_FULL_VERSION }}
-        path: UnityCache
-
     - name: Download Unity
-      if: steps.cache-unity.outputs.cache-hit != 'true'
       run: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/${{ env.UNITY_HASH }}/LinuxEditorInstaller/Unity.tar.xz
 
     - name: Install Unity
-      if: steps.cache-unity.outputs.cache-hit != 'true'
       run: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
-
-    - name: Prepare Managed Cache
-      if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: mkdir -p UnityCache && cp -Rp ~/Unity/Editor/Data/Managed/ UnityCache/Managed/
-
-    - name: Prepare MonoBleedingEdge Cache
-      if: steps.cache-unity.outputs.cache-hit != 'true'
-      run: mkdir -p UnityCache && cp -Rp ~/Unity/Editor/Data/MonoBleedingEdge/ UnityCache/MonoBleedingEdge/
-
-    - name: Restore Managed Cache
-      if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: mkdir -p ~/Unity/Editor/Data/ && cp -Rp UnityCache/Managed/ ~/Unity/Editor/Data/
-
-    - name: Restore MonoBleedingEdge Cache
-      if: steps.cache-unity.outputs.cache-hit == 'true'
-      run: mkdir -p ~/Unity/Editor/Data/ && cp -Rp UnityCache/MonoBleedingEdge/ ~/Unity/Editor/Data/
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
