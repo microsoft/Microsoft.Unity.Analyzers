@@ -34,7 +34,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-        include-prerelease: false
 
     - name: Download Unity
       run: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/${{ env.UNITY_HASH }}/LinuxEditorInstaller/Unity.tar.xz
