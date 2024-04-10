@@ -18,7 +18,7 @@ env:
 jobs:
   ci:
     strategy:
-      matrix:
+      matrix: # unfortunately accessing env variables in a matrix definition is not supported. I would love to extract hash/version
         include:
           - os: ubuntu
             download: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/887be4894c44/LinuxEditorInstaller/Unity.tar.xz
