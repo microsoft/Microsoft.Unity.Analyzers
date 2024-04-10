@@ -43,10 +43,10 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Download Unity
+    - name: Download Unity on ${{ matrix.os }}
       run: ${{ matrix.download }}
 
-    - name: Install Unity
+    - name: Install Unity on ${{ matrix.os }}
       run: ${{ matrix.install }}
 
     - name: Initialize CodeQL
