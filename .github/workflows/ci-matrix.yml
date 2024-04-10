@@ -11,8 +11,8 @@ on:
     - release/*
  
 env:
-  UNITY_HASH: 244b723c30a6
-  UNITY_FULL_VERSION: 2022.3.19f1
+  UNITY_HASH: 887be4894c44
+  UNITY_FULL_VERSION: 2022.3.22f1
  
 jobs:
   ci:
