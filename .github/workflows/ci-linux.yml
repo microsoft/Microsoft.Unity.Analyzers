@@ -23,7 +23,7 @@ jobs:
 
     steps:
     - name: Checkout 
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
       
     - name: Set Environment Variables
       uses: ./.github/actions/setvars
@@ -31,7 +31,7 @@ jobs:
         varFilePath: ./.github/variables/unity.env
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
         include-prerelease: false
@@ -43,7 +43,7 @@ jobs:
       run: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
 
     - name: Build
       run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln /p:UseSharedCompilation=false
@@ -53,7 +53,7 @@ jobs:
         DOTNET_NOLOGO: 1
           
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
       
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
