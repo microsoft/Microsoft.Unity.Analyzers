@@ -17,16 +17,16 @@ jobs:
         include:
           - os: ubuntu-latest
             download: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/887be4894c44/LinuxEditorInstaller/Unity.tar.xz
-            install: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
-            shell: bash
+            #install: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
+            #shell: bash
           - os: macos-latest
             download: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/887be4894c44/MacEditorInstaller/Unity.pkg
-            install: sudo installer -package unity.pkg -target /
-            shell: bash
+            #install: sudo installer -package unity.pkg -target /
+            #shell: bash
           - os: windows-latest
             download: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe" "%CD%\unitysetup.exe"
-            install: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
-            shell: cmd
+            #install: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
+            #shell: cmd
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
@@ -47,11 +47,11 @@ jobs:
 
     - name: Download Unity
       run: {{ matrix.download }}
-      shell: {{ matrix.shell }}
+      #shell: {{ matrix.shell }}
 
-    - name: Install Unity
-      run: {{ matrix.install }}
-      shell: {{ matrix.shell }}
+    #- name: Install Unity
+    #  run: {{ matrix.install }}
+    #  shell: {{ matrix.shell }}
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
