@@ -10,6 +10,11 @@ on:
     - main
     - release/*
 
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: 1
+
 jobs:
   ci:
     strategy:
@@ -54,10 +59,6 @@ jobs:
 
     - name: Build
       run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln /p:UseSharedCompilation=false
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT: 1
-        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-        DOTNET_NOLOGO: 1
           
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
@@ -72,7 +73,3 @@ jobs:
 
     - name: Test
       run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT: 1
-        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-        DOTNET_NOLOGO: 1
