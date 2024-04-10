@@ -34,7 +34,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-        include-prerelease: false    
 
     - name: Download Unity
       run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/${{ env.UNITY_HASH }}/Windows64EditorInstaller/UnitySetup64-${{ env.UNITY_FULL_VERSION }}.exe" "%CD%\unitysetup.exe"
