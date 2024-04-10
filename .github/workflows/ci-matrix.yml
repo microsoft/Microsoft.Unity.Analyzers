@@ -10,12 +10,8 @@ on:
     - main
     - release/*
  
- 
 jobs:
   ci:
-    env:
-      UNITY_HASH: 887be4894c44
-      UNITY_FULL_VERSION: 2022.3.22f1
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
