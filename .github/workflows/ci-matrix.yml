@@ -15,19 +15,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        UNITY_HASH: [887be4894c44]
-        UNITY_FULL_VERSION: [2022.3.22f1]
         include:
           - os: ubuntu-latest
-            download: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/${{ matrix.UNITY_HASH }}/LinuxEditorInstaller/Unity.tar.xz
+            download: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/887be4894c44/LinuxEditorInstaller/Unity.tar.xz
             install: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
             shell: bash
           - os: macos-latest
-            download: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/${{ matrix.UNITY_HASH }}/MacEditorInstaller/Unity.pkg
+            download: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/887be4894c44/MacEditorInstaller/Unity.pkg
             install: sudo installer -package unity.pkg -target /
             shell: bash
           - os: windows-latest
-            download: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/${{ matrix.UNITY_HASH }}/Windows64EditorInstaller/UnitySetup64-${{ matrix.UNITY_FULL_VERSION }}.exe" "%CD%\unitysetup.exe"
+            download: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe" "%CD%\unitysetup.exe"
             install: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
             shell: cmd
     runs-on: ${{ matrix.os }}
