@@ -14,16 +14,19 @@ jobs:
   ci:
     strategy:
       matrix:
-        os: [ubuntu, macos, windows]
-        #download: 'curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/887be4894c44/LinuxEditorInstaller/Unity.tar.xz'
-        #install: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
-        #shell: bash
-        #download: 'curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/887be4894c44/MacEditorInstaller/Unity.pkg'
-        #install: sudo installer -package unity.pkg -target /
-        #shell: bash
-        #download: 'bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe" "%CD%\unitysetup.exe"'
-        #install: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
-        #shell: cmd
+        include:
+          - os: ubuntu
+            download: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/887be4894c44/LinuxEditorInstaller/Unity.tar.xz
+            install: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
+            shell: bash
+          - os: macos
+            download: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/887be4894c44/MacEditorInstaller/Unity.pkg
+            install: sudo installer -package unity.pkg -target /
+            shell: bash
+          - os: windows
+            download: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe" "%CD%\unitysetup.exe"
+            install: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
+            shell: cmd
     runs-on: ${{ matrix.os }}-latest
     permissions:
       actions: read
@@ -42,22 +45,13 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Download Unity (ubuntu)
-      if: matrix.os == 'ubuntu'
-      run: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/887be4894c44/LinuxEditorInstaller/Unity.tar.xz
-      
-    - name: Download Unity (macos)
-      if: matrix.os == 'macos'
-      run: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/887be4894c44/MacEditorInstaller/Unity.pkg
-      
-    - name: Download Unity (windows)
-      if: matrix.os == 'windows'
-      run: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe" "%CD%\unitysetup.exe"
-      shell: cmd
-      
-    #- name: Install Unity
-    #  run: {{ matrix.install }}
-    #  shell: {{ matrix.shell }}
+    - name: Download Unity
+      run: ${{ matrix.download }}
+      shell: ${{ matrix.shell }}
+
+    - name: Install Unity
+      run: ${{ matrix.install }}
+      shell: ${{ matrix.shell }}
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
