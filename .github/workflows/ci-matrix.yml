@@ -13,6 +13,9 @@ on:
  
 jobs:
   ci:
+    env:
+      UNITY_HASH: 887be4894c44
+      UNITY_FULL_VERSION: 2022.3.22f1
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -29,9 +32,6 @@ jobs:
             download: bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/${{ env.UNITY_HASH }}/Windows64EditorInstaller/UnitySetup64-${{ env.UNITY_FULL_VERSION }}.exe" "%CD%\unitysetup.exe"
             install: unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
             shell: cmd
-    env:
-      UNITY_HASH: 887be4894c44
-      UNITY_FULL_VERSION: 2022.3.22f1
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
