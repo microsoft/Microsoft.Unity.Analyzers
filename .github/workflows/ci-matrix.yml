@@ -29,7 +29,7 @@ jobs:
           - os: windows
             download: cmd /c bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe" "%CD%\unitysetup.exe"
             install: cmd /c unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
-    name: ${{ matrix.os }}
+    name: CI-${{ runner.os }}
     runs-on: ${{ matrix.os }}-latest
     permissions:
       actions: read
@@ -72,4 +72,5 @@ jobs:
       run: echo "TEST_FILTER=FullyQualifiedName!~ConsistencyTests" >> $GITHUB_ENV
 
     - name: Test
-      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter ${{env.TEST_FILTER}}
+      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter $env:TEST_FILTER
+      shell: pwsh
