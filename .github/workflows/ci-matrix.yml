@@ -14,23 +14,44 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: 1
+  UNITY_HASH: '887be4894c44'
+  UNITY_FULL_VERSION: '2022.3.22f1'
 
 jobs:
+  compute:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      deployments: read
+      packages: none
+      pull-requests: write
+      security-events: write
+    outputs:
+      UNITY_HASH: ${{ env.UNITY_HASH }}
+      UNITY_FULL_VERSION: ${{ env.UNITY_FULL_VERSION }}
+    steps:
+      - name: Compute outputs
+        run: |
+          echo "UNITY_HASH=${{ env.UNITY_HASH }}" >> $GITHUB_OUTPUT
+          echo "UNITY_FULL_VERSION=${{ env.UNITY_FULL_VERSION }}" >> $GITHUB_OUTPUT
+
   ci:
     strategy:
-      matrix: # unfortunately accessing env variables in a matrix definition is not supported. I would love to extract hash/version
+      matrix: 
         include:
           - os: ubuntu
-            download: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/887be4894c44/LinuxEditorInstaller/Unity.tar.xz
+            download: curl -o ./Unity.tar.xz -k https://download.unity3d.com/download_unity/${{ needs.compute.outputs.UNITY_HASH }}/LinuxEditorInstaller/Unity.tar.xz
             install: mkdir -p ~/Unity && tar -xf Unity.tar.xz -C ~/Unity
           - os: macos
-            download: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/887be4894c44/MacEditorInstaller/Unity.pkg
+            download: curl -o ./unity.pkg -k https://download.unity3d.com/download_unity/${{ needs.compute.outputs.UNITY_HASH }}/MacEditorInstaller/Unity.pkg
             install: sudo installer -package unity.pkg -target /
           - os: windows
-            download: cmd /c bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/887be4894c44/Windows64EditorInstaller/UnitySetup64-2022.3.22f1.exe" "%CD%\unitysetup.exe"
+            download: cmd /c bitsadmin /TRANSFER unity /DOWNLOAD /PRIORITY foreground "https://download.unity3d.com/download_unity/${{ needs.compute.outputs.UNITY_HASH }}/Windows64EditorInstaller/UnitySetup64-${{ needs.compute.outputs.UNITY_FULL_VERSION }}.exe" "%CD%\unitysetup.exe"
             install: cmd /c unitysetup.exe /UI=reduced /S /D=%ProgramFiles%\Unity
     name: CI-${{ matrix.os }}
     runs-on: ${{ matrix.os }}-latest
+    needs: compute
     permissions:
       actions: read
       contents: read
