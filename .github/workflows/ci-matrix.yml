@@ -74,5 +74,5 @@ jobs:
       shell: bash
 
     - name: Test
-      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter $env:TEST_FILTER
-      shell: pwsh
+      run: dotnet test -c Debug ./src/Microsoft.Unity.Analyzers.Tests --filter {{env.TEST_FILTER}}
+      shell: bash
