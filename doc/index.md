@@ -65,3 +65,4 @@ ID | Suppressed ID | Justification
 [USP0019](USP0012.md) | IDE0051 | Don't flag private methods with PreserveAttribute or UsedImplicitlyAttribute as unused
 [USP0020](USP0020.md) | IDE0052 | The Unity runtime invokes Unity messages
 [USP0021](USP0021.md) | IDE0041 | Prefer reference equality
+[USP0022](USP0022.md) | IDE0270 | Unity objects should not use if null coalescing

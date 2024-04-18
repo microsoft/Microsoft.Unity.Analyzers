@@ -289,7 +289,12 @@ public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "IDE0074",
 		justification: Strings.UnityObjectCoalescingAssignmentSuppressorJustification);
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule, UseIsNullRule);
+	internal static readonly SuppressionDescriptor IfNullCoalescingRule = new(
+		id: "USP0022",
+		suppressedDiagnosticId: "IDE0270",
+		justification: Strings.UnityObjectIfNullCoalescingSuppressorJustification);
+
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule, UseIsNullRule, IfNullCoalescingRule);
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{

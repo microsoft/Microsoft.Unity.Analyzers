@@ -1150,6 +1150,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unity objects should not use if null coalescing..
+        /// </summary>
+        internal static string UnityObjectIfNullCoalescingSuppressorJustification {
+            get {
+                return ResourceManager.GetString("UnityObjectIfNullCoalescingSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use null comparison.
         /// </summary>
         internal static string UnityObjectIsPatternCodeFixTitle {
