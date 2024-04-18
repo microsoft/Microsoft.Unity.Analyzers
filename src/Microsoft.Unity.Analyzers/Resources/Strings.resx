@@ -232,6 +232,9 @@
   <data name="UnityObjectNullCoalescingSuppressorJustification" xml:space="preserve">
     <value>Unity objects should not use null coalescing.</value>
   </data>
+  <data name="UnityObjectIfNullCoalescingSuppressorJustification" xml:space="preserve">
+    <value>Unity objects should not use if null coalescing.</value>
+  </data>
   <data name="UnityObjectNullPropagationSuppressorJustification" xml:space="preserve">
     <value>Unity objects should not use null propagation.</value>
   </data>

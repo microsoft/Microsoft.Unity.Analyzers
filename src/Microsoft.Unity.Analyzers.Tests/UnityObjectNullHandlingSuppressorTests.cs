@@ -219,6 +219,7 @@ class Camera : MonoBehaviour
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
 
+
 	[Fact]
 	public async Task UseIsNullFromObjectSuppressed()
 	{
@@ -237,6 +238,30 @@ class Camera : MonoBehaviour
 
 		var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.UseIsNullRule)
 			.WithLocation(8, 20);
+
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
+
+	[Fact]
+	public async Task IfNullCoalescingSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+	public void M()
+	{
+		Camera item = FindItem() as Camera;
+		if (item == null)
+			throw new System.InvalidOperationException();
+	}
+
+	MonoBehaviour FindItem() => null;
+}";
+
+		var suppressor = ExpectSuppressor(UnityObjectNullHandlingSuppressor.IfNullCoalescingRule)
+			.WithLocation(9, 3);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
