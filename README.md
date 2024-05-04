@@ -9,7 +9,7 @@ Check out the [list of analyzers and suppressors](doc/index.md) defined in this 
 
 # Releases
 
-We are focusing our efforts on the experience brought by our IDEs (Visual Studio and Visual Studio for Mac) with Unity where these analyzers **ship in the box**. For Visual Studio Code, you can find all the documentation [here](https://code.visualstudio.com/docs/other/unity#_enabling-unity-warnings).
+We are focusing our efforts on the experience brought by our IDEs (Visual Studio, and Visual Studio for Mac) with Unity where these analyzers **ship in the box**. For Visual Studio Code, please use our official Unity extension [here](https://marketplace.visualstudio.com/items?itemName=VisualStudioToolsForUnity.vstuc).
 
 We also ship them on [NuGet](https://nuget.org/packages/Microsoft.Unity.Analyzers) as for people building class librairies for Unity and for other advanced usages.
 
@@ -17,9 +17,9 @@ We also ship them on [NuGet](https://nuget.org/packages/Microsoft.Unity.Analyzer
 If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
 
 # Prerequisites
-For building and testing, you'll need **.NET 7 and Visual Studio 2022 17.4+ or Visual Studio 2022 for Mac 17.4+**.
+For building and testing, you'll need **.NET 7 and Visual Studio 2022 17.4+, Visual Studio 2022 for Mac 17.4+ or Visual Studio Code 1.76+**.
 
-This project binaries are targeting **Visual Studio 2019 16.4+** and **Visual Studio for Mac 8.4+**.
+This project binaries are targeting **Visual Studio 2019 16.4+**, **Visual Studio for Mac 8.4+** and **Visual Studio Code 1.76+**.
 
 This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics.
 
@@ -41,14 +41,14 @@ You can open `.\src\Microsoft.Unity.Analyzers.sln` in your favorite IDE to work 
 
 Running and debugging the tests is the easiest way to get started but sometimes you want to work on a real-life Unity project.
 
-## On Windows
+## On Visual Studio
 
 - Open the `Microsoft.Unity.Analyzers.Vsix.sln` solution.
 - Make sure `Microsoft.Unity.Analyzers.Vsix` is set as the startup project.
 - Hit play (Current Instance) to start debugging an experimental instance of Visual Studio 2022.
 - Load any Unity project in the Visual Studio experimental instance then put breakpoints in the `Microsoft.Unity.Analyzers` project.
 
-## On macOS
+## On Visual Studio for Mac
 
 - Open the `Microsoft.Unity.Analyzers.Mpack.sln` solution.
 - Make sure `Microsoft.Unity.Analyzers.Mpack` is set as the startup project.
