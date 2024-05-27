@@ -28,7 +28,7 @@ public abstract class DiagnosticVerifier
 
 	protected virtual IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
 	{
-		return Enumerable.Empty<DiagnosticAnalyzer>();
+		return [];
 	}
 
 	protected static DiagnosticResult ExpectDiagnostic(DiagnosticDescriptor descriptor)
