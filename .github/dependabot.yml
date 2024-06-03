@@ -9,3 +9,14 @@ updates:
     directory: "/src"
     schedule:
       interval: "weekly"
+    groups:
+      roslyn:
+        patterns:
+          - "Microsoft.CodeAnalysis*"
+      vssdk:
+        patterns:
+          - "Microsoft.VisualStudio*"
+          - "Microsoft.VSSDK*" 
+      tests:
+        patterns:
+          - "xunit*" 
