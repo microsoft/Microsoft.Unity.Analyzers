@@ -1,5 +1,22 @@
+---
 version: 2
-updates: 
-  — package-ecosystem: "nuget"
-  directory: "/src" 
-  interval: "daily"
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/.github"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "nuget"
+    directory: "/src"
+    schedule:
+      interval: "weekly"
+    groups:
+      roslyn:
+        patterns:
+          - "Microsoft.CodeAnalysis*"
+      vssdk:
+        patterns:
+          - "Microsoft.VisualStudio*"
+          - "Microsoft.VSSDK*" 
+      tests:
+        patterns:
+          - "xunit*" 
