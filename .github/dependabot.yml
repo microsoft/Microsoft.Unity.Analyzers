@@ -9,6 +9,9 @@ updates:
     directory: "/src"
     schedule:
       interval: "weekly"
+    ignore:
+      # we need to fine-control the exact version for VS compat, and we have a distinct version for tests
+      - dependency-name: "Microsoft.CodeAnalysis.CSharp.Workspaces"  
     groups:
       roslyn:
         patterns:
