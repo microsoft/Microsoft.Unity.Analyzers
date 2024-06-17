@@ -91,13 +91,13 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 			return false;
 
 		var propertyValue = spProperty.GetValue(psi);
-		if (propertyValue is not ImmutableHashSet<(string Id, LocalizableString Justification)> suppressions)
+		if (propertyValue is not ImmutableArray<Suppression> suppressions)
 		{
 			Assert.Fail("Unable to retrieve suppressions");
 			return false;
 		}
 
-		if (!suppressions.Any(t => t.Id == suppressor.Id && t.Justification.Equals(suppressor.MessageFormat)))
+		if (!suppressions.Any(t => t.Descriptor.Id == suppressor.Id && t.Descriptor.Justification.Equals(suppressor.MessageFormat)))
 			return false;
 
 		return suppressor.Spans.Any(sp => sp.Span.StartLinePosition == diagnostic.Location.GetLineSpan().StartLinePosition);
