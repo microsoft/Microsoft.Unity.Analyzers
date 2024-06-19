@@ -65,10 +65,9 @@ public class TryGetComponentAnalyzer : DiagnosticAnalyzer
 	}
 }
 
-internal class TryGetComponentContext(string targetIdentifier, bool isVariableDeclaration, IfStatementSyntax ifStatement, SyntaxKind conditionKind)
+internal class TryGetComponentContext(string targetIdentifier, IfStatementSyntax ifStatement, SyntaxKind conditionKind)
 {
 	public string TargetIdentifier { get; } = targetIdentifier;
-	public bool IsVariableDeclaration { get; } = isVariableDeclaration;
 	public IfStatementSyntax IfStatement { get; } = ifStatement;
 	public SyntaxKind ConditionKind { get; } = conditionKind;
 
@@ -78,12 +77,12 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 		if (!IsCompatibleGetComponent(invocation, model))
 			return null;
 
-		// We want an assignment or variable declaration with invocation as initializer
+		// We want a variable declaration with invocation as initializer
 		var invocationParent = invocation.Parent;
 		if (invocationParent == null)
 			return null;
 
-		if (!TryGetTargetdentifier(model, invocationParent, out var targetIdentifier, out var isVariableDeclaration))
+		if (!TryGetTargetdentifier(invocationParent, out var targetIdentifier))
 			return null;
 
 		// We want the next line to be an if statement
@@ -111,7 +110,7 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 			visitor = visitor.Parent;
 		}
 
-		return new TryGetComponentContext(targetIdentifier.Value.Text, isVariableDeclaration, ifStatement, binaryExpression.Kind());
+		return new TryGetComponentContext(targetIdentifier.Value.Text, ifStatement, binaryExpression.Kind());
 	}
 
 	private static bool IsCompatibleGetComponent(InvocationExpressionSyntax invocation, SemanticModel model)
@@ -164,31 +163,15 @@ internal class TryGetComponentContext(string targetIdentifier, bool isVariableDe
 		return conditionIdentifier.HasValue;
 	}
 
-	private static bool TryGetTargetdentifier(SemanticModel model, SyntaxNode invocationParent, [NotNullWhen(true)] out SyntaxToken? targetIdentifier, out bool isVariableDeclaration)
+	private static bool TryGetTargetdentifier(SyntaxNode invocationParent, [NotNullWhen(true)] out SyntaxToken? targetIdentifier)
 	{
 		targetIdentifier = null;
-		isVariableDeclaration = false;
 
-		switch (invocationParent)
-		{
-			case EqualsValueClauseSyntax { Parent: VariableDeclaratorSyntax variableDeclarator }:
-				isVariableDeclaration = true;
-				targetIdentifier = variableDeclarator.Identifier;
-				break;
+		if (invocationParent is not EqualsValueClauseSyntax { Parent: VariableDeclaratorSyntax variableDeclarator })
+			return false;
 
-			case AssignmentExpressionSyntax { Left: IdentifierNameSyntax identifierName }:
-			{
-				// With an assignment, we want to work only with a field or local variable ('out' constraint)
-				var symbol = model.GetSymbolInfo(identifierName);
-				if (symbol.Symbol is not (ILocalSymbol or IFieldSymbol))
-					return false;
-
-				targetIdentifier = identifierName.Identifier;
-				break;
-			}
-		}
-
-		return targetIdentifier.HasValue;
+		targetIdentifier = variableDeclarator.Identifier;
+		return true;
 	}
 
 	private static bool TryGetNextTopNode(SyntaxNode node, [NotNullWhen(true)] out SyntaxNode? nextNode)
@@ -274,22 +257,18 @@ public class TryGetComponentCodeFix : CodeFixProvider
 		}
 
 		var targetIdentifier = context.TargetIdentifier;
-		var newArgument = context.IsVariableDeclaration switch
-		{
-			// Creating var argument
-			true => Argument(
-				DeclarationExpression(
-					IdentifierName(
-						Identifier(TriviaList(),
-							SyntaxKind.VarKeyword,
-							"var",
-							"var",
-							TriviaList())),
-					SingleVariableDesignation(
-						Identifier(targetIdentifier)))),
-			// Reusing the target identifier
-			false => Argument(IdentifierName(targetIdentifier))
-		};
+
+		// Creating var argument
+		var newArgument = Argument(
+			DeclarationExpression(
+				IdentifierName(
+					Identifier(TriviaList(),
+						SyntaxKind.VarKeyword,
+						"var",
+						"var",
+						TriviaList())),
+				SingleVariableDesignation(
+					Identifier(targetIdentifier))));
 
 		// Add the 'out' component argument 
 		newInvocation = newInvocation

@@ -266,92 +266,6 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task VariableAssignmentNotNullConditionTest()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public void Update() 
-    {
-        Rigidbody rb;
-        rb = gameObject.GetComponent<Rigidbody>();
-        if (rb != null) {
-            Debug.Log(rb.name);
-        }
-    }
-}
-";
-
-		var diagnostic = ExpectDiagnostic()
-			.WithLocation(9, 14);
-
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
-
-		const string fixedTest = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public void Update() 
-    {
-        Rigidbody rb;
-        if (gameObject.TryGetComponent<Rigidbody>(out rb)) {
-            Debug.Log(rb.name);
-        }
-    }
-}
-";
-
-		await VerifyCSharpFixAsync(test, fixedTest);
-	}
-
-	[Fact]
-	public async Task FieldAssignmentNotNullConditionTest()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    private Rigidbody rb;
-
-    public void Update() 
-    {
-        rb = gameObject.GetComponent<Rigidbody>();
-        if (rb != null) {
-            Debug.Log(rb.name);
-        }
-    }
-}
-";
-
-		var diagnostic = ExpectDiagnostic()
-			.WithLocation(10, 14);
-
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
-
-		const string fixedTest = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    private Rigidbody rb;
-
-    public void Update() 
-    {
-        if (gameObject.TryGetComponent<Rigidbody>(out rb)) {
-            Debug.Log(rb.name);
-        }
-    }
-}
-";
-
-		await VerifyCSharpFixAsync(test, fixedTest);
-	}
-
-	[Fact]
 	public async Task PropertyAssignmentNotNullConditionTest()
 	{
 		const string test = @"
@@ -419,49 +333,6 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task InlineIfAssignment()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public void Update() 
-    {
-        Component hit = null, platform = null;
-
-        if (hit != null)
-            platform = hit.GetComponent<Component>();
-        if (platform != null)
-            transform.parent = platform.transform;
-    }
-}
-";
-
-		var diagnostic = ExpectDiagnostic()
-			.WithLocation(11, 24);
-
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
-
-		const string fixedTest = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public void Update() 
-    {
-        Component hit = null, platform = null;
-
-        if (hit != null && hit.TryGetComponent<Component>(out platform))
-            transform.parent = platform.transform;
-    }
-}
-";
-
-		await VerifyCSharpFixAsync(test, fixedTest);
-	}
-
-	[Fact]
 	public async Task BlockBreaksDetection()
 	{
 		const string test = @"
@@ -508,49 +379,5 @@ class Camera : MonoBehaviour
 ";
 
 		await VerifyCSharpDiagnosticAsync(test);
-	}
-
-	[Fact]
-	public async Task DoubleInlineIfAssignment()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public void Update() 
-    {
-        Component hit = null, platform = null;
-
-        if (hit != null)
-            if (1 == 1)
-                platform = hit.GetComponent<Component>();
-        if (platform != null)
-            transform.parent = platform.transform;
-    }
-}
-";
-
-		var diagnostic = ExpectDiagnostic()
-			.WithLocation(12, 28);
-
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
-
-		const string fixedTest = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public void Update() 
-    {
-        Component hit = null, platform = null;
-
-        if (1 == 1 && hit != null && hit.TryGetComponent<Component>(out platform))
-            transform.parent = platform.transform;
-    }
-}
-";
-
-		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 }
