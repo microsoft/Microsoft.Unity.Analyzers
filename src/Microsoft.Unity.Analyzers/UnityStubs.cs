@@ -751,7 +751,7 @@ namespace UnityEditor
 		void OnPostprocessMeshHierarchy(GameObject root) { }
 		void OnPostprocessModel(GameObject gameObject) { }
 		void OnPostprocessSpeedTree(GameObject gameobject) { }
-		void OnPostProcessSprites(Texture2D texture, Sprite[] sprites) { }
+		void OnPostprocessSprites(Texture2D texture, Sprite[] sprites) { }
 		void OnPostprocessTexture(Texture2D texture) { }
 		void OnPostprocessPrefab(GameObject gameObject) { }
 		void OnPostprocessTexture2DArray(Texture2DArray texture) { }
