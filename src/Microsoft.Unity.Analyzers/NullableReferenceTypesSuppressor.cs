@@ -74,7 +74,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 
 		//suppress for fields that are not private and not static => statics cannot be set in editor and are not shown in the inspector and cannot be set there
 		if (!declarationSyntax.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PrivateKeyword) || modifier.IsKind(SyntaxKind.StaticKeyword))
-		    && !declarationSyntax.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == nameof(UnityEngine.HideInInspector))))
+			&& !declarationSyntax.AttributeLists.Any(attributeList => attributeList.Attributes.Any(attribute => attribute.Name.ToString() == nameof(UnityEngine.HideInInspector))))
 		{
 			context.ReportSuppression(Suppression.Create(Rule, diagnostic));
 			return;

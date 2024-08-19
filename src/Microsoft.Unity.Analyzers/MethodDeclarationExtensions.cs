@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Microsoft.Unity.Analyzers;
 

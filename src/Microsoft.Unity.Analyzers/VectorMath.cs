@@ -76,7 +76,7 @@ public class VectorMathAnalyzer : DiagnosticAnalyzer
 			return false;
 
 		return IsSupportedExpression(context, node, vectorType)
-		       && NeedsOrdering(context, (ExpressionSyntax)node);
+			   && NeedsOrdering(context, (ExpressionSyntax)node);
 	}
 
 	private static bool NeedsOrdering(SyntaxNodeAnalysisContext context, ExpressionSyntax node)
@@ -106,9 +106,9 @@ public class VectorMathAnalyzer : DiagnosticAnalyzer
 		}
 
 		return firstVectorIndex != -1
-		       && lastScalarIndex != -1
-		       && firstVectorIndex < lastScalarIndex
-		       && scalarCount >= 2;
+			   && lastScalarIndex != -1
+			   && firstVectorIndex < lastScalarIndex
+			   && scalarCount >= 2;
 	}
 
 	internal static bool IsFloatType(TypeInfo typeInfo)

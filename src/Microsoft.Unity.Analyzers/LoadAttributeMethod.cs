@@ -72,8 +72,8 @@ public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 	private static bool IsLoadAttributeType(ITypeSymbol type, bool onlyEditorAttributes)
 	{
 		return type.Matches(typeof(UnityEditor.InitializeOnLoadMethodAttribute))
-		       || type.Matches(typeof(UnityEditor.Callbacks.DidReloadScripts))
-		       || (type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute)) && !onlyEditorAttributes);
+			   || type.Matches(typeof(UnityEditor.Callbacks.DidReloadScripts))
+			   || (type.Matches(typeof(UnityEngine.RuntimeInitializeOnLoadMethodAttribute)) && !onlyEditorAttributes);
 	}
 
 

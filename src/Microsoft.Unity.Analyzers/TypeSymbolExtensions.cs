@@ -68,6 +68,6 @@ internal static class TypeSymbolExtensions
 		}
 
 		return named.Name == type.Name
-		       && named.ContainingNamespace?.ToDisplayString() == type.Namespace;
+			   && named.ContainingNamespace?.ToDisplayString() == type.Namespace;
 	}
 }

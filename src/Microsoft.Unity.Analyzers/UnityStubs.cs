@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Unity.Analyzers;
 
-#pragma warning disable 
+#pragma warning disable
 
 namespace UnityEngine
 {
@@ -50,7 +50,7 @@ namespace UnityEngine
 	enum CubemapFace { }
 
 	struct Color { }
-	
+
 	public struct Vector2 { }
 	public struct Vector3 { }
 	public struct Vector4 { }
@@ -215,7 +215,8 @@ namespace UnityEngine
 		public static bool GetKeyDown(string name) { return false; }
 	}
 
-	internal class KeyTextAttribute : Attribute {
+	internal class KeyTextAttribute : Attribute
+	{
 		public string? Text { get; set; }
 
 		public KeyTextAttribute(string? text)
@@ -660,7 +661,7 @@ namespace UnityEngine.UIElements
 
 namespace UnityEngine.Scripting
 {
-	class PreserveAttribute : Attribute { } 
+	class PreserveAttribute : Attribute { }
 }
 
 namespace UnityEditor.AssetImporters
@@ -684,11 +685,11 @@ namespace UnityEditor.Callbacks
 
 namespace UnityEditor
 {
+	using AssetImporters;
 	using UnityEngine;
 	using UnityEngine.UIElements;
-	using AssetImporters;
 
-	class AssetDatabase {}
+	class AssetDatabase { }
 
 	class Editor : ScriptableObject
 	{
