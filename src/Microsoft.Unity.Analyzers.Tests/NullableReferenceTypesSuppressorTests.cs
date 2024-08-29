@@ -11,7 +11,8 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 public class NullableReferenceTypesSuppressorTest : BaseSuppressorVerifierTest<NullableReferenceTypesSuppressor>
 {
-	public const string WarningFormat = "Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider declaring the {0} as nullable.";
+	public const string WarningFieldFormat = "Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.";
+	public const string WarningPropertyFormat = "Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.";
 
 	[Fact]
 	public async Task NonUnityClassIsExemptFromSuppressions()
@@ -45,12 +46,12 @@ namespace Assets.Scripts
 		DiagnosticResult[] diagnostics =
 		[
 			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
-				.WithMessageFormat(WarningFormat)
+				.WithMessageFormat(WarningFieldFormat)
 				.WithArguments("field", "field1")
 				.WithLocation(9, 28),
 
 			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
-				.WithMessageFormat(WarningFormat)
+				.WithMessageFormat(WarningPropertyFormat)
 				.WithArguments("property", "property1")
 				.WithLocation(11, 28),
 		];
@@ -160,7 +161,7 @@ public class TestScript : MonoBehaviour
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
 
 			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
-				.WithMessageFormat(WarningFormat)
+				.WithMessageFormat(WarningFieldFormat)
 				.WithArguments("field", "hiddenField")
 				.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector
 
