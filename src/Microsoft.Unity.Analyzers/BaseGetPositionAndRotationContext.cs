@@ -31,19 +31,19 @@ public class BaseGetPositionAndRotationContext : BasePositionAndRotationContext
 	private static bool IsOutRefCompatible(SemanticModel model, ExpressionSyntax expression)
 	{
 		return model.GetSymbolInfo(expression).Symbol is ILocalSymbol symbol
-		       && IsOutRefCompatible(symbol.Type);
+			   && IsOutRefCompatible(symbol.Type);
 	}
 
 	private static bool IsOutRefCompatible(SemanticModel model, TypeSyntax type)
 	{
 		return model.GetSymbolInfo(type).Symbol is ITypeSymbol symbol
-		       && IsOutRefCompatible(symbol);
+			   && IsOutRefCompatible(symbol);
 	}
 
 	private static bool IsOutRefCompatible(ITypeSymbol type)
 	{
 		return type.Matches(typeof(Vector3))
-		       || type.Matches(typeof(Quaternion));
+			   || type.Matches(typeof(Quaternion));
 	}
 
 	public override bool TryGetArgumentExpression(SemanticModel model, ExpressionSyntax expression, [NotNullWhen(true)] out ArgumentSyntax? result)

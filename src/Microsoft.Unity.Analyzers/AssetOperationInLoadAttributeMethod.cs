@@ -33,13 +33,13 @@ public class AssetOperationInLoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 	{
 		context.EnableConcurrentExecution();
 		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-		
+
 		context.RegisterSyntaxNodeAction(AnalyzeMemberAccess, SyntaxKind.SimpleMemberAccessExpression);
 	}
 
 	private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context)
 	{
-		if (context.Node is not MemberAccessExpressionSyntax {Expression: IdentifierNameSyntax ins})
+		if (context.Node is not MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax ins })
 			return;
 
 		var text = ins.Identifier.Text;
@@ -63,7 +63,7 @@ public class AssetOperationInLoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 	}
 
 	private static bool IsStaticCtorInDecoratedType(IMethodSymbol methodSymbol, INamedTypeSymbol typeSymbol) => typeSymbol.StaticConstructors.Contains(methodSymbol)
-	                                                                                                            && InitializeOnLoadStaticCtorAnalyzer.IsDecorated(typeSymbol);
+																												&& InitializeOnLoadStaticCtorAnalyzer.IsDecorated(typeSymbol);
 
 	private static bool IsDecoratedMethod(IMethodSymbol methodSymbol) => LoadAttributeMethodAnalyzer.IsDecorated(methodSymbol, onlyEditorAttributes: true);
 }

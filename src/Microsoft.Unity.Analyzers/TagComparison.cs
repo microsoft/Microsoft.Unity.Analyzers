@@ -70,7 +70,7 @@ public class TagComparisonAnalyzer : DiagnosticAnalyzer
 			return;
 
 		if (IsReportableExpression(context, expr.Left)
-		    || IsReportableExpression(context, expr.Right))
+			|| IsReportableExpression(context, expr.Right))
 			context.ReportDiagnostic(Diagnostic.Create(Rule, expr.GetLocation()));
 	}
 
@@ -122,7 +122,7 @@ public class TagComparisonAnalyzer : DiagnosticAnalyzer
 
 		var containingType = propertySymbol.ContainingType;
 		return propertySymbol.Name == nameof(UnityEngine.Component.tag)
-		       && (containingType.Matches(typeof(UnityEngine.GameObject)) || containingType.Matches(typeof(UnityEngine.Component)));
+			   && (containingType.Matches(typeof(UnityEngine.GameObject)) || containingType.Matches(typeof(UnityEngine.Component)));
 	}
 }
 

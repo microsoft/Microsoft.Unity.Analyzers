@@ -149,7 +149,7 @@ internal class TryGetComponentContext(string targetIdentifier, IfStatementSyntax
 
 		// We want an Equals/NotEquals condition
 		if (!binaryExpression.IsKind(SyntaxKind.EqualsExpression) &&
-		    !binaryExpression.IsKind(SyntaxKind.NotEqualsExpression))
+			!binaryExpression.IsKind(SyntaxKind.NotEqualsExpression))
 			return false;
 
 		// We want IdentifierNameSyntax and null as operands
@@ -240,18 +240,18 @@ public class TryGetComponentCodeFix : CodeFixProvider
 		switch (invocation.Expression)
 		{
 			case GenericNameSyntax directNameSyntax:
-			{
-				var newNameSyntax = directNameSyntax.WithIdentifier(identifier);
-				newInvocation = invocation.WithExpression(newNameSyntax);
-				break;
-			}
+				{
+					var newNameSyntax = directNameSyntax.WithIdentifier(identifier);
+					newInvocation = invocation.WithExpression(newNameSyntax);
+					break;
+				}
 			case MemberAccessExpressionSyntax { Name: GenericNameSyntax indirectNameSyntax } memberAccessExpression:
-			{
-				var newNameSyntax = indirectNameSyntax.WithIdentifier(identifier);
-				var newMemberAccessExpression = memberAccessExpression.WithName(newNameSyntax);
-				newInvocation = invocation.WithExpression(newMemberAccessExpression);
-				break;
-			}
+				{
+					var newNameSyntax = indirectNameSyntax.WithIdentifier(identifier);
+					var newMemberAccessExpression = memberAccessExpression.WithName(newNameSyntax);
+					newInvocation = invocation.WithExpression(newMemberAccessExpression);
+					break;
+				}
 			default:
 				return document;
 		}

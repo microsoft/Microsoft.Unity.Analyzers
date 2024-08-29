@@ -45,7 +45,7 @@ public abstract class BasePositionAndRotationContext(string positionPropertyName
 		var symbolInfo = model.GetSymbolInfo(syntax);
 		if (symbolInfo.Symbol is not IPropertySymbol)
 			return false;
-		
+
 		var expressionTypeInfo = model.GetTypeInfo(syntax.Expression);
 		if (expressionTypeInfo.Type == null)
 			return false;
@@ -139,7 +139,7 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 
 		if (!ExpressionContext.TryGetPropertyExpression(model, nextExpression, out var nextSyntax))
 			return;
-		
+
 		if (syntax.Expression.ToString() != nextSyntax.Expression.ToString())
 			return;
 
@@ -168,8 +168,8 @@ public abstract class BasePositionAndRotationCodeFix(BasePositionAndRotationCont
 
 	private BasePositionAndRotationContext ExpressionContext { get; } = expressionContext;
 
-	protected abstract string CodeFixTitle { get;}
-	
+	protected abstract string CodeFixTitle { get; }
+
 	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
 		var statement = await context.GetFixableNodeAsync<StatementSyntax>();

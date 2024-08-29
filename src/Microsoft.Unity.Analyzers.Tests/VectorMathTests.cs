@@ -10,12 +10,12 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class Vector2MathTests: VectorMathTests<Vector2>;
-public class Vector3MathTests: VectorMathTests<Vector3>;
-public class Vector4MathTests: VectorMathTests<Vector4>;
-public class Float2MathTests: VectorMathTests<float2>;
-public class Float3MathTests: VectorMathTests<float3>;
-public class Float4MathTests: VectorMathTests<float4>;
+public class Vector2MathTests : VectorMathTests<Vector2>;
+public class Vector3MathTests : VectorMathTests<Vector3>;
+public class Vector4MathTests : VectorMathTests<Vector4>;
+public class Float2MathTests : VectorMathTests<float2>;
+public class Float3MathTests : VectorMathTests<float3>;
+public class Float4MathTests : VectorMathTests<float4>;
 
 public abstract class VectorMathTests<T> : BaseCodeFixVerifierTest<VectorMathAnalyzer, VectorMathCodeFix>
 {

@@ -6,8 +6,8 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -95,8 +95,8 @@ public abstract class BaseVectorConversionAnalyzer : DiagnosticAnalyzer
 	private bool ArgumentMatches(IArgumentOperation argumentOperation, string name)
 	{
 		return argumentOperation.Value is IFieldReferenceOperation fieldOperation
-		       && fieldOperation.Field.Name == name
-		       && fieldOperation.Field.ContainingType.Matches(FromType);
+			   && fieldOperation.Field.Name == name
+			   && fieldOperation.Field.ContainingType.Matches(FromType);
 	}
 
 	internal static IdentifierNameSyntax? GetIdentifierNameSyntax(IArgumentOperation argumentOperation)
@@ -159,7 +159,7 @@ public abstract class BaseVectorConversionCodeFix : CodeFixProvider
 
 		var typeSyntax = SyntaxFactory.ParseTypeName(CastType.Name);
 		SyntaxNode castedSyntax = IsCastRequired(ocOperation) ? SyntaxFactory.CastExpression(typeSyntax, identifierNameSyntax) : identifierNameSyntax;
-		
+
 		var newRoot = root?.ReplaceNode(ocSyntax, castedSyntax);
 		if (newRoot == null)
 			return document;
