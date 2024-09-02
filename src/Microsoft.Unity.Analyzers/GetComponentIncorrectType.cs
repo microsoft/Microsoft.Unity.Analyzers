@@ -68,16 +68,25 @@ public class GetComponentIncorrectTypeAnalyzer : DiagnosticAnalyzer
 		if (argumentType == null)
 			return false;
 
-		if (argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface)
+		if (IsComponentOrInterface(argumentType))
 			return false;
 
 		if (argumentType.TypeKind == TypeKind.TypeParameter && argumentType is ITypeParameterSymbol typeParameter)
 		{
-			if (typeParameter.ConstraintTypes.Any(t => t.Extends(typeof(UnityEngine.Component))))
+			// We need to infer the effective generic tye given usage, but we don't do that yet.
+			if (typeParameter.ConstraintTypes.IsEmpty)
+				return false;
+
+			if (typeParameter.ConstraintTypes.Any(IsComponentOrInterface))
 				return false;
 		}
 
 		identifier = argumentType.Name;
 		return true;
+	}
+
+	private static bool IsComponentOrInterface(ITypeSymbol argumentType)
+	{
+		return argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface;
 	}
 }
