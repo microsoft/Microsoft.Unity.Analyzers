@@ -99,7 +99,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task GetComponentLegacyTest()
+	public async Task GetComponentLegacyInconclusiveTest()
 	{
 		const string test = @"
 using UnityEngine;
