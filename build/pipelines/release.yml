@@ -1,6 +1,15 @@
 trigger:
 - main
 
+parameters:
+- name: SignType
+  displayName: Signature
+  type: string
+  default: test
+  values:
+  - real
+  - test
+
 variables:
   BuildSolution: 'external/VSTUAnalyzers/src/Microsoft.Unity.Analyzers.sln'
   BuildConfiguration: 'Release'
@@ -35,7 +44,7 @@ extends:
           mb:
             signing:
               enabled: true
-              signType: '$(SignType)'
+              signType: '${{ parameters.SignType }}'
               zipSources: false
           outputs:
           - output: pipelineArtifact
