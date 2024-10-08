@@ -5,17 +5,18 @@ pipelines:
     retail:
       source:
         credscan:
-          lastModifiedDate: 2024-02-01
+          lastModifiedDate: 2024-03-18
         eslint:
-          lastModifiedDate: 2024-02-01
+          lastModifiedDate: 2024-03-18
         psscriptanalyzer:
-          lastModifiedDate: 2024-02-01
+          lastModifiedDate: 2024-03-18
         armory:
-          lastModifiedDate: 2024-02-01
+          lastModifiedDate: 2024-03-18
       binary:
         credscan:
-          lastModifiedDate: 2024-02-01
+          lastModifiedDate: 2024-03-18
         binskim:
-          lastModifiedDate: 2024-02-01
+          lastModifiedDate: 2024-03-18
         spotbugs:
-          lastModifiedDate: 2024-02-01
+          lastModifiedDate: 2024-03-18
+    usedNonDefaultBranch: true
