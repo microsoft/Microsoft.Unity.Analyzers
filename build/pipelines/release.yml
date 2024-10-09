@@ -9,6 +9,10 @@ parameters:
   values:
   - real
   - test
+- name: IsPublishing
+  displayName: Publish the build
+  type: boolean
+  default: false  
 
 variables:
   BuildSolution: 'external/VSTUAnalyzers/src/Microsoft.Unity.Analyzers.sln'
@@ -35,7 +39,7 @@ extends:
       os: windows
 
     stages:
-    - stage: Build
+    - stage: BuildAndPublish
       jobs:
       - job: VSTUAnalyzers
         timeoutInMinutes: 120
@@ -93,10 +97,29 @@ extends:
               **\*.snupkg
             TargetFolder: '$(Build.ArtifactStagingDirectory)\install'
 
-        - powershell: |
-            $regex = "\d+\.\d+(\.\d+\.\d+)?"
-            $version="$(Build.SourceBranchName)"
-            if ($version -match $regex) { 
-              Write-Host "##vso[build.addbuildtag]Built from tag"
-            }
-          displayName: 'Tag Build (when building from tag)'
+        - task: PowerShell@2
+          displayName: Version check
+          condition: and(succeeded(), and(eq('${{ parameters.SignType }}', 'real'), eq(${{ parameters.IsPublishing }}, true)))
+          inputs:
+            targetType: inline
+            script: |
+              $version = "$(Build.SourceBranchName)"
+              Write-Output "Checking release version ${version}"
+              $regex = "\d+\.\d+\.\d+\.\d+"
+              if ($version -notmatch $regex) { 
+                Write-Error "You should only publish a build using a version tag !"
+                exit 1
+              }
+
+        - task: NuGetToolInstaller@1
+          displayName: 'Use NuGet'
+          condition: and(succeeded(), and(eq('${{ parameters.SignType }}', 'real'), eq(${{ parameters.IsPublishing }}, true)))
+
+        - task: 1ES.PublishNuGet@1
+          displayName: 'NuGet push'
+          condition: and(succeeded(), and(eq('${{ parameters.SignType }}', 'real'), eq(${{ parameters.IsPublishing }}, true)))
+          inputs:
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            packagesToPush: '$(Build.ArtifactStagingDirectory)\install\*.nupkg'
+            nuGetFeedType: external
+            externalEndpoint: VisualStudioToolsForUnity (nuget.org)
