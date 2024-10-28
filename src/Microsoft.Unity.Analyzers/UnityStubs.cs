@@ -58,6 +58,9 @@ namespace UnityEngine
 
 	class IEnumeratorOrVoid { }
 
+	class Awaitable { }
+	class Awaitable<T> { }
+
 	class Component
 	{
 		public string tag { get; }

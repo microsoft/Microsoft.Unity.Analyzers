@@ -50,6 +50,48 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task AwaitableEmptyFixedUpdate()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // comment expected to be removed
+    private async Awaitable FixedUpdate()
+    {
+    }
+
+    private void Foo()
+    {
+    }
+}
+";
+		var context = AnalyzerVerificationContext
+			.Default
+			.WithAnalyzerFilter("CS1998");
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 29)
+			.WithArguments("FixedUpdate");
+
+		await VerifyCSharpDiagnosticAsync(context, test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+
+    private void Foo()
+    {
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
 	public async Task FixedUpdateWithBody()
 	{
 		const string test = @"

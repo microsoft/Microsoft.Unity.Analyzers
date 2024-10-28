@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System;
+using System.Collections;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 
@@ -27,11 +28,30 @@ internal static class TypeSymbolExtensions
 		return false;
 	}
 
+	public static bool IsAwaitableOf(this ITypeSymbol symbol, Type type)
+	{
+		if (symbol is not INamedTypeSymbol named)
+			return false;
+
+		if (symbol.Name != nameof(UnityEngine.Awaitable))
+			return false;
+
+		if (symbol.ContainingNamespace.Name != typeof(UnityEngine.Awaitable).Namespace)
+			return false;
+
+		if (type == typeof(void))
+			return named.TypeArguments.Length == 0;
+
+		return named.TypeArguments.Length == 1 && Matches(named.TypeArguments[0], type);
+	}
+
 	public static bool Matches(this ITypeSymbol symbol, Type type)
 	{
 		if (type == typeof(UnityEngine.IEnumeratorOrVoid))
 		{
-			return symbol.SpecialType is SpecialType.System_Void or SpecialType.System_Collections_IEnumerator;
+			return (symbol.SpecialType is SpecialType.System_Void or SpecialType.System_Collections_IEnumerator)
+				|| symbol.IsAwaitableOf(typeof(void))
+				|| symbol.IsAwaitableOf(typeof(IEnumerator));
 		}
 
 		switch (symbol.SpecialType)
@@ -66,6 +86,9 @@ internal static class TypeSymbolExtensions
 
 			return Matches(named.ConstructedFrom, type.GetGenericTypeDefinition());
 		}
+
+		if (symbol.IsAwaitableOf(type))
+			return true;
 
 		return named.Name == type.Name
 			   && named.ContainingNamespace?.ToDisplayString() == type.Namespace;
