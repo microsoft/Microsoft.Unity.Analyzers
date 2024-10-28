@@ -295,7 +295,7 @@ class Camera : MonoBehaviour
 {
     private async Awaitable Start(int foo)
     {
-        wait Awaitable.WaitForSecondsAsync(1);
+        await Awaitable.WaitForSecondsAsync(1);
     }
 }
 ";
