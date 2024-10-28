@@ -34,6 +34,32 @@ class Processor : AssetPostprocessor
 	}
 
 	[Fact]
+	public async Task UnusedAwaitableStaticMethodAndParametersSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class Processor : AssetPostprocessor
+{
+    private async static Awaitable<string> OnGeneratedCSProject(string path, string content)
+    {
+        await Awaitable.WaitForSecondsAsync(1);
+        return null;
+    }
+}";
+
+		var suppressors = new[] {
+			ExpectSuppressor(MessageSuppressor.MethodRule).WithLocation(7, 44),
+			ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(7, 72),
+			ExpectSuppressor(MessageSuppressor.ParameterRule).WithLocation(7, 85),
+		};
+
+		await VerifyCSharpDiagnosticAsync(test, suppressors);
+	}
+
+
+	[Fact]
 	public async Task UnusedMethodSuppressed()
 	{
 		const string test = @"
@@ -52,6 +78,28 @@ public class TestScript : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
 	}
+
+	[Fact]
+	public async Task UnusedAwaitableMethodSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+public class TestScript : MonoBehaviour
+{
+    private async Awaitable Start()
+    {
+        await Awaitable.WaitForSecondsAsync(1);
+    }
+}
+";
+
+		var suppressor = ExpectSuppressor(MessageSuppressor.MethodRule)
+			.WithLocation(6, 29);
+
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
+
 
 	[Fact]
 	public async Task UnusedMethodWithCrefSuppressed()

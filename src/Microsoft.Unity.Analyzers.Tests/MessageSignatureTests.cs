@@ -266,4 +266,119 @@ class App : AssetPostprocessor
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task AwaitableMessageSignature()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private async Awaitable Start()
+    {
+        await Awaitable.WaitForSecondsAsync(1);
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task AwaitableMessageSignatureFixed()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private async Awaitable Start(int foo)
+    {
+        wait Awaitable.WaitForSecondsAsync(1);
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 29)
+			.WithArguments("Start");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private async Awaitable Start()
+    {
+        await Awaitable.WaitForSecondsAsync(1);
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+
+
+	[Fact]
+	public async Task AwaitableOfMessageSignature()
+	{
+		const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static async Awaitable<bool> OnPreGeneratingCSProjectFiles()
+    {
+        await Awaitable.WaitForSecondsAsync(1);
+        return false;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task AwaitableOfMessageSignatureFixed()
+	{
+		const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static async Awaitable<bool> OnPreGeneratingCSProjectFiles(int foo)
+    {
+        await Awaitable.WaitForSecondsAsync(1);
+        return false;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 34)
+			.WithArguments("OnPreGeneratingCSProjectFiles");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    static async Awaitable<bool> OnPreGeneratingCSProjectFiles()
+    {
+        await Awaitable.WaitForSecondsAsync(1);
+        return false;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
 }
