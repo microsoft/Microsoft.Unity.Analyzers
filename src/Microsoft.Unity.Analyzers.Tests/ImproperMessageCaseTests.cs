@@ -61,6 +61,43 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task ImproperlyCasedAwaitableUpdate()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private async Awaitable UPDATE()
+    {
+    }
+}
+";
+
+		var context = AnalyzerVerificationContext
+			.Default
+			.WithAnalyzerFilter("CS1998");
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 29)
+			.WithArguments("UPDATE");
+
+		await VerifyCSharpDiagnosticAsync(context, test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private async Awaitable Update()
+    {
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
 	public async Task ImproperlyCasedStaticUpdateIgnored()
 	{
 		const string test = @"
@@ -111,6 +148,48 @@ class App : AssetPostprocessor
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task ImproperlyCasedAwaitableRealStaticMessage()
+	{
+		const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    async static Awaitable<bool> OnPREGeneratingCSProjectFiles()
+    {
+        return false;
+    }
+}
+";
+
+		var context = AnalyzerVerificationContext
+			.Default
+			.WithAnalyzerFilter("CS1998");
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 34)
+			.WithArguments("OnPREGeneratingCSProjectFiles");
+
+		await VerifyCSharpDiagnosticAsync(context, test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+using UnityEditor;
+
+class App : AssetPostprocessor
+{
+    async static Awaitable<bool> OnPreGeneratingCSProjectFiles()
+    {
+        return false;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
 
 	[Fact]
 	public async Task ProperlyCasedOnPostprocessAllAssets()
