@@ -122,4 +122,4 @@ extends:
             packageParentPath: '$(Build.ArtifactStagingDirectory)'
             packagesToPush: '$(Build.ArtifactStagingDirectory)\install\*.nupkg'
             nuGetFeedType: external
-            externalEndpoint: VisualStudioToolsForUnity (nuget.org)
+            publishFeedCredentials: 'VisualStudioToolsForUnity (nuget.org)'
