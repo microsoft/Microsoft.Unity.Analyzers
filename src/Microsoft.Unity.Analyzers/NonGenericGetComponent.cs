@@ -131,7 +131,7 @@ public class NonGenericGetComponentCodeFix : CodeFixProvider
 			.WithExpression(GenericName(
 				identifierSyntax.Identifier,
 				TypeArgumentList(
-					SeparatedList(new[] { typeOf.Type }))))
+					SeparatedList([typeOf.Type]))))
 			.WithArgumentList(newArgumentList);
 
 		// If we're casting the GetComponent result, remove the cast as the returned value is now type safe
