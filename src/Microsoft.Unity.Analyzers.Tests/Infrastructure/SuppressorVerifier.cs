@@ -35,7 +35,7 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 		return result;
 	}
 
-	private static IEnumerable<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
+	private static ImmutableArray<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
 	{
 		var fullpath = Path.GetFullPath(assembly);
 		var reference = new AnalyzerFileReference(fullpath, new AnalyzerAssemblyLoader());
