@@ -16,6 +16,7 @@ env:
   DOTNET_NOLOGO: 1
   UNITY_HASH: '11fa355cd605'
   UNITY_FULL_VERSION: '6000.0.24f1'
+  HUSKY: 0
 
 jobs:
   compute:
