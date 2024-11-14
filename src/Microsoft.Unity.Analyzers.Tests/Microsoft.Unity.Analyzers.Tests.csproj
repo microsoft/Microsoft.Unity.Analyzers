@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.Win32.Registry" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="4.11.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" GeneratePathProperty="true" />
@@ -29,7 +28,8 @@
       <Visible>False</Visible>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>  
-    <None Include="$(PkgMicrosoft_CodeAnalysis_NetAnalyzers)\analyzers\dotnet\cs\*.dll">
+    <!-- Use NetAnalyzer SDK-assemblies -->
+    <None Include="$(MicrosoftNETBuildTasksDirectoryRoot)..\analyzers\*.dll">
       <Visible>False</Visible>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>  
