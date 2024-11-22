@@ -116,7 +116,7 @@ class App : AssetPostprocessor
 	[Fact]
 	public async Task MessageSignatureUnityLogic()
 	{
-		// Unity allows to specify less parameters if you don't need them
+		// Unity allows to specify fewer parameters if you don't need them
 		const string test = @"
 using UnityEngine;
 
@@ -381,4 +381,32 @@ class App : AssetPostprocessor
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
+	[Fact]
+	public async Task BadMessageSignatureWithUsedMethod()
+	{
+		const string test = @"
+using UnityEditor;
+
+class Camera : Editor
+{
+    private void Foo()
+    {
+        OnSceneGUI(null);
+    }
+
+    private void OnSceneGUI(object foo)
+    {
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(11, 18)
+			.WithArguments("OnSceneGUI");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		// In this special case, we do not provide a codefix, given it would break the code as the message is -wrongly- used elsewhere
+		await VerifyCSharpFixAsync(test, test);
+	}
 }

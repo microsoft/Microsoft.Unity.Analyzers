@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace Microsoft.Unity.Analyzers;
 
@@ -30,5 +31,19 @@ internal static class CodeFixContextExtensions
 			.DescendantNodesAndSelf()
 			.OfType<T>()
 			.FirstOrDefault(predicate);
+	}
+
+	public static async Task<bool> IsReferencedAsync(this CodeFixContext context, SyntaxNode declaration)
+	{
+		var semanticModel = await context.Document
+			.GetSemanticModelAsync(context.CancellationToken)
+			.ConfigureAwait(false);
+
+		var symbol = semanticModel?.GetDeclaredSymbol(declaration);
+		if (symbol == null)
+			return false;
+
+		var references = await SymbolFinder.FindReferencesAsync(symbol, context.Document.Project.Solution, context.CancellationToken);
+		return references.Any(r => r.Locations.Any());
 	}
 }

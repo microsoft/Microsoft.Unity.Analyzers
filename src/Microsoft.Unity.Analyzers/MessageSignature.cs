@@ -100,14 +100,18 @@ public class MessageSignatureCodeFix : CodeFixProvider
 
 	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
-		var methodDeclaration = await context.GetFixableNodeAsync<MethodDeclarationSyntax>();
-		if (methodDeclaration == null)
+		var method = await context.GetFixableNodeAsync<MethodDeclarationSyntax>();
+		if (method == null)
+			return;
+
+		// Do not provide a code fix if the message is -wrongly- referenced elsewhere
+		if (await context.IsReferencedAsync(method))
 			return;
 
 		context.RegisterCodeFix(
 			CodeAction.Create(
 				Strings.MessageSignatureCodeFixTitle,
-				ct => FixMethodDeclarationSignatureAsync(context.Document, methodDeclaration, ct),
+				ct => FixMethodDeclarationSignatureAsync(context.Document, method, ct),
 				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
