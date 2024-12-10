@@ -66,6 +66,7 @@ internal class AnalyzerConfigOptionsLookup : AnalyzerConfigOptions
 		_default.Add("build_property.UsingMicrosoftNETSdkWeb", "false");
 		_default.Add("build_property.ProjectTypeGuids", "");
 		_default.Add("build_property.EffectiveAnalysisLevelStyle", "latest");
+		_default.Add("build_property.EnableCodeStyleSeverity", "");
 
 		_default.Add("dotnet_code_quality.CA1801.api_surface", "");
 		_default.Add("dotnet_code_quality.CA1822.api_surface", "");
