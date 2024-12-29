@@ -25,7 +25,8 @@ class DummyClass
 ";
 
 		var diagnostic = ExpectDiagnostic(MeshPropertyAllocationAnalyzer.Rule)
-			.WithLocation(6, 21);
+			.WithLocation(6, 21)
+			.WithArguments("uv");
 
 		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}
