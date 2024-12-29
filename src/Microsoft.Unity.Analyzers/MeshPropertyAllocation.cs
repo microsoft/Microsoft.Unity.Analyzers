@@ -62,7 +62,7 @@ public class MeshPropertyAllocationAnalyzer : DiagnosticAnalyzer
 			declaredType.ContainingNamespace.Name != "UnityEngine") return;
 
 		// properties that allocates copy of corresponding data in their getter
-		if (prop.Name is not ("uv" or "uv2" or "uv3" or "uv4" or "uv5" or "uv6" or "uv7" or "vertices" or "color" or "color32")) return;
+		if (prop.Name is not ("uv" or "uv2" or "uv3" or "uv4" or "uv5" or "uv6" or "uv7" or "vertices" or "colors" or "colors32")) return;
 
 		// TODO: check if the receiver is being overwrite or its property is changed by loop-dependant way:
 		//       Example: the following code should not be linted.
