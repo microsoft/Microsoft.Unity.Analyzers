@@ -615,15 +615,16 @@
     <value>Inefficient localPosition/localRotation read</value>
   </data>
   <data name="MeshPropertyAllocationCodeFixTitle" xml:space="preserve">
-    <value>Bind property in the outer scope</value>
+    <value>Bind property '{0}' in the outer scope</value>
   </data>
   <data name="MeshPropertyAllocationDiagnosticDescription" xml:space="preserve">
     <value>Property allocates copy of data per loop</value>
   </data>
   <data name="MeshPropertyAllocationDiagnosticMessageFormat" xml:space="preserve">
     <value>Property '{0}' allocates copy of data</value>
+    <comment>{0} is a property name</comment>
   </data>
   <data name="MeshPropertyAllocationDiagnosticTitle" xml:space="preserve">
-    <value>Same allocation is repeated in a loop</value>
+    <value>Expensive property is referred in a loop</value>
   </data>
 </root>
