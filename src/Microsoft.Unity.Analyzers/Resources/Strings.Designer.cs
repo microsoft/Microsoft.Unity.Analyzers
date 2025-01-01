@@ -1034,5 +1034,29 @@ namespace Microsoft.Unity.Analyzers.Resources {
                 return ResourceManager.GetString("MeshPropertyAllocationDiagnosticTitle", resourceCulture);
             }
         }
+        
+        internal static string MeshPropertyElementCounterCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MeshPropertyElementCounterCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        internal static string MeshPropertyElementCounterDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("MeshPropertyElementCounterDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        internal static string MeshPropertyElementCounterDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("MeshPropertyElementCounterDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        internal static string MeshPropertyElementCounterDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("MeshPropertyElementCounterDiagnosticTitle", resourceCulture);
+            }
+        }
     }
 }

@@ -627,4 +627,16 @@
   <data name="MeshPropertyAllocationDiagnosticTitle" xml:space="preserve">
     <value>Expensive property is referred in a loop</value>
   </data>
+  <data name="MeshPropertyElementCounterCodeFixTitle" xml:space="preserve">
+    <value>Use '{0}' instead</value>
+  </data>
+  <data name="MeshPropertyElementCounterDiagnosticDescription" xml:space="preserve">
+    <value>Counting on property '{0}' allocates entire content beforehand</value>
+  </data>
+  <data name="MeshPropertyElementCounterDiagnosticMessageFormat" xml:space="preserve">
+    <value>Use '{0}' instead of counting on '{1}'</value>
+  </data>
+  <data name="MeshPropertyElementCounterDiagnosticTitle" xml:space="preserve">
+    <value>Use specialized counting property</value>
+  </data>
 </root>
