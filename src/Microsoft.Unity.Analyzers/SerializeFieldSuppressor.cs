@@ -3,12 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
+using Unity.Properties;
 using UnityEngine;
 
 namespace Microsoft.Unity.Analyzers;
@@ -36,6 +38,8 @@ public class SerializeFieldSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "CS0649",
 		justification: Strings.NeverAssignedSerializeFieldSuppressorJustification);
 
+	private static readonly Type[] _suppressableAttributeTypes = [typeof(SerializeField), typeof(SerializeReference), typeof(CreatePropertyAttribute)];
+
 	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(ReadonlyRule, UnusedRule, UnusedCodeQualityRule, NeverAssignedRule);
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
@@ -46,12 +50,22 @@ public class SerializeFieldSuppressor : DiagnosticSuppressor
 		}
 	}
 
+	private static bool IsSuppressableAttribute(INamedTypeSymbol? symbol, Type type)
+	{
+		return symbol != null && symbol.Matches(type);
+	}
+
+	private static bool IsSuppressableAttribute(INamedTypeSymbol? symbol)
+	{
+		return _suppressableAttributeTypes.Any(type => IsSuppressableAttribute(symbol, type));
+	}
+
 	private static bool IsSuppressable(IFieldSymbol fieldSymbol)
 	{
-		if (fieldSymbol.GetAttributes().Any(a => a.AttributeClass != null && (a.AttributeClass.Matches(typeof(SerializeField)) || a.AttributeClass.Matches(typeof(SerializeReference)))))
+		if (fieldSymbol.GetAttributes().Any(a => IsSuppressableAttribute(a.AttributeClass)))
 			return true;
 
-		if (fieldSymbol.DeclaredAccessibility == Accessibility.Public && fieldSymbol.ContainingType.Extends(typeof(Object)))
+		if (fieldSymbol.DeclaredAccessibility == Accessibility.Public && fieldSymbol.ContainingType.Extends(typeof(UnityEngine.Object)))
 			return true;
 
 		return false;

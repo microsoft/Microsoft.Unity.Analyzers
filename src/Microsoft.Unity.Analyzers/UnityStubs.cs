@@ -796,6 +796,11 @@ namespace UnityEngine.Jobs
 	}
 }
 
+namespace Unity.Properties
+{
+	class CreatePropertyAttribute : System.Attribute { }
+}
+
 namespace JetBrains.Annotations
 {
 	class UsedImplicitlyAttribute : Attribute { }
