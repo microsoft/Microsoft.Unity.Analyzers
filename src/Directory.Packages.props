@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Global Analyzers -->
-    <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.22" />
+    <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.2" />
   </ItemGroup>
   <ItemGroup>
     <!-- Infrastructure -->
