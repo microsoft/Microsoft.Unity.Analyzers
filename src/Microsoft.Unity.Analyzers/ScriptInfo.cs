@@ -30,7 +30,7 @@ internal readonly struct ScriptInfo(ITypeSymbol symbol)
 	public bool HasMessages => Metadata != null;
 	public Type? Metadata { get; } = GetMatchingMetadata(symbol);
 
-	public static MethodInfo[] Messages { get; } = Types.SelectMany(GetMessages).ToArray();
+	public static MethodInfo[] Messages { get; } = [.. Types.SelectMany(GetMessages)];
 
 	public IEnumerable<MethodInfo> GetMessages()
 	{

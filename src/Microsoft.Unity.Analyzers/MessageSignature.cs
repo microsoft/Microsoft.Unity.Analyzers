@@ -159,6 +159,6 @@ public class MessageSignatureCodeFix : CodeFixProvider
 	{
 		return SyntaxFactory
 			.ParameterList()
-			.AddParameters(builder.CreateParameters(message).OfType<ParameterSyntax>().ToArray());
+			.AddParameters([.. builder.CreateParameters(message).OfType<ParameterSyntax>()]);
 	}
 }
