@@ -3,13 +3,16 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Global Analyzers -->
+    <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.22" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- Infrastructure -->
     <PackageVersion Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0" />
     <!-- Roslyn (version is overridden in Tests) -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.7.0" />
-    <!-- Analyzers -->
-    <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.22" />
+    <!-- Local Analyzers -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.12.0" />
     <!-- VSIX -->
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="17.12.40392" />
