@@ -13,7 +13,6 @@
   <PropertyGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">
     <!-- Tests are using a distinct Roslyn version, so use a dedicated folder to host assembly output -->
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
-    <Configurations>Debug;Release;DebugRelease</Configurations>
   </PropertyGroup>
 
   <ItemGroup Condition="Exists('$(VstuDirectory)libs\ProductInfo.cs')">
