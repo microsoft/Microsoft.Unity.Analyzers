@@ -11,7 +11,7 @@
     <PackageVersion Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0" />
     <!-- Roslyn (version is overridden in Tests) -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.7.0" />
     <!-- Local Analyzers -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.13.0" />
     <!-- VSIX -->
