@@ -30,12 +30,12 @@ For unit-testing, we require Unity to be installed. We recommend using the lates
 # Building and testing
 
 Compiling the solution:
-`dotnet build .\src\Microsoft.Unity.Analyzers.sln`
+`dotnet build .\src\Microsoft.Unity.Analyzers.slnx`
 
 Running the unit tests:
-`dotnet test .\src\Microsoft.Unity.Analyzers.sln`
+`dotnet test .\src\Microsoft.Unity.Analyzers.slnx`
 
-You can open `.\src\Microsoft.Unity.Analyzers.sln` in your favorite IDE to work on the analyzers and run/debug the tests.
+You can open `.\src\Microsoft.Unity.Analyzers.slnx` in your favorite IDE to work on the analyzers and run/debug the tests.
 
 # Debugging the analyzers on a Unity project
 
@@ -43,7 +43,7 @@ Running and debugging the tests is the easiest way to get started but sometimes 
 
 ## On Visual Studio
 
-- Open the `Microsoft.Unity.Analyzers.Vsix.sln` solution.
+- Open the `Microsoft.Unity.Analyzers.Vsix.slnx` solution.
 - Make sure `Microsoft.Unity.Analyzers.Vsix` is set as the startup project.
 - Hit play (Current Instance) to start debugging an experimental instance of Visual Studio 2022.
 - Load any Unity project in the Visual Studio experimental instance then put breakpoints in the `Microsoft.Unity.Analyzers` project.

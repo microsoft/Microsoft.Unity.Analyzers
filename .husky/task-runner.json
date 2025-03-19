@@ -3,7 +3,7 @@
     {
       "name": "dotnet-format-staged-files",
       "command": "dotnet",
-      "args": ["format", "src/Microsoft.Unity.Analyzers.sln", "whitespace", "--verbosity", "quiet", "--include", "${staged}"],
+      "args": ["format", "src/Microsoft.Unity.Analyzers.slnx", "whitespace", "--verbosity", "quiet", "--include", "${staged}"],
       "include": ["**/*.cs"]
     }
   ]
