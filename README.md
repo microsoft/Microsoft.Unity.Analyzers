@@ -14,10 +14,14 @@ For Visual Studio these analyzers **ship in the box** (_Game development with Un
 We also ship them on [NuGet](https://nuget.org/packages/Microsoft.Unity.Analyzers) as for people building class librairies for Unity and for other advanced usages.
 
 # Suggesting a new Analyzer
+
 If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
 
 # Prerequisites
-For building and testing, you'll need **.NET 9 and Visual Studio 2022 17.12+, or Visual Studio Code 1.92+**.
+
+For building and testing, you'll need **.NET 9 (SDK 9.0.201+) and Visual Studio 2022 17.13+, or Visual Studio Code 1.92+**.
+
+We are using `slnx` solution files, so when using Visual Studio, please make sure to enable `Solution File Persistence Model` in `Tools/Options/Preview Features`.
 
 This project binaries are targeting **Visual Studio 2019 16.4+** and **Visual Studio Code 1.76+**.
 
