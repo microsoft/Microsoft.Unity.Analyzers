@@ -14,10 +14,14 @@ For Visual Studio these analyzers **ship in the box** (_Game development with Un
 We also ship them on [NuGet](https://nuget.org/packages/Microsoft.Unity.Analyzers) as for people building class librairies for Unity and for other advanced usages.
 
 # Suggesting a new Analyzer
+
 If you have an idea for a best practice for Unity developers to follow, please open an [issue](https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/new?template=Feature_request.md) with the description.
 
 # Prerequisites
-For building and testing, you'll need **.NET 9 and Visual Studio 2022 17.12+, or Visual Studio Code 1.92+**.
+
+For building and testing, you'll need **.NET 9 (SDK 9.0.201+) and Visual Studio 2022 17.13+, or Visual Studio Code 1.92+**.
+
+We are using `slnx` solution files, so when using Visual Studio, please make sure to enable `Solution File Persistence Model` in `Tools/Options/Preview Features`.
 
 This project binaries are targeting **Visual Studio 2019 16.4+** and **Visual Studio Code 1.76+**.
 
@@ -30,12 +34,12 @@ For unit-testing, we require Unity to be installed. We recommend using the lates
 # Building and testing
 
 Compiling the solution:
-`dotnet build .\src\Microsoft.Unity.Analyzers.sln`
+`dotnet build .\src\Microsoft.Unity.Analyzers.slnx`
 
 Running the unit tests:
-`dotnet test .\src\Microsoft.Unity.Analyzers.sln`
+`dotnet test .\src\Microsoft.Unity.Analyzers.slnx`
 
-You can open `.\src\Microsoft.Unity.Analyzers.sln` in your favorite IDE to work on the analyzers and run/debug the tests.
+You can open `.\src\Microsoft.Unity.Analyzers.slnx` in your favorite IDE to work on the analyzers and run/debug the tests.
 
 # Debugging the analyzers on a Unity project
 
@@ -43,7 +47,7 @@ Running and debugging the tests is the easiest way to get started but sometimes 
 
 ## On Visual Studio
 
-- Open the `Microsoft.Unity.Analyzers.Vsix.sln` solution.
+- Open the `Microsoft.Unity.Analyzers.Vsix.slnx` solution.
 - Make sure `Microsoft.Unity.Analyzers.Vsix` is set as the startup project.
 - Hit play (Current Instance) to start debugging an experimental instance of Visual Studio 2022.
 - Load any Unity project in the Visual Studio experimental instance then put breakpoints in the `Microsoft.Unity.Analyzers` project.

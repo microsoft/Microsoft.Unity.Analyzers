@@ -80,7 +80,7 @@ jobs:
       uses: github/codeql-action/init@v3
 
     - name: Build
-      run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.sln /p:UseSharedCompilation=false
+      run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.slnx /p:UseSharedCompilation=false
           
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

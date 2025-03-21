@@ -4,5 +4,6 @@
 .cs text
 
 .sln text=crlf
+.slnx text=crlf
 .*proj text=crlf
 .settings text=crlf

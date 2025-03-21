@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Microsoft.Unity.Analyzers.Tests/Microsoft.Unity.Analyzers.Tests.csproj" />
+  <Project Path="Microsoft.Unity.Analyzers.Vsix/Microsoft.Unity.Analyzers.Vsix.csproj" />
+  <Project Path="Microsoft.Unity.Analyzers/Microsoft.Unity.Analyzers.csproj" />
+  <Project Path="new-analyzer/new-analyzer.csproj" />
+</Solution>

@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="Microsoft.Unity.Analyzers.Tests/Microsoft.Unity.Analyzers.Tests.csproj">
+    <Build Solution="Release|*" Project="false" />
+  </Project>
+  <Project Path="Microsoft.Unity.Analyzers/Microsoft.Unity.Analyzers.csproj" />
+  <Project Path="new-analyzer/new-analyzer.csproj">
+    <Build Solution="Release|*" Project="false" />
+  </Project>
+</Solution>
