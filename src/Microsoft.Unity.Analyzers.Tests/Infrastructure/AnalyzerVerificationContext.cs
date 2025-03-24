@@ -14,9 +14,10 @@ public readonly struct AnalyzerVerificationContext(ImmutableDictionary<string, s
 	public ImmutableArray<string> Filters { get; } = filters;
 	public LanguageVersion LanguageVersion { get; } = languageVersion;
 
+	// CS0414 - cf. IDE0051
 	public static AnalyzerVerificationContext Default = new(
 		ImmutableDictionary<string, string>.Empty,
-		[],
+		["CS0414"],
 		LanguageVersion.Latest);
 
 	public AnalyzerVerificationContext WithAnalyzerOption(string key, string value)
