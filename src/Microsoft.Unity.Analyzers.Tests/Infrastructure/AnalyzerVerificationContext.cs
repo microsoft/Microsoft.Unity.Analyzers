@@ -14,11 +14,9 @@ public readonly struct AnalyzerVerificationContext(ImmutableDictionary<string, s
 	public ImmutableArray<string> Filters { get; } = filters;
 	public LanguageVersion LanguageVersion { get; } = languageVersion;
 
-	// CS1701 - Assuming assembly reference 'mscorlib, Version=2.0.0.0' used by 'UnityEngine' matches identity 'mscorlib, Version=4.0.0.0' of 'mscorlib', you may need to supply runtime policy
-	// CS0414 - cf. IDE0051
 	public static AnalyzerVerificationContext Default = new(
 		ImmutableDictionary<string, string>.Empty,
-		["CS1701", "CS0414"],
+		[],
 		LanguageVersion.Latest);
 
 	public AnalyzerVerificationContext WithAnalyzerOption(string key, string value)
