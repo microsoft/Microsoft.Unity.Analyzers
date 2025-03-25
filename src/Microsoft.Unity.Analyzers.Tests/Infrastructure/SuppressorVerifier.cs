@@ -105,19 +105,16 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 
 	protected override void VerifyDiagnosticResults(Diagnostic[] actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
 	{
-		var suppressed = actualResults
-			.Where(d => expectedResults.Any(s => IsSuppressedBy(d, s)))
-			.ToArray();
+		Diagnostic[] suppressed = [.. actualResults
+			.Where(d => expectedResults.Any(s => IsSuppressedBy(d, s)))];
 
-		actualResults = actualResults
+		actualResults = [.. actualResults
 			// Filter diagnostic with an effective suppression
-			.Where(d => !suppressed.Contains(d))
-			.ToArray();
+			.Where(d => !suppressed.Contains(d))];
 
-		expectedResults = expectedResults
+		expectedResults = [.. expectedResults
 			// Filter suppressors effectively suppressing diagnostic
-			.Where(s => !suppressed.Any(d => IsSuppressedBy(d, s)))
-			.ToArray();
+			.Where(s => !suppressed.Any(d => IsSuppressedBy(d, s)))];
 
 		base.VerifyDiagnosticResults(actualResults, analyzer, expectedResults);
 	}

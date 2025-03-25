@@ -296,9 +296,7 @@ public abstract class DiagnosticVerifier
 
 	protected static Diagnostic[] FilterDiagnostics(IEnumerable<Diagnostic> diagnostics, ImmutableArray<string> filters)
 	{
-		return diagnostics
-			.Where(d => !filters.Contains(d.Id))
-			.ToArray();
+		return [.. diagnostics.Where(d => !filters.Contains(d.Id))];
 	}
 
 	private static Diagnostic[] SortDiagnostics(IEnumerable<Diagnostic> diagnostics)
