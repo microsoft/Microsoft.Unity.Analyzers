@@ -57,7 +57,7 @@ public class $(DiagnosticName)Analyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.$(DiagnosticName)DiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -72,7 +72,7 @@ public class $(DiagnosticName)Analyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class $(DiagnosticName)CodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create($(DiagnosticName)Analyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [$(DiagnosticName)Analyzer.Rule.Id];
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
