@@ -35,7 +35,7 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ImproperMessageCaseDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -101,7 +101,7 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class ImproperMessageCaseCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ImproperMessageCaseAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [ImproperMessageCaseAnalyzer.Rule.Id];
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -139,6 +139,7 @@ public class ImproperMessageCaseCodeFix : CodeFixProvider
 		if (newName == null)
 			return solution;
 
-		return await Renamer.RenameSymbolAsync(solution, methodSymbol, newName, solution.Options, cancellationToken);
+		var options = new SymbolRenameOptions { RenameFile = false, RenameInStrings = false, RenameInComments = false, RenameOverloads = false };
+		return await Renamer.RenameSymbolAsync(solution, methodSymbol, options, newName, cancellationToken);
 	}
 }

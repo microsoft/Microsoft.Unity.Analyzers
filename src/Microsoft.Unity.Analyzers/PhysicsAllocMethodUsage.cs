@@ -31,7 +31,7 @@ public class PhysicsAllocMethodUsageAnalyzer : MethodUsageAnalyzer<PhysicsAllocM
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.PhysicsAllocMethodUsageDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	protected override IEnumerable<MethodInfo> CollectMethods()
 	{

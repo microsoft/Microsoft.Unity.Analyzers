@@ -35,7 +35,7 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.MethodInvocationDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -110,7 +110,7 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 
 public abstract class BaseMethodInvocationCodeFix(string title) : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MethodInvocationAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [MethodInvocationAnalyzer.Rule.Id];
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

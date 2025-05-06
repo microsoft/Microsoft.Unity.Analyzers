@@ -29,7 +29,7 @@ public class ReflectionAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ReflectionDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	public override void Initialize(AnalysisContext context)
 	{

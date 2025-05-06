@@ -41,7 +41,7 @@ public class MessageSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "CA1801",
 		justification: Strings.MessageSuppressorJustification);
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(MethodRule, MethodCrefRule, MethodCodeQualityRule, ParameterRule, ParameterCodeQualityRule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [MethodRule, MethodCrefRule, MethodCodeQualityRule, ParameterRule, ParameterCodeQualityRule];
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{

@@ -40,7 +40,7 @@ public class SerializeFieldSuppressor : DiagnosticSuppressor
 
 	private static readonly Type[] _suppressableAttributeTypes = [typeof(SerializeField), typeof(SerializeReference), typeof(CreatePropertyAttribute)];
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(ReadonlyRule, UnusedRule, UnusedCodeQualityRule, NeverAssignedRule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [ReadonlyRule, UnusedRule, UnusedCodeQualityRule, NeverAssignedRule];
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{

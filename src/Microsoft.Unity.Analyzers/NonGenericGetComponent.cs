@@ -36,7 +36,7 @@ public class NonGenericGetComponentAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.NonGenericGetComponentDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -91,7 +91,7 @@ public class NonGenericGetComponentAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class NonGenericGetComponentCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(NonGenericGetComponentAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [NonGenericGetComponentAnalyzer.Rule.Id];
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

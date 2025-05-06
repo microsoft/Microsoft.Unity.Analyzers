@@ -32,7 +32,7 @@ public class ProtectedUnityMessageAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.ProtectedUnityMessageDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -80,7 +80,7 @@ public class ProtectedUnityMessageAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class ProtectedUnityMessageCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ProtectedUnityMessageAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [ProtectedUnityMessageAnalyzer.Rule.Id];
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

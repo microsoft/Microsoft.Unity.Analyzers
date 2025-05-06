@@ -34,7 +34,7 @@ public class SetPositionAndRotationAnalyzer() : BasePositionAndRotationAnalyzer(
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.SetPositionAndRotationDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	protected override void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement)
 	{
@@ -47,5 +47,5 @@ public class SetPositionAndRotationCodeFix() : BasePositionAndRotationCodeFix(Se
 {
 	protected override string CodeFixTitle => Strings.SetPositionAndRotationCodeFixTitle;
 
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(SetPositionAndRotationAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [SetPositionAndRotationAnalyzer.Rule.Id];
 }
