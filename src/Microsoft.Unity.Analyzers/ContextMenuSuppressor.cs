@@ -38,8 +38,7 @@ public class ContextMenuSuppressor : DiagnosticSuppressor
 		}
 	}
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions =>
-		ImmutableArray.Create(ContextMenuRule, ContextMenuItemUnusedRule, ContextMenuItemReadonlyRule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [ContextMenuRule, ContextMenuItemUnusedRule, ContextMenuItemReadonlyRule];
 
 	private void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
@@ -65,9 +64,9 @@ public class ContextMenuSuppressor : DiagnosticSuppressor
 		}
 	}
 
-	private static bool IsReportable(ISymbol symbol)
+	private static bool IsReportable(ISymbol? symbol)
 	{
-		var containingType = symbol.ContainingType;
+		var containingType = symbol?.ContainingType;
 
 		switch (symbol)
 		{
@@ -86,9 +85,9 @@ public class ContextMenuSuppressor : DiagnosticSuppressor
 		return false;
 	}
 
-	private static bool IsReferencedByContextMenuItem(IMethodSymbol symbol, INamedTypeSymbol containingType)
+	private static bool IsReferencedByContextMenuItem(IMethodSymbol symbol, INamedTypeSymbol? containingType)
 	{
-		foreach (var member in containingType.GetMembers())
+		foreach (var member in containingType?.GetMembers() ?? [])
 		{
 			if (member is not IFieldSymbol fieldSymbol)
 				continue;

@@ -34,7 +34,7 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.MessageSignatureDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -94,7 +94,7 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class MessageSignatureCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageSignatureAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [MessageSignatureAnalyzer.Rule.Id];
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -140,7 +140,7 @@ public class MessageSignatureCodeFix : CodeFixProvider
 		if (message == null)
 			return document;
 
-		var syntaxGenerator = document.Project.LanguageServices.GetService<SyntaxGenerator>();
+		var syntaxGenerator = document.Project.Services.GetService<SyntaxGenerator>();
 		if (syntaxGenerator == null)
 			return document;
 

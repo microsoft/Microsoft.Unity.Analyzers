@@ -40,7 +40,10 @@ public abstract class BaseVectorConversionAnalyzer : DiagnosticAnalyzer
 		if (model.GetOperation(ocSyntax) is not IObjectCreationOperation ocOperation)
 			return;
 
-		if (!ocOperation.Type.Matches(ToType))
+		if (ocOperation.Type is not { } operationType)
+			return;
+
+		if (!operationType.Matches(ToType))
 			return;
 
 		if (!CheckArguments(ocOperation))
@@ -137,7 +140,10 @@ public abstract class BaseVectorConversionCodeFix : CodeFixProvider
 		if (ocSyntax.Parent is not IArgumentOperation argOperation)
 			return true;
 
-		return !argOperation.Parameter.Type.Matches(CastType);
+		if (argOperation.Parameter is not { } operationParameter)
+			return true;
+
+		return !operationParameter.Type.Matches(CastType);
 	}
 
 	private async Task<Document> SimplifyObjectCreationAsync(Document document, ObjectCreationExpressionSyntax ocSyntax, CancellationToken ct)

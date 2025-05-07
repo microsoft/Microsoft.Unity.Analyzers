@@ -30,7 +30,7 @@ public class Vector3ConversionAnalyzer : BaseVectorConversionAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.Vector3ConversionDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
 	protected override Type FromType => typeof(Vector3);
 	protected override Type ToType => typeof(Vector2);
@@ -52,7 +52,7 @@ public class Vector3ConversionAnalyzer : BaseVectorConversionAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class Vector3ConversionCodeFix : BaseVectorConversionCodeFix
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(Vector3ConversionAnalyzer.Rule.Id);
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => [Vector3ConversionAnalyzer.Rule.Id];
 
 	protected override Type CastType => typeof(Vector2);
 

@@ -22,7 +22,7 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "CS8618",
 		justification: Strings.NullableReferenceTypesSuppressorJustification);
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [Rule];
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{

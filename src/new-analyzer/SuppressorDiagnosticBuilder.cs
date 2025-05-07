@@ -47,7 +47,7 @@ public class $(DiagnosticName) : DiagnosticSuppressor
 		}
 	}
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [Rule];
 
 	private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
