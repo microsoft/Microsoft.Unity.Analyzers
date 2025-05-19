@@ -23,8 +23,6 @@ For building and testing, you'll need **.NET 9 (SDK 9.0.201+) and Visual Studio 
 
 We are using `slnx` solution files, so when using Visual Studio, please make sure to enable `Solution File Persistence Model` in `Tools/Options/Preview Features`.
 
-This project binaries are targeting **Visual Studio 2019 16.4+** and **Visual Studio Code 1.76+**.
-
 This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics.
 
 On Windows, you'll need the _Visual Studio extension development_ workload installed to build a VSIX to use and debug the project in Visual Studio.

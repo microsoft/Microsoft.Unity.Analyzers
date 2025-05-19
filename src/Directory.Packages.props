@@ -4,22 +4,21 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Global Analyzers -->
-    <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.61" />
+    <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" />
   </ItemGroup>
   <ItemGroup>
     <!-- Infrastructure -->
     <PackageVersion Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0" />
-    <!-- Roslyn (version is overridden in Tests) -->
-    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
     <!-- Local Analyzers -->
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.13.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.14.0" />
     <!-- VSIX -->
     <PackageVersion Include="Microsoft.VisualStudio.SDK" Version="17.13.40008" />
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.13.2126" />
     <!-- Tests -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="9.0.4" />
+    <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="9.0.5" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.0" />
     <PackageVersion Include="Xunit.SkippableFact" Version="1.5.23" />
