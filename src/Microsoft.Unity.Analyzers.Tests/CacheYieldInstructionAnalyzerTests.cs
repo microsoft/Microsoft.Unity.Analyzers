@@ -50,6 +50,58 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task TestWaitForSecondsStaticTriviaAsync()
+	{
+		const string test = @"
+using System.Collections;
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // before
+    private int foo = 0; // inline
+    // after
+
+    static IEnumerator Coroutine()
+    {
+        // before
+        yield return new WaitForSeconds(1.666f); // inline
+        // after
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(14, 22);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using System.Collections;
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private static WaitForSeconds _waitForSeconds1_666 = new WaitForSeconds(1.666f);
+
+    // before
+    private int foo = 0; // inline
+    // after
+
+    static IEnumerator Coroutine()
+    {
+        // before
+        yield return _waitForSeconds1_666; // inline
+        // after
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+
+	[Fact]
 	public async Task TestWaitForSecondsOnlyLiteralAsync()
 	{
 		const string test = @"
