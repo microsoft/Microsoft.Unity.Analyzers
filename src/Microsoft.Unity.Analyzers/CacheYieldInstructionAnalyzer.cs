@@ -111,7 +111,6 @@ public class CacheYieldInstructionAnalyzerCodeFix : CodeFixProvider
 		if (type == null)
 			return document;
 
-		var typeName = type.ToMinimalDisplayString(semanticModel, objectCreation.SpanStart);
 		var fieldName = GenerateFieldName(objectCreation, type);
 		if (fieldName == null)
 			return document;
@@ -124,6 +123,8 @@ public class CacheYieldInstructionAnalyzerCodeFix : CodeFixProvider
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 		if (!fieldExists)
 		{
+			var typeName = type.ToMinimalDisplayString(semanticModel, objectCreation.SpanStart);
+
 			var fieldDecl = SyntaxFactory.FieldDeclaration(
 				SyntaxFactory.VariableDeclaration(
 					SyntaxFactory.ParseTypeName(typeName),
@@ -137,7 +138,7 @@ public class CacheYieldInstructionAnalyzerCodeFix : CodeFixProvider
 			)
 			.AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 
-			editor.InsertMembers(classDecl, 0, [fieldDecl.WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)]);
+			editor.InsertMembers(classDecl, 0, [fieldDecl.WithTrailingTrivia()]);
 		}
 
 		var yieldStatement = objectCreation.FirstAncestorOrSelf<YieldStatementSyntax>();
