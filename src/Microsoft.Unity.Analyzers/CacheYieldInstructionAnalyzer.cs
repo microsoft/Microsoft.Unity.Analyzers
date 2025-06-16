@@ -56,19 +56,15 @@ public class CacheYieldInstructionAnalyzerAnalyzer : DiagnosticAnalyzer
 		if (yieldStatement.Expression is not ObjectCreationExpressionSyntax objectCreation)
 			return;
 
+		if (objectCreation.ArgumentList?.Arguments.SingleOrDefault(arg => arg.Expression is LiteralExpressionSyntax) == null)
+			return;
+
 		var typeSymbol = context.SemanticModel.GetTypeInfo(objectCreation).Type;
 		if (typeSymbol == null)
 			return;
 
-		if (objectCreation.ArgumentList?.Arguments.SingleOrDefault(arg => arg.Expression is LiteralExpressionSyntax) == null)
-			return;
-
 		var typeName = typeSymbol.ToDisplayString();
 		if (!_cachableTypes.Contains(typeName))
-			return;
-
-		var method = yieldStatement.FirstAncestorOrSelf<MethodDeclarationSyntax>();
-		if (method == null)
 			return;
 
 		context.ReportDiagnostic(Diagnostic.Create(
@@ -90,89 +86,89 @@ public class CacheYieldInstructionAnalyzerCodeFix : CodeFixProvider
 	{
 		var objectCreation = await context.GetFixableNodeAsync<ObjectCreationExpressionSyntax>();
 		if (objectCreation == null)
-		    return;
+			return;
 
 		context.RegisterCodeFix(
-		    CodeAction.Create(
-		        Strings.CacheYieldInstructionAnalyzerCodeFixTitle,
-		        ct => CacheYieldInstructionAsync(context.Document, objectCreation, ct),
-		        objectCreation.ToFullString()),
-		    context.Diagnostics);
+			CodeAction.Create(
+				Strings.CacheYieldInstructionAnalyzerCodeFixTitle,
+				ct => CacheYieldInstructionAsync(context.Document, objectCreation, ct),
+				objectCreation.ToFullString()),
+			context.Diagnostics);
 	}
 
-    private static async Task<Document> CacheYieldInstructionAsync(Document document, ObjectCreationExpressionSyntax objectCreation, CancellationToken cancellationToken)
-    {
-        var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+	private static async Task<Document> CacheYieldInstructionAsync(Document document, ObjectCreationExpressionSyntax objectCreation, CancellationToken cancellationToken)
+	{
+		var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 		if (semanticModel == null)
 			return document;
 
 		var method = objectCreation.FirstAncestorOrSelf<MethodDeclarationSyntax>();
-        var classDecl = method?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-        if (classDecl == null)
-            return document;
+		var classDecl = method?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+		if (classDecl == null)
+			return document;
 
-        var type = semanticModel.GetTypeInfo(objectCreation).Type;
+		var type = semanticModel.GetTypeInfo(objectCreation).Type;
 		if (type == null)
 			return document;
 
 		var typeName = type.ToMinimalDisplayString(semanticModel, objectCreation.SpanStart);
-        var fieldName = GenerateFieldName(objectCreation, type);
+		var fieldName = GenerateFieldName(objectCreation, type);
 		if (fieldName == null)
 			return document;
 
 		var fieldExists = classDecl.Members
-            .OfType<FieldDeclarationSyntax>()
-            .SelectMany(f => f.Declaration.Variables)
-            .Any(v => v.Identifier.Text == fieldName);
+			.OfType<FieldDeclarationSyntax>()
+			.SelectMany(f => f.Declaration.Variables)
+			.Any(v => v.Identifier.Text == fieldName);
 
-        var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
-        if (!fieldExists)
-        {
-            var fieldDecl = SyntaxFactory.FieldDeclaration(
-                SyntaxFactory.VariableDeclaration(
-                    SyntaxFactory.ParseTypeName(typeName),
-                    SyntaxFactory.SeparatedList([
-	                    SyntaxFactory.VariableDeclarator(
-                            SyntaxFactory.Identifier(fieldName),
-                            null,
-                            SyntaxFactory.EqualsValueClause(objectCreation.WithoutTrivia()))
-                    ])
-                )
-            )
-            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+		if (!fieldExists)
+		{
+			var fieldDecl = SyntaxFactory.FieldDeclaration(
+				SyntaxFactory.VariableDeclaration(
+					SyntaxFactory.ParseTypeName(typeName),
+					SyntaxFactory.SeparatedList([
+						SyntaxFactory.VariableDeclarator(
+							SyntaxFactory.Identifier(fieldName),
+							null,
+							SyntaxFactory.EqualsValueClause(objectCreation.WithoutTrivia()))
+					])
+				)
+			)
+			.AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 
-            editor.InsertMembers(classDecl, 0, [fieldDecl.WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)]);
-        }
+			editor.InsertMembers(classDecl, 0, [fieldDecl.WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)]);
+		}
 
-        var yieldStatement = objectCreation.FirstAncestorOrSelf<YieldStatementSyntax>();
-        if (yieldStatement == null)
-	        return document;
+		var yieldStatement = objectCreation.FirstAncestorOrSelf<YieldStatementSyntax>();
+		if (yieldStatement == null)
+			return document;
 
-        var newYield = yieldStatement
-	        .WithExpression(SyntaxFactory.IdentifierName(fieldName))
-	        .WithTriviaFrom(yieldStatement);
+		var newYield = yieldStatement
+			.WithExpression(SyntaxFactory.IdentifierName(fieldName))
+			.WithTriviaFrom(yieldStatement);
 
-        editor.ReplaceNode(yieldStatement, newYield);
-        return editor.GetChangedDocument();
-    }
+		editor.ReplaceNode(yieldStatement, newYield);
+		return editor.GetChangedDocument();
+	}
 
-    private static string? GenerateFieldName(ObjectCreationExpressionSyntax objectCreation, ITypeSymbol type)
-    {
-	    var argList = objectCreation.ArgumentList;
-	    if (argList?.Arguments.Count != 1)
-		    return null;
+	private static string? GenerateFieldName(ObjectCreationExpressionSyntax objectCreation, ITypeSymbol type)
+	{
+		var argList = objectCreation.ArgumentList;
+		if (argList?.Arguments.Count != 1)
+			return null;
 
-	    var argument = argList.Arguments.ToFullString().Trim();
-	    var fieldName = $"_{type.Name.Substring(0, 1).ToLower()}{type.Name.Substring(1)}{NormalizeName(argument)}";
-	    return fieldName;
-    }
+		var argument = argList.Arguments.ToFullString().Trim();
+		var fieldName = $"_{type.Name.Substring(0, 1).ToLower()}{type.Name.Substring(1)}{NormalizeName(argument)}";
+		return fieldName;
+	}
 
-    private static string NormalizeName(string name)
-    {
-	    return name
-		    .Replace(".", "_")
-		    .Replace(",", "_")
-		    .Replace("f", "")
-		    .Replace(" ", "");
-    }
+	private static string NormalizeName(string name)
+	{
+		return name
+			.Replace(".", "_")
+			.Replace(",", "_")
+			.Replace("f", "")
+			.Replace(" ", "");
+	}
 }
