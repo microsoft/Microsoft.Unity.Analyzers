@@ -138,7 +138,7 @@ public class CacheYieldInstructionAnalyzerCodeFix : CodeFixProvider
 			)
 			.AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 
-			editor.InsertMembers(classDecl, 0, [fieldDecl.WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)]);
+			editor.InsertMembers(classDecl, 0, [fieldDecl]);
 		}
 
 		var yieldStatement = objectCreation.FirstAncestorOrSelf<YieldStatementSyntax>();
