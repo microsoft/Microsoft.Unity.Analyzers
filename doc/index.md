@@ -53,7 +53,7 @@ ID | Suppressed ID | Justification
 [USP0006](USP0006.md) | IDE0051 | Don't flag private fields decorated with serialization attributes as unused
 [USP0007](USP0007.md) | CS0649 | Don't flag fields decorated with serialization attributes as never assigned
 [USP0008](USP0008.md) | IDE0051 | Don't flag private methods used with `Invoke`/`InvokeRepeating` or `StartCoroutine`/`StopCoroutine` as unused
-[USP0009](USP0009.md) | IDE0051 | Don't flag methods decorated with with `MenuItem`/`ContextMenu` attribute or referenced by a field with the `ContextMenuItem` attribute as unused
+[USP0009](USP0009.md) | IDE0051 | Don't flag methods decorated with `MenuItem`/`ContextMenu` attribute or referenced by a field with the `ContextMenuItem` attribute as unused
 [USP0010](USP0010.md) | IDE0051 | Don't flag fields decorated with the `ContextMenuItem` attribute as unused
 [USP0011](USP0011.md) | IDE0044 | Don't make fields decorated with the `ContextMenuItem` attribute read-only
 [USP0012](USP0012.md) | IDE0051 | Don't flag private methods with `InitializeOnLoadMethod`, `RuntimeInitializeOnLoadMethod` or `DidReloadScripts` attribute as unused
