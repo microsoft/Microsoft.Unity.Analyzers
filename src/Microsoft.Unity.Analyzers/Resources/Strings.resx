@@ -614,4 +614,16 @@
   <data name="GetLocalPositionAndRotationDiagnosticTitle" xml:space="preserve">
     <value>Inefficient localPosition/localRotation read</value>
   </data>
+  <data name="CacheYieldInstructionAnalyzerCodeFixTitle" xml:space="preserve">
+    <value>Cache WaitForSeconds invocations</value>
+  </data>
+  <data name="CacheYieldInstructionAnalyzerDiagnosticDescription" xml:space="preserve">
+    <value>Creating WaitForSeconds instances has memory impacts.</value>
+  </data>
+  <data name="CacheYieldInstructionAnalyzerDiagnosticMessageFormat" xml:space="preserve">
+    <value>Cache WaitForSeconds invocations instead of creating new instances.</value>
+  </data>
+  <data name="CacheYieldInstructionAnalyzerDiagnosticTitle" xml:space="preserve">
+    <value>WaitForSeconds caching </value>
+  </data>
 </root>

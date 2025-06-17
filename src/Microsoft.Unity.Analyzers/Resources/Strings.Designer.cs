@@ -88,6 +88,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use WaitForSeconds caching.
+        /// </summary>
+        internal static string CacheYieldInstructionAnalyzerCodeFixTitle {
+            get {
+                return ResourceManager.GetString("CacheYieldInstructionAnalyzerCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating WaitForSeconds instances has memory impacts..
+        /// </summary>
+        internal static string CacheYieldInstructionAnalyzerDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("CacheYieldInstructionAnalyzerDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cache WaitForSeconds values instead of creating new instances..
+        /// </summary>
+        internal static string CacheYieldInstructionAnalyzerDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("CacheYieldInstructionAnalyzerDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WaitForSeconds caching .
+        /// </summary>
+        internal static string CacheYieldInstructionAnalyzerDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("CacheYieldInstructionAnalyzerDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Component &apos;{0}&apos; should not be instantiated directly..
         /// </summary>
         internal static string CreateComponentInstanceDiagnosticMessageFormat {
