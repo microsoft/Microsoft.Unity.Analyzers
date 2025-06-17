@@ -63,7 +63,7 @@ ID | Suppressed ID | Justification
 [USP0016](USP0016.md) | CS8618 | Initialization detection with nullable reference types
 [USP0017](USP0017.md) | IDE0074 | Unity objects should not use coalescing assignment
 [USP0018](USP0018.md) | IDE0016 | Unity objects should not be used with throw expressions
-[USP0019](USP0019.md) | IDE0051 | Don't flag private methods with implicit-usage attributes as unused
+[USP0019](USP0019.md) | IDE0051 | Don't flag private members with implicit-usage attributes as unused
 [USP0020](USP0020.md) | IDE0052 | The Unity runtime invokes Unity messages
 [USP0021](USP0021.md) | IDE0041 | Prefer reference equality
 [USP0022](USP0022.md) | IDE0270 | Unity objects should not use if null coalescing

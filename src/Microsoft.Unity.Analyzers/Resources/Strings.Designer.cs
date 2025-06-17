@@ -403,7 +403,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with implicit-usage attributes as unused..
+        ///   Looks up a localized string similar to Don&apos;t flag private members decorated with implicit-usage attributes as unused..
         /// </summary>
         internal static string ImplicitUsageAttributeSuppressorJustification {
             get {

@@ -482,7 +482,7 @@
     <value>Do not use Throw expressions with Unity objects.</value>
   </data>
   <data name="ImplicitUsageAttributeSuppressorJustification" xml:space="preserve">
-    <value>Don't flag private methods decorated with implicit-usage attributes as unused.</value>
+    <value>Don't flag private members decorated with implicit-usage attributes as unused.</value>
   </data>
   <data name="PropertyDrawerOnGUICodeFixTitle" xml:space="preserve">
     <value>Remove PropertyDrawer.OnGUI() call</value>
