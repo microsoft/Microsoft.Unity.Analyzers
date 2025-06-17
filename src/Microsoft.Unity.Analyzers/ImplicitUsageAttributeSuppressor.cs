@@ -3,56 +3,42 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Unity.Analyzers.Resources;
+using Unity.Properties;
 
 namespace Microsoft.Unity.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class ImplicitUsageAttributeSuppressor : DiagnosticSuppressor
+public class ImplicitUsageAttributeSuppressor : BaseAttributeSuppressor
 {
 	internal static readonly SuppressionDescriptor Rule = new(
 		id: "USP0019",
 		suppressedDiagnosticId: "IDE0051",
 		justification: Strings.ImplicitUsageAttributeSuppressorJustification);
 
-	public override void ReportSuppressions(SuppressionAnalysisContext context)
-	{
-		foreach (var diagnostic in context.ReportedDiagnostics)
-		{
-			AnalyzeDiagnostic(diagnostic, context);
-		}
-	}
+	protected override Type[] SuppressableAttributeTypes =>
+	[
+		typeof(JetBrains.Annotations.UsedImplicitlyAttribute),
+		typeof(UnityEngine.Scripting.PreserveAttribute),
+		typeof(CreatePropertyAttribute)
+	];
 
 	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [Rule];
 
-	private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
+	protected override SyntaxNode? GetSuppressibleNode(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
-		var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
-		if (methodDeclarationSyntax == null)
-			return;
-
-		var syntaxTree = diagnostic.Location.SourceTree;
-		if (syntaxTree == null)
-			return;
-
-		var model = context.GetSemanticModel(syntaxTree);
-		if (model.GetDeclaredSymbol(methodDeclarationSyntax) is not IMethodSymbol methodSymbol)
-			return;
-
-		if (!IsSuppressable(methodSymbol))
-			return;
-
-		context.ReportSuppression(Suppression.Create(Rule, diagnostic));
+		return context.GetSuppressibleNode<MemberDeclarationSyntax>(diagnostic) as SyntaxNode
+			?? context.GetSuppressibleNode<VariableDeclaratorSyntax>(diagnostic);
 	}
 
-	private static bool IsSuppressable(IMethodSymbol methodSymbol)
+	protected override bool IsSuppressableAttribute(INamedTypeSymbol? symbol)
 	{
 		// The Unity code stripper will consider any attribute with the exact name "PreserveAttribute", regardless of the namespace or assembly
-		return methodSymbol.GetAttributes().Any(a => a.AttributeClass != null && (a.AttributeClass.Matches(typeof(JetBrains.Annotations.UsedImplicitlyAttribute)) || a.AttributeClass.Name == nameof(UnityEngine.Scripting.PreserveAttribute)));
+		return base.IsSuppressableAttribute(symbol) || symbol is { Name: nameof(UnityEngine.Scripting.PreserveAttribute) };
 	}
 }

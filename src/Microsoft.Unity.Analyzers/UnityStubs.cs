@@ -24,12 +24,12 @@ namespace UnityEngine
 	class Collider2D { }
 	class Collision { }
 	class Collision2D { }
-	class ContextMenu : System.Attribute { }
-	class ContextMenuItemAttribute : System.Attribute { }
+	class ContextMenu : Attribute { }
+	class ContextMenuItemAttribute : Attribute { }
 	class ControllerColliderHit { }
 	class Cubemap { }
 	class GameObject { }
-	class HideInInspector : System.Attribute { }
+	class HideInInspector : Attribute { }
 	class Joint2D { }
 	class Light { }
 	class MasterServerEvent { }
@@ -41,9 +41,9 @@ namespace UnityEngine
 	class Object { }
 	class Renderer { }
 	class RenderTexture { }
-	class RuntimeInitializeOnLoadMethodAttribute : System.Attribute { }
-	class SerializeField : System.Attribute { }
-	class SerializeReference : System.Attribute { }
+	class RuntimeInitializeOnLoadMethodAttribute : Attribute { }
+	class SerializeField : Attribute { }
+	class SerializeReference : Attribute { }
 	class Shader { }
 	class Sprite { }
 
@@ -798,12 +798,17 @@ namespace UnityEngine.Jobs
 
 namespace Unity.Properties
 {
-	class CreatePropertyAttribute : System.Attribute { }
+	class CreatePropertyAttribute : Attribute { }
 }
 
 namespace JetBrains.Annotations
 {
 	class UsedImplicitlyAttribute : Attribute { }
+}
+
+namespace Sirenix.Serialization
+{
+	class OdinSerializeAttribute : Attribute { }
 }
 
 #pragma warning enable

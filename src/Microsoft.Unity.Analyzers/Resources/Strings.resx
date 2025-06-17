@@ -267,14 +267,14 @@
   <data name="MessageSuppressorJustification" xml:space="preserve">
     <value>The Unity runtime invokes Unity messages.</value>
   </data>
-  <data name="ReadonlySerializeFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't set fields with a SerializeField or SerializeReference attributes to read-only.</value>
+  <data name="ReadonlySerializedFieldSuppressorJustification" xml:space="preserve">
+    <value>Don't flag fields decorated with serialization attributes to read-only.</value>
   </data>
-  <data name="UnusedSerializeFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't flag private fields with a SerializeField or SerializeReference attribute as unused.</value>
+  <data name="UnusedSerializedFieldSuppressorJustification" xml:space="preserve">
+    <value>Don't flag private fields decorated with serialization attributes as unused.</value>
   </data>
-  <data name="NeverAssignedSerializeFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't flag fields with a SerializeField or SerializeReference attribute as never assigned.</value>
+  <data name="NeverAssignedSerializedFieldSuppressorJustification" xml:space="preserve">
+    <value>Don't flag fields decorated with serialization attributes as never assigned.</value>
   </data>
   <data name="UnusedMethodSuppressorJustification" xml:space="preserve">
     <value>Don't flag private methods used with Invoke/InvokeRepeating or StartCoroutine/StopCoroutine as unused.</value>
@@ -296,10 +296,10 @@
     <value>Don't flag methods with MenuItem/ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused.</value>
   </data>
   <data name="ReadonlyContextMenuItemJustification" xml:space="preserve">
-    <value>Don't set fields with a ContextMenuItem attribute as readonly.</value>
+    <value>Don't flag fields decorated with a ContextMenuItem attribute as readonly.</value>
   </data>
   <data name="UnusedContextMenuItemJustification" xml:space="preserve">
-    <value>Don't flag fields with a ContextMenuItem attribute as unused.</value>
+    <value>Don't flag fields decorated with a ContextMenuItem attribute as unused.</value>
   </data>
   <data name="ImproperSerializeFieldCodeFixTitle" xml:space="preserve">
     <value>Remove SerializeField attribute</value>
@@ -482,7 +482,7 @@
     <value>Do not use Throw expressions with Unity objects.</value>
   </data>
   <data name="ImplicitUsageAttributeSuppressorJustification" xml:space="preserve">
-    <value>Don't flag private methods decorated with PreserveAttribute or UsedImplicitlyAttribute as unused.</value>
+    <value>Don't flag private members decorated with implicit-usage attributes as unused.</value>
   </data>
   <data name="PropertyDrawerOnGUICodeFixTitle" xml:space="preserve">
     <value>Remove PropertyDrawer.OnGUI() call</value>

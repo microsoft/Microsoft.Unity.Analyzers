@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class SerializeFieldSuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
+public class SerializedFieldSuppressorTests : BaseSuppressorVerifierTest<SerializedFieldSuppressor>
 {
 	[Fact]
 	public async Task PrivateFieldWithAttributeNeverAssignedSuppressed()
@@ -31,7 +31,7 @@ class Camera : MonoBehaviour
 			.WithAnalyzerOption("dotnet_style_readonly_field", "false")
 			.WithAnalyzerFilter("IDE0051");
 
-		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
+		var suppressor = ExpectSuppressor(SerializedFieldSuppressor.NeverAssignedRule)
 			.WithLocation(7, 12);
 
 		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
@@ -56,7 +56,7 @@ class Camera : MonoBehaviour
 		var context = AnalyzerVerificationContext.Default
 			.WithAnalyzerFilter("IDE0051");
 
-		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.ReadonlyRule)
+		var suppressor = ExpectSuppressor(SerializedFieldSuppressor.ReadonlyRule)
 			.WithLocation(7, 20);
 
 		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
@@ -74,7 +74,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.NeverAssignedRule)
+		var suppressor = ExpectSuppressor(SerializedFieldSuppressor.NeverAssignedRule)
 			.WithLocation(6, 19);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
@@ -91,7 +91,7 @@ class Test : System.Object
 ";
 
 		// We don't want to suppress 'never assigned' for standard types
-		var diagnostic = new DiagnosticResult(SerializeFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, DiagnosticSeverity.Warning)
+		var diagnostic = new DiagnosticResult(SerializedFieldSuppressor.NeverAssignedRule.SuppressedDiagnosticId, DiagnosticSeverity.Warning)
 			.WithLocation(4, 19)
 			.WithMessage("Field 'Test.someField' is never assigned to, and will always have its default value null");
 
@@ -114,28 +114,7 @@ class Camera : MonoBehaviour
 		var context = AnalyzerVerificationContext.Default
 			.WithAnalyzerOption("dotnet_style_readonly_field", "false");
 
-		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
-			.WithLocation(7, 12);
-
-		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
-	}
-
-	[Fact]
-	public async Task PrivateFieldWithCreateAttributeUnusedSuppressed()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    [Unity.Properties.CreateProperty]
-    string someField = ""default"";
-}
-";
-		var context = AnalyzerVerificationContext.Default
-			.WithAnalyzerOption("dotnet_style_readonly_field", "false");
-
-		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedRule)
+		var suppressor = ExpectSuppressor(SerializedFieldSuppressor.UnusedRule)
 			.WithLocation(7, 12);
 
 		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
