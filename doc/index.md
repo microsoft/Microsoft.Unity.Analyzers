@@ -48,22 +48,22 @@ ID | Suppressed ID | Justification
 [USP0001](USP0001.md) | IDE0029 | Unity objects should not use null coalescing
 [USP0002](USP0002.md) | IDE0031 | Unity objects should not use null propagation
 [USP0003](USP0003.md) | IDE0051 | The Unity runtime invokes Unity messages
-[USP0004](USP0004.md) | IDE0044 | Don't set fields with `SerializeField` or `SerializeReference` attributes to read-only
+[USP0004](USP0004.md) | IDE0044 | Don't set fields decorated with serialization attributes to read-only
 [USP0005](USP0005.md) | IDE0060 | The Unity runtime invokes Unity messages
-[USP0006](USP0006.md) | IDE0051 | Don't flag private fields with `SerializeField` or `SerializeReference` attributes as unused
-[USP0007](USP0007.md) | CS0649 | Don't flag fields with `SerializeField` or `SerializeReference` attributes as never assigned
+[USP0006](USP0006.md) | IDE0051 | Don't flag private fields decorated with serialization attributes as unused
+[USP0007](USP0007.md) | CS0649 | Don't flag fields decorated with serialization attributes as never assigned
 [USP0008](USP0008.md) | IDE0051 | Don't flag private methods used with `Invoke`/`InvokeRepeating` or `StartCoroutine`/`StopCoroutine` as unused
 [USP0009](USP0009.md) | IDE0051 | Don't flag methods with `MenuItem`/`ContextMenu` attribute or referenced by a field with the `ContextMenuItem` attribute as unused
 [USP0010](USP0010.md) | IDE0051 | Don't flag fields with the `ContextMenuItem` attribute as unused
 [USP0011](USP0011.md) | IDE0044 | Don't make fields with the `ContextMenuItem` attribute read-only
 [USP0012](USP0012.md) | IDE0051 | Don't flag private methods with `InitializeOnLoadMethod`, `RuntimeInitializeOnLoadMethod` or `DidReloadScripts` attribute as unused
-[USP0013](USP0013.md) | CA1823 | Don't flag private fields with `SerializeField` or `SerializeReference` attributes as unused
+[USP0013](USP0013.md) | CA1823 | Don't flag private fields decorated with serialization attributes as unused
 [USP0014](USP0014.md) | CA1822 | The Unity runtime invokes Unity messages
 [USP0015](USP0015.md) | CA1801 | The Unity runtime invokes Unity messages
 [USP0016](USP0016.md) | CS8618 | Initialization detection with nullable reference types
 [USP0017](USP0017.md) | IDE0074 | Unity objects should not use coalescing assignment
 [USP0018](USP0018.md) | IDE0016 | Unity objects should not be used with throw expressions
-[USP0019](USP0012.md) | IDE0051 | Don't flag private methods with `PreserveAttribute` or `UsedImplicitlyAttribute` as unused
+[USP0019](USP0019.md) | IDE0051 | Don't flag private methods with implicit-usage attributes as unused
 [USP0020](USP0020.md) | IDE0052 | The Unity runtime invokes Unity messages
 [USP0021](USP0021.md) | IDE0041 | Prefer reference equality
 [USP0022](USP0022.md) | IDE0270 | Unity objects should not use if null coalescing

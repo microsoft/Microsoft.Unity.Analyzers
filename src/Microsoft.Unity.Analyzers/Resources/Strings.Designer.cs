@@ -88,7 +88,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use WaitForSeconds caching.
+        ///   Looks up a localized string similar to Cache WaitForSeconds invocations.
         /// </summary>
         internal static string CacheYieldInstructionAnalyzerCodeFixTitle {
             get {
@@ -106,7 +106,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cache WaitForSeconds values instead of creating new instances..
+        ///   Looks up a localized string similar to Cache WaitForSeconds invocations instead of creating new instances..
         /// </summary>
         internal static string CacheYieldInstructionAnalyzerDiagnosticMessageFormat {
             get {
@@ -403,7 +403,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with PreserveAttribute or UsedImplicitlyAttribute as unused..
+        ///   Looks up a localized string similar to Don&apos;t flag private methods decorated with implicit-usage attributes as unused..
         /// </summary>
         internal static string ImplicitUsageAttributeSuppressorJustification {
             get {
@@ -763,11 +763,11 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag fields with a SerializeField or SerializeReference attribute as never assigned..
+        ///   Looks up a localized string similar to Don&apos;t flag fields decorated with serialization attributes as never assigned..
         /// </summary>
-        internal static string NeverAssignedSerializeFieldSuppressorJustification {
+        internal static string NeverAssignedSerializedFieldSuppressorJustification {
             get {
-                return ResourceManager.GetString("NeverAssignedSerializeFieldSuppressorJustification", resourceCulture);
+                return ResourceManager.GetString("NeverAssignedSerializedFieldSuppressorJustification", resourceCulture);
             }
         }
         
@@ -916,7 +916,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t set fields with a ContextMenuItem attribute as readonly..
+        ///   Looks up a localized string similar to Don&apos;t flag fields with a ContextMenuItem attribute as readonly..
         /// </summary>
         internal static string ReadonlyContextMenuItemJustification {
             get {
@@ -925,11 +925,11 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t set fields with a SerializeField or SerializeReference attributes to read-only..
+        ///   Looks up a localized string similar to Don&apos;t flag fields with decorated with serialization attributes to read-only..
         /// </summary>
-        internal static string ReadonlySerializeFieldSuppressorJustification {
+        internal static string ReadonlySerializedFieldSuppressorJustification {
             get {
-                return ResourceManager.GetString("ReadonlySerializeFieldSuppressorJustification", resourceCulture);
+                return ResourceManager.GetString("ReadonlySerializedFieldSuppressorJustification", resourceCulture);
             }
         }
         
@@ -1393,11 +1393,11 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag private fields with a SerializeField or SerializeReference attribute as unused..
+        ///   Looks up a localized string similar to Don&apos;t flag private fields decorated with serialization attributes as unused..
         /// </summary>
-        internal static string UnusedSerializeFieldSuppressorJustification {
+        internal static string UnusedSerializedFieldSuppressorJustification {
             get {
-                return ResourceManager.GetString("UnusedSerializeFieldSuppressorJustification", resourceCulture);
+                return ResourceManager.GetString("UnusedSerializedFieldSuppressorJustification", resourceCulture);
             }
         }
         

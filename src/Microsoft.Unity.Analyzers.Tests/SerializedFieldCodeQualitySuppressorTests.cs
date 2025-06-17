@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
-public class SerializeFieldCodeQualitySuppressorTests : BaseSuppressorVerifierTest<SerializeFieldSuppressor>
+public class SerializedFieldCodeQualitySuppressorTests : BaseSuppressorVerifierTest<SerializedFieldSuppressor>
 {
 	// Only load CodeQuality analyzers for those tests
 	protected override SuppressorVerifierAnalyzers SuppressorVerifierAnalyzers => SuppressorVerifierAnalyzers.CodeQuality;
@@ -26,7 +26,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-		var suppressor = ExpectSuppressor(SerializeFieldSuppressor.UnusedCodeQualityRule)
+		var suppressor = ExpectSuppressor(SerializedFieldSuppressor.UnusedCodeQualityRule)
 			.WithLocation(7, 12);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);

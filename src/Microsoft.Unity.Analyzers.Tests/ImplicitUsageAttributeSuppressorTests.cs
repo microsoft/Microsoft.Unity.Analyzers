@@ -11,6 +11,27 @@ namespace Microsoft.Unity.Analyzers.Tests;
 public class ImplicitUsageAttributeSuppressorTests : BaseSuppressorVerifierTest<ImplicitUsageAttributeSuppressor>
 {
 	[Fact]
+	public async Task PrivateFieldWithCreateAttributeUnusedSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    [Unity.Properties.CreateProperty]
+    string someField = ""default"";
+}
+";
+		var context = AnalyzerVerificationContext.Default
+			.WithAnalyzerOption("dotnet_style_readonly_field", "false");
+
+		var suppressor = ExpectSuppressor(ImplicitUsageAttributeSuppressor.Rule)
+			.WithLocation(7, 12);
+
+		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
+	}
+
+	[Fact]
 	public async Task UnityPreserveTest()
 	{
 		const string test = @"
