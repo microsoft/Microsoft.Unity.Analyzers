@@ -268,7 +268,7 @@
     <value>The Unity runtime invokes Unity messages.</value>
   </data>
   <data name="ReadonlySerializedFieldSuppressorJustification" xml:space="preserve">
-    <value>Don't flag fields with decorated with serialization attributes to read-only.</value>
+    <value>Don't flag fields decorated with serialization attributes to read-only.</value>
   </data>
   <data name="UnusedSerializedFieldSuppressorJustification" xml:space="preserve">
     <value>Don't flag private fields decorated with serialization attributes as unused.</value>
@@ -296,10 +296,10 @@
     <value>Don't flag methods with MenuItem/ContextMenu attribute or referenced by a field with the ContextMenuItem attribute as unused.</value>
   </data>
   <data name="ReadonlyContextMenuItemJustification" xml:space="preserve">
-    <value>Don't flag fields with a ContextMenuItem attribute as readonly.</value>
+    <value>Don't flag fields decorated with a ContextMenuItem attribute as readonly.</value>
   </data>
   <data name="UnusedContextMenuItemJustification" xml:space="preserve">
-    <value>Don't flag fields with a ContextMenuItem attribute as unused.</value>
+    <value>Don't flag fields decorated with a ContextMenuItem attribute as unused.</value>
   </data>
   <data name="ImproperSerializeFieldCodeFixTitle" xml:space="preserve">
     <value>Remove SerializeField attribute</value>

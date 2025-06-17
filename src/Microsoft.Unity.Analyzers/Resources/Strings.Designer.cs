@@ -916,7 +916,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag fields with a ContextMenuItem attribute as readonly..
+        ///   Looks up a localized string similar to Don&apos;t flag fields decorated with a ContextMenuItem attribute as readonly..
         /// </summary>
         internal static string ReadonlyContextMenuItemJustification {
             get {
@@ -925,7 +925,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag fields with decorated with serialization attributes to read-only..
+        ///   Looks up a localized string similar to Don&apos;t flag fields decorated with serialization attributes to read-only..
         /// </summary>
         internal static string ReadonlySerializedFieldSuppressorJustification {
             get {
@@ -1330,7 +1330,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t flag fields with a ContextMenuItem attribute as unused..
+        ///   Looks up a localized string similar to Don&apos;t flag fields decorated with a ContextMenuItem attribute as unused..
         /// </summary>
         internal static string UnusedContextMenuItemJustification {
             get {
