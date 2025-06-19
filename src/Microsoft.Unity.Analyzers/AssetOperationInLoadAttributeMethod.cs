@@ -29,6 +29,13 @@ public class AssetOperationInLoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
+	private static readonly ImmutableHashSet<string> _ignoredMembers = [
+		"IsAssetImportWorkerProcess",
+		"IsCacheServerEnabled",
+		"IsConnectedToCacheServer",
+		"IsDirectoryMonitoringEnabled"
+	];
+
 	public override void Initialize(AnalysisContext context)
 	{
 		context.EnableConcurrentExecution();
@@ -39,7 +46,7 @@ public class AssetOperationInLoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 
 	private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context)
 	{
-		if (context.Node is not MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax ins })
+		if (context.Node is not MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax ins } memberAccess)
 			return;
 
 		var text = ins.Identifier.Text;
@@ -51,6 +58,9 @@ public class AssetOperationInLoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 			.GetTypeInfo(ins);
 
 		if (typeInfo.Type == null || !typeInfo.Type.Extends(typeof(UnityEditor.AssetDatabase)))
+			return;
+
+		if (memberAccess.Name is IdentifierNameSyntax memberName && _ignoredMembers.Contains(memberName.Identifier.Text))
 			return;
 
 		if (context.ContainingSymbol is not IMethodSymbol methodSymbol)
