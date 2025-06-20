@@ -86,4 +86,24 @@ class Loader
 
 		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}
+
+	[Fact]
+	public async Task TestIgnoreList()
+	{
+		const string test = @"
+using UnityEditor;
+
+class Loader
+{
+    [InitializeOnLoadMethod]
+    public void Foo() {
+        if (AssetDatabase.IsAssetImportWorkerProcess())
+            return;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
 }
