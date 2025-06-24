@@ -1,22 +1,13 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-## husky task runner examples -------------------
-## Note : for local installation use 'dotnet' prefix. e.g. 'dotnet husky'
+REBASE_PATH="$(git rev-parse --git-path rebase-merge)" # directory
+MERGE_PATH="$(git rev-parse --git-path MERGE_HEAD)"    # file
 
-## run all tasks
-#husky run
-
-### run all tasks with group: 'group-name'
-#husky run --group group-name
-
-## run task with name: 'task-name'
-#husky run --name task-name
-
-## pass hook arguments to task
-#husky run --args "$1" "$2"
-
-## or put your custom commands -------------------
-#echo 'Husky.Net is awesome!'
-
-dotnet husky run
+# Check if the rebase or merge path exists.
+if [ -d "$REBASE_PATH" ] || [ -f "$MERGE_PATH" ]; then
+  echo "Skipping Husky pre-commit hook: rebase or merge detected."
+else
+  echo "Running Husky pre-commit hook."
+  dotnet husky run 
+fi
