@@ -92,7 +92,7 @@ public class CacheYieldInstructionAnalyzerCodeFix : CodeFixProvider
 			CodeAction.Create(
 				Strings.CacheYieldInstructionAnalyzerCodeFixTitle,
 				ct => CacheYieldInstructionAsync(context.Document, objectCreation, ct),
-				objectCreation.ToFullString()),
+				FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 			context.Diagnostics);
 	}
 

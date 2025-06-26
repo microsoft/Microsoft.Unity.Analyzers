@@ -21,7 +21,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Unity.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class TryGetComponentAnalyzer : DiagnosticAnalyzer
+public class TryGetComponentAnalyzer : BaseGetComponentAnalyzer
 {
 	private const string RuleId = "UNT0026";
 
@@ -56,13 +56,6 @@ public class TryGetComponentAnalyzer : DiagnosticAnalyzer
 
 		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
 	}
-
-	private static bool IsTryGetComponentSupported(SyntaxNodeAnalysisContext context)
-	{
-		// We need Unity 2019.2+ for proper support
-		var goType = context.Compilation?.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName!);
-		return goType?.MemberNames.Contains(nameof(UnityEngine.Component.TryGetComponent)) ?? false;
-	}
 }
 
 internal class TryGetComponentContext(string targetIdentifier, IfStatementSyntax ifStatement, SyntaxKind conditionKind)
@@ -74,7 +67,7 @@ internal class TryGetComponentContext(string targetIdentifier, IfStatementSyntax
 	public static TryGetComponentContext? GetContext(InvocationExpressionSyntax invocation, SemanticModel model)
 	{
 		// We want the generic GetComponent, no arguments
-		if (!IsCompatibleGetComponent(invocation, model))
+		if (!BaseGetComponentAnalyzer.IsGenericGetComponent(invocation, model, out _))
 			return null;
 
 		// We want a variable declaration with invocation as initializer
@@ -104,35 +97,13 @@ internal class TryGetComponentContext(string targetIdentifier, IfStatementSyntax
 			if (visitor is BlockSyntax)
 				break;
 
-			if (visitor is IfStatementSyntax { Else: { } })
+			if (visitor is IfStatementSyntax { Else: not null })
 				return null;
 
 			visitor = visitor.Parent;
 		}
 
 		return new TryGetComponentContext(targetIdentifier.Value.Text, ifStatement, binaryExpression.Kind());
-	}
-
-	private static bool IsCompatibleGetComponent(InvocationExpressionSyntax invocation, SemanticModel model)
-	{
-		// We are looking for the exact GetComponent method, not other derivatives, so we do not want to use KnownMethods.IsGetComponentName(nameSyntax)
-		if (invocation.GetMethodNameSyntax() is not { Identifier.Text: nameof(UnityEngine.Component.GetComponent) })
-			return false;
-
-		var symbol = model.GetSymbolInfo(invocation);
-		if (symbol.Symbol is not IMethodSymbol method)
-			return false;
-
-		// We want Component.GetComponent or GameObject.GetComponent (given we already checked the exact name, we can use this one)
-		if (!KnownMethods.IsGetComponent(method))
-			return false;
-
-		// We don't want arguments
-		if (invocation.ArgumentList.Arguments.Count != 0)
-			return false;
-
-		// We want a type argument
-		return method.TypeArguments.Length == 1;
 	}
 
 	private static bool TryGetConditionIdentifier(SyntaxNode ifNode, [NotNullWhen(true)] out SyntaxToken? conditionIdentifier, [NotNullWhen(true)] out BinaryExpressionSyntax? foundBinaryExpression, [NotNullWhen(true)] out IfStatementSyntax? foundIfStatement)

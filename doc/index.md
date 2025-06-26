@@ -40,6 +40,7 @@ ID | Title | Category
 [UNT0036](UNT0036.md) | Inefficient method to get position and rotation | Performance
 [UNT0037](UNT0037.md) | Inefficient method to get localPosition and localRotation | Performance
 [UNT0038](UNT0038.md) | Cache `WaitForSeconds` invocations | Performance
+[UNT0039](UNT0039.md) | Use `RequireComponent` attribute when self-invoking `GetComponent` | Type Safety
 
 # Diagnostic Suppressors
 

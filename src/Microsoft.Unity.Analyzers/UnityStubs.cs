@@ -599,6 +599,8 @@ namespace UnityEngine
 		[PhysicsAllocMethodUsage] static RaycastHit[] BoxCastAll(Vector3 center, Vector3 halfExtents, Vector3 direction, Quaternion orientation) { return null; }
 		[PhysicsAllocMethodUsage] static RaycastHit[] BoxCastAll(Vector3 center, Vector3 halfExtents, Vector3 direction) { return null; }
 	}
+
+	class RequireComponent : Attribute { }
 }
 
 namespace UnityEngine.EventSystems
