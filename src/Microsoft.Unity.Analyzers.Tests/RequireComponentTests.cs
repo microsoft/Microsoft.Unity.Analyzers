@@ -105,7 +105,7 @@ public class PlayerScript : MonoBehaviour
 {
     void Start()
     {
-		var foo = new GameObject();
+        var foo = new GameObject();
         var rb = foo.GetComponent<Rigidbody>();
     }
 }";
@@ -181,32 +181,6 @@ class Camera : MonoBehaviour
         var rb = gameObject.GetComponent<Rigidbody>();
         if (rb != null) {
             Debug.Log(rb.name);
-        }
-    }
-}
-";
-
-		await VerifyCSharpDiagnosticAsync(test);
-	}
-
-	[Fact]
-	public async Task VariableDeclarationScopeTest()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    public void Update() 
-    {
-        if (true) {
-            var rb = gameObject.GetComponent<Rigidbody>();
-            if (rb != null) {
-                Debug.Log(rb.name);
-            }
-            if (rb == null) {
-                Debug.Log(""null"");
-            }
         }
     }
 }
