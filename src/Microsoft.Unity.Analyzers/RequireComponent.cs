@@ -72,6 +72,16 @@ public class RequireComponentAnalyzer : BaseGetComponentAnalyzer
 		if (IsInvocationNullChecked(invocation))
 			return;
 
+		var invocationParent = invocation.Parent;
+		if (invocationParent == null)
+			return;
+
+		if (TryGetTargetdentifier(invocationParent, out var targetIdentifier)
+			&& TryGetNextTopNode(invocationParent, out var ifNode)
+			&& TryGetConditionIdentifier(ifNode, out var conditionIdentifier, out _, out _)
+			&& conditionIdentifier.Value.Text != targetIdentifier.Value.Text)
+			return;
+
 		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation()));
 	}
 

@@ -167,4 +167,137 @@ public class PlayerScript : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task VariableDeclarationNotNullConditionTest()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        var rb = gameObject.GetComponent<Rigidbody>();
+        if (rb != null) {
+            Debug.Log(rb.name);
+        }
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task VariableDeclarationScopeTest()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        if (true) {
+            var rb = gameObject.GetComponent<Rigidbody>();
+            if (rb != null) {
+                Debug.Log(rb.name);
+            }
+            if (rb == null) {
+                Debug.Log(""null"");
+            }
+        }
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task VariableDeclarationNotNullConditionReverseOperandsTest()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        var rb = gameObject.GetComponent<Rigidbody>();
+        if (null != rb) {
+            Debug.Log(rb.name);
+        }
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task VariableDeclarationNullConditionTest()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        var rb = gameObject.GetComponent<Rigidbody>();
+        if (rb == null) {
+            Debug.Log(""null!"");
+        }
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task PropertyAssignmentNotNullConditionTest()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    private Rigidbody rb { get; set;}
+
+    public void Update() 
+    {
+        rb = gameObject.GetComponent<Rigidbody>();
+        if (rb != null) {
+            Debug.Log(rb.name);
+        }
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task NoGetComponentDerivatives()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() 
+    {
+        var rb = gameObject.GetComponentInChildren<Rigidbody>();
+        if (rb != null) {
+            Debug.Log(rb.name);
+        }
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 }

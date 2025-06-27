@@ -16,7 +16,7 @@ namespace Microsoft.Unity.Analyzers
 {
 	public abstract class BaseGetComponentAnalyzer : DiagnosticAnalyzer
 	{
-		internal static bool IsGenericGetComponent(InvocationExpressionSyntax invocation, SemanticModel model, [NotNullWhen(true)] out IMethodSymbol? method)
+		protected internal static bool IsGenericGetComponent(InvocationExpressionSyntax invocation, SemanticModel model, [NotNullWhen(true)] out IMethodSymbol? method)
 		{
 			method = null;
 
@@ -91,6 +91,68 @@ namespace Microsoft.Unity.Analyzers
 			// We need Unity 2019.2+ for proper support
 			var goType = context.Compilation.GetTypeByMetadataName(typeof(UnityEngine.GameObject).FullName!);
 			return goType?.MemberNames.Contains(nameof(UnityEngine.Component.TryGetComponent)) ?? false;
+		}
+
+		protected internal static bool TryGetConditionIdentifier(SyntaxNode ifNode, [NotNullWhen(true)] out SyntaxToken? conditionIdentifier, [NotNullWhen(true)] out BinaryExpressionSyntax? foundBinaryExpression, [NotNullWhen(true)] out IfStatementSyntax? foundIfStatement)
+		{
+			foundBinaryExpression = null;
+			foundIfStatement = null;
+			conditionIdentifier = null;
+
+			if (ifNode is not IfStatementSyntax { Condition: BinaryExpressionSyntax binaryExpression } ifStatement)
+				return false;
+
+			foundBinaryExpression = binaryExpression;
+			foundIfStatement = ifStatement;
+
+			// We want an Equals/NotEquals condition
+			if (!binaryExpression.IsKind(SyntaxKind.EqualsExpression) &&
+				!binaryExpression.IsKind(SyntaxKind.NotEqualsExpression))
+				return false;
+
+			// We want IdentifierNameSyntax and null as operands
+			conditionIdentifier = binaryExpression.Left switch
+			{
+				IdentifierNameSyntax leftIdentifierName when binaryExpression.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } => leftIdentifierName.Identifier,
+				LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } when binaryExpression.Right is IdentifierNameSyntax rightIdentifierName => rightIdentifierName.Identifier,
+				_ => null
+			};
+
+			return conditionIdentifier.HasValue;
+		}
+
+		protected internal static bool TryGetTargetdentifier(SyntaxNode invocationParent, [NotNullWhen(true)] out SyntaxToken? targetIdentifier)
+		{
+			targetIdentifier = null;
+
+			if (invocationParent is not EqualsValueClauseSyntax { Parent: VariableDeclaratorSyntax variableDeclarator })
+				return false;
+
+			targetIdentifier = variableDeclarator.Identifier;
+			return true;
+		}
+
+		protected internal static bool TryGetNextTopNode(SyntaxNode node, [NotNullWhen(true)] out SyntaxNode? nextNode)
+		{
+			nextNode = null;
+			var topNode = node;
+			while (topNode.Parent != null && topNode.Parent is not BlockSyntax)
+				topNode = topNode.Parent;
+
+			if (topNode.Parent is not BlockSyntax block)
+				return false;
+
+			var siblingsAndSelf = block.ChildNodes().ToImmutableArray();
+			var invocationIndex = siblingsAndSelf.IndexOf(topNode);
+			if (invocationIndex == -1)
+				return false;
+
+			var ifIndex = invocationIndex + 1;
+			if (ifIndex >= siblingsAndSelf.Length)
+				return false;
+
+			nextNode = siblingsAndSelf[ifIndex];
+			return true;
 		}
 	}
 }
