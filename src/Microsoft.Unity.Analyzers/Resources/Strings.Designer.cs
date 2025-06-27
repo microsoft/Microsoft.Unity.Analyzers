@@ -961,6 +961,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use RequireComponent attribute.
+        /// </summary>
+        internal static string RequireComponentAnalyzerCodeFixTitle {
+            get {
+                return ResourceManager.GetString("RequireComponentAnalyzerCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The RequireComponent attribute automatically adds required components as dependencies..
+        /// </summary>
+        internal static string RequireComponentAnalyzerDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("RequireComponentAnalyzerDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use RequireComponent attribute when self-invoking GetComponent.
+        /// </summary>
+        internal static string RequireComponentAnalyzerDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("RequireComponentAnalyzerDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use RequireComponent attribute when self-invoking GetComponent.
+        /// </summary>
+        internal static string RequireComponentAnalyzerDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("RequireComponentAnalyzerDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use SetLocalPositionAndRotation() method.
         /// </summary>
         internal static string SetLocalPositionAndRotationCodeFixTitle {

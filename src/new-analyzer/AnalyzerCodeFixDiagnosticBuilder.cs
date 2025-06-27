@@ -86,7 +86,7 @@ public class $(DiagnosticName)CodeFix : CodeFixProvider
 		//     CodeAction.Create(
 		//         Strings.$(DiagnosticName)CodeFixTitle,
 		//         ct => {},
-		//         declaration.ToFullString()),
+		//         FixableDiagnosticIds.Single()), // using DiagnosticId as equivalence key for BatchFixer
 		//     context.Diagnostics);
 	}
 }

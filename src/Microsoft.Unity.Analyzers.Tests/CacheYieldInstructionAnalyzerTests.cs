@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests;
 public class CacheYieldInstructionAnalyzerTests : BaseCodeFixVerifierTest<CacheYieldInstructionAnalyzerAnalyzer, CacheYieldInstructionAnalyzerCodeFix>
 {
 	[Fact]
-	public async Task WaitForSecondsStaticAsync()
+	public async Task WaitForSecondsStatic()
 	{
 		const string test = @"
 using System.Collections;
@@ -50,7 +50,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task WaitForSecondsStaticTriviaAsync()
+	public async Task WaitForSecondsStaticTrivia()
 	{
 		const string test = @"
 using System.Collections;
@@ -102,7 +102,7 @@ class Camera : MonoBehaviour
 
 
 	[Fact]
-	public async Task WaitForSecondsOnlyLiteralAsync()
+	public async Task WaitForSecondsOnlyLiteral()
 	{
 		const string test = @"
 using System.Collections;
@@ -122,7 +122,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task WaitForSecondsMultipleAsync()
+	public async Task WaitForSecondsMultiple()
 	{
 		const string test = @"
 using System.Collections;
@@ -175,7 +175,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task WaitForSecondsReuseAsync()
+	public async Task WaitForSecondsReuse()
 	{
 		const string test = @"
 using System.Collections;
@@ -227,7 +227,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task WaitForSecondsAndRealtimeAsync()
+	public async Task WaitForSecondsAndRealtime()
 	{
 		const string test = @"
 using System.Collections;

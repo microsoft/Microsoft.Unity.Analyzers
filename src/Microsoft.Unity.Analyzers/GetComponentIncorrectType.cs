@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -14,7 +13,7 @@ using Microsoft.Unity.Analyzers.Resources;
 namespace Microsoft.Unity.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class GetComponentIncorrectTypeAnalyzer : DiagnosticAnalyzer
+public class GetComponentIncorrectTypeAnalyzer : BaseGetComponentAnalyzer
 {
 	private const string RuleId = "UNT0014";
 
@@ -59,34 +58,5 @@ public class GetComponentIncorrectTypeAnalyzer : DiagnosticAnalyzer
 			return;
 
 		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), identifier));
-	}
-
-	private static bool HasInvalidTypeArgument(IMethodSymbol method, out string? identifier)
-	{
-		identifier = null;
-		var argumentType = method.TypeArguments.FirstOrDefault();
-		if (argumentType == null)
-			return false;
-
-		if (IsComponentOrInterface(argumentType))
-			return false;
-
-		if (argumentType.TypeKind == TypeKind.TypeParameter && argumentType is ITypeParameterSymbol typeParameter)
-		{
-			// We need to infer the effective generic tye given usage, but we don't do that yet.
-			if (typeParameter.ConstraintTypes.IsEmpty)
-				return false;
-
-			if (typeParameter.ConstraintTypes.Any(IsComponentOrInterface))
-				return false;
-		}
-
-		identifier = argumentType.Name;
-		return true;
-	}
-
-	private static bool IsComponentOrInterface(ITypeSymbol argumentType)
-	{
-		return argumentType.Extends(typeof(UnityEngine.Component)) || argumentType.TypeKind == TypeKind.Interface;
 	}
 }

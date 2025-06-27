@@ -3,9 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +20,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Microsoft.Unity.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class NonGenericGetComponentAnalyzer : DiagnosticAnalyzer
+public class NonGenericGetComponentAnalyzer : BaseGetComponentAnalyzer
 {
 	private const string RuleId = "UNT0003";
 
@@ -55,11 +53,7 @@ public class NonGenericGetComponentAnalyzer : DiagnosticAnalyzer
 		if (!KnownMethods.IsGetComponentName(name))
 			return;
 
-		var symbol = context.SemanticModel.GetSymbolInfo(invocation);
-		if (symbol.Symbol == null)
-			return;
-
-		if (!IsNonGenericGetComponent(symbol.Symbol, out var methodName))
+		if (!IsNonGenericGetComponent(invocation, context.SemanticModel, out var method))
 			return;
 
 		if (invocation.Expression is not IdentifierNameSyntax)
@@ -68,23 +62,7 @@ public class NonGenericGetComponentAnalyzer : DiagnosticAnalyzer
 		if (!invocation.ArgumentList.Arguments[0].Expression.IsKind(SyntaxKind.TypeOfExpression))
 			return;
 
-		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), methodName));
-	}
-
-	private static bool IsNonGenericGetComponent(ISymbol symbol, [NotNullWhen(true)] out string? methodName)
-	{
-		methodName = null;
-		if (symbol is not IMethodSymbol method)
-			return false;
-
-		if (!KnownMethods.IsGetComponent(method))
-			return false;
-
-		if (method.Parameters.Length == 0 || !method.Parameters[0].Type.Matches(typeof(Type)))
-			return false;
-
-		methodName = method.Name;
-		return true;
+		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), method.Name));
 	}
 }
 

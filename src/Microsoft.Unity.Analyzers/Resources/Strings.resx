@@ -626,4 +626,16 @@
   <data name="CacheYieldInstructionAnalyzerDiagnosticTitle" xml:space="preserve">
     <value>WaitForSeconds caching </value>
   </data>
+  <data name="RequireComponentAnalyzerCodeFixTitle" xml:space="preserve">
+    <value>Use RequireComponent attribute</value>
+  </data>
+  <data name="RequireComponentAnalyzerDiagnosticDescription" xml:space="preserve">
+    <value>The RequireComponent attribute automatically adds required components as dependencies.</value>
+  </data>
+  <data name="RequireComponentAnalyzerDiagnosticMessageFormat" xml:space="preserve">
+    <value>Use RequireComponent attribute when self-invoking GetComponent</value>
+  </data>
+  <data name="RequireComponentAnalyzerDiagnosticTitle" xml:space="preserve">
+    <value>Use RequireComponent attribute when self-invoking GetComponent</value>
+  </data>
 </root>
