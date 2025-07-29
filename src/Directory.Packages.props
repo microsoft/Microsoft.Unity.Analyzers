@@ -18,9 +18,9 @@
     <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.14.2094" />
     <!-- Tests -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="9.0.6" />
+    <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="9.0.7" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.3" />
     <PackageVersion Include="Xunit.SkippableFact" Version="1.5.23" />
     <!-- Misc -->
     <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
