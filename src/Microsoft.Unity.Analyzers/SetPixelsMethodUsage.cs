@@ -30,7 +30,7 @@ public class SetPixelsMethodUsageAnalyzer : MethodUsageAnalyzer<SetPixelsMethodU
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.SetPixelsMethodUsageDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	protected override IEnumerable<MethodInfo> CollectMethods()
 	{

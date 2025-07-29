@@ -33,7 +33,7 @@ public class TagComparisonAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.TagComparisonDiagnosticDescription);
 
-	public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	public sealed override void Initialize(AnalysisContext context)
 	{
@@ -129,7 +129,7 @@ public class TagComparisonAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class TagComparisonCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [TagComparisonAnalyzer.Rule.Id];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(TagComparisonAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

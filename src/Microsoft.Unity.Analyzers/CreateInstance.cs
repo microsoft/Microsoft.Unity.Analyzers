@@ -46,7 +46,7 @@ public class CreateInstanceAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(ScriptableObjectId),
 		description: Strings.CreateScriptableObjectInstanceDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [ComponentIdRule, ScriptableObjectRule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ComponentIdRule, ScriptableObjectRule);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -80,7 +80,7 @@ public class CreateInstanceAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class CreateInstanceCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [CreateInstanceAnalyzer.ComponentId, CreateInstanceAnalyzer.ScriptableObjectId];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CreateInstanceAnalyzer.ComponentId, CreateInstanceAnalyzer.ScriptableObjectId);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

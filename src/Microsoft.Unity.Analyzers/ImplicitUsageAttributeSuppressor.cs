@@ -28,7 +28,7 @@ public class ImplicitUsageAttributeSuppressor : BaseAttributeSuppressor
 		typeof(CreatePropertyAttribute)
 	];
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [Rule];
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(Rule);
 
 	protected override SyntaxNode? GetSuppressibleNode(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
