@@ -68,3 +68,4 @@ ID | Suppressed ID | Justification
 [USP0020](USP0020.md) | IDE0052 | The Unity runtime invokes Unity messages
 [USP0021](USP0021.md) | IDE0041 | Prefer reference equality
 [USP0022](USP0022.md) | IDE0270 | Unity objects should not use if null coalescing
+[USP0023](USP0023.md) | IDE1006 | The Unity runtime invokes Unity messages
