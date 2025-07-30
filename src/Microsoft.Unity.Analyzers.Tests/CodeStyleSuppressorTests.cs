@@ -11,6 +11,14 @@ namespace Microsoft.Unity.Analyzers.Tests;
 
 public class CodeStyleSuppressorTests : BaseSuppressorVerifierTest<CodeStyleSuppressor>
 {
+	public static readonly AnalyzerVerificationContext Context = AnalyzerVerificationContext.Default
+		.WithAnalyzerOption("dotnet_naming_style.camel_case.capitalization", "camel_case")
+		.WithAnalyzerOption("dotnet_naming_symbols.private_methods.applicable_kinds", "method")
+		.WithAnalyzerOption("dotnet_naming_symbols.private_methods.applicable_accessibilities", "private")
+		.WithAnalyzerOption("dotnet_naming_rule.private_methods.symbols", "private_methods")
+		.WithAnalyzerOption("dotnet_naming_rule.private_methods.style", "camel_case")
+		.WithAnalyzerOption("dotnet_naming_rule.private_methods.severity", "warning");
+
 	[Fact]
 	public async Task TestCodeStyleIgnoreForUnityMessages()
 	{
@@ -23,18 +31,10 @@ class Menu : MonoBehaviour
     public void Start() { }
 }";
 
-		var context = AnalyzerVerificationContext.Default
-			.WithAnalyzerOption("dotnet_naming_style.camel_case.capitalization", "camel_case")
-			.WithAnalyzerOption("dotnet_naming_symbols.private_methods.applicable_kinds", "method")
-			.WithAnalyzerOption("dotnet_naming_symbols.private_methods.applicable_accessibilities", "private")
-			.WithAnalyzerOption("dotnet_naming_rule.private_methods.symbols", "private_methods")
-			.WithAnalyzerOption("dotnet_naming_rule.private_methods.style", "camel_case")
-			.WithAnalyzerOption("dotnet_naming_rule.private_methods.severity", "warning");
-
 		var suppressor = ExpectSuppressor(CodeStyleSuppressor.Rule)
 			.WithLocation(6, 18);
 
-		await VerifyCSharpDiagnosticAsync(context, test, suppressor);
+		await VerifyCSharpDiagnosticAsync(Context, test, suppressor);
 	}
 
 	[Fact]
@@ -49,20 +49,12 @@ class Menu : MonoBehaviour
     public void Bar() { }
 }";
 
-		var context = AnalyzerVerificationContext.Default
-			.WithAnalyzerOption("dotnet_naming_style.camel_case.capitalization", "camel_case")
-			.WithAnalyzerOption("dotnet_naming_symbols.private_methods.applicable_kinds", "method")
-			.WithAnalyzerOption("dotnet_naming_symbols.private_methods.applicable_accessibilities", "private")
-			.WithAnalyzerOption("dotnet_naming_rule.private_methods.symbols", "private_methods")
-			.WithAnalyzerOption("dotnet_naming_rule.private_methods.style", "camel_case")
-			.WithAnalyzerOption("dotnet_naming_rule.private_methods.severity", "warning");
-
 		var not = ExpectNotSuppressed(CodeStyleSuppressor.Rule)
 				.WithLocation(6, 18)
 				.WithSeverity(DiagnosticSeverity.Info)
 				.WithMessageFormat("Naming rule violation: The first word, '{0}', must begin with a lower case character")
 				.WithArguments("Foo");
 
-		await VerifyCSharpDiagnosticAsync(context, test, not);
+		await VerifyCSharpDiagnosticAsync(Context, test, not);
 	}
 }
