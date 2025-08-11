@@ -28,15 +28,37 @@ internal static class TypeSymbolExtensions
 		return false;
 	}
 
+	private static bool IsBuiltinAwaitableOf(INamedTypeSymbol typeSymbol, Type type)
+	{
+		return IsAwaitableOf(typeSymbol, type, typeof(UnityEngine.Awaitable));
+	}
+
+	private static bool IsUniTaskAwaitableOf(INamedTypeSymbol typeSymbol, Type type)
+	{
+		return IsAwaitableOf(typeSymbol, type, type == typeof(void) ? typeof(Cysharp.Threading.Tasks.UniTaskVoid) : typeof(Cysharp.Threading.Tasks.UniTask));
+	}
+
+	private static bool IsAwaitableOf(INamedTypeSymbol typeSymbol, Type type, Type awaiter)
+	{
+		// We do not want to use typeSymbol.Matches(awaiter) here, to prevent infinite recursion
+		if (typeSymbol.Name != awaiter.Name)
+			return false;
+
+		return typeSymbol.ContainingNamespace.ToDisplayString() == awaiter.Namespace;
+	}
+
+	private static bool IsAwaitableOf(INamedTypeSymbol typeSymbol, Type type)
+	{
+		return IsBuiltinAwaitableOf(typeSymbol, type)
+			   || IsUniTaskAwaitableOf(typeSymbol, type);
+	}
+
 	public static bool IsAwaitableOf(this ITypeSymbol symbol, Type type)
 	{
 		if (symbol is not INamedTypeSymbol named)
 			return false;
 
-		if (symbol.Name != nameof(UnityEngine.Awaitable))
-			return false;
-
-		if (symbol.ContainingNamespace.Name != typeof(UnityEngine.Awaitable).Namespace)
+		if (!IsAwaitableOf(named, type))
 			return false;
 
 		if (type == typeof(void))

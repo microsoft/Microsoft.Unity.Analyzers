@@ -813,4 +813,11 @@ namespace Sirenix.Serialization
 	class OdinSerializeAttribute : Attribute { }
 }
 
+namespace Cysharp.Threading.Tasks
+{
+	class UniTask { }
+	class UniTask<T> { }
+	class UniTaskVoid { }
+}
+
 #pragma warning enable
