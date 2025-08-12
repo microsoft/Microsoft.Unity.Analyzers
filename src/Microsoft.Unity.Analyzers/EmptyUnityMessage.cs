@@ -32,7 +32,7 @@ public class EmptyUnityMessageAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.EmptyUnityMessageDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -79,7 +79,7 @@ public class EmptyUnityMessageAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class EmptyUnityMessageCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [EmptyUnityMessageAnalyzer.Rule.Id];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(EmptyUnityMessageAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

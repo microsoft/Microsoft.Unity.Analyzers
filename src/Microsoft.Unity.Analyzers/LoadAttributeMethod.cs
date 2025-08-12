@@ -33,7 +33,7 @@ public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.LoadAttributeMethodDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -92,7 +92,7 @@ public class LoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class LoadAttributeMethodCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [LoadAttributeMethodAnalyzer.Rule.Id];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(LoadAttributeMethodAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

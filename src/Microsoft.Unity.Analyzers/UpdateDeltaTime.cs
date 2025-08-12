@@ -45,7 +45,10 @@ public class UpdateDeltaTimeAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(FixedUpdateId),
 		description: Strings.FixedUpdateWithoutDeltaTimeDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [UpdateRule, FixedUpdateRule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(
+		UpdateRule,
+		FixedUpdateRule
+	);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -107,7 +110,10 @@ public class UpdateDeltaTimeCodeFix : CodeFixProvider
 {
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [UpdateDeltaTimeAnalyzer.UpdateId, UpdateDeltaTimeAnalyzer.FixedUpdateId];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(
+		UpdateDeltaTimeAnalyzer.UpdateId,
+		UpdateDeltaTimeAnalyzer.FixedUpdateId
+	);
 
 	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 	{

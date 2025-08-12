@@ -33,7 +33,7 @@ public class CacheYieldInstructionAnalyzerAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.CacheYieldInstructionAnalyzerDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -78,7 +78,7 @@ public class CacheYieldInstructionAnalyzerAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class CacheYieldInstructionAnalyzerCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [CacheYieldInstructionAnalyzerAnalyzer.Rule.Id];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CacheYieldInstructionAnalyzerAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

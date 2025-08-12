@@ -65,8 +65,12 @@ public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(IsPatternRuleId),
 		description: Strings.UnityObjectIsPatternDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule, IsPatternRule
-];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(
+		NullCoalescingRule,
+		NullPropagationRule,
+		CoalescingAssignmentRule,
+		IsPatternRule
+	);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -128,14 +132,12 @@ public class UnityObjectNullHandlingAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds =>
-	[
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(
 		UnityObjectNullHandlingAnalyzer.NullCoalescingRule.Id,
 		UnityObjectNullHandlingAnalyzer.NullPropagationRule.Id,
 		UnityObjectNullHandlingAnalyzer.CoalescingAssignmentRule.Id,
 		UnityObjectNullHandlingAnalyzer.IsPatternRule.Id
-,
-	];
+	);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -292,7 +294,13 @@ public class UnityObjectNullHandlingSuppressor : DiagnosticSuppressor
 		suppressedDiagnosticId: "IDE0270",
 		justification: Strings.UnityObjectIfNullCoalescingSuppressorJustification);
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [NullCoalescingRule, NullPropagationRule, CoalescingAssignmentRule, UseIsNullRule, IfNullCoalescingRule];
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(
+		NullCoalescingRule,
+		NullPropagationRule,
+		CoalescingAssignmentRule,
+		UseIsNullRule,
+		IfNullCoalescingRule
+	);
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{

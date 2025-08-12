@@ -35,7 +35,7 @@ public class RequireComponentAnalyzer : BaseGetComponentAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.RequireComponentAnalyzerDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -113,7 +113,7 @@ public class RequireComponentAnalyzer : BaseGetComponentAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class RequireComponentCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [RequireComponentAnalyzer.Rule.Id];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(RequireComponentAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

@@ -36,7 +36,7 @@ public class InputGetKeyAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.InputGetKeyDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	private static readonly Lazy<Dictionary<string, KeyCode>> _lookup = new(BuildLookup);
 
@@ -132,7 +132,7 @@ public class InputGetKeyAnalyzer : DiagnosticAnalyzer
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 public class InputGetKeyCodeFix : CodeFixProvider
 {
-	public sealed override ImmutableArray<string> FixableDiagnosticIds => [InputGetKeyAnalyzer.Rule.Id];
+	public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(InputGetKeyAnalyzer.Rule.Id);
 
 	public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

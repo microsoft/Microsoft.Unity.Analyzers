@@ -27,14 +27,14 @@ public class AssetOperationInLoadAttributeMethodAnalyzer : DiagnosticAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.AssetOperationInLoadAttributeMethodDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	private static readonly ImmutableHashSet<string> _ignoredMembers = [
+	private static readonly ImmutableHashSet<string> _ignoredMembers = ImmutableHashSet.Create(
 		"IsAssetImportWorkerProcess",
 		"IsCacheServerEnabled",
 		"IsConnectedToCacheServer",
 		"IsDirectoryMonitoringEnabled"
-	];
+	);
 
 	public override void Initialize(AnalysisContext context)
 	{

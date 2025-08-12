@@ -27,7 +27,7 @@ public class GetComponentIncorrectTypeAnalyzer : BaseGetComponentAnalyzer
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),
 		description: Strings.GetComponentIncorrectTypeDiagnosticDescription);
 
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
+	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
 	public override void Initialize(AnalysisContext context)
 	{

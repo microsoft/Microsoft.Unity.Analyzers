@@ -35,12 +35,12 @@ public class SerializedFieldSuppressor : BaseAttributeSuppressor
 		suppressedDiagnosticId: "CS0649",
 		justification: Strings.NeverAssignedSerializedFieldSuppressorJustification);
 
-	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [
+	public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(
 		ReadonlyRule,
 		UnusedRule,
 		UnusedCodeQualityRule,
 		NeverAssignedRule
-	];
+	);
 
 	protected override Type[] SuppressableAttributeTypes =>
 	[
