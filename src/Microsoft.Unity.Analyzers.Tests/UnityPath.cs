@@ -51,10 +51,21 @@ internal static class UnityPath
 			RegisterUnityInstallation(Path.Combine(name, dataSubFolder));
 	}
 
-	private static void RegisterMacOsInstallations()
+	private static void RegisterMacOsInstallations(string unityAppFolder = "Unity.app", string contentSubFolder = "Contents")
 	{
-		RegisterHubInstallations(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Unity.app", "Contents");
-		RegisterUnityInstallation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Unity/Unity.app/Contents"));
+		RegisterHubInstallations(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), unityAppFolder, contentSubFolder);
+
+		var unityPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Unity");
+
+		RegisterUnityInstallation(Path.Combine(unityPath, unityAppFolder, contentSubFolder)); // before 6.1
+
+		// After 6.1
+		var directories = Directory.EnumerateDirectories(unityPath)
+			.OrderByDescending(n => n)
+			.Select(n => Path.Combine(unityPath, n));
+
+		foreach (var name in directories)
+			RegisterUnityInstallation(Path.Combine(name, unityAppFolder, contentSubFolder));
 	}
 
 	private static void RegisterLinuxInstallations()
