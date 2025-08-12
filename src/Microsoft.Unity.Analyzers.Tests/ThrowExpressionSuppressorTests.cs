@@ -83,7 +83,7 @@ class Camera : MonoBehaviour
 }
 ";
 
-		var diagnostic = DiagnosticResult.CompilerWarning(ThrowExpressionSuppressor.Rule.SuppressedDiagnosticId)
+		var diagnostic = ExpectNotSuppressed(ThrowExpressionSuppressor.Rule)
 			.WithSeverity(DiagnosticSeverity.Info)
 			.WithMessage("Null check can be simplified")
 			.WithLocation(10, 13);

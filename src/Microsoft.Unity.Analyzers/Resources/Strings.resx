@@ -638,4 +638,7 @@
   <data name="RequireComponentAnalyzerDiagnosticTitle" xml:space="preserve">
     <value>Use RequireComponent attribute when self-invoking GetComponent</value>
   </data>
+  <data name="CodeStyleSuppressorJustification" xml:space="preserve">
+    <value>The Unity runtime invokes Unity messages.</value>
+  </data>
 </root>

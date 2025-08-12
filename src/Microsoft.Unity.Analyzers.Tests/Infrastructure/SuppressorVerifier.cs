@@ -35,6 +35,11 @@ public abstract class SuppressorVerifier : DiagnosticVerifier
 		return result;
 	}
 
+	protected static DiagnosticResult ExpectNotSuppressed(SuppressionDescriptor descriptor)
+	{
+		return DiagnosticResult.CompilerWarning(descriptor.SuppressedDiagnosticId);
+	}
+
 	private static ImmutableArray<DiagnosticAnalyzer> LoadAnalyzers(string assembly)
 	{
 		var fullpath = Path.GetFullPath(assembly);

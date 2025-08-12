@@ -45,12 +45,12 @@ namespace Assets.Scripts
 
 		DiagnosticResult[] diagnostics =
 		[
-			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+			ExpectNotSuppressed(NullableReferenceTypesSuppressor.Rule)
 				.WithMessageFormat(WarningFieldFormat)
 				.WithArguments("field", "field1")
 				.WithLocation(9, 28),
 
-			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+			ExpectNotSuppressed(NullableReferenceTypesSuppressor.Rule)
 				.WithMessageFormat(WarningPropertyFormat)
 				.WithArguments("property", "property1")
 				.WithLocation(11, 28),
@@ -160,7 +160,7 @@ public class TestScript : MonoBehaviour
 
 			ExpectSuppressor(NullableReferenceTypesSuppressor.Rule).WithLocation(18, 27), //staticField
 
-			DiagnosticResult.CompilerWarning(NullableReferenceTypesSuppressor.Rule.SuppressedDiagnosticId)
+			ExpectNotSuppressed(NullableReferenceTypesSuppressor.Rule)
 				.WithMessageFormat(WarningFieldFormat)
 				.WithArguments("field", "hiddenField")
 				.WithLocation(20, 38), //should throw on public fields that are not shown in the inspector

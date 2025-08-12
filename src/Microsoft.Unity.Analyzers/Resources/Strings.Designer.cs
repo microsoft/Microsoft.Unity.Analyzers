@@ -124,6 +124,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Unity runtime invokes Unity messages..
+        /// </summary>
+        internal static string CodeStyleSuppressorJustification {
+            get {
+                return ResourceManager.GetString("CodeStyleSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Component &apos;{0}&apos; should not be instantiated directly..
         /// </summary>
         internal static string CreateComponentInstanceDiagnosticMessageFormat {

@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
@@ -88,4 +89,6 @@ internal class AnalyzerConfigOptionsLookup : AnalyzerConfigOptions
 
 		throw new ArgumentException($"Unexpected analyzer option requested '{key}'");
 	}
+
+	public override IEnumerable<string> Keys => _overrides.Keys.Union(_default.Keys);
 }
