@@ -44,6 +44,9 @@ public class CodeStyleSuppressor : DiagnosticSuppressor
 			return;
 
 		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
+		if (!scriptInfo.HasMessages)
+			return;
+
 		if (!scriptInfo.IsMessage(methodSymbol))
 			return;
 
