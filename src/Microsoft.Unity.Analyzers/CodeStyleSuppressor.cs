@@ -3,7 +3,9 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -18,6 +20,11 @@ public class CodeStyleSuppressor : DiagnosticSuppressor
 		id: "USP0023",
 		suppressedDiagnosticId: "IDE1006",
 		justification: Strings.CodeStyleSuppressorJustification);
+
+	public static readonly ImmutableArray<Type> UnityMessageBaseTypes = ImmutableArray.Create(
+		typeof(UnityEngine.MonoBehaviour),
+		typeof(UnityEngine.ScriptableObject)
+	);
 
 	public override void ReportSuppressions(SuppressionAnalysisContext context)
 	{
@@ -44,7 +51,7 @@ public class CodeStyleSuppressor : DiagnosticSuppressor
 			return;
 
 		var typeSymbol = methodSymbol.ContainingType;
-		if (!typeSymbol.Extends(typeof(UnityEngine.MonoBehaviour)))
+		if (!UnityMessageBaseTypes.Any(typeSymbol.Extends))
 			return;
 
 		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);

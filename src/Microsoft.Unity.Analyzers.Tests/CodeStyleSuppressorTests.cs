@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Xunit;
@@ -19,41 +20,49 @@ public class CodeStyleSuppressorTests : BaseSuppressorVerifierTest<CodeStyleSupp
 		.WithAnalyzerOption("dotnet_naming_rule.private_methods.style", "camel_case")
 		.WithAnalyzerOption("dotnet_naming_rule.private_methods.severity", "warning");
 
-	[Fact]
-	public async Task TestCodeStyleIgnoreForUnityMessages()
-	{
-		const string test = @"
-using UnityEngine;
+	public static TheoryData<string> GetUnityMessageBaseTypeNames() => [..
+		CodeStyleSuppressor.UnityMessageBaseTypes.Select(x => x.Name)
+	];
 
-class Menu : MonoBehaviour
-{
-    private void Update() { }
-    public void Start() { }
-}";
+	[Theory]
+	[MemberData(nameof(GetUnityMessageBaseTypeNames))]
+	public async Task TestCodeStyleIgnoreForUnityMessages(string baseTypeName)
+	{
+		string test = $$"""
+			using UnityEngine;
+
+			class Menu : {{baseTypeName}}
+			{
+				private void Awake() { }
+				public void OnEnable() { }
+			}
+		""";
 
 		var suppressor = ExpectSuppressor(CodeStyleSuppressor.Rule)
-			.WithLocation(6, 18);
+			.WithLocation(5, 16);
 
 		await VerifyCSharpDiagnosticAsync(Context, test, suppressor);
 	}
 
-	[Fact]
-	public async Task TestCodeStyleEffectiveForNonUnityMessages()
+	[Theory]
+	[MemberData(nameof(GetUnityMessageBaseTypeNames))]
+	public async Task TestCodeStyleEffectiveForNonUnityMessages(string baseTypeName)
 	{
-		const string test = @"
-using UnityEngine;
+		string test = $$"""
+			using UnityEngine;
 
-class Menu : MonoBehaviour
-{
-    private void Foo() { }
-    public void Bar() { }
-}";
+			class Menu : {{baseTypeName}}
+			{
+				private void Foo() { }
+				public void Bar() { }
+			}
+		""";
 
 		var not = ExpectNotSuppressed(CodeStyleSuppressor.Rule)
-				.WithLocation(6, 18)
-				.WithSeverity(DiagnosticSeverity.Info)
-				.WithMessageFormat("Naming rule violation: The first word, '{0}', must begin with a lower case character")
-				.WithArguments("Foo");
+			.WithLocation(5, 16)
+			.WithSeverity(DiagnosticSeverity.Info)
+			.WithMessageFormat("Naming rule violation: The first word, '{0}', must begin with a lower case character")
+			.WithArguments("Foo");
 
 		await VerifyCSharpDiagnosticAsync(Context, test, not);
 	}
