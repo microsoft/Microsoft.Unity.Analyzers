@@ -46,18 +46,17 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 
 	private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
 	{
-		if (context.Node is not ClassDeclarationSyntax classDeclaration)
+		if (context.Node is not ClassDeclarationSyntax classSyntax)
 			return;
 
-		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-		if (typeSymbol == null)
+		if (context.SemanticModel.GetDeclaredSymbol(classSyntax) is not ITypeSymbol typeSymbol)
 			return;
 
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return;
 
-		var methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
+		var methods = classSyntax.Members.OfType<MethodDeclarationSyntax>();
 
 		var allMessages = scriptInfo
 			.GetMessages()
@@ -67,15 +66,15 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 			.GetNotImplementedMessages()
 			.ToLookup(m => m.Name.ToLower()); // case-insensitive indexing
 
-		foreach (var method in methods)
+		foreach (var methodSyntax in methods)
 		{
-			if (method.ExplicitInterfaceSpecifier != null)
+			if (methodSyntax.ExplicitInterfaceSpecifier != null)
 				continue;
 
-			if (method.HasPolymorphicModifier())
+			if (methodSyntax.HasPolymorphicModifier())
 				continue;
 
-			var methodName = method.Identifier.Text;
+			var methodName = methodSyntax.Identifier.Text;
 			// We have a valid case match here, so stop further inspection (This will prevent false positive for possible overloads, when one of them is still in the notImplementedMessages lookup)
 			if (allMessages.Contains(methodName))
 				continue;
@@ -84,8 +83,7 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 			if (!notImplementedMessages.Contains(key))
 				continue;
 
-			var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
-			if (methodSymbol == null)
+			if (context.SemanticModel.GetDeclaredSymbol(methodSyntax) is not IMethodSymbol methodSymbol)
 				continue;
 
 			var namedMessages = notImplementedMessages[key];
@@ -93,7 +91,7 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 				continue;
 
 			// We can't use SymbolFinder.FindReferencesAsync() to find possible references, given we do not have access to the solution here yet
-			context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), methodName));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, methodSyntax.Identifier.GetLocation(), methodName));
 		}
 	}
 }
@@ -119,7 +117,7 @@ public class ImproperMessageCaseCodeFix : CodeFixProvider
 			context.Diagnostics);
 	}
 
-	private static async Task<Solution> FixMessageCaseAsync(Document document, MethodDeclarationSyntax declaration, CancellationToken cancellationToken)
+	private static async Task<Solution> FixMessageCaseAsync(Document document, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
 	{
 		var solution = document.Project.Solution;
 
@@ -127,8 +125,7 @@ public class ImproperMessageCaseCodeFix : CodeFixProvider
 		if (model == null)
 			return solution;
 
-		var methodSymbol = model.GetDeclaredSymbol(declaration);
-		if (methodSymbol == null)
+		if (model.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 			return solution;
 
 		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);

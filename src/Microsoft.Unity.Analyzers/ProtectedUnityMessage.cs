@@ -43,37 +43,32 @@ public class ProtectedUnityMessageAnalyzer : DiagnosticAnalyzer
 
 	private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 	{
-		var method = context.Node as MethodDeclarationSyntax;
-		if (method?.Body == null)
+		var methodSyntax = context.Node as MethodDeclarationSyntax;
+		if (methodSyntax?.Body == null)
 			return;
 
-		if (method.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+		if (methodSyntax.Modifiers.Any(SyntaxKind.ProtectedKeyword))
 			return;
 
-		var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-		if (classDeclaration == null || classDeclaration.Modifiers.Any(SyntaxKind.SealedKeyword))
+		if (context.SemanticModel.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 			return;
 
-		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-		if (typeSymbol == null)
+		var typeSymbol = methodSymbol.ContainingType;
+		if (typeSymbol.IsSealed)
 			return;
 
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return;
 
-		var symbol = context.SemanticModel.GetDeclaredSymbol(method);
-		if (symbol == null)
-			return;
-
-		if (!scriptInfo.IsMessage(symbol))
+		if (!scriptInfo.IsMessage(methodSymbol))
 			return;
 
 		// In this case the scope is enforced
-		if (symbol.IsOverride)
+		if (methodSymbol.IsOverride)
 			return;
 
-		context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation()));
+		context.ReportDiagnostic(Diagnostic.Create(Rule, methodSyntax.Identifier.GetLocation()));
 	}
 }
 
