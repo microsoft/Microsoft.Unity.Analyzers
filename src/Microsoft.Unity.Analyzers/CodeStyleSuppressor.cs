@@ -43,10 +43,6 @@ public class CodeStyleSuppressor : DiagnosticSuppressor
 		if (model.GetDeclaredSymbol(methodDeclarationSyntax) is not IMethodSymbol methodSymbol)
 			return;
 
-		var typeSymbol = methodSymbol.ContainingType;
-		if (!typeSymbol.Extends(typeof(UnityEngine.MonoBehaviour)))
-			return;
-
 		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
 		if (!scriptInfo.IsMessage(methodSymbol))
 			return;
