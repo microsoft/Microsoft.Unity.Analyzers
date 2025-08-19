@@ -57,4 +57,40 @@ class Menu : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(Context, test, not);
 	}
+
+	[Fact]
+	public async Task TestCodeStyleIgnoreForUnityMessagesAlt()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Menu : ScriptableObject
+{
+    private void Awake() { }
+}";
+
+		var suppressor = ExpectSuppressor(CodeStyleSuppressor.Rule)
+			.WithLocation(6, 18);
+
+		await VerifyCSharpDiagnosticAsync(Context, test, suppressor);
+	}
+
+	[Fact]
+	public async Task TestCodeStyleEffectiveForNonMessageBasedTypes()
+	{
+		const string test = @"
+class Bar
+{
+    private void Foo() { }
+}";
+
+		var not = ExpectNotSuppressed(CodeStyleSuppressor.Rule)
+			.WithLocation(4, 18)
+			.WithSeverity(DiagnosticSeverity.Info)
+			.WithMessageFormat("Naming rule violation: The first word, '{0}', must begin with a lower case character")
+			.WithArguments("Foo");
+
+		await VerifyCSharpDiagnosticAsync(Context, test, not);
+	}
+
 }
