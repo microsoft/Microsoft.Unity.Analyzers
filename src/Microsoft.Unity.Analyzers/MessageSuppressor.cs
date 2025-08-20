@@ -72,8 +72,7 @@ public class MessageSuppressor : DiagnosticSuppressor
 		if (node == null)
 			return;
 
-		var syntaxTree = diagnostic.Location.SourceTree;
-		if (syntaxTree == null)
+		if (diagnostic.Location.SourceTree is not { } syntaxTree)
 			return;
 
 		var model = context.GetSemanticModel(syntaxTree);

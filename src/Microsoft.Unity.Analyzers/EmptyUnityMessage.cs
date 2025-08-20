@@ -43,36 +43,27 @@ public class EmptyUnityMessageAnalyzer : DiagnosticAnalyzer
 
 	private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
 	{
-		var method = context.Node as MethodDeclarationSyntax;
-		if (method?.Body == null)
+		var methodSyntax = context.Node as MethodDeclarationSyntax;
+		if (methodSyntax?.Body == null)
 			return;
 
-		if (method.HasPolymorphicModifier())
+		if (methodSyntax.HasPolymorphicModifier())
 			return;
 
-		if (method.Body.Statements.Count > 0)
+		if (methodSyntax.Body.Statements.Count > 0)
 			return;
 
-		var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-		if (classDeclaration == null)
+		if (context.SemanticModel.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 			return;
 
-		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-		if (typeSymbol == null)
-			return;
-
-		var scriptInfo = new ScriptInfo(typeSymbol);
+		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
 		if (!scriptInfo.HasMessages)
 			return;
 
-		var symbol = context.SemanticModel.GetDeclaredSymbol(method);
-		if (symbol == null)
+		if (!scriptInfo.IsMessage(methodSymbol))
 			return;
 
-		if (!scriptInfo.IsMessage(symbol))
-			return;
-
-		context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), symbol.Name));
+		context.ReportDiagnostic(Diagnostic.Create(Rule, methodSyntax.Identifier.GetLocation(), methodSymbol.Name));
 	}
 }
 

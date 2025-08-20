@@ -31,16 +31,14 @@ public class CodeStyleSuppressor : DiagnosticSuppressor
 
 	private static void AnalyzeDiagnostic(Diagnostic diagnostic, SuppressionAnalysisContext context)
 	{
-		var syntaxTree = diagnostic.Location.SourceTree;
-		if (syntaxTree == null)
+		if (diagnostic.Location.SourceTree is not { } syntaxTree)
 			return;
 
-		var methodDeclarationSyntax = context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic);
-		if (methodDeclarationSyntax == null)
+		if (context.GetSuppressibleNode<MethodDeclarationSyntax>(diagnostic) is not { } methodSyntax)
 			return;
 
 		var model = context.GetSemanticModel(syntaxTree);
-		if (model.GetDeclaredSymbol(methodDeclarationSyntax) is not IMethodSymbol methodSymbol)
+		if (model.GetDeclaredSymbol(methodSyntax) is not IMethodSymbol methodSymbol)
 			return;
 
 		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);

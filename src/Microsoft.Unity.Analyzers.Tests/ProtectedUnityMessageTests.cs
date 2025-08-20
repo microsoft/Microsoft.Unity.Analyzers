@@ -259,6 +259,28 @@ public sealed class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task SealedPartialClassUnityMessage()
+	{
+		const string test = @"
+using UnityEngine;
+
+partial class Camera : MonoBehaviour
+{
+    public void Update()
+    {
+        Vector3 position = new Vector3(1,1,1);
+    }
+}
+
+sealed partial class Camera
+{
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
 	public async Task ShouldNotWarnForOverride()
 	{
 		const string test = @"

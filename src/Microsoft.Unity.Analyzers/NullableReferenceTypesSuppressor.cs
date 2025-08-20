@@ -28,23 +28,20 @@ public class NullableReferenceTypesSuppressor : DiagnosticSuppressor
 	{
 		foreach (var diagnostic in context.ReportedDiagnostics)
 		{
-			var syntaxTree = diagnostic.Location.SourceTree;
-			if (syntaxTree == null)
+			if (diagnostic.Location.SourceTree is not { } syntaxTree)
 				continue;
 
 			var root = syntaxTree.GetRoot();
 			var node = root.FindNode(diagnostic.Location.SourceSpan);
 
-			var classDeclaration = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-			if (classDeclaration is null)
+			if (node.FirstAncestorOrSelf<ClassDeclarationSyntax>() is not { } classSyntax)
 				continue;
 
 			var model = context.GetSemanticModel(syntaxTree);
-			var symbol = model.GetDeclaredSymbol(classDeclaration);
-			if (symbol is null)
+			if (model.GetDeclaredSymbol(classSyntax) is not ITypeSymbol typeSymbol)
 				continue;
 
-			var scriptInfo = new ScriptInfo(symbol);
+			var scriptInfo = new ScriptInfo(typeSymbol);
 			if (!scriptInfo.HasMessages)
 				continue;
 

@@ -57,21 +57,13 @@ public class UpdateDeltaTimeAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
 	}
 
-	private static bool IsMessage(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method, Type metadata, string methodName)
+	private static bool IsMessage(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodSyntax, Type metadata, string methodName)
 	{
-		var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-		if (classDeclaration == null)
-			return false;
-
-		var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
+		var methodSymbol = context.SemanticModel.GetDeclaredSymbol(methodSyntax);
 		if (methodSymbol == null)
 			return false;
 
-		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-		if (typeSymbol == null)
-			return false;
-
-		var scriptInfo = new ScriptInfo(typeSymbol);
+		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
 		if (!scriptInfo.HasMessages)
 			return false;
 

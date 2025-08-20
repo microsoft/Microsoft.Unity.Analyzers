@@ -50,21 +50,12 @@ public class ReflectionAnalyzer : DiagnosticAnalyzer
 		AnalyzeMethodBody(context, method);
 	}
 
-	private static bool IsCriticalMessage(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax method)
+	private static bool IsCriticalMessage(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodSyntax)
 	{
-		var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
-		if (methodSymbol == null)
+		if (context.SemanticModel.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 			return false;
 
-		var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-		if (classDeclaration == null)
-			return false;
-
-		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-		if (typeSymbol == null)
-			return false;
-
-		var scriptInfo = new ScriptInfo(typeSymbol);
+		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
 		if (!scriptInfo.HasMessages)
 			return false;
 

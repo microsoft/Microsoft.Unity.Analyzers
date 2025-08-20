@@ -45,36 +45,34 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 
 	private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
 	{
-		if (context.Node is not ClassDeclarationSyntax classDeclaration)
+		if (context.Node is not ClassDeclarationSyntax classSyntax)
 			return;
 
-		var typeSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-		if (typeSymbol == null)
+		if (context.SemanticModel.GetDeclaredSymbol(classSyntax) is not { } typeSymbol)
 			return;
 
 		var scriptInfo = new ScriptInfo(typeSymbol);
 		if (!scriptInfo.HasMessages)
 			return;
 
-		var methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
+		var methods = classSyntax.Members.OfType<MethodDeclarationSyntax>();
 		var messages = scriptInfo
 			.GetMessages()
 			.ToLookup(m => m.Name);
 
-		foreach (var method in methods)
+		foreach (var methodSyntax in methods)
 		{
 			// Exclude explicit interface implementations, that will not be called by the Unity runtime
 			// scriptInfo.IsMessage is already handling this through fullname, but for this very specific task we are looking for bad signatures, so not relying on scriptInfo.IsMessage at this step
-			if (method.ExplicitInterfaceSpecifier != null)
+			if (methodSyntax.ExplicitInterfaceSpecifier != null)
 				continue;
 
-			var methodName = method.Identifier.Text;
+			var methodName = methodSyntax.Identifier.Text;
 
 			if (!messages.Contains(methodName))
 				continue;
 
-			var methodSymbol = context.SemanticModel.GetDeclaredSymbol(method);
-			if (methodSymbol == null)
+			if (context.SemanticModel.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 				continue;
 
 			// A message is detected, so the signature is correct
@@ -86,7 +84,7 @@ public class MessageSignatureAnalyzer : DiagnosticAnalyzer
 			if (namedMessages.All(m => m.IsStatic != methodSymbol.IsStatic))
 				continue;
 
-			context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), methodName));
+			context.ReportDiagnostic(Diagnostic.Create(Rule, methodSyntax.Identifier.GetLocation(), methodName));
 		}
 	}
 }
@@ -116,7 +114,7 @@ public class MessageSignatureCodeFix : CodeFixProvider
 			context.Diagnostics);
 	}
 
-	private static async Task<Document> FixMethodDeclarationSignatureAsync(Document document, MethodDeclarationSyntax methodDeclaration, CancellationToken ct)
+	private static async Task<Document> FixMethodDeclarationSignatureAsync(Document document, MethodDeclarationSyntax methodSyntax, CancellationToken ct)
 	{
 		var root = await document
 			.GetSyntaxRootAsync(ct)
@@ -126,13 +124,10 @@ public class MessageSignatureCodeFix : CodeFixProvider
 			.GetSemanticModelAsync(ct)
 			.ConfigureAwait(false);
 
-		var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
-		if (methodSymbol == null)
+		if (semanticModel.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 			return document;
 
-		var typeSymbol = methodSymbol.ContainingType;
-
-		var scriptInfo = new ScriptInfo(typeSymbol);
+		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
 		var message = scriptInfo
 			.GetMessages()
 			.FirstOrDefault(m => m.Name == methodSymbol.Name);
@@ -140,15 +135,14 @@ public class MessageSignatureCodeFix : CodeFixProvider
 		if (message == null)
 			return document;
 
-		var syntaxGenerator = document.Project.LanguageServices.GetService<SyntaxGenerator>();
-		if (syntaxGenerator == null)
+		if (document.Project.LanguageServices.GetService<SyntaxGenerator>() is not { } syntaxGenerator)
 			return document;
 
 		var builder = new MessageBuilder(syntaxGenerator);
-		var newMethodDeclaration = methodDeclaration
+		var newMethodSyntax = methodSyntax
 			.WithParameterList(CreateParameterList(builder, message));
 
-		var newRoot = root?.ReplaceNode(methodDeclaration, newMethodDeclaration);
+		var newRoot = root?.ReplaceNode(methodSyntax, newMethodSyntax);
 		if (newRoot == null)
 			return document;
 
