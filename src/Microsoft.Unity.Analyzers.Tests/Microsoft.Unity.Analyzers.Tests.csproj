@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <NoWarn>NU1608</NoWarn>
+    <NoWarn>NU1608;VSTHRD200</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

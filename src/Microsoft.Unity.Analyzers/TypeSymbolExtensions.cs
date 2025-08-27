@@ -38,7 +38,7 @@ internal static class TypeSymbolExtensions
 		return IsAwaitableOf(typeSymbol, type, type == typeof(void) ? typeof(Cysharp.Threading.Tasks.UniTaskVoid) : typeof(Cysharp.Threading.Tasks.UniTask));
 	}
 
-	private static bool IsAwaitableOf(INamedTypeSymbol typeSymbol, Type type, Type awaiter)
+	private static bool IsAwaitableOf(INamedTypeSymbol typeSymbol, Type _, Type awaiter)
 	{
 		// We do not want to use typeSymbol.Matches(awaiter) here, to prevent infinite recursion
 		if (typeSymbol.Name != awaiter.Name)

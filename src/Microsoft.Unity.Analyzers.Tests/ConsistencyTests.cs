@@ -6,7 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
@@ -18,37 +20,52 @@ public class ConsistencyTests(ITestOutputHelper output)
 {
 	private static Dictionary<string, List<int>> CollectIds<T>(Func<T, string> reader) where T : class
 	{
+		var lookup = new Dictionary<string, List<int>>();
+
+		foreach (var rule in CollectRules<T>())
+		{
+			var id = reader(rule);
+			var prefix = id[..3];
+			var num = int.Parse(id[3..]);
+
+			if (!lookup.TryGetValue(prefix, out _))
+				lookup.Add(prefix, []);
+
+			lookup[prefix].Add(num);
+		}
+
+		return lookup;
+	}
+
+	private static List<T> CollectRules<T>() where T : class
+	{
 		var assembly = typeof(DiagnosticCategory).Assembly;
 
 		var analyzers = assembly
 			.GetTypes()
 			.Where(t => t.GetCustomAttributes(typeof(DiagnosticAnalyzerAttribute), true).Any());
 
-		var lookup = new Dictionary<string, List<int>>();
+		List<T> rules = [];
 
 		foreach (var analyzer in analyzers)
 		{
-			var rules = analyzer
+			var fields = analyzer
 				.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
-				.Where(f => f.FieldType == typeof(T));
+				.Where(f => f.FieldType == typeof(T))
+				.ToArray();
 
-			foreach (var fieldInfo in rules)
-			{
-				var rule = fieldInfo.GetValue(null) as T;
-				Assert.NotNull(rule);
+			var localRules = fields
+				.Select(f => f.GetValue(null))
+				.OfType<T>()
+				.ToArray();
 
-				var id = reader(rule);
-				var prefix = id[..3];
-				var num = int.Parse(id[3..]);
+			rules.AddRange(localRules);
 
-				if (!lookup.TryGetValue(prefix, out _))
-					lookup.Add(prefix, []);
-
-				lookup[prefix].Add(num);
-			}
+			if (fields.Length != 0)
+				Assert.NotEmpty(localRules);
 		}
 
-		return lookup;
+		return rules;
 	}
 
 	private static void CheckLookup(Dictionary<string, List<int>> lookup)
@@ -93,4 +110,23 @@ public class ConsistencyTests(ITestOutputHelper output)
 			return d.Id;
 		}));
 	}
+
+	[Fact]
+	public async Task CheckHelpLinks()
+	{
+
+		var rules = CollectRules<DiagnosticDescriptor>();
+
+		using var client = new HttpClient();
+		foreach (var d in rules)
+		{
+			output.WriteLine($"Scanning diagnostic {d.Id}: {d.Description}");
+			Assert.NotEmpty(d.HelpLinkUri);
+			Assert.Contains(d.Id, d.HelpLinkUri);
+
+			var response = await client.GetAsync(d.HelpLinkUri);
+			Assert.True(response.IsSuccessStatusCode);
+		}
+	}
+
 }

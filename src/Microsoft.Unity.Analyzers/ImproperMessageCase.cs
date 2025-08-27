@@ -83,7 +83,7 @@ public class ImproperMessageCaseAnalyzer : DiagnosticAnalyzer
 			if (!notImplementedMessages.Contains(key))
 				continue;
 
-			if (context.SemanticModel.GetDeclaredSymbol(methodSyntax) is not IMethodSymbol methodSymbol)
+			if (context.SemanticModel.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 				continue;
 
 			var namedMessages = notImplementedMessages[key];
