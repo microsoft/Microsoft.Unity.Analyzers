@@ -172,6 +172,7 @@ namespace UnityEngine
 		IEnumeratorOrVoid OnParticleTrigger() { return null; }
 		IEnumeratorOrVoid OnParticleSystemStopped() { return null; }
 		IEnumeratorOrVoid OnParticleUpdateJobScheduled() { return null; }
+		IEnumeratorOrVoid OnChildRectTransformDimensionsChange() { return null; }
 	}
 
 	class StateMachineBehaviour : ScriptableObject
