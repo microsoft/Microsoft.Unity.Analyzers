@@ -15,7 +15,7 @@
           Condition="Exists('$(VstuDirectory)build\UnityVS.Signing.props')" />
 
   <PropertyGroup Condition="Exists('$(VstuDirectory)build\UnityVS.props')">
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
