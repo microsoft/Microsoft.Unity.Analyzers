@@ -16,7 +16,7 @@ public readonly struct AnalyzerVerificationContext(ImmutableDictionary<string, s
 
 	// CS0414 - cf. IDE0051
 	public static AnalyzerVerificationContext Default = new(
-		ImmutableDictionary<string, string>.Empty,
+		[],
 		["CS0414"],
 		LanguageVersion.Latest);
 
