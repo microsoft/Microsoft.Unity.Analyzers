@@ -68,7 +68,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '10.0.x'
 
     - name: Download Unity on ${{ matrix.os }}
       run: ${{ matrix.download }}
@@ -78,13 +78,15 @@ jobs:
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
+      if: ${{ contains(matrix.os, 'windows') }}
 
     - name: Build
       run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.slnx /p:UseSharedCompilation=false
           
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
-      
+      if: ${{ contains(matrix.os, 'windows') }}
+
     - name: Test context (main)
       if: github.ref == 'refs/heads/main'
       run: echo "TEST_FILTER=." >> $GITHUB_ENV
