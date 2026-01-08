@@ -10,24 +10,27 @@ namespace Microsoft.Unity.Analyzers;
 
 internal static class MethodSymbolExtensions
 {
-	public static bool Matches(this IMethodSymbol symbol, MethodInfo method)
+	extension(IMethodSymbol symbol)
 	{
-		if (method.Name != symbol.Name)
-			return false;
-
-		if (!symbol.ReturnType.Matches(method.ReturnType))
-			return false;
-
-		var parameters = method.GetParameters();
-		if (parameters.Length < symbol.Parameters.Length)
-			return false;
-
-		for (var i = 0; i < symbol.Parameters.Length; i++)
+		public bool Matches(MethodInfo method)
 		{
-			if (!symbol.Parameters[i].Type.Matches(parameters[i].ParameterType))
+			if (method.Name != symbol.Name)
 				return false;
-		}
 
-		return true;
+			if (!symbol.ReturnType.Matches(method.ReturnType))
+				return false;
+
+			var parameters = method.GetParameters();
+			if (parameters.Length < symbol.Parameters.Length)
+				return false;
+
+			for (var i = 0; i < symbol.Parameters.Length; i++)
+			{
+				if (!symbol.Parameters[i].Type.Matches(parameters[i].ParameterType))
+					return false;
+			}
+
+			return true;
+		}
 	}
 }

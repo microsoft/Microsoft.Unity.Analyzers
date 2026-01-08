@@ -122,10 +122,7 @@ public class ImproperMessageCaseCodeFix : CodeFixProvider
 		var solution = document.Project.Solution;
 
 		var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-		if (model == null)
-			return solution;
-
-		if (model.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
+		if (model?.GetDeclaredSymbol(methodSyntax) is not { } methodSymbol)
 			return solution;
 
 		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);

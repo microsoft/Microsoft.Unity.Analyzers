@@ -10,19 +10,22 @@ namespace Microsoft.Unity.Analyzers;
 
 internal static class MethodDeclarationExtensions
 {
-	public static bool HasPolymorphicModifier(this MethodDeclarationSyntax method)
+	extension(MethodDeclarationSyntax method)
 	{
-		foreach (var modifier in method.Modifiers)
+		public bool HasPolymorphicModifier()
 		{
-			switch (modifier.Kind())
+			foreach (var modifier in method.Modifiers)
 			{
-				case SyntaxKind.AbstractKeyword:
-				case SyntaxKind.VirtualKeyword:
-				case SyntaxKind.OverrideKeyword:
-					return true;
+				switch (modifier.Kind())
+				{
+					case SyntaxKind.AbstractKeyword:
+					case SyntaxKind.VirtualKeyword:
+					case SyntaxKind.OverrideKeyword:
+						return true;
+				}
 			}
-		}
 
-		return false;
+			return false;
+		}
 	}
 }

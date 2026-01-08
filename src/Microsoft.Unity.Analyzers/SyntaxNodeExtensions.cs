@@ -9,20 +9,23 @@ namespace Microsoft.Unity.Analyzers;
 
 internal static class SyntaxNodeExtensions
 {
-	public static SyntaxTriviaList MergeLeadingTriviaWith(this SyntaxNode first, SyntaxNode second)
+	extension(SyntaxNode first)
 	{
-		var merged = first.GetLeadingTrivia().AddRange(second.GetLeadingTrivia());
-		var result = SyntaxTriviaList.Empty;
-
-		SyntaxTrivia previous = new SyntaxTrivia();
-		foreach (var trivia in merged)
+		public SyntaxTriviaList MergeLeadingTriviaWith(SyntaxNode second)
 		{
-			if (!trivia.IsEquivalentTo(previous))
-				result = result.Add(trivia);
+			var merged = first.GetLeadingTrivia().AddRange(second.GetLeadingTrivia());
+			var result = SyntaxTriviaList.Empty;
 
-			previous = trivia;
+			SyntaxTrivia previous = new SyntaxTrivia();
+			foreach (var trivia in merged)
+			{
+				if (!trivia.IsEquivalentTo(previous))
+					result = result.Add(trivia);
+
+				previous = trivia;
+			}
+
+			return result;
 		}
-
-		return result;
 	}
 }

@@ -14,36 +14,39 @@ namespace Microsoft.Unity.Analyzers;
 
 internal static class CodeFixContextExtensions
 {
-	public static Task<T?> GetFixableNodeAsync<T>(this CodeFixContext context) where T : SyntaxNode
+	extension(CodeFixContext context)
 	{
-		return GetFixableNodeAsync<T>(context, _ => true);
-	}
+		public Task<T?> GetFixableNodeAsync<T>() where T : SyntaxNode
+		{
+			return GetFixableNodeAsync<T>(context, _ => true);
+		}
 
-	public static async Task<T?> GetFixableNodeAsync<T>(this CodeFixContext context, Func<T, bool> predicate) where T : SyntaxNode
-	{
-		var root = await context
-			.Document
-			.GetSyntaxRootAsync(context.CancellationToken)
-			.ConfigureAwait(false);
+		public async Task<T?> GetFixableNodeAsync<T>(Func<T, bool> predicate) where T : SyntaxNode
+		{
+			var root = await context
+				.Document
+				.GetSyntaxRootAsync(context.CancellationToken)
+				.ConfigureAwait(false);
 
-		return root?
-			.FindNode(context.Span)
-			.DescendantNodesAndSelf()
-			.OfType<T>()
-			.FirstOrDefault(predicate);
-	}
+			return root?
+				.FindNode(context.Span)
+				.DescendantNodesAndSelf()
+				.OfType<T>()
+				.FirstOrDefault(predicate);
+		}
 
-	public static async Task<bool> IsReferencedAsync(this CodeFixContext context, SyntaxNode declaration)
-	{
-		var semanticModel = await context.Document
-			.GetSemanticModelAsync(context.CancellationToken)
-			.ConfigureAwait(false);
+		public async Task<bool> IsReferencedAsync(SyntaxNode declaration)
+		{
+			var semanticModel = await context.Document
+				.GetSemanticModelAsync(context.CancellationToken)
+				.ConfigureAwait(false);
 
-		var symbol = semanticModel?.GetDeclaredSymbol(declaration);
-		if (symbol == null)
-			return false;
+			var symbol = semanticModel?.GetDeclaredSymbol(declaration);
+			if (symbol == null)
+				return false;
 
-		var references = await SymbolFinder.FindReferencesAsync(symbol, context.Document.Project.Solution, context.CancellationToken);
-		return references.Any(r => r.Locations.Any());
+			var references = await SymbolFinder.FindReferencesAsync(symbol, context.Document.Project.Solution, context.CancellationToken);
+			return references.Any(r => r.Locations.Any());
+		}
 	}
 }
