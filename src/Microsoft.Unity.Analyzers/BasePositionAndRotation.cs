@@ -168,6 +168,8 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 		var symbol1 = model.GetSymbolInfo(expr1).Symbol;
 		var symbol2 = model.GetSymbolInfo(expr2).Symbol;
 
+		// If either symbol is null (including ambiguous cases with CandidateSymbols),
+		// we conservatively treat them as not equivalent to avoid incorrect suggestions
 		if (symbol1 == null || symbol2 == null)
 			return false;
 
@@ -177,6 +179,7 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 	private static bool DetectExpressionReuse(SemanticModel model, MemberAccessExpressionSyntax candidate, MemberAccessExpressionSyntax expression)
 	{
 		var candidateSymbol = model.GetSymbolInfo(candidate).Symbol;
+		// If symbol is null (including ambiguous cases), conservatively assume no reuse
 		if (candidateSymbol == null)
 			return false;
 
