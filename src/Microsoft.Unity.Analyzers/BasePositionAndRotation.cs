@@ -165,33 +165,46 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 
 	private static bool AreExpressionsEquivalent(SemanticModel model, ExpressionSyntax expr1, ExpressionSyntax expr2)
 	{
-		var symbol1 = model.GetSymbolInfo(expr1).Symbol;
-		var symbol2 = model.GetSymbolInfo(expr2).Symbol;
+		// First try syntactic equivalence which handles cases like "transform" vs "this.transform"
+		if (expr1.IsEquivalentTo(expr2))
+			return true;
+
+		// For member access expressions, we need to compare the entire chain semantically
+		if (expr1 is MemberAccessExpressionSyntax member1 && expr2 is MemberAccessExpressionSyntax member2)
+		{
+			// Compare the member name symbols (e.g., "transform" property)
+			var symbol1 = model.GetSymbolInfo(member1.Name).Symbol;
+			var symbol2 = model.GetSymbolInfo(member2.Name).Symbol;
+
+			if (symbol1 == null || symbol2 == null)
+				return false;
+
+			if (!SymbolEqualityComparer.Default.Equals(symbol1, symbol2))
+				return false;
+
+			// Recursively compare the base expressions (e.g., "instance" vs "go")
+			return AreExpressionsEquivalent(model, member1.Expression, member2.Expression);
+		}
+
+		// For other expressions, compare their symbols
+		var exprSymbol1 = model.GetSymbolInfo(expr1).Symbol;
+		var exprSymbol2 = model.GetSymbolInfo(expr2).Symbol;
 
 		// If either symbol is null (including ambiguous cases with CandidateSymbols),
 		// we conservatively treat them as not equivalent to avoid incorrect suggestions
-		if (symbol1 == null || symbol2 == null)
+		if (exprSymbol1 == null || exprSymbol2 == null)
 			return false;
 
-		return SymbolEqualityComparer.Default.Equals(symbol1, symbol2);
+		return SymbolEqualityComparer.Default.Equals(exprSymbol1, exprSymbol2);
 	}
 
 	private static bool DetectExpressionReuse(SemanticModel model, MemberAccessExpressionSyntax candidate, MemberAccessExpressionSyntax expression)
 	{
-		var candidateSymbol = model.GetSymbolInfo(candidate).Symbol;
-		// If symbol is null (including ambiguous cases), conservatively assume no reuse
-		if (candidateSymbol == null)
-			return false;
-
 		var syntaxes = expression.Parent?.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
 		if (syntaxes == null)
 			return false;
 
-		return syntaxes.Any(syntax =>
-		{
-			var symbol = model.GetSymbolInfo(syntax).Symbol;
-			return symbol != null && SymbolEqualityComparer.Default.Equals(candidateSymbol, symbol);
-		});
+		return syntaxes.Any(syntax => AreExpressionsEquivalent(model, candidate, syntax));
 	}
 
 	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement);
