@@ -140,7 +140,7 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 		if (!ExpressionContext.TryGetPropertyExpression(model, nextExpression, out var nextSyntax))
 			return;
 
-		if (syntax.Expression.ToString() != nextSyntax.Expression.ToString())
+		if (!AreExpressionsEquivalent(model, syntax.Expression, nextSyntax.Expression))
 			return;
 
 		var property = ExpressionContext.GetPropertyName(model, expression);
@@ -156,7 +156,49 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 		if (expression.FirstAncestorOrSelf<StatementSyntax>() is not { } statement)
 			return;
 
+		// Check for expression reuse that could change semantics when combining into a single method call
+		if (DetectExpressionReuse(model, syntax, nextSyntax))
+			return;
+
 		OnPatternFound(context, statement);
+	}
+
+	private static bool AreExpressionsEquivalent(SemanticModel model, ExpressionSyntax expr1, ExpressionSyntax expr2)
+	{
+		// First try syntactic equivalence which handles cases like "transform" vs "this.transform"
+		if (expr1.IsEquivalentTo(expr2))
+			return true;
+
+		// For member access expressions, we need to compare the entire chain semantically
+		if (expr1 is MemberAccessExpressionSyntax member1 && expr2 is MemberAccessExpressionSyntax member2)
+		{
+			// Compare the member name symbols (e.g., "transform" property)
+			var symbol1 = model.GetSymbolInfo(member1.Name).Symbol;
+			var symbol2 = model.GetSymbolInfo(member2.Name).Symbol;
+
+			if (symbol1 == null || symbol2 == null)
+				return false;
+
+			return SymbolEqualityComparer.Default.Equals(symbol1, symbol2) &&
+				   AreExpressionsEquivalent(model, member1.Expression, member2.Expression);
+		}
+
+		// For other expressions, compare their symbols
+		var exprSymbol1 = model.GetSymbolInfo(expr1).Symbol;
+		var exprSymbol2 = model.GetSymbolInfo(expr2).Symbol;
+
+		// If either symbol is null (including ambiguous cases with CandidateSymbols),
+		// we conservatively treat them as not equivalent to avoid incorrect suggestions
+		if (exprSymbol1 == null || exprSymbol2 == null)
+			return false;
+
+		return SymbolEqualityComparer.Default.Equals(exprSymbol1, exprSymbol2);
+	}
+
+	private static bool DetectExpressionReuse(SemanticModel model, MemberAccessExpressionSyntax candidate, MemberAccessExpressionSyntax expression)
+	{
+		var syntaxes = expression.Parent?.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
+		return syntaxes != null && syntaxes.Any(syntax => AreExpressionsEquivalent(model, candidate, syntax));
 	}
 
 	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement);

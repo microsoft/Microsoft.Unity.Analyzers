@@ -324,4 +324,178 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task RotationReusingPosition()
+	{
+		// https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/428
+
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        var Target = GameObject.Find(""Sphere"").transform;
+        transform.position = Target.position + GetComputedOffset();
+        transform.rotation = Quaternion.LookRotation(Target.position - transform.position, Vector3.up);
+    }
+
+    private Vector3 GetComputedOffset()
+    {
+        return Vector3.up + Vector3.left;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task RotationReusingPositionWithThisSemantic()
+	{
+		// Test semantic equivalence in expression reuse detection
+		// transform.position in line 1 should be detected as reused in line 2 even with this. prefix
+
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        var Target = GameObject.Find(""Sphere"").transform;
+        this.transform.position = Target.position + GetComputedOffset();
+        transform.rotation = Quaternion.LookRotation(Target.position - transform.position, Vector3.up);
+    }
+
+    private Vector3 GetComputedOffset()
+    {
+        return Vector3.up + Vector3.left;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task RotationReusingPositionWithVariable()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        var Target = GameObject.Find(""Sphere"").transform;
+        var newPosition = Target.position + GetComputedOffset();
+        transform.position = newPosition;
+        transform.rotation = Quaternion.LookRotation(Target.position - newPosition, Vector3.up);
+    }
+
+    private Vector3 GetComputedOffset()
+    {
+        return Vector3.up + Vector3.left;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        var Target = GameObject.Find(""Sphere"").transform;
+        var newPosition = Target.position + GetComputedOffset();
+        transform.SetPositionAndRotation(newPosition, Quaternion.LookRotation(Target.position - newPosition, Vector3.up));
+    }
+
+    private Vector3 GetComputedOffset()
+    {
+        return Vector3.up + Vector3.left;
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task SemanticEquivalenceWithThis()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        this.transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+        transform.rotation = transform.rotation;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic().WithLocation(8, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        this.transform.SetPositionAndRotation(new Vector3(0.0f, 1.0f, 0.0f), transform.rotation);
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task SemanticEquivalenceReverseWithThis()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+        this.transform.rotation = transform.rotation;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic().WithLocation(8, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        transform.SetPositionAndRotation(new Vector3(0.0f, 1.0f, 0.0f), transform.rotation);
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
