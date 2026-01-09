@@ -156,7 +156,17 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 		if (expression.FirstAncestorOrSelf<StatementSyntax>() is not { } statement)
 			return;
 
+		// Check for expression reuse that could change semantics when combining into a single method call
+		if (DetectExpressionReuse(model, syntax, nextSyntax))
+			return;
+
 		OnPatternFound(context, statement);
+	}
+
+	private static bool DetectExpressionReuse(SemanticModel model, MemberAccessExpressionSyntax candidate, MemberAccessExpressionSyntax expression)
+	{
+		var syntaxes = expression.Parent?.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
+		return syntaxes != null && syntaxes.Any(syntax => syntax.ToString() == candidate.ToString());
 	}
 
 	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement);

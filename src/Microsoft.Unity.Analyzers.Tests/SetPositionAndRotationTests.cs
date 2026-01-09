@@ -324,4 +324,80 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task RotationReusingPosition()
+	{
+		// https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/428
+
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        var Target = GameObject.Find(""Sphere"").transform;
+        transform.position = Target.position + GetComputedOffset();
+        transform.rotation = Quaternion.LookRotation(Target.position - transform.position, Vector3.up);
+    }
+
+    private Vector3 GetComputedOffset()
+    {
+        return Vector3.up + Vector3.left;
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task RotationReusingPositionWithVariable()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        var Target = GameObject.Find(""Sphere"").transform;
+        var newPosition = Target.position + GetComputedOffset();
+        transform.position = newPosition;
+        transform.rotation = Quaternion.LookRotation(Target.position - newPosition, Vector3.up);
+    }
+
+    private Vector3 GetComputedOffset()
+    {
+        return Vector3.up + Vector3.left;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        var Target = GameObject.Find(""Sphere"").transform;
+        var newPosition = Target.position + GetComputedOffset();
+        transform.SetPositionAndRotation(newPosition, Quaternion.LookRotation(Target.position - newPosition, Vector3.up));
+    }
+
+    private Vector3 GetComputedOffset()
+    {
+        return Vector3.up + Vector3.left;
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
