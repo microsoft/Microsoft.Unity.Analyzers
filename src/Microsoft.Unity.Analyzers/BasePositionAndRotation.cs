@@ -179,11 +179,8 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 			if (symbol1 == null || symbol2 == null)
 				return false;
 
-			if (!SymbolEqualityComparer.Default.Equals(symbol1, symbol2))
-				return false;
-
-			// Recursively compare the base expressions (e.g., "instance" vs "go")
-			return AreExpressionsEquivalent(model, member1.Expression, member2.Expression);
+			return SymbolEqualityComparer.Default.Equals(symbol1, symbol2) &&
+				   AreExpressionsEquivalent(model, member1.Expression, member2.Expression);
 		}
 
 		// For other expressions, compare their symbols
@@ -201,10 +198,7 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 	private static bool DetectExpressionReuse(SemanticModel model, MemberAccessExpressionSyntax candidate, MemberAccessExpressionSyntax expression)
 	{
 		var syntaxes = expression.Parent?.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
-		if (syntaxes == null)
-			return false;
-
-		return syntaxes.Any(syntax => AreExpressionsEquivalent(model, candidate, syntax));
+		return syntaxes != null && syntaxes.Any(syntax => AreExpressionsEquivalent(model, candidate, syntax));
 	}
 
 	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement);

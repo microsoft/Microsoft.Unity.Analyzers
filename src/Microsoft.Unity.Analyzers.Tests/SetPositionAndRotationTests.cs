@@ -456,7 +456,7 @@ class Camera : MonoBehaviour
 {
     void Update()
     {
-        transform.SetPositionAndRotation(new Vector3(0.0f, 1.0f, 0.0f), transform.rotation);
+        this.transform.SetPositionAndRotation(new Vector3(0.0f, 1.0f, 0.0f), transform.rotation);
     }
 }
 ";
