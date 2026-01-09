@@ -140,7 +140,7 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 		if (!ExpressionContext.TryGetPropertyExpression(model, nextExpression, out var nextSyntax))
 			return;
 
-		if (syntax.Expression.ToString() != nextSyntax.Expression.ToString())
+		if (!AreExpressionsEquivalent(model, syntax.Expression, nextSyntax.Expression))
 			return;
 
 		var property = ExpressionContext.GetPropertyName(model, expression);
@@ -163,10 +163,32 @@ public abstract class BasePositionAndRotationAnalyzer(BasePositionAndRotationCon
 		OnPatternFound(context, statement);
 	}
 
+	private static bool AreExpressionsEquivalent(SemanticModel model, ExpressionSyntax expr1, ExpressionSyntax expr2)
+	{
+		var symbol1 = model.GetSymbolInfo(expr1).Symbol;
+		var symbol2 = model.GetSymbolInfo(expr2).Symbol;
+
+		if (symbol1 == null || symbol2 == null)
+			return false;
+
+		return SymbolEqualityComparer.Default.Equals(symbol1, symbol2);
+	}
+
 	private static bool DetectExpressionReuse(SemanticModel model, MemberAccessExpressionSyntax candidate, MemberAccessExpressionSyntax expression)
 	{
+		var candidateSymbol = model.GetSymbolInfo(candidate).Symbol;
+		if (candidateSymbol == null)
+			return false;
+
 		var syntaxes = expression.Parent?.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
-		return syntaxes != null && syntaxes.Any(syntax => syntax.ToString() == candidate.ToString());
+		if (syntaxes == null)
+			return false;
+
+		return syntaxes.Any(syntax =>
+		{
+			var symbol = model.GetSymbolInfo(syntax).Symbol;
+			return symbol != null && SymbolEqualityComparer.Default.Equals(candidateSymbol, symbol);
+		});
 	}
 
 	protected abstract void OnPatternFound(SyntaxNodeAnalysisContext context, StatementSyntax statement);
