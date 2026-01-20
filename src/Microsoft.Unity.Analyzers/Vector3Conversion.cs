@@ -24,7 +24,7 @@ public class Vector3ConversionAnalyzer : BaseVectorConversionAnalyzer
 		id: RuleId,
 		title: Strings.Vector3ConversionDiagnosticTitle,
 		messageFormat: Strings.Vector3ConversionDiagnosticMessageFormat,
-		category: DiagnosticCategory.Performance,
+		category: DiagnosticCategory.Readability,
 		defaultSeverity: DiagnosticSeverity.Info,
 		isEnabledByDefault: true,
 		helpLinkUri: HelpLink.ForDiagnosticId(RuleId),

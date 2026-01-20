@@ -10,4 +10,5 @@ public static class DiagnosticCategory
 	public static readonly string Performance = nameof(Performance);
 	public static readonly string Correctness = nameof(Correctness);
 	public static readonly string TypeSafety = nameof(TypeSafety);
+	public static readonly string Readability = nameof(Readability);
 }
