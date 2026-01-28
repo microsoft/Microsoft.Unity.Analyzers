@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -309,6 +309,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
         internal static string FixedUpdateWithoutDeltaTimeDiagnosticTitle {
             get {
                 return ResourceManager.GetString("FixedUpdateWithoutDeltaTimeDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject.isStatic is only usable in the Editor. In builds, it always returns false. Use editor-only code or editor callbacks like OnValidate/Reset when accessing isStatic..
+        /// </summary>
+        internal static string GameObjectIsStaticDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("GameObjectIsStaticDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject.isStatic is editor-only and always returns false in builds..
+        /// </summary>
+        internal static string GameObjectIsStaticDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("GameObjectIsStaticDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameObject.isStatic is editor-only.
+        /// </summary>
+        internal static string GameObjectIsStaticDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("GameObjectIsStaticDiagnosticTitle", resourceCulture);
             }
         }
         
