@@ -641,4 +641,13 @@
   <data name="CodeStyleSuppressorJustification" xml:space="preserve">
     <value>The Unity runtime invokes Unity messages.</value>
   </data>
+  <data name="GameObjectIsStaticDiagnosticDescription" xml:space="preserve">
+    <value>GameObject.isStatic is only usable in the Editor. In builds, it always returns false. Use editor-only code or editor callbacks like OnValidate/Reset when accessing isStatic.</value>
+  </data>
+  <data name="GameObjectIsStaticDiagnosticMessageFormat" xml:space="preserve">
+    <value>GameObject.isStatic is editor-only and always returns false in builds.</value>
+  </data>
+  <data name="GameObjectIsStaticDiagnosticTitle" xml:space="preserve">
+    <value>GameObject.isStatic is editor-only</value>
+  </data>
 </root>
