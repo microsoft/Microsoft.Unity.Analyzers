@@ -41,7 +41,7 @@ ID | Title | Category
 [UNT0037](UNT0037.md) | Inefficient method to get localPosition and localRotation | Performance
 [UNT0038](UNT0038.md) | Cache `WaitForSeconds` invocations | Performance
 [UNT0039](UNT0039.md) | Use `RequireComponent` attribute when self-invoking `GetComponent` | Type Safety
-[UNT0039](UNT0039.md) | GameObject.isStatic is editor-only | Correctness
+[UNT0040](UNT0040.md) | GameObject.isStatic is editor-only | Correctness
 
 # Diagnostic Suppressors
 
