@@ -650,4 +650,17 @@
   <data name="GameObjectIsStaticDiagnosticTitle" xml:space="preserve">
     <value>GameObject.isStatic is editor-only</value>
   </data>
+  <data name="AnimatorStringToHashCodeFixTitle" xml:space="preserve">
+    <value>Use Animator.StringToHash</value>
+  </data>
+  <data name="AnimatorStringToHashDiagnosticDescription" xml:space="preserve">
+    <value>String parameters in Animator methods are converted to hashes at runtime. Pre-computing the hash using Animator.StringToHash and caching the result improves performance.</value>
+  </data>
+  <data name="AnimatorStringToHashDiagnosticMessageFormat" xml:space="preserve">
+    <value>Use Animator.StringToHash for repeated Animator method calls with string parameter '{1}' in '{0}'.</value>
+    <comment>{0} is a method name, {1} is a string literal value</comment>
+  </data>
+  <data name="AnimatorStringToHashDiagnosticTitle" xml:space="preserve">
+    <value>Use Animator.StringToHash instead of strings</value>
+  </data>
 </root>

@@ -42,6 +42,7 @@ ID | Title | Category
 [UNT0038](UNT0038.md) | Cache `WaitForSeconds` invocations | Performance
 [UNT0039](UNT0039.md) | Use `RequireComponent` attribute when self-invoking `GetComponent` | Type Safety
 [UNT0040](UNT0040.md) | GameObject.isStatic is editor-only | Correctness
+[UNT0041](UNT0041.md) | Use Animator.StringToHash for repeated Animator method calls |
 
 # Diagnostic Suppressors
 
@@ -70,3 +71,4 @@ ID | Suppressed ID | Justification
 [USP0021](USP0021.md) | IDE0041 | Prefer reference equality
 [USP0022](USP0022.md) | IDE0270 | Unity objects should not use if null coalescing
 [USP0023](USP0023.md) | IDE1006 | The Unity runtime invokes Unity messages
+
