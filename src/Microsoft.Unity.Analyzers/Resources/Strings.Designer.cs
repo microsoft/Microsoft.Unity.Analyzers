@@ -61,6 +61,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use Animator.StringToHash.
+        /// </summary>
+        internal static string AnimatorStringToHashCodeFixTitle {
+            get {
+                return ResourceManager.GetString("AnimatorStringToHashCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to String parameters in Animator methods are converted to hashes at runtime. Pre-computing the hash using Animator.StringToHash and caching the result improves performance..
+        /// </summary>
+        internal static string AnimatorStringToHashDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("AnimatorStringToHashDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Animator.StringToHash for repeated Animator method calls with string parameter &apos;{1}&apos; in &apos;{0}&apos;..
+        /// </summary>
+        internal static string AnimatorStringToHashDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("AnimatorStringToHashDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Animator.StringToHash instead of strings.
+        /// </summary>
+        internal static string AnimatorStringToHashDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("AnimatorStringToHashDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Asset operations such as asset loading should be avoided in LoadAttribute method..
         /// </summary>
         internal static string AssetOperationInLoadAttributeMethodDiagnosticDescription {
