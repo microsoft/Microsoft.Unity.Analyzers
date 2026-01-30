@@ -268,10 +268,9 @@ public class MeshArrayPropertyInLoopCodeFix : CodeFixProvider
 
 	private static List<MemberAccessExpressionSyntax> FindAllPropertyAccesses(SemanticModel model, MemberAccessExpressionSyntax memberAccess, SyntaxNode loop)
 	{
-		return loop.DescendantNodes()
+		return [.. loop.DescendantNodes()
 			.OfType<MemberAccessExpressionSyntax>()
-			.Where(m => MeshArrayPropertyInLoopAnalyzer.IsSameMeshPropertyAccess(model, m, memberAccess) && MeshArrayPropertyInLoopAnalyzer.IsInLoopConditionOrBody(m, loop))
-			.ToList();
+			.Where(m => MeshArrayPropertyInLoopAnalyzer.IsSameMeshPropertyAccess(model, m, memberAccess) && MeshArrayPropertyInLoopAnalyzer.IsInLoopConditionOrBody(m, loop))];
 	}
 
 	private static string GenerateVariableName(SemanticModel semanticModel, MemberAccessExpressionSyntax memberAccess, IPropertySymbol propertySymbol, SyntaxNode loop)
