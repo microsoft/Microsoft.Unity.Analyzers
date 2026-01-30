@@ -663,4 +663,17 @@
   <data name="AnimatorStringToHashDiagnosticTitle" xml:space="preserve">
     <value>Use Animator.StringToHash instead of strings</value>
   </data>
+  <data name="MeshArrayPropertyInLoopCodeFixTitle" xml:space="preserve">
+    <value>Cache array property before loop</value>
+  </data>
+  <data name="MeshArrayPropertyInLoopDiagnosticDescription" xml:space="preserve">
+    <value>Accessing array properties like vertices, normals, etc. on Mesh inside a loop causes a new array allocation on each access. Cache the array in a local variable before the loop to avoid repeated allocations.</value>
+  </data>
+  <data name="MeshArrayPropertyInLoopDiagnosticMessageFormat" xml:space="preserve">
+    <value>Mesh.{0} allocates a new array on each access. Cache it before the loop.</value>
+    <comment>{0} is the property name (e.g., vertices, normals)</comment>
+  </data>
+  <data name="MeshArrayPropertyInLoopDiagnosticTitle" xml:space="preserve">
+    <value>Mesh array property accessed in loop</value>
+  </data>
 </root>

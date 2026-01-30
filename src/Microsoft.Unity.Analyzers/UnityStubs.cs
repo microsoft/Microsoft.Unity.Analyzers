@@ -34,6 +34,7 @@ namespace UnityEngine
 	class Light { }
 	class MasterServerEvent { }
 	class Material { }
+	class Mesh { }
 	class NetworkConnectionError { }
 	class NetworkDisconnection { }
 	class NetworkMessageInfo { }
@@ -50,6 +51,8 @@ namespace UnityEngine
 	enum CubemapFace { }
 
 	struct Color { }
+
+	struct Color32 { }
 
 	public struct Vector2 { }
 	public struct Vector3 { }
