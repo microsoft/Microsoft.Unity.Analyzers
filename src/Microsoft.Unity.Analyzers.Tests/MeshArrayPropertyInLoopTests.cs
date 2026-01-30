@@ -56,6 +56,50 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task VerticesInForLoopConditionNoVariable()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        for (int i = 0; i < GetComponent<MeshFilter>().mesh.vertices.Length; i++)
+        {
+            // some work
+        }
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 29)
+			.WithArguments("vertices");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Vector3[] meshVertices = GetComponent<MeshFilter>().mesh.vertices;
+        for (int i = 0; i < meshVertices.Length; i++)
+        {
+            // some work
+        }
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+
+	[Fact]
 	public async Task VerticesInForLoopBody()
 	{
 		const string test = @"
