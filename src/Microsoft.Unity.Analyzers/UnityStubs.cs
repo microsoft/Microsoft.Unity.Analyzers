@@ -34,6 +34,7 @@ namespace UnityEngine
 	class Light { }
 	class MasterServerEvent { }
 	class Material { }
+	class Mesh { }
 	class NetworkConnectionError { }
 	class NetworkDisconnection { }
 	class NetworkMessageInfo { }

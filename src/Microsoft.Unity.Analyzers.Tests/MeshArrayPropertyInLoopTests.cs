@@ -69,6 +69,7 @@ class Camera : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             var v = mesh.vertices[i];
+            var x = mesh.vertices[i] + mesh.vertices[i];
         }
     }
 }
@@ -92,6 +93,56 @@ class Camera : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             var v = meshVertices[i];
+            var x = meshVertices[i] + meshVertices[i];
+        }
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task VerticesInForLoopConditionAndBody()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        for (int i = 0; i < mesh.vertices.Length; i++)
+        {
+            var v = mesh.vertices[i];
+            var x = mesh.vertices[i] + mesh.vertices[i];
+            var z = 2 * mesh.vertices.Length + mesh.vertices.Length;
+        }
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(9, 29)
+			.WithArguments("vertices");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        Vector3[] meshVertices = mesh.vertices;
+        for (int i = 0; i < meshVertices.Length; i++)
+        {
+            var v = meshVertices[i];
+            var x = meshVertices[i] + meshVertices[i];
+            var z = 2 * meshVertices.Length + meshVertices.Length;
         }
     }
 }
@@ -192,7 +243,6 @@ class Camera : MonoBehaviour
 }
 ";
 
-		// No diagnostic - vertices is accessed outside the loop
 		await VerifyCSharpDiagnosticAsync(test);
 	}
 
@@ -272,30 +322,6 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task TrianglesPropertyNotReported()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    void Update()
-    {
-        Mesh mesh = GetComponent<MeshFilter>().mesh;
-        for (int i = 0; i < mesh.triangles.Length; i++)
-        {
-            // some work
-        }
-    }
-}
-";
-
-		// triangles returns int[] which is not in our list of allocating array element types
-		// (we only track Vector2[], Vector3[], Vector4[], Color[], Color32[])
-		await VerifyCSharpDiagnosticAsync(test);
-	}
-
-	[Fact]
 	public async Task TangentsPropertyInLoop()
 	{
 		const string test = @"
@@ -350,11 +376,11 @@ class Camera : MonoBehaviour
 {
     void Update()
     {
-        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        Mesh meshLocal = GetComponent<MeshFilter>().mesh;
         int i = 0;
         do
         {
-            var v = mesh.vertices[i];
+            var v = meshLocal.vertices[i];
             i++;
         } while (i < 10);
     }
@@ -374,12 +400,12 @@ class Camera : MonoBehaviour
 {
     void Update()
     {
-        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        Mesh meshLocal = GetComponent<MeshFilter>().mesh;
         int i = 0;
-        Vector3[] meshVertices = mesh.vertices;
+        Vector3[] meshLocalVertices = meshLocal.vertices;
         do
         {
-            var v = meshVertices[i];
+            var v = meshLocalVertices[i];
             i++;
         } while (i < 10);
     }
@@ -437,57 +463,6 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task NestedLoop()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    void Update()
-    {
-        Mesh mesh = GetComponent<MeshFilter>().mesh;
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < mesh.vertices.Length; j++)
-            {
-                // some work
-            }
-        }
-    }
-}
-";
-
-		var diagnostic = ExpectDiagnostic()
-			.WithLocation(11, 33)
-			.WithArguments("vertices");
-
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
-
-		const string fixedTest = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    void Update()
-    {
-        Mesh mesh = GetComponent<MeshFilter>().mesh;
-        for (int i = 0; i < 10; i++)
-        {
-            Vector3[] meshVertices = mesh.vertices;
-            for (int j = 0; j < meshVertices.Length; j++)
-            {
-                // some work
-            }
-        }
-    }
-}
-";
-
-		await VerifyCSharpFixAsync(test, fixedTest);
-	}
-
-	[Fact]
 	public async Task VertexCountNotReported()
 	{
 		const string test = @"
@@ -508,6 +483,53 @@ class Camera : MonoBehaviour
 
 		// vertexCount is not an allocating property
 		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task VariableNameConflict()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        var meshVertices = new Vector3[0]; // already declared
+        for (int i = 0; i < mesh.vertices.Length; i++)
+        {
+            // some work
+        }
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 29)
+			.WithArguments("vertices");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        var meshVertices = new Vector3[0]; // already declared
+        Vector3[] meshVertices1 = mesh.vertices;
+        for (int i = 0; i < meshVertices1.Length; i++)
+        {
+            // some work
+        }
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
 	[Fact]

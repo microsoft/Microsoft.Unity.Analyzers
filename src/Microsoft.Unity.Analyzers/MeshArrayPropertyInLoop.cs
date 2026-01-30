@@ -4,6 +4,7 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -36,14 +37,9 @@ public class MeshArrayPropertyInLoopAnalyzer : DiagnosticAnalyzer
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	// Array element types that cause allocations when returned from Mesh properties
 	private static readonly Type[] AllocatingArrayElementTypes =
 	[
-		typeof(UnityEngine.Vector2),
-		typeof(UnityEngine.Vector3),
-		typeof(UnityEngine.Vector4),
-		typeof(UnityEngine.Color),
-		typeof(UnityEngine.Color32)
+		typeof(UnityEngine.Vector2), typeof(UnityEngine.Vector3), typeof(UnityEngine.Vector4), typeof(UnityEngine.Color), typeof(UnityEngine.Color32)
 	];
 
 	public override void Initialize(AnalysisContext context)
@@ -58,12 +54,16 @@ public class MeshArrayPropertyInLoopAnalyzer : DiagnosticAnalyzer
 		if (context.Node is not MemberAccessExpressionSyntax memberAccess)
 			return;
 
-		// Check if this is inside a loop
-		if (!IsInsideLoop(memberAccess))
+		var loop = FindContainingLoop(memberAccess);
+		if (loop == null)
 			return;
 
-		// Check if accessing an allocating property on Mesh
 		if (!IsAllocatingMeshProperty(context, memberAccess, out var propertyName))
+			return;
+
+		// Only report if this is the first occurrence of this property access in the loop
+		// to avoid flooding the user with multiple diagnostics for the same issue
+		if (!IsFirstOccurrenceInLoop(context.SemanticModel, memberAccess, loop))
 			return;
 
 		context.ReportDiagnostic(Diagnostic.Create(
@@ -72,44 +72,70 @@ public class MeshArrayPropertyInLoopAnalyzer : DiagnosticAnalyzer
 			propertyName));
 	}
 
-	private static bool IsInsideLoop(SyntaxNode node)
+	internal static SyntaxNode? FindContainingLoop(SyntaxNode node)
 	{
 		var current = node.Parent;
 		while (current != null)
 		{
 			switch (current)
 			{
-				case ForStatementSyntax forStatement:
-					// Check if the node is in the condition or incrementors (these are evaluated each iteration)
-					if (IsInLoopConditionOrIncrementors(node, forStatement))
-						return true;
-					// Check if the node is in the body
-					if (forStatement.Statement != null && forStatement.Statement.Contains(node))
-						return true;
-					break;
-
-				case ForEachStatementSyntax forEachStatement:
-					if (forEachStatement.Statement != null && forEachStatement.Statement.Contains(node))
-						return true;
-					break;
-
-				case WhileStatementSyntax whileStatement:
-					// Condition is evaluated each iteration
-					if (whileStatement.Condition.Contains(node))
-						return true;
-					if (whileStatement.Statement != null && whileStatement.Statement.Contains(node))
-						return true;
-					break;
-
-				case DoStatementSyntax doStatement:
-					// Condition is evaluated each iteration
-					if (doStatement.Condition.Contains(node))
-						return true;
-					if (doStatement.Statement != null && doStatement.Statement.Contains(node))
-						return true;
-					break;
+				case ForStatementSyntax:
+				case ForEachStatementSyntax:
+				case WhileStatementSyntax:
+				case DoStatementSyntax:
+					return current;
 
 				// Stop looking if we hit a method/lambda/function boundary
+				case MethodDeclarationSyntax:
+				case LocalFunctionStatementSyntax:
+				case AnonymousFunctionExpressionSyntax:
+					return null;
+			}
+
+			current = current.Parent;
+		}
+
+		return null;
+	}
+
+	private static bool IsFirstOccurrenceInLoop(SemanticModel model, MemberAccessExpressionSyntax memberAccess, SyntaxNode loop)
+	{
+		var allOccurrences = loop.DescendantNodes()
+			.OfType<MemberAccessExpressionSyntax>()
+			.Where(m => IsInLoopConditionOrBody(m, loop) && IsSameMeshPropertyAccess(model, m, memberAccess))
+			.OrderBy(m => m.SpanStart)
+			.ToList();
+
+		return allOccurrences.Count > 0 && allOccurrences[0] == memberAccess;
+	}
+
+	internal static bool IsSameMeshPropertyAccess(SemanticModel model, MemberAccessExpressionSyntax candidate, MemberAccessExpressionSyntax reference)
+	{
+		var candidateSymbol = model.GetSymbolInfo(candidate).Symbol;
+		var referenceSymbol = model.GetSymbolInfo(reference).Symbol;
+
+		if (candidateSymbol == null || referenceSymbol == null)
+			return false;
+
+		if (!SymbolEqualityComparer.Default.Equals(candidateSymbol, referenceSymbol))
+			return false;
+
+		var candidateExprSymbol = model.GetSymbolInfo(candidate.Expression).Symbol;
+		var referenceExprSymbol = model.GetSymbolInfo(reference.Expression).Symbol;
+
+		return SymbolEqualityComparer.Default.Equals(candidateExprSymbol, referenceExprSymbol);
+	}
+
+	internal static bool IsInLoopConditionOrBody(SyntaxNode node, SyntaxNode loop)
+	{
+		if (!loop.Contains(node))
+			return false;
+
+		var current = node.Parent;
+		while (current != null && current != loop)
+		{
+			switch (current)
+			{
 				case MethodDeclarationSyntax:
 				case LocalFunctionStatementSyntax:
 				case AnonymousFunctionExpressionSyntax:
@@ -119,16 +145,25 @@ public class MeshArrayPropertyInLoopAnalyzer : DiagnosticAnalyzer
 			current = current.Parent;
 		}
 
-		return false;
+		return loop switch
+		{
+			ForStatementSyntax forStatement =>
+				IsInLoopConditionOrIncrementors(node, forStatement) || forStatement.Statement.Contains(node),
+			ForEachStatementSyntax forEachStatement =>
+				forEachStatement.Statement.Contains(node),
+			WhileStatementSyntax whileStatement =>
+				whileStatement.Condition.Contains(node) || whileStatement.Statement.Contains(node),
+			DoStatementSyntax doStatement =>
+				doStatement.Condition.Contains(node) || doStatement.Statement.Contains(node),
+			_ => false
+		};
 	}
 
 	private static bool IsInLoopConditionOrIncrementors(SyntaxNode node, ForStatementSyntax forStatement)
 	{
-		// Check if node is in the condition
 		if (forStatement.Condition != null && forStatement.Condition.Contains(node))
 			return true;
 
-		// Check if node is in any of the incrementors
 		foreach (var incrementor in forStatement.Incrementors)
 		{
 			if (incrementor.Contains(node))
@@ -151,12 +186,10 @@ public class MeshArrayPropertyInLoopAnalyzer : DiagnosticAnalyzer
 		if (symbol is not IPropertySymbol propertySymbol)
 			return false;
 
-		// Check if it's a Mesh property
 		var containingType = propertySymbol.ContainingType;
-		if (containingType == null || containingType.Name != "Mesh" || containingType.ContainingNamespace?.ToDisplayString() != "UnityEngine")
+		if (!containingType.Matches(typeof(UnityEngine.Mesh)))
 			return false;
 
-		// Check if the return type is an array of one of the allocating element types
 		if (propertySymbol.Type is not IArrayTypeSymbol arrayType)
 			return false;
 
@@ -200,18 +233,15 @@ public class MeshArrayPropertyInLoopCodeFix : CodeFixProvider
 		if (symbol is not IPropertySymbol propertySymbol)
 			return document;
 
-		// Find the containing loop
-		var loop = FindContainingLoop(memberAccess);
+		var loop = MeshArrayPropertyInLoopAnalyzer.FindContainingLoop(memberAccess);
 		if (loop == null)
 			return document;
 
-		// Generate a variable name based on the property
-		var variableName = GenerateVariableName(memberAccess, propertySymbol);
-
+		var allOccurrences = FindAllPropertyAccesses(semanticModel, memberAccess, loop);
+		var variableName = GenerateVariableName(semanticModel, memberAccess, propertySymbol, loop);
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
-
-		// Create the variable declaration
 		var typeName = propertySymbol.Type.ToMinimalDisplayString(semanticModel, memberAccess.SpanStart);
+
 		var variableDeclaration = SyntaxFactory.LocalDeclarationStatement(
 			SyntaxFactory.VariableDeclaration(
 				SyntaxFactory.ParseTypeName(typeName),
@@ -223,50 +253,29 @@ public class MeshArrayPropertyInLoopCodeFix : CodeFixProvider
 			)
 		).NormalizeWhitespace();
 
-		// Preserve the leading trivia (indentation) from the loop
 		var leadingTrivia = loop.GetLeadingTrivia();
 		variableDeclaration = variableDeclaration
 			.WithLeadingTrivia(leadingTrivia)
 			.WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed);
 
-		// Insert the declaration before the loop
 		editor.InsertBefore(loop, variableDeclaration);
 
-		// Replace the member access with the variable reference
-		editor.ReplaceNode(memberAccess, SyntaxFactory.IdentifierName(variableName).WithTriviaFrom(memberAccess));
+		foreach (var occurrence in allOccurrences)
+			editor.ReplaceNode(occurrence, SyntaxFactory.IdentifierName(variableName).WithTriviaFrom(occurrence));
 
 		return editor.GetChangedDocument();
 	}
 
-	private static SyntaxNode? FindContainingLoop(SyntaxNode node)
+	private static List<MemberAccessExpressionSyntax> FindAllPropertyAccesses(SemanticModel model, MemberAccessExpressionSyntax memberAccess, SyntaxNode loop)
 	{
-		var current = node.Parent;
-		while (current != null)
-		{
-			switch (current)
-			{
-				case ForStatementSyntax:
-				case ForEachStatementSyntax:
-				case WhileStatementSyntax:
-				case DoStatementSyntax:
-					return current;
-
-				// Stop looking if we hit a method/lambda/function boundary
-				case MethodDeclarationSyntax:
-				case LocalFunctionStatementSyntax:
-				case AnonymousFunctionExpressionSyntax:
-					return null;
-			}
-
-			current = current.Parent;
-		}
-
-		return null;
+		return loop.DescendantNodes()
+			.OfType<MemberAccessExpressionSyntax>()
+			.Where(m => MeshArrayPropertyInLoopAnalyzer.IsSameMeshPropertyAccess(model, m, memberAccess) && MeshArrayPropertyInLoopAnalyzer.IsInLoopConditionOrBody(m, loop))
+			.ToList();
 	}
 
-	private static string GenerateVariableName(MemberAccessExpressionSyntax memberAccess, IPropertySymbol propertySymbol)
+	private static string GenerateVariableName(SemanticModel semanticModel, MemberAccessExpressionSyntax memberAccess, IPropertySymbol propertySymbol, SyntaxNode loop)
 	{
-		// Try to get a meaningful prefix from the expression (e.g., "mesh" from "mesh.vertices")
 		var prefix = memberAccess.Expression switch
 		{
 			IdentifierNameSyntax identifier => identifier.Identifier.Text,
@@ -274,7 +283,22 @@ public class MeshArrayPropertyInLoopCodeFix : CodeFixProvider
 			_ => "mesh"
 		};
 
-		// Combine prefix with property name
-		return $"{prefix}{char.ToUpperInvariant(propertySymbol.Name[0])}{propertySymbol.Name.Substring(1)}";
+		var baseName = $"{prefix}{char.ToUpperInvariant(propertySymbol.Name[0])}{propertySymbol.Name.Substring(1)}";
+		var candidateName = baseName;
+		var counter = 1;
+
+		while (IsNameInScope(semanticModel, loop, candidateName))
+		{
+			candidateName = $"{baseName}{counter}";
+			counter++;
+		}
+
+		return candidateName;
+	}
+
+	private static bool IsNameInScope(SemanticModel semanticModel, SyntaxNode location, string name)
+	{
+		var symbols = semanticModel.LookupSymbols(location.SpanStart, name: name);
+		return symbols.Length > 0;
 	}
 }
