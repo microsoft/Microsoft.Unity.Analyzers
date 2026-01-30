@@ -709,6 +709,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cache array property before loop.
+        /// </summary>
+        internal static string MeshArrayPropertyInLoopCodeFixTitle {
+            get {
+                return ResourceManager.GetString("MeshArrayPropertyInLoopCodeFixTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accessing array properties like vertices, normals, etc. on Mesh inside a loop causes a new array allocation on each access. Cache the array in a local variable before the loop to avoid repeated allocations..
+        /// </summary>
+        internal static string MeshArrayPropertyInLoopDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("MeshArrayPropertyInLoopDiagnosticDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mesh.{0} allocates a new array on each access. Cache it before the loop..
+        /// </summary>
+        internal static string MeshArrayPropertyInLoopDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("MeshArrayPropertyInLoopDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mesh array property accessed in loop.
+        /// </summary>
+        internal static string MeshArrayPropertyInLoopDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("MeshArrayPropertyInLoopDiagnosticTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unity needs a method decorated with InitializeOnLoadMethod, RuntimeInitializeOnLoadMethod or DidReloadScripts attribute to be static and parameterless. Else either Unity won&apos;t call it or will throw NullReferenceException..
         /// </summary>
         internal static string LoadAttributeMethodDiagnosticDescription {

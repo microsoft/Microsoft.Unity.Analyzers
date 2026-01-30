@@ -51,6 +51,8 @@ namespace UnityEngine
 
 	struct Color { }
 
+	struct Color32 { }
+
 	public struct Vector2 { }
 	public struct Vector3 { }
 	public struct Vector4 { }
