@@ -85,7 +85,7 @@ public abstract class CodeFixVerifier : DiagnosticVerifier
 
 		//after applying all of the code fixes, compare the resulting string to the inputted one
 		var actual = await GetStringFromDocumentAsync(document);
-		Assert.Equal(newSource, actual);
+		Assert.Equal(newSource.ReplaceLineEndings(), actual.ReplaceLineEndings());
 	}
 
 	private static async Task<Document> ApplyFixAsync(Document document, CodeAction codeAction)

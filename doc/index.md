@@ -41,8 +41,9 @@ ID | Title | Category
 [UNT0037](UNT0037.md) | Inefficient method to get localPosition and localRotation | Performance
 [UNT0038](UNT0038.md) | Cache `WaitForSeconds` invocations | Performance
 [UNT0039](UNT0039.md) | Use `RequireComponent` attribute when self-invoking `GetComponent` | Type Safety
-[UNT0040](UNT0040.md) | GameObject.isStatic is editor-only | Correctness
-[UNT0041](UNT0041.md) | Use Animator.StringToHash for repeated Animator method calls |
+[UNT0040](UNT0040.md) | `GameObject.isStatic` is editor-only | Correctness
+[UNT0041](UNT0041.md) | Use `Animator.StringToHash` for repeated `Animator` method calls | Performance
+[UNT0042](UNT0042.md) | `Mesh` array property accessed in loop | Performance
 
 # Diagnostic Suppressors
 
