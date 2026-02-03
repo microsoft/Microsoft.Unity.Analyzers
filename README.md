@@ -19,7 +19,7 @@ If you have an idea for a best practice for Unity developers to follow, please o
 
 # Prerequisites
 
-For building and testing, you'll need **.NET 9 (SDK 9.0.201+) and Visual Studio 2022 17.13+, or Visual Studio Code 1.92+**.
+For building and testing, you'll need **.NET 10 and Visual Studio 2026, or Visual Studio Code 1.92+**.
 
 We are using `slnx` solution files, so when using Visual Studio, please make sure to enable `Solution File Persistence Model` in `Tools/Options/Preview Features`.
 
@@ -93,3 +93,4 @@ Example for creating `CustomSuppressor` and `CustomSuppressorTests` classes :
 
 This project welcomes contributions and suggestions.
 Please have a look at our [Guidelines](CONTRIBUTING.md) for contributing.
+
