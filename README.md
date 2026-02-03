@@ -21,8 +21,6 @@ If you have an idea for a best practice for Unity developers to follow, please o
 
 For building and testing, you'll need **.NET 10 and Visual Studio 2026, or Visual Studio Code 1.92+**.
 
-We are using `slnx` solution files, so when using Visual Studio, please make sure to enable `Solution File Persistence Model` in `Tools/Options/Preview Features`.
-
 This project is using the `DiagnosticSuppressor` API to conditionally suppress reported compiler/analyzer diagnostics.
 
 On Windows, you'll need the _Visual Studio extension development_ workload installed to build a VSIX to use and debug the project in Visual Studio.
@@ -93,5 +91,6 @@ Example for creating `CustomSuppressor` and `CustomSuppressorTests` classes :
 
 This project welcomes contributions and suggestions.
 Please have a look at our [Guidelines](CONTRIBUTING.md) for contributing.
+
 
 
