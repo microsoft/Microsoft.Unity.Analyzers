@@ -47,7 +47,7 @@ Running and debugging the tests is the easiest way to get started but sometimes 
 
 - Open the `Microsoft.Unity.Analyzers.Vsix.slnx` solution.
 - Make sure `Microsoft.Unity.Analyzers.Vsix` is set as the startup project.
-- Hit play (Current Instance) to start debugging an experimental instance of Visual Studio 2022.
+- Hit play (Current Instance) to start debugging an experimental instance of Visual Studio.
 - Load any Unity project in the Visual Studio experimental instance then put breakpoints in the `Microsoft.Unity.Analyzers` project.
 
 # Handling duplicate diagnostics 
@@ -93,4 +93,5 @@ Example for creating `CustomSuppressor` and `CustomSuppressorTests` classes :
 
 This project welcomes contributions and suggestions.
 Please have a look at our [Guidelines](CONTRIBUTING.md) for contributing.
+
 
