@@ -158,4 +158,41 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task TestDestroyTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() {
+        // comment before
+        Destroy(/* inline before */ transform /* inline after */ );
+        // comment after
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public void Update() {
+        // comment before
+        Destroy(/* inline before */ transform.gameObject /* inline after */ );
+        // comment after
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

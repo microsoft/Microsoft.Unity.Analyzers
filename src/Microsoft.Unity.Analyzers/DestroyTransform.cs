@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Editing;
 using Microsoft.Unity.Analyzers.Resources;
 
 namespace Microsoft.Unity.Analyzers;
@@ -131,13 +132,11 @@ public class DestroyTransformCodeFix : CodeFixProvider
 	private static async Task<Document> UseGameObjectAsync(Document document, ExpressionSyntax argument, CancellationToken cancellationToken)
 	{
 		var gameObject = SyntaxFactory.IdentifierName("gameObject");
-		var memberAccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, argument, gameObject);
+		var memberAccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, argument.WithoutTrailingTrivia(), gameObject);
 
-		var root = await document
-			.GetSyntaxRootAsync(cancellationToken)
-			.ConfigureAwait(false);
+		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+		editor.ReplaceNode(argument, memberAccess.WithTrailingTrivia(argument.GetTrailingTrivia()));
 
-		var newRoot = root?.ReplaceNode(argument, memberAccess);
-		return newRoot == null ? document : document.WithSyntaxRoot(newRoot);
+		return editor.GetChangedDocument();
 	}
 }
