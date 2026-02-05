@@ -183,7 +183,10 @@ public class AnimatorStringToHashCodeFix : CodeFixProvider
 			editor.InsertMembers(classDecl, 0, [fieldDecl]);
 		}
 
-		var newArgument = stringArgument.WithExpression(SyntaxFactory.IdentifierName(fieldName));
+		var newArgument = stringArgument
+			.WithExpression(SyntaxFactory.IdentifierName(fieldName))
+			.WithTrailingTrivia(stringArgument.GetTrailingTrivia());
+
 		editor.ReplaceNode(stringArgument, newArgument);
 
 		return editor.GetChangedDocument();
