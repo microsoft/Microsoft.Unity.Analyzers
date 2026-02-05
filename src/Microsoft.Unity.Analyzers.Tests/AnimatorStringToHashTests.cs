@@ -435,4 +435,49 @@ class Test : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test, diagnostic1, diagnostic2);
 	}
+
+	[Fact]
+	public async Task AnimatorPlayWithStringLiteralTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Test : MonoBehaviour
+{
+    private Animator _animator = null;
+
+    void Start()
+    {
+        // comment before
+        _animator.Play(/* inline before */ ""Attack"" /* inline after */);
+        // comment after
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(11, 9)
+			.WithArguments("Play", "Attack");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Test : MonoBehaviour
+{
+    private static readonly int AttackHash = Animator.StringToHash(""Attack"");
+    private Animator _animator = null;
+
+    void Start()
+    {
+        // comment before
+        _animator.Play(/* inline before */ AttackHash /* inline after */);
+        // comment after
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
