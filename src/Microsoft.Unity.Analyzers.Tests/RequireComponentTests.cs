@@ -291,7 +291,7 @@ public class PlayerScript : MonoBehaviour
 }";
 
 		var diagnostic = ExpectDiagnostic()
-			.WithLocation(10, 18);
+			.WithLocation(9, 18);
 
 		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 
