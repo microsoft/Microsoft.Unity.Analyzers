@@ -290,4 +290,41 @@ class App : AssetPostprocessor
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task ImproperlyCasedUpdateTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // comment
+    private void /* inner */ UPDATE /* outer */ ()
+    {
+    }
+    /* comment */
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 30)
+			.WithArguments("UPDATE");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // comment
+    private void /* inner */ Update /* outer */ ()
+    {
+    }
+    /* comment */
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

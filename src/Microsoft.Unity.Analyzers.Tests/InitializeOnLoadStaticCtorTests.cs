@@ -80,4 +80,45 @@ public sealed class Camera : MonoBehaviour
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task InitializeOnLoadWithoutStaticCtorTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+[InitializeOnLoad]
+class Camera : MonoBehaviour
+{
+    // comment
+    private int field = 0;
+    /* comment */
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(6, 7)
+			.WithArguments("Camera");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+using UnityEditor;
+
+[InitializeOnLoad]
+class Camera : MonoBehaviour
+{
+    static Camera()
+    {
+    }
+
+    // comment
+    private int field = 0;
+    /* comment */
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

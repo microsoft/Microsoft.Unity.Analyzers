@@ -94,4 +94,48 @@ class Context
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[SkippableFact]
+	public async Task UpdateLocalPositionAndRotationMethodTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // leading comment
+        transform.localPosition = new Vector3(0.0f, 1.0f, 0.0f);
+        transform.localRotation = transform.localRotation;
+        // trailing comment
+    }
+}
+";
+
+		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
+		var type = typeof(UnityEngine.Transform);
+
+		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+
+		var diagnostic = ExpectDiagnostic().WithLocation(9, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // leading comment
+        transform.SetLocalPositionAndRotation(new Vector3(0.0f, 1.0f, 0.0f), transform.localRotation);
+        // trailing comment
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
