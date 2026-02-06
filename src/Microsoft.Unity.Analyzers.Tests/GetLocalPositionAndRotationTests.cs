@@ -115,4 +115,52 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[SkippableFact]
+	public async Task UseGetLocalPositionAndRotationMethodTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Quaternion rotation;
+        // rotation comment
+        rotation = transform.localRotation;
+        // position comment
+        var position = transform.localPosition;
+        // trailing comment
+    }
+}
+";
+
+		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
+		var type = typeof(UnityEngine.Transform);
+
+		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+
+		var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Quaternion rotation;
+        // rotation comment
+        // position comment
+        transform.GetLocalPositionAndRotation(out var position, out rotation);
+        // trailing comment
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

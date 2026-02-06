@@ -57,7 +57,7 @@ public class BaseGetPositionAndRotationContext : BasePositionAndRotationContext
 			if (!IsOutRefCompatible(model, expression))
 				return false;
 
-			result = Argument(expression)
+			result = Argument(expression.WithoutLeadingTrivia())
 				.WithRefOrOutKeyword(Token(SyntaxKind.OutKeyword))
 				.WithLeadingTrivia(assignment.OperatorToken.TrailingTrivia);
 
