@@ -409,4 +409,39 @@ class Camera : Editor
 		// In this special case, we do not provide a codefix, given it would break the code as the message is -wrongly- used elsewhere
 		await VerifyCSharpFixAsync(test, test);
 	}
+
+	[Fact]
+	public async Task MessageSignatureTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // leading comment
+    private void OnApplicationPause(int foo, bool pause, string[] bar) // trailing comment
+    {
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(7, 18)
+			.WithArguments("OnApplicationPause");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    // leading comment
+    private void OnApplicationPause(bool pause) // trailing comment
+    {
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
