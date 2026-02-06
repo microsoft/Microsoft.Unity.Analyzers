@@ -62,4 +62,59 @@ public class UnusedCoroutineScript : MonoBehaviour
 ";
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task UnusedCoroutineReturnValueTrivia()
+	{
+		const string test = @"
+using System.Collections;
+using UnityEngine;
+
+public class UnusedCoroutineScript : MonoBehaviour
+{
+    void Start()
+    {
+        // leading comment
+        UnusedCoroutine(2.0f); // trailing comment
+    }
+
+    private IEnumerator UnusedCoroutine(float waitTime)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            yield return new WaitForSeconds(waitTime);
+        }
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnusedCoroutineReturnValueAnalyzer.Rule.Id)
+			.WithLocation(10, 9)
+			.WithArguments("UnusedCoroutine");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using System.Collections;
+using UnityEngine;
+
+public class UnusedCoroutineScript : MonoBehaviour
+{
+    void Start()
+    {
+        // leading comment
+        StartCoroutine(UnusedCoroutine(2.0f)); // trailing comment
+    }
+
+    private IEnumerator UnusedCoroutine(float waitTime)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            yield return new WaitForSeconds(waitTime);
+        }
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
