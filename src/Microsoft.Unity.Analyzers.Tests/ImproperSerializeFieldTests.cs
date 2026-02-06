@@ -58,7 +58,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task RedundantSerializeFieldComments()
+	public async Task RedundantSerializeFieldTrivia()
 	{
 		const string test = @"
 using UnityEngine;

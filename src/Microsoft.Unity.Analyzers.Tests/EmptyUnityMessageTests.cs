@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests;
 public class EmptyUnityMessageTests : BaseCodeFixVerifierTest<EmptyUnityMessageAnalyzer, EmptyUnityMessageCodeFix>
 {
 	[Fact]
-	public async Task EmptyFixedUpdate()
+	public async Task EmptyFixedUpdateTrivia()
 	{
 		const string test = @"
 using UnityEngine;

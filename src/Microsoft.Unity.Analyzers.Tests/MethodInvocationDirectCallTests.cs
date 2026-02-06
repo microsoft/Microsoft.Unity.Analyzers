@@ -103,7 +103,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task TestStartCoroutineComments()
+	public async Task TestStartCoroutineTrivia()
 	{
 		const string test = @"
 using UnityEngine;

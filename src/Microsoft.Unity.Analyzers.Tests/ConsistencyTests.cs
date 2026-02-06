@@ -129,4 +129,46 @@ public class ConsistencyTests(ITestOutputHelper output)
 		}
 	}
 
+	[SkippableFact]
+	public void CheckCodeFixTestsHaveTriviaTests()
+	{
+		var assembly = typeof(ConsistencyTests).Assembly;
+
+		var codeFixTestClasses = assembly
+			.GetTypes()
+			.Where(t => t is { IsClass: true, IsAbstract: false } && IsBaseCodeFixVerifierTest(t))
+			.ToArray();
+
+		List<string> missingTriviaTests = [];
+
+		foreach (var testClass in codeFixTestClasses)
+		{
+			if (testClass
+				.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+				.Where(m => m.GetCustomAttributes(typeof(FactAttribute), true).Any() ||
+							m.GetCustomAttributes(typeof(TheoryAttribute), true).Any())
+				.Any(m => m.Name.Contains("Trivia", StringComparison.OrdinalIgnoreCase)))
+				continue;
+
+			missingTriviaTests.Add(testClass.Name);
+		}
+
+		Skip.If(missingTriviaTests.Any(), $"The following CodeFix test classes ({(float)missingTriviaTests.Count / codeFixTestClasses.Length:0.00%}) are missing a Trivia test:\n\n{string.Join("\n", missingTriviaTests)}");
+	}
+
+	private static bool IsBaseCodeFixVerifierTest(Type type)
+	{
+		// IsAssignableFrom cannot be used with open generic types
+		var baseType = type.BaseType;
+		while (baseType != null)
+		{
+			if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(BaseCodeFixVerifierTest<,>))
+				return true;
+
+			baseType = baseType.BaseType;
+		}
+
+		return false;
+	}
+
 }

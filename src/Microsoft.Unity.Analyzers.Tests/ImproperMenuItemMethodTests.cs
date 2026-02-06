@@ -47,7 +47,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task MissingStaticDeclarationComments()
+	public async Task MissingStaticDeclarationTrivia()
 	{
 		const string test = @"
 using UnityEngine;

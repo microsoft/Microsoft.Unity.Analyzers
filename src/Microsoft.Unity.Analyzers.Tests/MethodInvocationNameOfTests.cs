@@ -53,7 +53,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task TestInvokeComments()
+	public async Task TestInvokeTrivia()
 	{
 		const string test = @"
 using UnityEngine;

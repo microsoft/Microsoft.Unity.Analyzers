@@ -79,7 +79,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task RemoveGameObjectPropertyComments()
+	public async Task RemoveGameObjectPropertyTrivia()
 	{
 		const string test = @"
 using UnityEngine;
