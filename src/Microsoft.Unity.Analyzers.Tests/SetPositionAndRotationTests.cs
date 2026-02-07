@@ -91,7 +91,7 @@ class Context
 
 
 	[Fact]
-	public async Task UpdatePositionAndRotationMethodComments()
+	public async Task UpdatePositionAndRotationMethodTrivia()
 	{
 		const string test = @"
 using UnityEngine;

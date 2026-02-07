@@ -108,7 +108,8 @@ public class UnusedCoroutineReturnValueCodeFix : CodeFixProvider
 				IdentifierName("StartCoroutine"),
 				ArgumentList(
 					SingletonSeparatedList(
-						Argument(invocation)))));
+						Argument(invocation.WithoutTrivia())))))
+			.WithTriviaFrom(parent);
 
 		var newRoot = root?.ReplaceNode(parent, newExpressionStatement);
 		if (newRoot == null)

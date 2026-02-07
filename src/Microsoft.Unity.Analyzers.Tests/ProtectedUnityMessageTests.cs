@@ -51,7 +51,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task FixDefaultUnityMessageComments()
+	public async Task FixDefaultUnityMessageTrivia()
 	{
 		const string test = @"
 using UnityEngine;
@@ -93,7 +93,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task FixPrivateUnityMessageComments()
+	public async Task FixPrivateUnityMessageTrivia()
 	{
 		const string test = @"
 using UnityEngine;

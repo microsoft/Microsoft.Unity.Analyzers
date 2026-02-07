@@ -242,4 +242,49 @@ class Camera : MonoBehaviour
 		// Implicit conversion incompatible with 'out'
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task UseGetPositionAndRotationMethodAssignmentTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Vector3 position;
+        Quaternion rotation;
+        // position comment
+        position = transform.position;
+        // rotation comment
+        rotation = transform.rotation;
+        // trailing comment
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic().WithLocation(11, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Vector3 position;
+        Quaternion rotation;
+        // position comment
+        // rotation comment
+        transform.GetPositionAndRotation(out position, out rotation);
+        // trailing comment
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

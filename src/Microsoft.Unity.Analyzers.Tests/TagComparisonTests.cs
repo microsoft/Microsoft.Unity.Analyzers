@@ -45,7 +45,7 @@ public class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task TagAsIdentifierComments()
+	public async Task TagAsIdentifierTrivia()
 	{
 		const string test = @"
 using UnityEngine;

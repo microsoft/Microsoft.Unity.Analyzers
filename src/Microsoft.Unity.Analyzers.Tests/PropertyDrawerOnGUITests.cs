@@ -123,4 +123,41 @@ class MyDrawer : DerivedDrawer
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task TestBaseOnGUITrivia()
+	{
+		const string test = @"
+using UnityEngine;
+using UnityEditor;
+
+class MyDrawer : PropertyDrawer
+{
+	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+		// comment expected to be removed
+		base.OnGUI(position, property, label);
+		// trailing comment
+	}
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(9, 3);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+using UnityEditor;
+
+class MyDrawer : PropertyDrawer
+{
+	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+		// trailing comment
+	}
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

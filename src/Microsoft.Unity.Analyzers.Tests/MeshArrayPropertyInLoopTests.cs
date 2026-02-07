@@ -631,4 +631,53 @@ class Camera : MonoBehaviour
 		// The lambda is not considered inside the loop
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task VerticesInForLoopConditionTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        // loop start
+        for (int i = 0; i < /* vertices access */ mesh.vertices.Length /* end access */; i++)
+        {
+            // some work
+        }
+        // loop end
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 51)
+			.WithArguments("vertices");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        Vector3[] meshVertices = mesh.vertices;
+        // loop start
+        for (int i = 0; i < /* vertices access */ meshVertices.Length /* end access */; i++)
+        {
+            // some work
+        }
+        // loop end
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

@@ -51,7 +51,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task FixIdentifierCoalescingComments()
+	public async Task FixIdentifierCoalescingTrivia()
 	{
 		const string test = @"
 using UnityEngine;
@@ -197,7 +197,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task FixNullPropagationComments()
+	public async Task FixNullPropagationTrivia()
 	{
 		const string test = @"
 using UnityEngine;
@@ -305,7 +305,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task FixCoalescingAssignmentComments()
+	public async Task FixCoalescingAssignmentTrivia()
 	{
 		const string test = @"
 using UnityEngine;

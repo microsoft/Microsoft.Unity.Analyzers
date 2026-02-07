@@ -155,8 +155,12 @@ public class RequireComponentCodeFix : CodeFixProvider
 						SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(typeName))))))
 			.WithAdditionalAnnotations(Simplifier.Annotation);
 
-		var newClassDeclaration = classDeclaration.AddAttributeLists(
-			SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(attribute)));
+		var attributeList = SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(attribute));
+
+		var leadingTrivia = classDeclaration.GetLeadingTrivia();
+		var newClassDeclaration = classDeclaration
+			.WithoutLeadingTrivia()
+			.AddAttributeLists(attributeList.WithLeadingTrivia(leadingTrivia));
 
 		var root = await document.GetSyntaxRootAsync(cancellationToken);
 		if (root == null)

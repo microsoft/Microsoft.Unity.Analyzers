@@ -85,7 +85,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task GetComponentAsComments()
+	public async Task GetComponentAsTrivia()
 	{
 		const string test = @"
 using UnityEngine;

@@ -166,6 +166,8 @@ public abstract class BaseVectorConversionCodeFix : CodeFixProvider
 		var typeSyntax = SyntaxFactory.ParseTypeName(CastType.Name);
 		SyntaxNode castedSyntax = IsCastRequired(ocOperation) ? SyntaxFactory.CastExpression(typeSyntax, identifierNameSyntax) : identifierNameSyntax;
 
+		castedSyntax = castedSyntax.WithTriviaFrom(ocSyntax);
+
 		var newRoot = root?.ReplaceNode(ocSyntax, castedSyntax);
 		if (newRoot == null)
 			return document;

@@ -254,8 +254,9 @@ public class MeshArrayPropertyInLoopCodeFix : CodeFixProvider
 		).NormalizeWhitespace();
 
 		var leadingTrivia = loop.GetLeadingTrivia();
+		var indentation = leadingTrivia.LastOrDefault(t => t.IsKind(SyntaxKind.WhitespaceTrivia));
 		variableDeclaration = variableDeclaration
-			.WithLeadingTrivia(leadingTrivia)
+			.WithLeadingTrivia(indentation.IsKind(SyntaxKind.WhitespaceTrivia) ? SyntaxFactory.TriviaList(indentation) : leadingTrivia)
 			.WithTrailingTrivia(SyntaxFactory.CarriageReturnLineFeed);
 
 		editor.InsertBefore(loop, variableDeclaration);

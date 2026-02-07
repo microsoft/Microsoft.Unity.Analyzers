@@ -139,8 +139,12 @@ public class MessageSignatureCodeFix : CodeFixProvider
 			return document;
 
 		var builder = new MessageBuilder(syntaxGenerator);
+		var newParameterList = CreateParameterList(builder, message)
+			.WithCloseParenToken(
+				SyntaxFactory.Token(SyntaxKind.CloseParenToken)
+					.WithTrailingTrivia(methodSyntax.ParameterList.CloseParenToken.TrailingTrivia));
 		var newMethodSyntax = methodSyntax
-			.WithParameterList(CreateParameterList(builder, message));
+			.WithParameterList(newParameterList);
 
 		var newRoot = root?.ReplaceNode(methodSyntax, newMethodSyntax);
 		if (newRoot == null)

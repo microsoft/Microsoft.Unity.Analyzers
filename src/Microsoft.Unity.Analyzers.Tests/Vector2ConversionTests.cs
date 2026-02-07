@@ -155,4 +155,47 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task UseConversionTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Vector3 v3 = Vector3.zero;
+        Vector2 v2 = Vector2.zero;
+        // leading comment
+        var distance = Vector3.Distance(v3, /* inner */ new Vector3(v2.x, v2.y, 0) /* outer */);
+        // trailing comment
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(11, 57);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        Vector3 v3 = Vector3.zero;
+        Vector2 v2 = Vector2.zero;
+        // leading comment
+        var distance = Vector3.Distance(v3, /* inner */ v2 /* outer */);
+        // trailing comment
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }

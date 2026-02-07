@@ -49,7 +49,7 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
-	public async Task FixedUpdateWithDeltaTimeComments()
+	public async Task FixedUpdateWithDeltaTimeTrivia()
 	{
 		const string test = @"
 using UnityEngine;

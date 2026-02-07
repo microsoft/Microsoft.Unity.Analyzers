@@ -62,7 +62,7 @@ class Loader
 	}
 
 	[Fact]
-	public async Task InitializeOnLoadMethodFixModifiersComments()
+	public async Task InitializeOnLoadMethodFixModifiersTrivia()
 	{
 		const string test = @"
 using UnityEditor;

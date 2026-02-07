@@ -274,4 +274,40 @@ class Camera : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task GetComponentTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+// class comment
+public class PlayerScript : MonoBehaviour
+{
+    void Start()
+    {
+        var rb = GetComponent<Rigidbody>(); // trailing comment
+    }
+}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(9, 18);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+// class comment
+[RequireComponent(typeof(Rigidbody))]
+public class PlayerScript : MonoBehaviour
+{
+    void Start()
+    {
+        var rb = GetComponent<Rigidbody>(); // trailing comment
+    }
+}";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
 }
