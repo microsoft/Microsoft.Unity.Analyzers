@@ -310,4 +310,21 @@ public class PlayerScript : MonoBehaviour
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Fact]
+	public async Task GenericTypeParameter()
+	{
+		const string test = @"
+using UnityEngine;
+
+public class PlayerScript : MonoBehaviour
+{
+    void Foo<T>()
+    {
+        var bar = GetComponent<T>();
+    }
+}";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
 }
