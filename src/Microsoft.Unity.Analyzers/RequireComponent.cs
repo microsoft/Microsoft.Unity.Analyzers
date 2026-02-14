@@ -66,6 +66,9 @@ public class RequireComponentAnalyzer : BaseGetComponentAnalyzer
 			return;
 
 		var componentType = method.TypeArguments.First(); // Checked by IsGenericGetComponent
+		if (componentType.TypeKind == TypeKind.TypeParameter)
+        	return;
+
 		if (IsTypeAlreadyRequired(containerType, componentType))
 			return;
 
