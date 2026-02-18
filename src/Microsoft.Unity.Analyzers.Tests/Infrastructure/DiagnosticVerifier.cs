@@ -330,8 +330,9 @@ public abstract class DiagnosticVerifier
 			yield break;
 
 		var scripting = installation;
+		var resources = Path.Combine(installation, "Resources");
 		// Unity 6000.3.x introduced a new folder structure on MacOS
-		var macosScripting = Path.Combine(installation, "Resources", "Scripting");
+		var macosScripting = Path.Combine(resources, "Scripting");
 
 		if (OperatingSystem.IsMacOS() && Path.Exists(macosScripting))
 			scripting = macosScripting;
@@ -349,7 +350,7 @@ public abstract class DiagnosticVerifier
 		yield return Path.Combine(facades, "netstandard.dll");
 
 		// Use the 2D template to get additional assemblies, normally acquired through Package Manager
-		var libcache = Path.Combine(installation, "Resources", "PackageManager", "ProjectTemplates", "libcache");
+		var libcache = Path.Combine(resources, "PackageManager", "ProjectTemplates", "libcache");
 		var template2d = Directory.GetDirectories(libcache, "com.unity.template.2d-*").Single();
 		var template2dScriptAssemblies = Path.Combine(template2d, "ScriptAssemblies");
 
