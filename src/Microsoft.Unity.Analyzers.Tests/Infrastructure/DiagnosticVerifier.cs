@@ -329,11 +329,20 @@ public abstract class DiagnosticVerifier
 		if (!Directory.Exists(installation))
 			yield break;
 
-		var managed = Path.Combine(installation, "Managed");
+		var scripting = installation;
+		var resources = Path.Combine(installation, "Resources");
+		// Unity 6000.3.x introduced a new folder structure on MacOS
+		var macosScripting = Path.Combine(resources, "Scripting");
+
+		if (OperatingSystem.IsMacOS() && Path.Exists(macosScripting))
+			scripting = macosScripting;
+
+		var managed = Path.Combine(scripting, "Managed");
+
 		yield return Path.Combine(managed, "UnityEditor.dll");
 		yield return Path.Combine(managed, "UnityEngine.dll");
 
-		var monolib = Path.Combine(installation, "MonoBleedingEdge", "lib", "mono", "4.7.1-api");
+		var monolib = Path.Combine(scripting, "MonoBleedingEdge", "lib", "mono", "4.7.1-api");
 		yield return Path.Combine(monolib, "mscorlib.dll");
 		yield return Path.Combine(monolib, "System.dll");
 
@@ -341,7 +350,7 @@ public abstract class DiagnosticVerifier
 		yield return Path.Combine(facades, "netstandard.dll");
 
 		// Use the 2D template to get additional assemblies, normally acquired through Package Manager
-		var libcache = Path.Combine(installation, "Resources", "PackageManager", "ProjectTemplates", "libcache");
+		var libcache = Path.Combine(resources, "PackageManager", "ProjectTemplates", "libcache");
 		var template2d = Directory.GetDirectories(libcache, "com.unity.template.2d-*").Single();
 		var template2dScriptAssemblies = Path.Combine(template2d, "ScriptAssemblies");
 

@@ -90,7 +90,8 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-	[Fact]
+	// starting with Unity 6000.3.x, SerializeField attribute is decorated with [AttributeUsage(AttributeTargets.Field)]
+	/*[Fact]
 	public async Task InvalidSerializeFieldPropertyTest()
 	{
 		const string test = @"
@@ -119,7 +120,7 @@ class Camera : MonoBehaviour
 ";
 
 		await VerifyCSharpFixAsync(test, fixedTest);
-	}
+	}*/
 
 	[Fact]
 	public async Task InvalidSerializeFieldReadonlyTest()

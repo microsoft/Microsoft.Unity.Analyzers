@@ -66,8 +66,17 @@ public abstract class BaseVectorConversionAnalyzer : DiagnosticAnalyzer
 		if (inOperation.Syntax is not InvocationExpressionSyntax invocation)
 			return true;
 
-		var overloads = model.GetMemberGroup(invocation.Expression);
-		return overloads.Length == 1;
+		var overloads = model
+			.GetMemberGroup(invocation.Expression)
+			.OfType<IMethodSymbol>();
+
+		// With Unity 6000.3.x, Unity introduced overloads with -in- specifiers for performance
+		// So we consider overloads as distinct only when their parameter types differ (ignoring specifiers)
+		var distinctSignatures = overloads
+			.GroupBy(m => string.Join(",", m.Parameters.Select(p => p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))))
+			.Count();
+
+		return distinctSignatures == 1;
 	}
 
 	protected virtual bool CheckArguments(IObjectCreationOperation ocOperation)
