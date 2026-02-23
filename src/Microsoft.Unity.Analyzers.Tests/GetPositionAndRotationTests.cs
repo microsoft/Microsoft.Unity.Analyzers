@@ -49,7 +49,7 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-	[SkippableFact]
+	[Fact]
 	public async Task UseGetPositionAndRotationMethodTransformAccess()
 	{
 		const string test = @"
@@ -72,7 +72,7 @@ class Context
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Jobs.TransformAccess);
 
-		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+		Assert.SkipUnless(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(12, 9);
 

@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.Unity.Analyzers.Tests;
 
@@ -124,12 +123,12 @@ public class ConsistencyTests(ITestOutputHelper output)
 			Assert.NotEmpty(d.HelpLinkUri);
 			Assert.Contains(d.Id, d.HelpLinkUri);
 
-			var response = await client.GetAsync(d.HelpLinkUri);
+			var response = await client.GetAsync(d.HelpLinkUri, TestContext.Current.CancellationToken);
 			Assert.True(response.IsSuccessStatusCode);
 		}
 	}
 
-	[SkippableFact]
+	[Fact]
 	public void CheckCodeFixTestsHaveTriviaTests()
 	{
 		var assembly = typeof(ConsistencyTests).Assembly;
@@ -153,7 +152,7 @@ public class ConsistencyTests(ITestOutputHelper output)
 			missingTriviaTests.Add(testClass.Name);
 		}
 
-		Skip.If(missingTriviaTests.Any(), $"The following CodeFix test classes ({(float)missingTriviaTests.Count / codeFixTestClasses.Length:0.00%}) are missing a Trivia test:\n\n{string.Join("\n", missingTriviaTests)}");
+		Assert.SkipWhen(missingTriviaTests.Any(), $"The following CodeFix test classes ({(float)missingTriviaTests.Count / codeFixTestClasses.Length:0.00%}) are missing a Trivia test:\n\n{string.Join("\n", missingTriviaTests)}");
 	}
 
 	private static bool IsBaseCodeFixVerifierTest(Type type)
