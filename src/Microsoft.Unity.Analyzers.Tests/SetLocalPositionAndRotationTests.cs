@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests;
 public class SetLocalPositionAndRotationTests : BaseCodeFixVerifierTest<SetLocalPositionAndRotationAnalyzer, SetLocalPositionAndRotationCodeFix>
 {
 	// For extensive testing, see SetPositionAndRotationTests.cs
-	[SkippableFact]
+	[Fact]
 	public async Task UpdateLocalPositionAndRotationMethod()
 	{
 		const string test = @"
@@ -30,7 +30,7 @@ class Camera : MonoBehaviour
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Transform);
 
-		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+		Assert.SkipUnless(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(8, 9);
 
@@ -51,7 +51,7 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-	[SkippableFact]
+	[Fact]
 	public async Task UpdateLocalPositionAndRotationMethodTransformAccess()
 	{
 		const string test = @"
@@ -72,7 +72,7 @@ class Context
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Jobs.TransformAccess);
 
-		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+		Assert.SkipUnless(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
 
@@ -95,7 +95,7 @@ class Context
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-	[SkippableFact]
+	[Fact]
 	public async Task UpdateLocalPositionAndRotationMethodTrivia()
 	{
 		const string test = @"
@@ -116,7 +116,7 @@ class Camera : MonoBehaviour
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Transform);
 
-		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+		Assert.SkipUnless(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(9, 9);
 

@@ -11,7 +11,7 @@ namespace Microsoft.Unity.Analyzers.Tests;
 public class GetLocalPositionAndRotationTests : BaseCodeFixVerifierTest<GetLocalPositionAndRotationAnalyzer, GetLocalPositionAndRotationCodeFix>
 {
 	// For extensive testing, see GetPositionAndRotationTests
-	[SkippableFact]
+	[Fact]
 	public async Task UseGetLocalPositionAndRotationMethod()
 	{
 		const string test = @"
@@ -31,7 +31,7 @@ class Camera : MonoBehaviour
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Transform);
 
-		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+		Assert.SkipUnless(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(9, 9);
 
@@ -53,7 +53,7 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-	[SkippableFact]
+	[Fact]
 	public async Task UseGetLocalPositionAndRotationMethodTransformAccess()
 	{
 		const string test = @"
@@ -73,7 +73,7 @@ class Context
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Jobs.TransformAccess);
 
-		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+		Assert.SkipUnless(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(9, 9);
 
@@ -95,7 +95,7 @@ class Context
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
-	[SkippableFact]
+	[Fact]
 	public async Task NoTypeMismatch()
 	{
 		const string test = @"
@@ -116,7 +116,7 @@ class Camera : MonoBehaviour
 		await VerifyCSharpDiagnosticAsync(test);
 	}
 
-	[SkippableFact]
+	[Fact]
 	public async Task UseGetLocalPositionAndRotationMethodTrivia()
 	{
 		const string test = @"
@@ -139,7 +139,7 @@ class Camera : MonoBehaviour
 		var method = GetCSharpDiagnosticAnalyzer().ExpressionContext.PositionAndRotationMethodName;
 		var type = typeof(UnityEngine.Transform);
 
-		Skip.IfNot(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
+		Assert.SkipUnless(MethodExists("UnityEngine", type.FullName!, method), $"This Unity version does not support {type}.{method}");
 
 		var diagnostic = ExpectDiagnostic().WithLocation(10, 9);
 
