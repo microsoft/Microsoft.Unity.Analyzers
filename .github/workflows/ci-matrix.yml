@@ -77,14 +77,14 @@ jobs:
       run: ${{ matrix.install }}
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       if: ${{ contains(matrix.os, 'windows') }}
 
     - name: Build
       run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.slnx /p:UseSharedCompilation=false
           
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4
       if: ${{ contains(matrix.os, 'windows') }}
 
     - name: Test context (main)
