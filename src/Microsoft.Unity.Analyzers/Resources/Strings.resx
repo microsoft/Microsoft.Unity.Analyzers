@@ -676,4 +676,18 @@
   <data name="MeshArrayPropertyInLoopDiagnosticTitle" xml:space="preserve">
     <value>Mesh array property accessed in loop</value>
   </data>
+  <data name="ConditionalCompilationSymbolTypoDiagnosticDescription" xml:space="preserve">
+    <value>Conditional compilation symbols that are very close to project-level preprocessor symbols may be typos and can make #if or #elif blocks compile unexpectedly.</value>
+  </data>
+  <data name="ConditionalCompilationSymbolTypoCodeFixTitle" xml:space="preserve">
+    <value>Replace with '{0}'</value>
+    <comment>{0} is the suggested preprocessor symbol name</comment>
+  </data>
+  <data name="ConditionalCompilationSymbolTypoDiagnosticMessageFormat" xml:space="preserve">
+    <value>Conditional compilation symbol '{0}' is not defined. Did you mean '{1}'?</value>
+    <comment>{0} is the symbol used in source, {1} is the closest known symbol</comment>
+  </data>
+  <data name="ConditionalCompilationSymbolTypoDiagnosticTitle" xml:space="preserve">
+    <value>Possible typo in conditional compilation symbol</value>
+  </data>
 </root>
