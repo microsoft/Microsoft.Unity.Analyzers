@@ -167,7 +167,43 @@ namespace Microsoft.Unity.Analyzers.Resources {
                 return ResourceManager.GetString("CodeStyleSuppressorJustification", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Replace with &apos;{0}&apos;.
+        /// </summary>
+        internal static string ConditionalCompilationSymbolTypoCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ConditionalCompilationSymbolTypoCodeFixTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Conditional compilation symbols that are very close to project-level preprocessor symbols may be typos and can make #if or #elif blocks compile unexpectedly..
+        /// </summary>
+        internal static string ConditionalCompilationSymbolTypoDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ConditionalCompilationSymbolTypoDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Conditional compilation symbol &apos;{0}&apos; is not defined. Did you mean &apos;{1}&apos;?.
+        /// </summary>
+        internal static string ConditionalCompilationSymbolTypoDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ConditionalCompilationSymbolTypoDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Possible typo in conditional compilation symbol.
+        /// </summary>
+        internal static string ConditionalCompilationSymbolTypoDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ConditionalCompilationSymbolTypoDiagnosticTitle", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Component &apos;{0}&apos; should not be instantiated directly..
         /// </summary>

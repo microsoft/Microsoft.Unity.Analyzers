@@ -44,6 +44,7 @@ ID | Title | Category
 [UNT0040](UNT0040.md) | `GameObject.isStatic` is editor-only | Correctness
 [UNT0041](UNT0041.md) | Use `Animator.StringToHash` for repeated `Animator` method calls | Performance
 [UNT0042](UNT0042.md) | `Mesh` array property accessed in loop | Performance
+[UNT0043](UNT0043.md) | Possible typo in conditional compilation symbol | Correctness
 
 # Diagnostic Suppressors
 
