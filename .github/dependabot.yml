@@ -11,11 +11,8 @@ updates:
       interval: "weekly"
     ignore:
       # we need to fine-control the exact version for VS compat, and we have a distinct version for tests
-      - dependency-name: "Microsoft.CodeAnalysis.CSharp.Workspaces"  
+      - dependency-name: "Microsoft.CodeAnalysis*"  
     groups:
-      roslyn:
-        patterns:
-          - "Microsoft.CodeAnalysis*"
       vssdk:
         patterns:
           - "Microsoft.VisualStudio*"
