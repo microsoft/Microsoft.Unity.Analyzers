@@ -601,7 +601,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SerializeField attribute does not work on properties, and are unnecessary for public fields..
+        ///   Looks up a localized string similar to SerializeField attribute does not work on properties, and is unnecessary for public non-dictionary fields..
         /// </summary>
         internal static string ImproperSerializeFieldDiagnosticDescription {
             get {
