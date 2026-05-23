@@ -80,10 +80,16 @@ public class ImproperSerializeFieldAnalyzer : DiagnosticAnalyzer
 
 		return symbol switch
 		{
-			IFieldSymbol fieldSymbol => fieldSymbol.DeclaredAccessibility == Accessibility.Public || fieldSymbol.IsStatic || fieldSymbol.IsReadOnly, // redundant on public fields and invalid on static/readonly fields
+			IFieldSymbol fieldSymbol => fieldSymbol.IsStatic || fieldSymbol.IsReadOnly || IsRedundantOnPublicField(fieldSymbol), // redundant on non-dictionary public fields and invalid on static/readonly fields
 			IPropertySymbol => true, // Should never be on a property
 			_ => false,
 		};
+	}
+
+	private static bool IsRedundantOnPublicField(IFieldSymbol fieldSymbol)
+	{
+		return fieldSymbol.DeclaredAccessibility == Accessibility.Public
+			   && !fieldSymbol.Type.Extends(typeof(Dictionary<,>));
 	}
 }
 

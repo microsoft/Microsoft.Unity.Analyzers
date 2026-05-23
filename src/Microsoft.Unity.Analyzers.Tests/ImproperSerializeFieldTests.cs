@@ -58,6 +58,56 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task ValidSerializeFieldPublicDictionaryTest()
+	{
+		const string test = @"
+using System.Collections.Generic;
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField]
+    public Dictionary<string, string> publicDictionary = null;
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task InvalidSerializeFieldStaticDictionaryTest()
+	{
+		const string test = @"
+using System.Collections.Generic;
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    [SerializeField]
+    public static Dictionary<string, string> publicDictionary = null;
+}
+";
+
+		var diagnostic = ExpectDiagnostic(ImproperSerializeFieldAnalyzer.Rule.Id)
+			.WithLocation(7, 5)
+			.WithArguments("publicDictionary");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using System.Collections.Generic;
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    public static Dictionary<string, string> publicDictionary = null;
+}
+";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
 	public async Task RedundantSerializeFieldTrivia()
 	{
 		const string test = @"

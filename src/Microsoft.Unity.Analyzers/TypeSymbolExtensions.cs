@@ -89,6 +89,13 @@ internal static class TypeSymbolExtensions
 				return Matches(named.ConstructedFrom, type.GetGenericTypeDefinition());
 			}
 
+			if (type.IsGenericTypeDefinition)
+			{
+				var originalDefinition = named.OriginalDefinition;
+				return originalDefinition.MetadataName == type.Name
+					   && originalDefinition.ContainingNamespace?.ToDisplayString() == type.Namespace;
+			}
+
 			if (symbol.IsAwaitableOf(type))
 				return true;
 
