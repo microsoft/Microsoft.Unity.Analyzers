@@ -263,6 +263,305 @@ class Camera : MonoBehaviour
 		await VerifyCSharpFixAsync(test, test);
 	}
 
+	[Fact]
+	public async Task FixNullPropagationInvocationStatement()
+	{
+		// See https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/468
+		// `obj?.Method(args);` used as a statement is not a member binding so the codefix
+		// previously returned the document unchanged, leaving the VS lightbulb as a no-op.
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        gameObject?.AddComponent(typeof(Rotate));
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(10, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        if (gameObject != null)
+            gameObject.AddComponent(typeof(Rotate));
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task FixNullPropagationInvocationStatementTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // before
+        gameObject?.AddComponent(typeof(Rotate)); // trailing
+        // after
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(11, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // before
+        if (gameObject != null)
+            gameObject.AddComponent(typeof(Rotate)); // trailing
+        // after
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task FixNullPropagationInvocationExpressionTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    Component NP()
+    {
+        return /* inner */ gameObject?.AddComponent(typeof(Rotate));
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(10, 28);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    Component NP()
+    {
+        return /* inner */ gameObject != null ? gameObject.AddComponent(typeof(Rotate)) : null;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task FixNullPropagationInvocationExpression()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    Component NP()
+    {
+        return gameObject?.AddComponent(typeof(Rotate));
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(10, 16);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    Component NP()
+    {
+        return gameObject != null ? gameObject.AddComponent(typeof(Rotate)) : null;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task FixNullPropagationInvocationChain()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    GameObject NP()
+    {
+        return transform?.GetChild(0).gameObject;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(8, 16);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    GameObject NP()
+    {
+        return transform != null ? transform.GetChild(0).gameObject : null;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task CantFixNullPropagationValueTypeResult()
+	{
+		// `transform?.gameObject.activeInHierarchy` yields `bool?` (Nullable<bool>). A naive ternary
+		// rewrite would have branches `bool` and `null` which cannot be unified - we must skip rather
+		// than emit non-compiling code.
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    bool NP()
+    {
+        return transform?.gameObject.activeInHierarchy ?? false;
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(8, 16);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		// we cannot safely fix without introducing a cast
+		await VerifyCSharpFixAsync(test, test);
+	}
+
+	[Fact]
+	public async Task FixNullPropagationDanglingElse()
+	{
+		// The original `obj?.Foo();` is the `then` branch of an outer if-else; without block-wrapping
+		// the rewrite would bind the outer `else` to the generated inner `if`.
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        if (enabled)
+            gameObject?.AddComponent(typeof(Rotate));
+        else
+            Debug.Log(""no"");
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(11, 13);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        if (enabled)
+        {
+            if (gameObject != null)
+                gameObject.AddComponent(typeof(Rotate));
+        }
+        else
+            Debug.Log(""no"");
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task CantFixNullPropagationNestedReceiverSideEffect()
+	{
+		// `GetComponent<Camera>().gameObject` is syntactically a member access, but the receiver is
+		// an invocation. Strengthened HasSideEffect must reject this so we don't duplicate the call.
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        GetComponent<Camera>().gameObject?.AddComponent(typeof(Rotate));
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(10, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		// we cannot fix because the receiver (.gameObject) hangs off an invocation with side effects
+		await VerifyCSharpFixAsync(test, test);
+	}
+
 
 	[Fact]
 	public async Task FixCoalescingAssignment()
