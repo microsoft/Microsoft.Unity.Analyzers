@@ -166,6 +166,20 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 				if (HasSideEffect(caes.Expression))
 					return;
 
+				if (FindLeftmostBinding(caes.WhenNotNull) == null)
+					return;
+
+				// For the expression form we emit `obj != null ? <rewritten> : null`. If the original
+				// conditional access yields a value type (i.e. Nullable<T>), the ternary's branches
+				// (T and null) cannot be unified without an explicit cast - skip rather than emit
+				// non-compiling code. Statement form (handled in the rewrite) is unaffected.
+				if (GetEnclosingExpressionStatement(caes) == null)
+				{
+					var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+					if (semanticModel != null && IsValueTypeOrNullable(semanticModel.GetTypeInfo(caes).Type))
+						return;
+				}
+
 				action = CodeAction.Create(
 					Strings.UnityObjectNullPropagationCodeFixTitle,
 					ct => ReplaceNullPropagationAsync(context.Document, caes, ct),
@@ -205,11 +219,20 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 	// We could potentially rewrite by introducing a variable
 	private static bool HasSideEffect(ExpressionSyntax expression)
 	{
-		return expression.Kind() switch
+		return expression switch
 		{
-			SyntaxKind.SimpleMemberAccessExpression or SyntaxKind.PointerMemberAccessExpression or SyntaxKind.IdentifierName => false,
+			IdentifierNameSyntax => false,
+			ThisExpressionSyntax => false,
+			MemberAccessExpressionSyntax { RawKind: (int)SyntaxKind.SimpleMemberAccessExpression or (int)SyntaxKind.PointerMemberAccessExpression } mae => HasSideEffect(mae.Expression),
+			ParenthesizedExpressionSyntax pes => HasSideEffect(pes.Expression),
 			_ => true,
 		};
+	}
+
+	private static bool IsValueTypeOrNullable(ITypeSymbol? type)
+	{
+		// Nullable<T> is itself a value type - this catches both T and T?.
+		return type is { IsValueType: true };
 	}
 
 	private static async Task<Document> ReplaceWithAsync(Document document, SyntaxNode source, SyntaxNode replacement, CancellationToken cancellationToken)
@@ -244,16 +267,111 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 
 	private static async Task<Document> ReplaceNullPropagationAsync(Document document, ConditionalAccessExpressionSyntax access, CancellationToken cancellationToken)
 	{
-		// obj?.member -> obj != null ? obj.member : null
-		if (access.WhenNotNull is not MemberBindingExpressionSyntax mbes)
+		// obj?.member         -> obj != null ? obj.member : null
+		// obj?.member(args)   -> obj != null ? obj.member(args) : null
+		// obj?.member(args);  -> if (obj != null) obj.member(args);   (statement form, avoids CS0201)
+		var rewrittenWhenNotNull = RewriteWhenNotNull(access);
+		if (rewrittenWhenNotNull == null)
 			return document;
 
+		var condition = SyntaxFactory.BinaryExpression(
+			SyntaxKind.NotEqualsExpression,
+			access.Expression.WithoutTrivia(),
+			SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
+
+		// When the conditional access is the entire expression of an expression statement,
+		// a ternary cannot be used at statement level (CS0201). Use an `if` statement instead.
+		// Walk through any parenthesized wrappers to find the enclosing statement.
+		var enclosingStatement = GetEnclosingExpressionStatement(access);
+		if (enclosingStatement != null)
+		{
+			StatementSyntax ifStatement = SyntaxFactory.IfStatement(
+				condition,
+				SyntaxFactory.ExpressionStatement(rewrittenWhenNotNull.WithoutTrivia()));
+
+			// Wrap with a block when needed to avoid dangling-else ambiguity (e.g. parent if/else).
+			if (RequiresBlockWrap(enclosingStatement))
+				ifStatement = SyntaxFactory.Block(ifStatement);
+
+			return await ReplaceWithAsync(document, enclosingStatement, ifStatement.WithTriviaFrom(enclosingStatement), cancellationToken);
+		}
+
 		var conditional = SyntaxFactory.ConditionalExpression(
-			condition: SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, access.Expression, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
-			whenTrue: SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, access.Expression, mbes.Name),
+			condition: condition,
+			whenTrue: rewrittenWhenNotNull.WithoutTrivia(),
 			whenFalse: SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
 
 		return await ReplaceWithAsync(document, access, conditional, cancellationToken);
+	}
+
+	private static ExpressionStatementSyntax? GetEnclosingExpressionStatement(ConditionalAccessExpressionSyntax access)
+	{
+		SyntaxNode? current = access;
+		while (current?.Parent is ParenthesizedExpressionSyntax pes)
+			current = pes;
+
+		return current?.Parent as ExpressionStatementSyntax;
+	}
+
+	private static bool RequiresBlockWrap(StatementSyntax statement)
+	{
+		// Avoid dangling-else: `if (cond) obj?.Foo(); else Bar();` must not become
+		// `if (cond) if (obj != null) obj.Foo(); else Bar();` (else would bind to inner if).
+		return statement.Parent is IfStatementSyntax { Else: not null } parentIf && parentIf.Statement == statement;
+	}
+
+	private static ExpressionSyntax? RewriteWhenNotNull(ConditionalAccessExpressionSyntax access)
+	{
+		var binding = FindLeftmostBinding(access.WhenNotNull);
+		ExpressionSyntax replacement = binding switch
+		{
+			MemberBindingExpressionSyntax mbes => SyntaxFactory.MemberAccessExpression(
+				SyntaxKind.SimpleMemberAccessExpression,
+				access.Expression.WithoutTrivia(),
+				mbes.Name),
+			ElementBindingExpressionSyntax ebes => SyntaxFactory.ElementAccessExpression(
+				access.Expression.WithoutTrivia(),
+				ebes.ArgumentList),
+			_ => null!,
+		};
+
+		if (replacement == null!)
+			return null;
+
+		if (ReferenceEquals(binding, access.WhenNotNull))
+			return replacement;
+
+		return access.WhenNotNull.ReplaceNode(binding!, replacement);
+	}
+
+	private static ExpressionSyntax? FindLeftmostBinding(ExpressionSyntax expression)
+	{
+		// Descend into the chain until we reach the `?.`-bound prefix (MemberBindingExpression / ElementBindingExpression).
+		ExpressionSyntax? current = expression;
+		while (current != null)
+		{
+			switch (current)
+			{
+				case MemberBindingExpressionSyntax:
+				case ElementBindingExpressionSyntax:
+					return current;
+				case MemberAccessExpressionSyntax mae:
+					current = mae.Expression;
+					break;
+				case InvocationExpressionSyntax ie:
+					current = ie.Expression;
+					break;
+				case ElementAccessExpressionSyntax eae:
+					current = eae.Expression;
+					break;
+				case ConditionalAccessExpressionSyntax cae:
+					current = cae.Expression;
+					break;
+				default:
+					return null;
+			}
+		}
+		return null;
 	}
 
 	private static Task<Document> ReplacePatternExpressionAsync(Document document, IsPatternExpressionSyntax pattern, CancellationToken cancellationToken)
