@@ -299,7 +299,8 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 		var conditional = SyntaxFactory.ConditionalExpression(
 			condition: condition,
 			whenTrue: rewrittenWhenNotNull.WithoutTrivia(),
-			whenFalse: SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
+			whenFalse: SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression))
+			.WithTriviaFrom(access);
 
 		return await ReplaceWithAsync(document, access, conditional, cancellationToken);
 	}
@@ -323,7 +324,7 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 	private static ExpressionSyntax? RewriteWhenNotNull(ConditionalAccessExpressionSyntax access)
 	{
 		var binding = FindLeftmostBinding(access.WhenNotNull);
-		ExpressionSyntax replacement = binding switch
+		ExpressionSyntax? replacement = binding switch
 		{
 			MemberBindingExpressionSyntax mbes => SyntaxFactory.MemberAccessExpression(
 				SyntaxKind.SimpleMemberAccessExpression,
@@ -332,23 +333,23 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 			ElementBindingExpressionSyntax ebes => SyntaxFactory.ElementAccessExpression(
 				access.Expression.WithoutTrivia(),
 				ebes.ArgumentList),
-			_ => null!,
+			_ => null,
 		};
 
-		if (replacement == null!)
+		if (replacement is null || binding is null)
 			return null;
 
 		if (ReferenceEquals(binding, access.WhenNotNull))
 			return replacement;
 
-		return access.WhenNotNull.ReplaceNode(binding!, replacement);
+		return access.WhenNotNull.ReplaceNode(binding, replacement);
 	}
 
 	private static ExpressionSyntax? FindLeftmostBinding(ExpressionSyntax expression)
 	{
 		// Descend into the chain until we reach the `?.`-bound prefix (MemberBindingExpression / ElementBindingExpression).
-		ExpressionSyntax? current = expression;
-		while (current != null)
+		var current = expression;
+		while (true)
 		{
 			switch (current)
 			{
@@ -371,7 +372,6 @@ public class UnityObjectNullHandlingCodeFix : CodeFixProvider
 					return null;
 			}
 		}
-		return null;
 	}
 
 	private static Task<Document> ReplacePatternExpressionAsync(Document document, IsPatternExpressionSyntax pattern, CancellationToken cancellationToken)

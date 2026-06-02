@@ -306,6 +306,87 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task FixNullPropagationInvocationStatementTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // before
+        gameObject?.AddComponent(typeof(Rotate)); // trailing
+        // after
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(11, 9);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    void Update()
+    {
+        // before
+        if (gameObject != null)
+            gameObject.AddComponent(typeof(Rotate)); // trailing
+        // after
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task FixNullPropagationInvocationExpressionTrivia()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    Component NP()
+    {
+        return /* inner */ gameObject?.AddComponent(typeof(Rotate));
+    }
+}
+";
+
+		var diagnostic = ExpectDiagnostic(UnityObjectNullHandlingAnalyzer.NullPropagationRule)
+			.WithLocation(10, 28);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Rotate : MonoBehaviour { }
+
+class Camera : MonoBehaviour
+{
+    Component NP()
+    {
+        return /* inner */ gameObject != null ? gameObject.AddComponent(typeof(Rotate)) : null;
+    }
+}
+";
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
 	public async Task FixNullPropagationInvocationExpression()
 	{
 		const string test = @"
