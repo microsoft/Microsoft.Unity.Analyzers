@@ -227,6 +227,31 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task NonUnityTypeWithMultipleLiteralArguments()
+	{
+		// See https://github.com/microsoft/Microsoft.Unity.Analyzers/issues/471
+		// The analyzer used to throw AD0001 (InvalidOperationException: Sequence contains more than one matching element)
+		// when a yield return expression created an object with more than one literal argument.
+		const string test = @"
+using System.Collections.Generic;
+
+public struct A
+{
+    public A(int a, int b)
+    {
+    }
+
+    public static IEnumerable<A> GetObjs()
+    {
+        yield return new A(23, 23);
+    }
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
 	public async Task WaitForSecondsAndRealtime()
 	{
 		const string test = @"

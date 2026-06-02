@@ -56,7 +56,11 @@ public class CacheYieldInstructionAnalyzerAnalyzer : DiagnosticAnalyzer
 		if (yieldStatement.Expression is not ObjectCreationExpressionSyntax objectCreation)
 			return;
 
-		if (objectCreation.ArgumentList?.Arguments.SingleOrDefault(arg => arg.Expression is LiteralExpressionSyntax) == null)
+		// The code fix only supports caching when there's exactly one literal argument (see issue #471).
+		if (objectCreation.ArgumentList?.Arguments is not { Count: 1 } arguments)
+			return;
+
+		if (arguments[0].Expression is not LiteralExpressionSyntax)
 			return;
 
 		var typeSymbol = context.SemanticModel.GetTypeInfo(objectCreation).Type;
