@@ -65,9 +65,14 @@ public class RequireComponentAnalyzer : BaseGetComponentAnalyzer
 		if (!containerType.Extends(typeof(MonoBehaviour)))
 			return;
 
+		// GetComponent inside editor-only messages is typically used to populate
+		// serialized fields with overridable defaults, so the component is not a hard requirement
+		if (invocation.IsInsideEditorOnlyMessage(model))
+			return;
+
 		var componentType = method.TypeArguments.First(); // Checked by IsGenericGetComponent
 		if (componentType.TypeKind == TypeKind.TypeParameter)
-        	return;
+			return;
 
 		if (IsTypeAlreadyRequired(containerType, componentType))
 			return;
