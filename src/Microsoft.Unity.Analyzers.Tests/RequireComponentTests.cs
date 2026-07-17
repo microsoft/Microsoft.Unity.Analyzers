@@ -327,4 +327,64 @@ public class PlayerScript : MonoBehaviour
 
 		await VerifyCSharpDiagnosticAsync(test);
 	}
+
+	[Fact]
+	public async Task GetComponentInResetMessage()
+	{
+		const string test = @"
+using UnityEngine;
+
+public class PlayerScript : MonoBehaviour
+{
+    public Rigidbody rb;
+
+    void Reset()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+}";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task GetComponentInOnValidateMessage()
+	{
+		const string test = @"
+using UnityEngine;
+
+public class PlayerScript : MonoBehaviour
+{
+    public Rigidbody rb;
+
+    void OnValidate()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+}";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task GetComponentInResetOverload()
+	{
+		const string test = @"
+using UnityEngine;
+
+public class PlayerScript : MonoBehaviour
+{
+    public Rigidbody rb;
+
+    void Reset(int value)
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 14);
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+	}
 }
