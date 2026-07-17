@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Collections.Immutable;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -31,7 +30,6 @@ public class GameObjectIsStaticAnalyzer : DiagnosticAnalyzer
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	private static readonly string[] EditorOnlyMessages = ["OnValidate", "Reset"];
 	private static readonly Regex EditorFolderRegex = new(@"[/\\]Assets[/\\].*[/\\]Editor[/\\]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 	public override void Initialize(AnalysisContext context)
@@ -59,7 +57,7 @@ public class GameObjectIsStaticAnalyzer : DiagnosticAnalyzer
 		if (DirectiveHelper.IsInsideDirective(memberAccess, "UNITY_EDITOR"))
 			return;
 
-		if (IsInsideEditorOnlyMessage(memberAccess, context.SemanticModel))
+		if (memberAccess.IsInsideEditorOnlyMessage(context.SemanticModel))
 			return;
 
 		if (IsInsideEditorFolder(context))
@@ -72,22 +70,5 @@ public class GameObjectIsStaticAnalyzer : DiagnosticAnalyzer
 	{
 		var filePath = context.Node.SyntaxTree.FilePath;
 		return !string.IsNullOrWhiteSpace(filePath) && EditorFolderRegex.IsMatch(filePath);
-	}
-
-	private static bool IsInsideEditorOnlyMessage(SyntaxNode node, SemanticModel semanticModel)
-	{
-		var methodSyntax = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (methodSyntax == null)
-			return false;
-
-		var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax);
-		if (methodSymbol == null)
-			return false;
-
-		var scriptInfo = new ScriptInfo(methodSymbol.ContainingType);
-		if (!scriptInfo.HasMessages)
-			return false;
-
-		return EditorOnlyMessages.Contains(methodSymbol.Name) && scriptInfo.IsMessage(methodSymbol);
 	}
 }
