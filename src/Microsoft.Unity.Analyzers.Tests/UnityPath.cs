@@ -117,7 +117,14 @@ internal static class UnityPath
 
 	private static void RegisterUnityInstallation(string path)
 	{
-		if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
+		if (!string.IsNullOrEmpty(path) && Directory.Exists(path) && HasManagedAssemblies(path))
 			_unityInstallations.Add(path);
+	}
+
+	private static bool HasManagedAssemblies(string path)
+	{
+		// Skip partial installations (uninstall leftovers, stripped editors)
+		return File.Exists(Path.Combine(path, "Managed", "UnityEditor.dll"))
+			|| File.Exists(Path.Combine(path, "Resources", "Scripting", "Managed", "UnityEditor.dll"));
 	}
 }
