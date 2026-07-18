@@ -736,6 +736,15 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Unity Input System invokes input messages..
+        /// </summary>
+        internal static string InputSystemMessageSuppressorJustification {
+            get {
+                return ResourceManager.GetString("InputSystemMessageSuppressorJustification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fix method signature.
         /// </summary>
         internal static string LoadAttributeMethodCodeFixTitle {

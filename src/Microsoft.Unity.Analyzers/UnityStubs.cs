@@ -628,6 +628,18 @@ namespace UnityEngine.EventSystems
 	}
 }
 
+namespace UnityEngine.InputSystem
+{
+	class InputValue { }
+
+	class InputAction
+	{
+		public struct CallbackContext { }
+	}
+
+	class PlayerInput : MonoBehaviour { }
+}
+
 namespace UnityEngine.Networking
 {
 	class NetworkReader { }

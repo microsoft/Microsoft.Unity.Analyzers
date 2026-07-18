@@ -466,6 +466,9 @@
   <data name="InputGetKeyDiagnosticTitle" xml:space="preserve">
     <value>Input.GetKey overloads with KeyCode argument</value>
   </data>
+  <data name="InputSystemMessageSuppressorJustification" xml:space="preserve">
+    <value>The Unity Input System invokes input messages.</value>
+  </data>
   <data name="TryGetComponentCodeFixTitle" xml:space="preserve">
     <value>Use TryGetComponent instead</value>
   </data>
