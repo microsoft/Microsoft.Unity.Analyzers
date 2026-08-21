@@ -5,6 +5,8 @@ updates:
     directory: "/.github"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
   - package-ecosystem: "nuget"
     directory: "/src"
     schedule:
