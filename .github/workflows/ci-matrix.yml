@@ -63,10 +63,10 @@ jobs:
 
     steps:
     - name: Checkout 
-      uses: actions/checkout@v5
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
       
     - name: Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
       with:
         dotnet-version: '10.0.x'
 
@@ -77,14 +77,14 @@ jobs:
       run: ${{ matrix.install }}
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
+      uses: github/codeql-action/init@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4.37.8
       if: ${{ contains(matrix.os, 'windows') }}
 
     - name: Build
       run: dotnet build -c Debug ./src/Microsoft.Unity.Analyzers.slnx /p:UseSharedCompilation=false
           
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
+      uses: github/codeql-action/analyze@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28 # v4.37.8
       if: ${{ contains(matrix.os, 'windows') }}
 
     - name: Test context (main)
