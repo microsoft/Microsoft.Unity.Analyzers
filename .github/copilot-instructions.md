@@ -129,8 +129,8 @@ When you need to search the unity API, you can use :
 # Build
 dotnet build .\src\Microsoft.Unity.Analyzers.slnx
 
-# Run tests
-dotnet test .\src\Microsoft.Unity.Analyzers.slnx --filter FullyQualifiedName!~ConsistencyTests
+# Run tests with Microsoft Testing Platform
+dotnet .\src\Microsoft.Unity.Analyzers.Tests\bin\Debug\net10.0\Microsoft.Unity.Analyzers.Tests.dll --retry-failed-tests 3 --filter-not-class Microsoft.Unity.Analyzers.Tests.ConsistencyTests
 ```
 
 Indeed we want to skip ConsistencyTests when developping new diagnostics because those tests are doing http-requests on documentation.

@@ -32,8 +32,8 @@ For unit-testing, we require Unity to be installed. We recommend using the lates
 Compiling the solution:
 `dotnet build .\src\Microsoft.Unity.Analyzers.slnx`
 
-Running the unit tests:
-`dotnet test .\src\Microsoft.Unity.Analyzers.slnx`
+Running the unit tests with Microsoft Testing Platform and retrying failures up to three times:
+`dotnet .\src\Microsoft.Unity.Analyzers.Tests\bin\Debug\net10.0\Microsoft.Unity.Analyzers.Tests.dll --retry-failed-tests 3`
 
 You can open `.\src\Microsoft.Unity.Analyzers.slnx` in your favorite IDE to work on the analyzers and run/debug the tests.
 
@@ -91,6 +91,4 @@ Example for creating `CustomSuppressor` and `CustomSuppressorTests` classes :
 
 This project welcomes contributions and suggestions.
 Please have a look at our [Guidelines](CONTRIBUTING.md) for contributing.
-
-
 
