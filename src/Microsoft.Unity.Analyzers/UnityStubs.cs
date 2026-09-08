@@ -824,4 +824,9 @@ namespace Cysharp.Threading.Tasks
 	class UniTaskVoid { }
 }
 
+namespace TMPro
+{
+	class TMP_Text { }
+}
+
 #pragma warning enable

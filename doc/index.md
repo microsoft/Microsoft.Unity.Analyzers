@@ -45,6 +45,7 @@ ID | Title | Category
 [UNT0041](UNT0041.md) | Use `Animator.StringToHash` for repeated `Animator` method calls | Performance
 [UNT0042](UNT0042.md) | `Mesh` array property accessed in loop | Performance
 [UNT0043](UNT0043.md) | Possible typo in conditional compilation symbol | Correctness
+[UNT0044](UNT0044.md) | Avoid temporary strings when setting TextMeshPro text | Performance
 
 # Diagnostic Suppressors
 
@@ -73,4 +74,3 @@ ID | Suppressed ID | Justification
 [USP0021](USP0021.md) | IDE0041 | Prefer reference equality
 [USP0022](USP0022.md) | IDE0270 | Unity objects should not use if null coalescing
 [USP0023](USP0023.md) | IDE1006 | The Unity runtime invokes Unity messages
-
