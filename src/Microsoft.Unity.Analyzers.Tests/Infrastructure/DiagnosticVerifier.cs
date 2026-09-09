@@ -24,6 +24,9 @@ public abstract class DiagnosticVerifier
 	private const string CSharpDefaultFileExt = "cs";
 	private const string TestProjectName = "TestProject";
 
+	private static readonly Lazy<ImmutableArray<MetadataReference>> _references = new(
+		() => [.. UnityAssemblies().Select(path => MetadataReference.CreateFromFile(path))]);
+
 	protected abstract DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer();
 
 	protected virtual IEnumerable<DiagnosticAnalyzer> GetRelatedAnalyzers(DiagnosticAnalyzer analyzer)
@@ -340,14 +343,17 @@ public abstract class DiagnosticVerifier
 		var managed = Path.Combine(scripting, "Managed");
 
 		yield return Path.Combine(managed, "UnityEditor.dll");
-		yield return Path.Combine(managed, "UnityEngine.dll");
 
-		var monolib = Path.Combine(scripting, "MonoBleedingEdge", "lib", "mono", "4.7.1-api");
-		yield return Path.Combine(monolib, "mscorlib.dll");
-		yield return Path.Combine(monolib, "System.dll");
+		// Package assemblies reference Unity's modules rather than the combined reference assembly.
+		foreach (var assembly in Directory.EnumerateFiles(Path.Combine(managed, "UnityEngine"), "*.dll"))
+			yield return assembly;
 
-		var facades = Path.Combine(monolib, "Facades");
-		yield return Path.Combine(facades, "netstandard.dll");
+		var netstandard = Path.Combine(scripting, "NetStandard");
+		yield return Path.Combine(netstandard, "ref", "2.1.0", "netstandard.dll");
+
+		var shims = Path.Combine(netstandard, "compat", "2.1.0", "shims", "netfx");
+		foreach (var assembly in Directory.EnumerateFiles(shims, "*.dll"))
+			yield return assembly;
 
 		// Use the 2D template to get additional assemblies, normally acquired through Package Manager
 		var libcache = Path.Combine(resources, "PackageManager", "ProjectTemplates", "libcache");
@@ -355,6 +361,8 @@ public abstract class DiagnosticVerifier
 		var template2dScriptAssemblies = Path.Combine(template2d, "ScriptAssemblies");
 
 		yield return Path.Combine(template2dScriptAssemblies, "Unity.Mathematics.dll");
+		yield return Path.Combine(template2dScriptAssemblies, "UnityEngine.UI.dll");
+		yield return Path.Combine(template2dScriptAssemblies, "Unity.TextMeshPro.dll");
 	}
 
 	private static Project CreateProject(AnalyzerVerificationContext context, string[] sources)
@@ -365,7 +373,7 @@ public abstract class DiagnosticVerifier
 			.CurrentSolution
 			.AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp);
 
-		solution = UnityAssemblies().Aggregate(solution, (current, dll) => current.AddMetadataReference(projectId, MetadataReference.CreateFromFile(dll)));
+		solution = solution.AddMetadataReferences(projectId, _references.Value);
 
 		var parseOptions = new CSharpParseOptions(context.LanguageVersion)
 			.WithPreprocessorSymbols(context.PreprocessorSymbols);

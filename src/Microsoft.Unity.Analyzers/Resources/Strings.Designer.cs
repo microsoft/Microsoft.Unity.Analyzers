@@ -19,7 +19,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -1275,6 +1275,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to TextMeshPro SetText overloads can consume buffers or format numeric arguments without creating a temporary string. Review formatting, preprocessing, and update behavior before switching overloads..
+        /// </summary>
+        internal static string TextMeshProSetTextDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("TextMeshProSetTextDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Consider &apos;{0}&apos; to avoid creating a temporary string.
+        /// </summary>
+        internal static string TextMeshProSetTextDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("TextMeshProSetTextDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Avoid temporary strings when setting TextMeshPro text.
+        /// </summary>
+        internal static string TextMeshProSetTextDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("TextMeshProSetTextDiagnosticTitle", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Do not use Throw expressions with Unity objects..
         /// </summary>

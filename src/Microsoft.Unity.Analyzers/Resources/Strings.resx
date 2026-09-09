@@ -690,4 +690,14 @@
   <data name="ConditionalCompilationSymbolTypoDiagnosticTitle" xml:space="preserve">
     <value>Possible typo in conditional compilation symbol</value>
   </data>
+  <data name="TextMeshProSetTextDiagnosticDescription" xml:space="preserve">
+    <value>TextMeshPro SetText overloads can consume buffers or format numeric arguments without creating a temporary string. Review formatting, preprocessing, and update behavior before switching overloads.</value>
+  </data>
+  <data name="TextMeshProSetTextDiagnosticMessageFormat" xml:space="preserve">
+    <value>Consider '{0}' to avoid creating a temporary string</value>
+    <comment>{0} is the suggested TextMeshPro SetText overload</comment>
+  </data>
+  <data name="TextMeshProSetTextDiagnosticTitle" xml:space="preserve">
+    <value>Avoid temporary strings when setting TextMeshPro text</value>
+  </data>
 </root>
