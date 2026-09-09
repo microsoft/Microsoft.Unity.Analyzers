@@ -700,4 +700,40 @@
   <data name="TextMeshProSetTextDiagnosticTitle" xml:space="preserve">
     <value>Avoid temporary strings when setting TextMeshPro text</value>
   </data>
+  <data name="AsyncVoidMethodDiagnosticDescription" xml:space="preserve">
+    <value>Async void methods cannot be awaited and do not propagate exceptions to their callers. Return a task-like type unless a callback contract requires void.</value>
+  </data>
+  <data name="AsyncVoidMethodDiagnosticMessageFormat" xml:space="preserve">
+    <value>Async method '{0}' should return a task-like type instead of void</value>
+  </data>
+  <data name="AsyncVoidMethodDiagnosticTitle" xml:space="preserve">
+    <value>Avoid async void methods</value>
+  </data>
+  <data name="AsyncVoidDelegateDiagnosticDescription" xml:space="preserve">
+    <value>An async lambda or anonymous method converted to a void-returning delegate cannot be awaited and does not propagate exceptions to its caller.</value>
+  </data>
+  <data name="AsyncVoidDelegateDiagnosticMessageFormat" xml:space="preserve">
+    <value>Async delegate returns void instead of a task-like type</value>
+  </data>
+  <data name="AsyncVoidDelegateDiagnosticTitle" xml:space="preserve">
+    <value>Avoid async void delegates</value>
+  </data>
+  <data name="TaskToStringDiagnosticDescription" xml:space="preserve">
+    <value>Converting a Task, ValueTask, UniTask, or Unity Awaitable to a string does not await it. Await the operation and use its result, or explicitly select task metadata for logging.</value>
+  </data>
+  <data name="TaskToStringDiagnosticMessageFormat" xml:space="preserve">
+    <value>A task-like value is converted to a string instead of its result</value>
+  </data>
+  <data name="TaskToStringDiagnosticTitle" xml:space="preserve">
+    <value>Do not convert task-like values to strings</value>
+  </data>
+  <data name="NullTaskReturnDiagnosticDescription" xml:space="preserve">
+    <value>Awaiting a null Task or Unity Awaitable throws. Return a non-null operation rather than null or the default value of a reference-type task.</value>
+  </data>
+  <data name="NullTaskReturnDiagnosticMessageFormat" xml:space="preserve">
+    <value>Returning a null task-like value can cause an exception when awaited</value>
+  </data>
+  <data name="NullTaskReturnDiagnosticTitle" xml:space="preserve">
+    <value>Do not return null for task-like types</value>
+  </data>
 </root>

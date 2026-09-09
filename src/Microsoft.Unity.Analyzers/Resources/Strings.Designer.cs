@@ -124,6 +124,60 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An async lambda or anonymous method converted to a void-returning delegate cannot be awaited and does not propagate exceptions to its caller..
+        /// </summary>
+        internal static string AsyncVoidDelegateDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("AsyncVoidDelegateDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Async delegate returns void instead of a task-like type.
+        /// </summary>
+        internal static string AsyncVoidDelegateDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("AsyncVoidDelegateDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Avoid async void delegates.
+        /// </summary>
+        internal static string AsyncVoidDelegateDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("AsyncVoidDelegateDiagnosticTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Async void methods cannot be awaited and do not propagate exceptions to their callers. Return a task-like type unless a callback contract requires void..
+        /// </summary>
+        internal static string AsyncVoidMethodDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("AsyncVoidMethodDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Async method &apos;{0}&apos; should return a task-like type instead of void.
+        /// </summary>
+        internal static string AsyncVoidMethodDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("AsyncVoidMethodDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Avoid async void methods.
+        /// </summary>
+        internal static string AsyncVoidMethodDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("AsyncVoidMethodDiagnosticTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Cache WaitForSeconds invocations.
         /// </summary>
         internal static string CacheYieldInstructionAnalyzerCodeFixTitle {
@@ -961,6 +1015,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Awaiting a null Task or Unity Awaitable throws. Return a non-null operation rather than null or the default value of a reference-type task..
+        /// </summary>
+        internal static string NullTaskReturnDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("NullTaskReturnDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Returning a null task-like value can cause an exception when awaited.
+        /// </summary>
+        internal static string NullTaskReturnDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("NullTaskReturnDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Do not return null for task-like types.
+        /// </summary>
+        internal static string NullTaskReturnDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("NullTaskReturnDiagnosticTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Avoid using allocating versions of Physics functions..
         /// </summary>
         internal static string PhysicsAllocMethodUsageDiagnosticDescription {
@@ -1275,6 +1356,33 @@ namespace Microsoft.Unity.Analyzers.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Converting a Task, ValueTask, UniTask, or Unity Awaitable to a string does not await it. Await the operation and use its result, or explicitly select task metadata for logging..
+        /// </summary>
+        internal static string TaskToStringDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("TaskToStringDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A task-like value is converted to a string instead of its result.
+        /// </summary>
+        internal static string TaskToStringDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("TaskToStringDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Do not convert task-like values to strings.
+        /// </summary>
+        internal static string TaskToStringDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("TaskToStringDiagnosticTitle", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to TextMeshPro SetText overloads can consume buffers or format numeric arguments without creating a temporary string. Review formatting, preprocessing, and update behavior before switching overloads..
         /// </summary>

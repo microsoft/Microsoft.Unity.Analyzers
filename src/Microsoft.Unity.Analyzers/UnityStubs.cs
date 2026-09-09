@@ -28,6 +28,7 @@ namespace UnityEngine
 	class ContextMenuItemAttribute : Attribute { }
 	class ControllerColliderHit { }
 	class Cubemap { }
+	class Debug { }
 	class GameObject { }
 	class HideInInspector : Attribute { }
 	class Joint2D { }

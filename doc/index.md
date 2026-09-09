@@ -46,6 +46,10 @@ ID | Title | Category
 [UNT0042](UNT0042.md) | `Mesh` array property accessed in loop | Performance
 [UNT0043](UNT0043.md) | Possible typo in conditional compilation symbol | Correctness
 [UNT0044](UNT0044.md) | Avoid temporary strings when setting TextMeshPro text | Performance
+[UNT0045](UNT0045.md) | Avoid async void methods | Correctness
+[UNT0046](UNT0046.md) | Avoid async void delegates | Correctness
+[UNT0047](UNT0047.md) | Do not convert task-like values to strings | Correctness
+[UNT0048](UNT0048.md) | Do not return null for task-like types | Correctness
 
 # Diagnostic Suppressors
 

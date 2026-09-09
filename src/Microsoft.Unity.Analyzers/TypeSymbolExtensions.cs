@@ -5,7 +5,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Unity.Analyzers;
@@ -33,6 +35,26 @@ internal static class TypeSymbolExtensions
 
 	extension(ITypeSymbol symbol)
 	{
+		public bool IsTaskLike()
+		{
+			if (symbol is ITypeParameterSymbol parameter)
+				return HasTaskLikeConstraint(parameter, new HashSet<ITypeParameterSymbol>(SymbolEqualityComparer.Default));
+
+			for (var current = symbol; current != null; current = current.BaseType)
+			{
+				if (current is not INamedTypeSymbol { ContainingType: null, Arity: 0 or 1 } named)
+					continue;
+
+				if (HasNameAndNamespace(named, typeof(Task))
+					|| HasNameAndNamespace(named, typeof(ValueTask))
+					|| HasNameAndNamespace(named, typeof(UnityEngine.Awaitable))
+					|| HasNameAndNamespace(named, typeof(Cysharp.Threading.Tasks.UniTask)))
+					return true;
+			}
+
+			return false;
+		}
+
 		public bool IsAwaitableOf(Type type)
 		{
 			if (symbol is not INamedTypeSymbol named)
@@ -104,28 +126,44 @@ internal static class TypeSymbolExtensions
 		}
 	}
 
-	private static bool IsBuiltinAwaitableOf(INamedTypeSymbol typeSymbol, Type type)
+	private static bool HasTaskLikeConstraint(ITypeParameterSymbol parameter, HashSet<ITypeParameterSymbol> visited)
 	{
-		return IsAwaitableOf(typeSymbol, type, typeof(UnityEngine.Awaitable));
+		if (!visited.Add(parameter))
+			return false;
+
+		foreach (var constraint in parameter.ConstraintTypes)
+		{
+			if (constraint is ITypeParameterSymbol other
+				? HasTaskLikeConstraint(other, visited)
+				: constraint.IsTaskLike())
+				return true;
+		}
+
+		return false;
+	}
+
+	private static bool IsBuiltinAwaitableOf(INamedTypeSymbol typeSymbol)
+	{
+		return HasNameAndNamespace(typeSymbol, typeof(UnityEngine.Awaitable));
 	}
 
 	private static bool IsUniTaskAwaitableOf(INamedTypeSymbol typeSymbol, Type type)
 	{
-		return IsAwaitableOf(typeSymbol, type, type == typeof(void) ? typeof(Cysharp.Threading.Tasks.UniTaskVoid) : typeof(Cysharp.Threading.Tasks.UniTask));
+		return HasNameAndNamespace(typeSymbol, type == typeof(void) ? typeof(Cysharp.Threading.Tasks.UniTaskVoid) : typeof(Cysharp.Threading.Tasks.UniTask));
 	}
 
-	private static bool IsAwaitableOf(INamedTypeSymbol typeSymbol, Type _, Type awaiter)
+	private static bool HasNameAndNamespace(INamedTypeSymbol typeSymbol, Type type)
 	{
-		// We do not want to use typeSymbol.Matches(awaiter) here, to prevent infinite recursion
-		if (typeSymbol.Name != awaiter.Name)
+		// Matches also checks awaitable result types, so calling it here would recurse.
+		if (typeSymbol.Name != type.Name)
 			return false;
 
-		return typeSymbol.ContainingNamespace.ToDisplayString() == awaiter.Namespace;
+		return typeSymbol.ContainingNamespace.ToDisplayString() == type.Namespace;
 	}
 
 	private static bool IsAwaitableOf(INamedTypeSymbol typeSymbol, Type type)
 	{
-		return IsBuiltinAwaitableOf(typeSymbol, type)
+		return IsBuiltinAwaitableOf(typeSymbol)
 			   || IsUniTaskAwaitableOf(typeSymbol, type);
 	}
 }

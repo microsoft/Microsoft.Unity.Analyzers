@@ -411,6 +411,47 @@ class Camera : Editor
 	}
 
 	[Fact]
+	public async Task UniTaskMessageSignatures()
+	{
+		const string source = @"
+using System.Collections;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEditor;
+
+class Script : MonoBehaviour
+{
+    private UniTaskVoid Awake() => default;
+    private UniTask<IEnumerator> Start() => default;
+}
+
+class Processor : AssetPostprocessor
+{
+    private static UniTask<bool> OnPreGeneratingCSProjectFiles() => default;
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(source + AsyncTestSources.UniTaskTypes);
+	}
+
+	[Fact]
+	public async Task TaskLikeRecognitionDoesNotBroadenUnityMessageSignatures()
+	{
+		const string source = @"
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+class Script : MonoBehaviour
+{
+    private UniTask Start() => default;
+}
+";
+
+		await VerifyCSharpDiagnosticAsync(source + AsyncTestSources.UniTaskTypes,
+			ExpectDiagnostic().WithLocation(7, 21).WithArguments("Start"));
+	}
+
+	[Fact]
 	public async Task MessageSignatureTrivia()
 	{
 		const string test = @"
