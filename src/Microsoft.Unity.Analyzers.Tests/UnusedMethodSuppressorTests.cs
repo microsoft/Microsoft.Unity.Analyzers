@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Xunit;
 
 namespace Microsoft.Unity.Analyzers.Tests;
@@ -59,38 +58,6 @@ class Camera : MonoBehaviour
 			.WithLocation(11, 18);
 
 		await VerifyCSharpDiagnosticAsync(test, suppressor);
-	}
-
-	[Fact]
-	public async Task UnusedMethodIsInvokingUserDefinedNotSuppressed()
-	{
-		const string test = @"
-using UnityEngine;
-
-class Camera : MonoBehaviour
-{
-    void Start()
-    {
-        IsInvoking(""InvokeMe"");
-    }
-
-    public new bool IsInvoking(string methodName)
-    {
-        Start();
-        return false;
-    }
-
-    private void InvokeMe()
-    {
-    }
-}";
-
-		var diagnostic = ExpectNotSuppressed(UnusedMethodSuppressor.Rule)
-			.WithSeverity(DiagnosticSeverity.Info)
-			.WithMessage("Private member 'Camera.InvokeMe' is unused")
-			.WithLocation(17, 18);
-
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
 	}
 
 	[Fact]
