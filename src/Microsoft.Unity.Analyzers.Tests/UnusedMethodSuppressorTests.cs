@@ -36,6 +36,31 @@ class Camera : MonoBehaviour
 	}
 
 	[Fact]
+	public async Task UnusedMethodIsInvokingSuppressed()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    void Start()
+    {
+        IsInvoking(""InvokeMe"");
+    }
+
+    private void InvokeMe()
+    {
+        Start();
+    }
+}";
+
+		var suppressor = ExpectSuppressor(UnusedMethodSuppressor.Rule)
+			.WithLocation(11, 18);
+
+		await VerifyCSharpDiagnosticAsync(test, suppressor);
+	}
+
+	[Fact]
 	public async Task UnusedMethodMixedTypes()
 	{
 		const string test = @"

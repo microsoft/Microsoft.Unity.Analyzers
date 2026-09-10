@@ -45,7 +45,7 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 	}
 
 	// TODO we cannot add this to our stubs/KnownMethods so far (else they will be matched as Unity messages)
-	internal static readonly HashSet<string> InvokeMethodNames = ["Invoke", "InvokeRepeating", "CancelInvoke"];
+	internal static readonly HashSet<string> InvokeMethodNames = ["Invoke", "InvokeRepeating", "CancelInvoke", "IsInvoking"];
 	internal static readonly HashSet<string> CoroutineMethodNames = ["StartCoroutine", "StopCoroutine"];
 
 	private static bool InvocationMatches(SyntaxNode node)
