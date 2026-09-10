@@ -916,6 +916,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use non-allocating access.
+        /// </summary>
+        internal static string NonAllocatingArrayAccessCodeFixTitle {
+            get {
+                return ResourceManager.GetString("NonAllocatingArrayAccessCodeFixTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use non-allocating Unity APIs instead of allocating an array to read its length or an element..
+        /// </summary>
+        internal static string NonAllocatingArrayAccessDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("NonAllocatingArrayAccessDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use &apos;{0}&apos; instead of &apos;{1}&apos; to avoid allocating an array..
+        /// </summary>
+        internal static string NonAllocatingArrayAccessDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("NonAllocatingArrayAccessDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use non-allocating array access.
+        /// </summary>
+        internal static string NonAllocatingArrayAccessDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("NonAllocatingArrayAccessDiagnosticTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Use the generic form of GetComponent.
         /// </summary>
         internal static string NonGenericGetComponentCodeFixTitle {

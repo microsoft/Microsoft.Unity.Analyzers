@@ -700,4 +700,16 @@
   <data name="TextMeshProSetTextDiagnosticTitle" xml:space="preserve">
     <value>Avoid temporary strings when setting TextMeshPro text</value>
   </data>
+  <data name="NonAllocatingArrayAccessCodeFixTitle" xml:space="preserve">
+    <value>Use non-allocating access</value>
+  </data>
+  <data name="NonAllocatingArrayAccessDiagnosticDescription" xml:space="preserve">
+    <value>Use non-allocating Unity APIs instead of allocating an array to read its length or an element.</value>
+  </data>
+  <data name="NonAllocatingArrayAccessDiagnosticMessageFormat" xml:space="preserve">
+    <value>Use '{0}' instead of '{1}' to avoid allocating an array.</value>
+  </data>
+  <data name="NonAllocatingArrayAccessDiagnosticTitle" xml:space="preserve">
+    <value>Use non-allocating array access</value>
+  </data>
 </root>
