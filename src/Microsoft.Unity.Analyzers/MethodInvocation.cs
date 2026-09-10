@@ -45,7 +45,7 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 	}
 
 	// TODO we cannot add this to our stubs/KnownMethods so far (else they will be matched as Unity messages)
-	internal static readonly HashSet<string> InvokeMethodNames = ["Invoke", "InvokeRepeating", "CancelInvoke"];
+	internal static readonly HashSet<string> InvokeMethodNames = ["Invoke", "InvokeRepeating", "CancelInvoke", "IsInvoking"];
 	internal static readonly HashSet<string> CoroutineMethodNames = ["StartCoroutine", "StopCoroutine"];
 
 	private static bool InvocationMatches(SyntaxNode node)
@@ -64,7 +64,7 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 		}
 	}
 
-	internal static bool InvocationMatches(InvocationExpressionSyntax ies, [NotNullWhen(true)] out string? argument)
+	internal static bool InvocationMatches(InvocationExpressionSyntax ies, SemanticModel model, [NotNullWhen(true)] out string? argument)
 	{
 		argument = null;
 
@@ -76,7 +76,17 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 		if (args.Count <= 0)
 			return false;
 
-		if (args.First().Expression is not LiteralExpressionSyntax les)
+		if (args.First().Expression is not LiteralExpressionSyntax les || !les.IsKind(SyntaxKind.StringLiteralExpression))
+			return false;
+
+		if (model.GetSymbolInfo(ies.Expression).Symbol is not IMethodSymbol methodSymbol)
+			return false;
+
+		var typeSymbol = methodSymbol.ContainingType;
+		if (!typeSymbol.Extends(typeof(UnityEngine.MonoBehaviour)))
+			return false;
+
+		if (methodSymbol.Name == "IsInvoking" && !typeSymbol.Matches(typeof(UnityEngine.MonoBehaviour)))
 			return false;
 
 		argument = les.Token.ValueText;
@@ -93,15 +103,7 @@ public class MethodInvocationAnalyzer : DiagnosticAnalyzer
 		if (options == null || options.LanguageVersion < LanguageVersion.CSharp6) // we want nameof support
 			return;
 
-		if (!InvocationMatches(invocation, out string? argument))
-			return;
-
-		var model = context.SemanticModel;
-		if (model.GetSymbolInfo(invocation.Expression).Symbol is not IMethodSymbol methodSymbol)
-			return;
-
-		var typeSymbol = methodSymbol.ContainingType;
-		if (!typeSymbol.Extends(typeof(UnityEngine.MonoBehaviour)))
+		if (!InvocationMatches(invocation, context.SemanticModel, out string? argument))
 			return;
 
 		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), argument));

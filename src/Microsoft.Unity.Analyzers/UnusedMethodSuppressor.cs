@@ -55,7 +55,7 @@ public class UnusedMethodSuppressor : DiagnosticSuppressor
 			.Select(location => location.SourceTree?.GetRoot(context.CancellationToken).FindNode(location.SourceSpan))
 			.SelectMany(typeNode => typeNode?.DescendantNodes())
 			.OfType<InvocationExpressionSyntax>()
-			.Any(e => MethodInvocationAnalyzer.InvocationMatches(e, out string? argument) && argument == methodSymbol.Name);
+			.Any(e => MethodInvocationAnalyzer.InvocationMatches(e, context.GetSemanticModel(e.SyntaxTree), out string? argument) && argument == methodSymbol.Name);
 
 		if (report)
 			context.ReportSuppression(Suppression.Create(Rule, diagnostic));

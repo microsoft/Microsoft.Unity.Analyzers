@@ -11,6 +11,32 @@ namespace Microsoft.Unity.Analyzers.Tests;
 public class MethodInvocationDirectCallTests : BaseCodeFixVerifierTest<MethodInvocationAnalyzer, MethodInvocationDirectCallCodeFix>
 {
 	[Fact]
+	public async Task TestIsInvokingDoesNotOfferDirectCall()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{
+    bool HasPendingInvoke()
+    {
+        return IsInvoking(""InvokeMe"");
+    }
+
+    private void InvokeMe()
+    {
+    }
+}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 16)
+			.WithArguments("InvokeMe");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpFixAsync(test, test);
+	}
+
+	[Fact]
 	public async Task TestStartCoroutine()
 	{
 		const string test = @"

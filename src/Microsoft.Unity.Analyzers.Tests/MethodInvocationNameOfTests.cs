@@ -200,6 +200,135 @@ class Camera : MonoBehaviour
 	}
 
 
+	[Theory]
+	[InlineData("IsInvoking(\"InvokeMe\")", "IsInvoking(nameof(InvokeMe))")]
+	[InlineData("this.IsInvoking(\"InvokeMe\")", "this.IsInvoking(nameof(InvokeMe))")]
+	[InlineData("IsInvoking(methodName: \"InvokeMe\")", "IsInvoking(nameof(InvokeMe))")]
+	[InlineData("IsInvoking(@\"InvokeMe\")", "IsInvoking(nameof(InvokeMe))")]
+	[InlineData("IsInvoking(/* inner */ \"InvokeMe\" /* outer */)", "IsInvoking(/* inner */ nameof(InvokeMe) /* outer */)")]
+	public async Task TestIsInvoking(string expression, string fixedExpression)
+	{
+		var test = $@"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{{
+    bool HasPendingInvoke()
+    {{
+        return {expression};
+    }}
+
+    private void InvokeMe()
+    {{
+    }}
+}}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(8, 16)
+			.WithArguments("InvokeMe");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpFixAsync(test, test.Replace(expression, fixedExpression));
+	}
+
+	[Theory]
+	[InlineData("IsInvoking()")]
+	[InlineData("IsInvoking(nameof(InvokeMe))")]
+	[InlineData("IsInvoking(methodName)")]
+	[InlineData("IsInvoking($\"{methodName}\")")]
+	[InlineData("IsInvoking(null)")]
+	public async Task TestIsInvokingWithoutLiteralMethodName(string expression)
+	{
+		var test = $@"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{{
+    bool HasPendingInvoke(string methodName)
+    {{
+        return {expression};
+    }}
+
+    private void InvokeMe()
+    {{
+    }}
+}}";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Theory]
+	[InlineData("class Camera", "")]
+	[InlineData("class Camera : UnityEngine.MonoBehaviour", "new ")]
+	public async Task TestIsInvokingUserDefined(string declaration, string modifier)
+	{
+		var test = $@"
+{declaration}
+{{
+    bool HasPendingInvoke()
+    {{
+        return IsInvoking(""InvokeMe"");
+    }}
+
+    public {modifier}bool IsInvoking(string methodName)
+    {{
+        return false;
+    }}
+}}";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
+	[Fact]
+	public async Task TestIsInvokingMixedTypes()
+	{
+		const string test = @"
+using UnityEngine;
+
+class A : MonoBehaviour
+{
+    private B b = null;
+
+    bool HasPendingInvoke()
+    {
+        return b.IsInvoking(""Foo"");
+    }
+
+    class B : MonoBehaviour
+    {
+        void Foo()
+        {
+        }
+    }
+}";
+
+		var diagnostic = ExpectDiagnostic()
+			.WithLocation(10, 16)
+			.WithArguments("Foo");
+
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpFixAsync(test, test);
+	}
+
+	[Theory]
+	[InlineData("SendMessage")]
+	[InlineData("BroadcastMessage")]
+	public async Task TestMessageDispatchNotReported(string methodName)
+	{
+		var test = $@"
+using UnityEngine;
+
+class Camera : MonoBehaviour
+{{
+    void Start()
+    {{
+        {methodName}(""OnMessage"");
+    }}
+}}";
+
+		await VerifyCSharpDiagnosticAsync(test);
+	}
+
 	[Fact]
 	public async Task TestInvokeRepeatingThis()
 	{
