@@ -1276,6 +1276,42 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cache shader property ID.
+        /// </summary>
+        internal static string ShaderPropertyToIDCodeFixTitle {
+            get {
+                return ResourceManager.GetString("ShaderPropertyToIDCodeFixTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cache repeated Shader.PropertyToID calls with the same string literal in a static readonly field..
+        /// </summary>
+        internal static string ShaderPropertyToIDDiagnosticDescription {
+            get {
+                return ResourceManager.GetString("ShaderPropertyToIDDiagnosticDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cache the shader property ID for &apos;{0}&apos; instead of calling Shader.PropertyToID repeatedly..
+        /// </summary>
+        internal static string ShaderPropertyToIDDiagnosticMessageFormat {
+            get {
+                return ResourceManager.GetString("ShaderPropertyToIDDiagnosticMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cache repeated Shader.PropertyToID calls.
+        /// </summary>
+        internal static string ShaderPropertyToIDDiagnosticTitle {
+            get {
+                return ResourceManager.GetString("ShaderPropertyToIDDiagnosticTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Use CompareTag method.
         /// </summary>
         internal static string TagComparisonCodeFixTitle {
