@@ -41,7 +41,8 @@ public class NonAllocatingArrayAccessAnalyzer : DiagnosticAnalyzer
 	private static readonly Dictionary<string, (Type[] Types, string Count, string Element)> Candidates = new()
 	{
 		["contacts"] = ([typeof(UnityEngine.Collision), typeof(UnityEngine.Collision2D)], "contactCount", "GetContact"),
-		["touches"] = ([typeof(UnityEngine.Input)], "touchCount", "GetTouch")
+		["touches"] = ([typeof(UnityEngine.Input)], "touchCount", "GetTouch"),
+		["accelerationEvents"] = ([typeof(UnityEngine.Input)], "accelerationEventCount", "GetAccelerationEvent")
 	};
 
 	public override void Initialize(AnalysisContext context)
