@@ -480,4 +480,52 @@ class Test : MonoBehaviour
 
 		await VerifyCSharpFixAsync(test, fixedTest);
 	}
+
+	[Theory]
+	[InlineData("    private static readonly int AttackHash = 42;\n")]
+	[InlineData("    private static readonly int AttackHash = Animator.StringToHash(\"Idle\");\n")]
+	[InlineData("    private static readonly int AttackHash = Shader.PropertyToID(\"Attack\");\n")]
+	[InlineData("    private static int AttackHash = Animator.StringToHash(\"Attack\");\n")]
+	public async Task UnrelatedHashFieldIsNotReused(string member)
+	{
+		var test = $@"
+using UnityEngine;
+
+class Test : MonoBehaviour
+{{
+{member}    private Animator _animator = null;
+
+    void Start()
+    {{
+        _animator.Play(""Attack"");
+    }}
+}}
+";
+		var fixedTest = test.Replace(member,
+				"    private static readonly int AttackHash1 = Animator.StringToHash(\"Attack\");\n" + member)
+			.Replace("_animator.Play(\"Attack\")", "_animator.Play(AttackHash1)");
+
+		await VerifyCSharpFixAsync(test, fixedTest);
+	}
+
+	[Fact]
+	public async Task ExistingHashFieldWithDifferentName()
+	{
+		const string test = @"
+using UnityEngine;
+
+class Test : MonoBehaviour
+{
+    private static readonly int CachedAttack = Animator.StringToHash(""Attack"");
+    private Animator _animator = null;
+
+    void Start()
+    {
+        _animator.Play(""Attack"");
+    }
+}
+";
+
+		await VerifyCSharpFixAsync(test, test.Replace("_animator.Play(\"Attack\")", "_animator.Play(CachedAttack)"));
+	}
 }

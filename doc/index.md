@@ -47,6 +47,7 @@ ID | Title | Category
 [UNT0043](UNT0043.md) | Possible typo in conditional compilation symbol | Correctness
 [UNT0044](UNT0044.md) | Avoid temporary strings when setting TextMeshPro text | Performance
 [UNT0045](UNT0045.md) | Use non-allocating array access | Performance
+[UNT0046](UNT0046.md) | Cache Shader.PropertyToID calls | Performance
 
 # Diagnostic Suppressors
 

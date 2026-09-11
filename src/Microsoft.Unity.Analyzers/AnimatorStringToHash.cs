@@ -3,10 +3,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -142,74 +140,25 @@ public class AnimatorStringToHashCodeFix : CodeFixProvider
 		if (classDecl == null)
 			return document;
 
-		var fieldName = GenerateFieldName(literalValue);
-
-		var fieldExists = classDecl.Members
-			.OfType<FieldDeclarationSyntax>()
-			.SelectMany(f => f.Declaration.Variables)
-			.Any(v => v.Identifier.Text == fieldName);
+		var factory = methodSymbol.ContainingType.GetMembers("StringToHash")
+			.OfType<IMethodSymbol>()
+			.FirstOrDefault(m => m.IsStatic && m.Parameters.Length == 1
+				&& m.Parameters[0].Type.SpecialType == SpecialType.System_String
+				&& m.ReturnType.SpecialType == SpecialType.System_Int32);
+		if (factory == null)
+			return document;
 
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
-
-		if (!fieldExists)
-		{
-			// Create: private static readonly int FieldName = Animator.StringToHash("value");
-			var hashInvocation = SyntaxFactory.InvocationExpression(
-					SyntaxFactory.MemberAccessExpression(
-						SyntaxKind.SimpleMemberAccessExpression,
-						SyntaxFactory.IdentifierName(nameof(UnityEngine.Animator)),
-						SyntaxFactory.IdentifierName("StringToHash")))
-				.WithArgumentList(SyntaxFactory.ArgumentList(
-					SyntaxFactory.SingletonSeparatedList(
-						SyntaxFactory.Argument(
-							SyntaxFactory.LiteralExpression(
-								SyntaxKind.StringLiteralExpression,
-								SyntaxFactory.Literal(literalValue))))));
-
-			var fieldDecl = SyntaxFactory.FieldDeclaration(
-					SyntaxFactory.VariableDeclaration(
-						SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.IntKeyword)),
-						SyntaxFactory.SeparatedList([
-							SyntaxFactory.VariableDeclarator(
-								SyntaxFactory.Identifier(fieldName),
-								null,
-								SyntaxFactory.EqualsValueClause(hashInvocation))
-						])))
-				.AddModifiers(
-					SyntaxFactory.Token(SyntaxKind.PrivateKeyword),
-					SyntaxFactory.Token(SyntaxKind.StaticKeyword),
-					SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword));
-
-			editor.InsertMembers(classDecl, 0, [fieldDecl]);
-		}
+		var fieldName = CachedStringIdField.GetOrCreate(editor, classDecl, factory, literalValue, "Hash",
+			stringArgument.Expression, cancellationToken);
+		if (fieldName == null)
+			return document;
 
 		var newArgument = stringArgument
-			.WithExpression(SyntaxFactory.IdentifierName(fieldName))
-			.WithTrailingTrivia(stringArgument.GetTrailingTrivia());
+			.WithExpression(SyntaxFactory.IdentifierName(fieldName).WithTriviaFrom(stringArgument.Expression));
 
 		editor.ReplaceNode(stringArgument, newArgument);
 
 		return editor.GetChangedDocument();
-	}
-
-	private static string GenerateFieldName(string literalValue)
-	{
-		var cleaned = Regex.Replace(literalValue, @"[^a-zA-Z0-9]", " ");
-
-		var words = cleaned.Split([' '], StringSplitOptions.RemoveEmptyEntries);
-		var pascalCase = string.Concat(words.Select(ToPascalCaseWord));
-
-		if (!string.IsNullOrEmpty(pascalCase) && char.IsDigit(pascalCase[0]))
-			pascalCase = "_" + pascalCase;
-
-		return pascalCase + "Hash";
-	}
-
-	private static string ToPascalCaseWord(string word)
-	{
-		if (string.IsNullOrEmpty(word))
-			return "";
-
-		return char.ToUpperInvariant(word[0]) + word.Substring(1);
 	}
 }
