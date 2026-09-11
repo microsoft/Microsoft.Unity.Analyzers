@@ -14,15 +14,19 @@ public class NonAllocatingArrayAccessTests : BaseCodeFixVerifierTest<NonAllocati
 	[InlineData("Collision", "value.contacts.Length", "value.contactCount", "contacts", "contactCount")]
 	[InlineData("Collision2D", "value.contacts.Length", "value.contactCount", "contacts", "contactCount")]
 	[InlineData("object", "Input.touches.Length", "Input.touchCount", "touches", "touchCount")]
+	[InlineData("object", "Input.accelerationEvents.Length", "Input.accelerationEventCount", "accelerationEvents", "accelerationEventCount")]
 	[InlineData("Collision", "value.contacts[i]", "value.GetContact(i)", "contacts", "GetContact")]
 	[InlineData("Collision2D", "value.contacts[i]", "value.GetContact(i)", "contacts", "GetContact")]
 	[InlineData("object", "Input.touches[i]", "Input.GetTouch(i)", "touches", "GetTouch")]
+	[InlineData("object", "Input.accelerationEvents[i]", "Input.GetAccelerationEvent(i)", "accelerationEvents", "GetAccelerationEvent")]
 	[InlineData("Collision", "value.contacts[0].normal", "value.GetContact(0).normal", "contacts", "GetContact")]
 	[InlineData("Collision2D", "value.contacts[0].normal", "value.GetContact(0).normal", "contacts", "GetContact")]
 	[InlineData("object", "Input.touches[0].position", "Input.GetTouch(0).position", "touches", "GetTouch")]
+	[InlineData("object", "Input.accelerationEvents[0].acceleration", "Input.GetAccelerationEvent(0).acceleration", "accelerationEvents", "GetAccelerationEvent")]
 	[InlineData("Collision", "value.contacts[i++]", "value.GetContact(i++)", "contacts", "GetContact")]
 	[InlineData("Collision2D", "value.contacts[i++]", "value.GetContact(i++)", "contacts", "GetContact")]
 	[InlineData("object", "Input.touches[i++]", "Input.GetTouch(i++)", "touches", "GetTouch")]
+	[InlineData("object", "Input.accelerationEvents[i++]", "Input.GetAccelerationEvent(i++)", "accelerationEvents", "GetAccelerationEvent")]
 	public async Task NonAllocatingRead(string type, string expression, string fixedExpression, string property, string replacement)
 	{
 		var test = Source(type, $"Debug.Log({expression});");
@@ -70,10 +74,14 @@ public class NonAllocatingArrayAccessTests : BaseCodeFixVerifierTest<NonAllocati
 	[InlineData("Collision2D", "Debug.Log(value.GetContact(i));")]
 	[InlineData("object", "Debug.Log(Input.touchCount);")]
 	[InlineData("object", "Debug.Log(Input.GetTouch(i));")]
+	[InlineData("object", "Debug.Log(Input.accelerationEventCount);")]
+	[InlineData("object", "Debug.Log(Input.GetAccelerationEvent(i));")]
 	[InlineData("Collision", "Debug.Log(value.contacts);")]
 	[InlineData("object", "Debug.Log(Input.touches);")]
+	[InlineData("object", "Debug.Log(Input.accelerationEvents);")]
 	[InlineData("Collision", "foreach (var contact in value.contacts) Debug.Log(contact);")]
 	[InlineData("object", "foreach (var touch in Input.touches) Debug.Log(touch);")]
+	[InlineData("object", "foreach (var accelerationEvent in Input.accelerationEvents) Debug.Log(accelerationEvent);")]
 	[InlineData("Collision", "Debug.Log(value.contacts.LongLength);")]
 	[InlineData("Collision", "Debug.Log(nameof(value.contacts.Length));")]
 	[InlineData("object", "Debug.Log(nameof(Input.touches.Length));")]
@@ -96,6 +104,8 @@ public class NonAllocatingArrayAccessTests : BaseCodeFixVerifierTest<NonAllocati
 	[InlineData("object", "void Inspect(in Touch touch) { } Inspect((Input.touches[i]));")]
 	[InlineData("Collision", "Debug.Log(value.contacts[i].ToString());")]
 	[InlineData("object", "Input.touches[i].position = Vector2.zero;")]
+	[InlineData("object", "Input.accelerationEvents[i] = default;")]
+	[InlineData("object", "void Modify(ref AccelerationEvent accelerationEvent) { } Modify(ref Input.accelerationEvents[i]);")]
 	[InlineData("object", "Input.touches[i]!.position = Vector2.zero;")]
 	[InlineData("Collision", "ref var contact = ref value.contacts[i]!; Debug.Log(contact);")]
 	[InlineData("object", "Input.touches[i].tapCount++;")]
@@ -103,6 +113,7 @@ public class NonAllocatingArrayAccessTests : BaseCodeFixVerifierTest<NonAllocati
 	[InlineData("Collision", "Debug.Log(value.contacts[(long)i]);")]
 	[InlineData("Collision2D", "Debug.Log(value.contacts[(uint)i]);")]
 	[InlineData("object", "Debug.Log(Input.touches[(long)i]);")]
+	[InlineData("object", "Debug.Log(Input.accelerationEvents[(long)i]);")]
 	public async Task NotAValueReadWithIntIndex(string type, string statement)
 	{
 		await VerifyCSharpDiagnosticAsync(Source(type, statement));
