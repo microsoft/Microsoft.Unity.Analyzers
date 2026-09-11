@@ -150,7 +150,7 @@ public class AnimatorStringToHashCodeFix : CodeFixProvider
 
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 		var fieldName = CachedStringIdField.GetOrCreate(editor, classDecl, factory, literalValue, "Hash",
-			[stringArgument.Expression], cancellationToken);
+			stringArgument.Expression, cancellationToken);
 		if (fieldName == null)
 			return document;
 

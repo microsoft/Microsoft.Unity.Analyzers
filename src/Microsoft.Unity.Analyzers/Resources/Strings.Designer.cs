@@ -1285,7 +1285,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cache repeated Shader.PropertyToID calls with the same string literal in a static readonly field..
+        ///   Looks up a localized string similar to Cache the result of Shader.PropertyToID in a static readonly field to avoid recomputing the ID..
         /// </summary>
         internal static string ShaderPropertyToIDDiagnosticDescription {
             get {
@@ -1303,7 +1303,7 @@ namespace Microsoft.Unity.Analyzers.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cache repeated Shader.PropertyToID calls.
+        ///   Looks up a localized string similar to Cache Shader.PropertyToID calls.
         /// </summary>
         internal static string ShaderPropertyToIDDiagnosticTitle {
             get {

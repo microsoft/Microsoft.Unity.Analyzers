@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *-------------------------------------------------------------------------------------------*/
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -44,84 +42,47 @@ public class ShaderPropertyToIDAnalyzer : DiagnosticAnalyzer
 	{
 		context.EnableConcurrentExecution();
 		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-		context.RegisterSyntaxNodeAction(AnalyzeType, SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.RecordDeclaration);
+		context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
 	}
 
-	private static void AnalyzeType(SyntaxNodeAnalysisContext context)
+	private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
 	{
-		var groups = CollectCalls((TypeDeclarationSyntax)context.Node, context.SemanticModel, context.CancellationToken);
-		if (groups == null)
+		var invocation = (InvocationExpressionSyntax)context.Node;
+		var name = invocation.Expression switch
+		{
+			MemberAccessExpressionSyntax access => access.Name.Identifier.ValueText,
+			IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+			_ => null
+		};
+
+		if (name != "PropertyToID" || invocation.ArgumentList.Arguments.Count != 1
+			|| invocation.ArgumentList.Arguments[0].Expression is not LiteralExpressionSyntax literal
+			|| !literal.IsKind(SyntaxKind.StringLiteralExpression)
+			|| invocation.ContainsDirectives)
 			return;
 
-		foreach (var group in groups)
+		for (var parent = invocation.Parent; parent != null; parent = parent.Parent)
 		{
-			if (group.Value.Count >= 2)
-				context.ReportDiagnostic(Diagnostic.Create(Rule, group.Value[0].GetLocation(), group.Key));
-		}
-	}
+			// Initializers already cache the computed ID.
+			if (parent is BaseFieldDeclarationSyntax or EqualsValueClauseSyntax { Parent: PropertyDeclarationSyntax })
+				return;
 
-	internal static Dictionary<string, List<InvocationExpressionSyntax>>? CollectCalls(
-		TypeDeclarationSyntax declaration, SemanticModel model, CancellationToken cancellationToken)
-	{
-		List<InvocationExpressionSyntax>? candidates = null;
-		foreach (var member in declaration.Members)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			if (member is BaseTypeDeclarationSyntax or BaseFieldDeclarationSyntax)
-				continue;
-
-			foreach (var node in member.DescendantNodes(ShouldDescend))
-			{
-				if (node is not InvocationExpressionSyntax invocation || invocation.ArgumentList.Arguments.Count != 1
-					|| invocation.ContainsDirectives)
-					continue;
-
-				var name = invocation.Expression switch
-				{
-					MemberAccessExpressionSyntax access => access.Name.Identifier.ValueText,
-					IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
-					_ => null
-				};
-
-				if (name == "PropertyToID"
-					&& invocation.ArgumentList.Arguments[0].Expression is LiteralExpressionSyntax literal
-					&& literal.IsKind(SyntaxKind.StringLiteralExpression))
-					(candidates ??= []).Add(invocation);
-			}
+			if (parent is MemberDeclarationSyntax)
+				break;
 		}
 
-		if (candidates == null || candidates.Count < 2)
-			return null;
+		if (context.SemanticModel.GetOperation(invocation, context.CancellationToken) is not IInvocationOperation operation
+			|| operation.Parent is IExpressionStatementOperation)
+			return;
 
-		Dictionary<string, List<InvocationExpressionSyntax>>? groups = null;
-		foreach (var candidate in candidates)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-			if (model.GetOperation(candidate, cancellationToken) is not IInvocationOperation operation
-				|| operation.Parent is IExpressionStatementOperation
-				|| operation.Arguments.Length != 1
-				|| operation.Arguments[0].Value.ConstantValue.Value is not string value)
-				continue;
+		var method = operation.TargetMethod;
+		if (!method.IsStatic || !method.ContainingType.Matches(typeof(UnityEngine.Shader))
+			|| method.Parameters.Length != 1
+			|| method.Parameters[0].Type.SpecialType != SpecialType.System_String
+			|| method.ReturnType.SpecialType != SpecialType.System_Int32)
+			return;
 
-			var method = operation.TargetMethod;
-			if (!method.IsStatic || !method.ContainingType.Matches(typeof(UnityEngine.Shader))
-				|| method.Name != "PropertyToID" || method.Parameters.Length != 1
-				|| method.Parameters[0].Type.SpecialType != SpecialType.System_String
-				|| method.ReturnType.SpecialType != SpecialType.System_Int32)
-				continue;
-
-			groups ??= new(StringComparer.Ordinal);
-			if (!groups.TryGetValue(value, out var calls))
-				groups.Add(value, calls = []);
-			calls.Add(candidate);
-		}
-
-		return groups;
-	}
-
-	private static bool ShouldDescend(SyntaxNode node)
-	{
-		return node is not EqualsValueClauseSyntax { Parent: PropertyDeclarationSyntax };
+		context.ReportDiagnostic(Diagnostic.Create(Rule, invocation.GetLocation(), literal.Token.ValueText));
 	}
 }
 
@@ -154,33 +115,21 @@ public class ShaderPropertyToIDCodeFix : CodeFixProvider
 		if (declaration == null || model?.GetSymbolInfo(invocation, cancellationToken).Symbol is not IMethodSymbol factory)
 			return document;
 
-		var groups = ShaderPropertyToIDAnalyzer.CollectCalls(declaration, model, cancellationToken);
-		if (groups == null)
+		if (invocation.ArgumentList.Arguments[0].Expression is not LiteralExpressionSyntax literal)
 			return document;
 
-		foreach (var group in groups)
-		{
-			if (group.Value.Count < 2 || !group.Value.Contains(invocation))
-				continue;
+		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+		var fieldName = CachedStringIdField.GetOrCreate(editor, declaration, factory, literal.Token.ValueText, "Id", invocation, cancellationToken);
+		if (fieldName == null)
+			return document;
 
-			var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
-			var fieldName = CachedStringIdField.GetOrCreate(editor, declaration, factory, group.Key, "Id", group.Value, cancellationToken);
-			if (fieldName == null)
-				return document;
+		var interiorTrivia = invocation.DescendantTrivia().Where(trivia => invocation.Span.Contains(trivia.Span));
+		var reference = IdentifierName(fieldName)
+			.WithTriviaFrom(invocation)
+			.WithLeadingTrivia(invocation.GetLeadingTrivia().AddRange(interiorTrivia))
+			.WithAdditionalAnnotations(Formatter.Annotation);
+		editor.ReplaceNode(invocation, reference);
 
-			foreach (var call in group.Value)
-			{
-				var interiorTrivia = call.DescendantTrivia().Where(trivia => call.Span.Contains(trivia.Span));
-				var reference = IdentifierName(fieldName)
-					.WithTriviaFrom(call)
-					.WithLeadingTrivia(call.GetLeadingTrivia().AddRange(interiorTrivia))
-					.WithAdditionalAnnotations(Formatter.Annotation);
-				editor.ReplaceNode(call, reference);
-			}
-
-			return editor.GetChangedDocument();
-		}
-
-		return document;
+		return editor.GetChangedDocument();
 	}
 }

@@ -4,7 +4,6 @@
  *-------------------------------------------------------------------------------------------*/
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -20,7 +19,7 @@ namespace Microsoft.Unity.Analyzers;
 internal static class CachedStringIdField
 {
 	public static string? GetOrCreate(DocumentEditor editor, TypeDeclarationSyntax declaration,
-		IMethodSymbol factory, string value, string suffix, IReadOnlyList<ExpressionSyntax> usages, CancellationToken cancellationToken)
+		IMethodSymbol factory, string value, string suffix, ExpressionSyntax usage, CancellationToken cancellationToken)
 	{
 		var model = editor.SemanticModel;
 		if (model.GetDeclaredSymbol(declaration, cancellationToken) is not INamedTypeSymbol type)
@@ -47,7 +46,7 @@ internal static class CachedStringIdField
 				if (SymbolEqualityComparer.Default.Equals(fieldModel.GetSymbolInfo(initializer, cancellationToken).Symbol, factory)
 					&& fieldModel.GetConstantValue(initializer.ArgumentList.Arguments[0].Expression, cancellationToken).Value is string existingValue
 					&& existingValue == value
-					&& CanReference(model, usages, field.Name, field))
+					&& CanReference(model, usage, field.Name, field))
 					return field.Name;
 			}
 		}
@@ -55,7 +54,7 @@ internal static class CachedStringIdField
 		var baseName = GenerateFieldName(value, suffix);
 		var fieldName = baseName;
 		var counter = 1;
-		while (fieldName == type.Name || type.GetMembers(fieldName).Length > 0 || !CanReference(model, usages, fieldName))
+		while (fieldName == type.Name || type.GetMembers(fieldName).Length > 0 || !CanReference(model, usage, fieldName))
 			fieldName = baseName + counter++;
 
 		ExpressionSyntax factoryExpression = IdentifierName(factory.Name);
@@ -83,17 +82,11 @@ internal static class CachedStringIdField
 		return fieldName;
 	}
 
-	private static bool CanReference(SemanticModel model, IReadOnlyList<ExpressionSyntax> usages, string name, IFieldSymbol? existingField = null)
+	private static bool CanReference(SemanticModel model, ExpressionSyntax usage, string name, IFieldSymbol? existingField = null)
 	{
-		foreach (var usage in usages)
-		{
-			var symbols = model.LookupSymbols(usage.SpanStart, name: name);
-			if (existingField == null ? symbols.Length != 0
-				: symbols.Length != 1 || !SymbolEqualityComparer.Default.Equals(symbols[0], existingField))
-				return false;
-		}
-
-		return true;
+		var symbols = model.LookupSymbols(usage.SpanStart, name: name);
+		return existingField == null ? symbols.Length == 0
+			: symbols.Length == 1 && SymbolEqualityComparer.Default.Equals(symbols[0], existingField);
 	}
 
 	private static string GenerateFieldName(string value, string suffix)

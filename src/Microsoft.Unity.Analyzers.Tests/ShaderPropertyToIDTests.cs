@@ -19,15 +19,24 @@ public class ShaderPropertyToIDTests : BaseCodeFixVerifierTest<ShaderPropertyToI
 	[InlineData("Shader.PropertyToID(@\"_Color\")")]
 	[InlineData("UnityEngine.Shader.PropertyToID(\"_Color\")")]
 	[InlineData("global::UnityEngine.Shader.PropertyToID(\"_Color\")")]
-	public async Task RepeatedLiteralCalls(string expression)
+	public async Task LiteralCall(string expression)
 	{
-		var test = Source(expression, ColorCall);
+		var test = Source(expression, "0");
 		var diagnostic = ExpectDiagnostic()
 			.WithLocation(8, 16)
 			.WithArguments("_Color");
 
 		await VerifyCSharpDiagnosticAsync(test, diagnostic);
-		await VerifyCSharpFixAsync(test, Source("ColorId", "ColorId", ColorField));
+		await VerifyCSharpFixAsync(test, Source("ColorId", "0", ColorField));
+	}
+
+	[Fact]
+	public async Task FixOnlySelectedCall()
+	{
+		await VerifyCSharpFixAsync(
+			Source(ColorCall, ColorCall),
+			Source("ColorId", ColorCall, ColorField),
+			codeFixIndex: 0);
 	}
 
 	[Theory]
@@ -127,7 +136,7 @@ public class ShaderPropertyToIDTests : BaseCodeFixVerifierTest<ShaderPropertyToI
 	}
 
 	[Fact]
-	public async Task RepeatedGroupsWithConflictingNames()
+	public async Task DifferentNamesWithTheSameFieldName()
 	{
 		var first = "Shader.PropertyToID(\"_Main-Tex\") + Shader.PropertyToID(\"_Main Tex\")";
 		var test = Source(first, first);
@@ -157,10 +166,26 @@ partial class Example
 	public async Task CallsInOneMethod()
 	{
 		var test = Source(ColorCall + " + " + ColorCall, "0");
-		var diagnostic = ExpectDiagnostic().WithLocation(8, 16).WithArguments("_Color");
+		var first = ExpectDiagnostic().WithLocation(8, 16).WithArguments("_Color");
+		var second = ExpectDiagnostic().WithLocation(8, 16 + ColorCall.Length + 3).WithArguments("_Color");
 
-		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+		await VerifyCSharpDiagnosticAsync(test, first, second);
 		await VerifyCSharpFixAsync(test, Source("ColorId + ColorId", "0", ColorField));
+	}
+
+	[Theory]
+	[InlineData("_Other", "OtherId")]
+	[InlineData("_color", "ColorId1")]
+	public async Task DifferentPropertyNames(string name, string fieldName)
+	{
+		var call = $"Shader.PropertyToID(\"{name}\")";
+		var test = Source(ColorCall, call);
+		var first = ExpectDiagnostic().WithLocation(8, 16).WithArguments("_Color");
+		var second = ExpectDiagnostic().WithLocation(13, 16).WithArguments(name);
+		var field = $"    private static readonly int {fieldName} = {call};\n";
+
+		await VerifyCSharpDiagnosticAsync(test, first, second);
+		await VerifyCSharpFixAsync(test, Source("ColorId", fieldName, field + ColorField));
 	}
 
 	[Fact]
@@ -173,20 +198,17 @@ partial class Example
 	}
 
 	[Theory]
-	[InlineData("Shader.PropertyToID(\"_Color\")", "0")]
-	[InlineData("Shader.PropertyToID(\"_Color\")", "Shader.PropertyToID(\"_Other\")")]
-	[InlineData("Shader.PropertyToID(\"_Color\")", "Shader.PropertyToID(\"_color\")")]
 	[InlineData("Shader.PropertyToID(null)", "Shader.PropertyToID(null)")]
 	[InlineData("Shader.PropertyToID(PropertyName)", "Shader.PropertyToID(PropertyName)", "    private string PropertyName = \"_Color\";\n")]
-	[InlineData("Shader.PropertyToID(\"_Color\")", "ColorId", ColorField)]
+	[InlineData("ColorId", "0", ColorField)]
 	[InlineData("ColorId", "OtherColorId", ColorField + "    private static readonly int OtherColorId = Shader.PropertyToID(\"_Color\");\n")]
-	public async Task NoRepeatedLiteralCalls(string first, string second, string members = "")
+	public async Task NonLiteralOrCachedCalls(string first, string second, string members = "")
 	{
 		await VerifyCSharpDiagnosticAsync(Source(first, second, members));
 	}
 
 	[Fact]
-	public async Task SingleCallInUpdateDoesNotCountAsRepeated()
+	public async Task SingleCallInUpdate()
 	{
 		const string test = @"
 using UnityEngine;
@@ -199,7 +221,23 @@ class Example : MonoBehaviour
     }
 }";
 
-		await VerifyCSharpDiagnosticAsync(test);
+		var diagnostic = ExpectDiagnostic().WithLocation(8, 19).WithArguments("_Color");
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Example : MonoBehaviour
+{
+    private static readonly int ColorId = Shader.PropertyToID(""_Color"");
+
+    void Update()
+    {
+        Debug.Log(ColorId);
+    }
+}";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
 	[Theory]
@@ -208,14 +246,14 @@ class Example : MonoBehaviour
 	[InlineData("for (Shader.PropertyToID(\"_Color\"); System.Environment.TickCount < 0; Shader.PropertyToID(\"_Color\")) { }")]
 	public async Task DiscardedValues(string statement)
 	{
-		var test = Source("0", ColorCall, firstSetup: "        " + statement + "\n");
+		var test = Source("0", "0", firstSetup: "        " + statement + "\n");
 		await VerifyCSharpDiagnosticAsync(test);
 	}
 
 	[Fact]
 	public async Task ExpressionBodiedVoidMethod()
 	{
-		var test = Source("0", ColorCall, "    void Method() => Shader.PropertyToID(\"_Color\");\n");
+		var test = Source("0", "0", "    void Method() => Shader.PropertyToID(\"_Color\");\n");
 		await VerifyCSharpDiagnosticAsync(test);
 	}
 
@@ -233,18 +271,39 @@ static class OtherShader
 	}
 
 	[Fact]
-	public async Task NestedTypesAreIndependent()
+	public async Task SingleCallInNestedType()
 	{
-		const string nested = @"    class Nested
+		const string test = @"
+using UnityEngine;
+
+class Example
+{
+    class Nested
     {
         int Read() => Shader.PropertyToID(""_Color"");
     }
-";
-		await VerifyCSharpDiagnosticAsync(Source(ColorCall, "0", nested));
+}";
+		var diagnostic = ExpectDiagnostic().WithLocation(8, 23).WithArguments("_Color");
+		await VerifyCSharpDiagnosticAsync(test, diagnostic);
+
+		const string fixedTest = @"
+using UnityEngine;
+
+class Example
+{
+    class Nested
+    {
+        private static readonly int ColorId = Shader.PropertyToID(""_Color"");
+
+        int Read() => ColorId;
+    }
+}";
+
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
 	[Fact]
-	public async Task PartialDeclarationsAreIndependent()
+	public async Task CallsInDifferentPartialDeclarations()
 	{
 		const string otherPart = @"
 partial class Example
@@ -253,7 +312,9 @@ partial class Example
 }";
 		var test = Source(ColorCall, "0", declaration: "partial class Example : MonoBehaviour") + otherPart;
 
-		await VerifyCSharpDiagnosticAsync(test);
+		var fixedTest = Source("ColorId", "0", ColorField, declaration: "partial class Example : MonoBehaviour")
+			+ otherPart.Replace(ColorCall, "ColorId");
+		await VerifyCSharpFixAsync(test, fixedTest);
 	}
 
 	[Fact]

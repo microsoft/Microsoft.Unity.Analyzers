@@ -716,12 +716,12 @@
     <value>Cache shader property ID</value>
   </data>
   <data name="ShaderPropertyToIDDiagnosticDescription" xml:space="preserve">
-    <value>Cache repeated Shader.PropertyToID calls with the same string literal in a static readonly field.</value>
+    <value>Cache the result of Shader.PropertyToID in a static readonly field to avoid recomputing the ID.</value>
   </data>
   <data name="ShaderPropertyToIDDiagnosticMessageFormat" xml:space="preserve">
     <value>Cache the shader property ID for '{0}' instead of calling Shader.PropertyToID repeatedly.</value>
   </data>
   <data name="ShaderPropertyToIDDiagnosticTitle" xml:space="preserve">
-    <value>Cache repeated Shader.PropertyToID calls</value>
+    <value>Cache Shader.PropertyToID calls</value>
   </data>
 </root>
