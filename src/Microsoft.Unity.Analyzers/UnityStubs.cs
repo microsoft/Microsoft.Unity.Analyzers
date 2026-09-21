@@ -607,6 +607,11 @@ namespace UnityEngine
 	class RequireComponent : Attribute { }
 }
 
+namespace UnityEngine.SceneManagement
+{
+	struct Scene { }
+}
+
 namespace UnityEngine.EventSystems
 {
 	abstract class UIBehaviour : MonoBehaviour
@@ -687,6 +692,11 @@ namespace UnityEditor.AssetImporters
 	}
 }
 
+namespace UnityEditor.Build.Content
+{
+	struct SceneImportContext { }
+}
+
 namespace UnityEditor.Callbacks
 {
 	class DidReloadScripts : Attribute { }
@@ -695,7 +705,9 @@ namespace UnityEditor.Callbacks
 namespace UnityEditor
 {
 	using AssetImporters;
+	using Build.Content;
 	using UnityEngine;
+	using UnityEngine.SceneManagement;
 	using UnityEngine.UIElements;
 
 	class AssetDatabase { }
@@ -766,6 +778,7 @@ namespace UnityEditor
 		void OnPostprocessPrefab(GameObject gameObject) { }
 		void OnPostprocessTexture2DArray(Texture2DArray texture) { }
 		void OnPostprocessTexture3D(Texture3D texture) { }
+		void OnProcessScene(Scene scene, SceneImportContext sceneContext) { }
 
 		void OnPreprocessAnimation() { }
 		void OnPreprocessAsset() { }
