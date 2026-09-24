@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -39,10 +40,8 @@ public class ConditionalCompilationSymbolTypoAnalyzer : DiagnosticAnalyzer
 
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	private const int LongSymbolLength = 8;
-	private const int MaxShortSymbolEditDistance = 1;
-	private const int MaxLongSymbolEditDistance = 2;
-	private const int MaxStackAllocEditDistanceBufferLength = 64;
+	// UNITY_X, UNITY_X_Y, UNITY_X_Y_Z, and UNITY_X_Y_OR_NEWER.
+	private static readonly Regex UnityVersionSymbolRegex = new(@"\AUNITY_[0-9]+(?:_[0-9]+(?:_[0-9]+|_OR_NEWER)?)?\z", RegexOptions.Compiled);
 
 	public override void Initialize(AnalysisContext context)
 	{
@@ -57,12 +56,12 @@ public class ConditionalCompilationSymbolTypoAnalyzer : DiagnosticAnalyzer
 		if (context.Tree.Options is not CSharpParseOptions parseOptions)
 			return;
 
-		var knownSymbols = GetKnownSymbols(parseOptions);
-		if (knownSymbols.Length == 0)
+		var definedSymbols = GetDefinedSymbols(parseOptions);
+		if (definedSymbols.Length == 0)
 			return;
 
 		var root = context.Tree.GetRoot(context.CancellationToken);
-		var knownSymbolSet = new HashSet<string>(knownSymbols, StringComparer.Ordinal);
+		var definedSymbolSet = new HashSet<string>(definedSymbols, StringComparer.Ordinal);
 		var localSymbols = GetLocalSymbols(root);
 
 		foreach (var condition in GetDirectiveConditions(root))
@@ -75,29 +74,28 @@ public class ConditionalCompilationSymbolTypoAnalyzer : DiagnosticAnalyzer
 				if (string.IsNullOrEmpty(symbol))
 					continue;
 
-				if (knownSymbolSet.Contains(symbol) || localSymbols.Contains(symbol))
+				if (definedSymbolSet.Contains(symbol) || localSymbols.Contains(symbol) || UnityVersionSymbolRegex.IsMatch(symbol))
 					continue;
 
-				if (!TryFindClosestSymbol(symbol, knownSymbols, out var closestSymbol))
+				if (!TryFindSuggestedSymbol(symbol, definedSymbols, out var suggestedSymbol))
 					continue;
 
 				context.ReportDiagnostic(Diagnostic.Create(
 					Rule,
 					identifier.GetLocation(),
 					null,
-					ImmutableDictionary<string, string?>.Empty.Add(SuggestedSymbolPropertyName, closestSymbol),
+					ImmutableDictionary<string, string?>.Empty.Add(SuggestedSymbolPropertyName, suggestedSymbol),
 					symbol,
-					closestSymbol));
+					suggestedSymbol));
 			}
 		}
 	}
 
-	private static string[] GetKnownSymbols(CSharpParseOptions parseOptions)
+	private static string[] GetDefinedSymbols(CSharpParseOptions parseOptions)
 	{
 		return [.. parseOptions.PreprocessorSymbolNames
 			.Where(symbol => !string.IsNullOrWhiteSpace(symbol))
-			.Distinct(StringComparer.Ordinal)
-			.OrderBy(symbol => symbol, StringComparer.Ordinal)];
+			.Distinct(StringComparer.Ordinal)];
 	}
 
 	private static HashSet<string> GetLocalSymbols(SyntaxNode root)
@@ -132,91 +130,84 @@ public class ConditionalCompilationSymbolTypoAnalyzer : DiagnosticAnalyzer
 		}
 	}
 
-	private static bool TryFindClosestSymbol(string symbol, string[] candidates, [NotNullWhen(true)] out string? closestSymbol)
+	private static bool TryFindSuggestedSymbol(string symbol, string[] candidates, [NotNullWhen(true)] out string? suggestedSymbol)
 	{
-		closestSymbol = null;
+		suggestedSymbol = null;
 		if (symbol.Length < 3)
 			return false;
 
-		var maxDistance = GetMaxEditDistance(symbol);
-		var bestDistance = maxDistance + 1;
-		var bestLengthDifference = int.MaxValue;
-
 		foreach (var candidate in candidates)
 		{
-			var lengthDifference = Math.Abs(symbol.Length - candidate.Length);
-			if (lengthDifference > maxDistance)
+			if (!IsSingleEdit(symbol.AsSpan(), candidate.AsSpan()) ||
+				!HaveSameNumericComponents(symbol.AsSpan(), candidate.AsSpan()))
 				continue;
 
-			var distance = GetEditDistance(symbol, candidate, maxDistance);
-			if (distance > maxDistance)
-				continue;
-
-			if (distance > bestDistance)
-				continue;
-
-			if (distance == bestDistance && lengthDifference >= bestLengthDifference)
-				continue;
-
-			closestSymbol = candidate;
-			bestDistance = distance;
-			bestLengthDifference = lengthDifference;
-		}
-
-		return closestSymbol != null;
-	}
-
-	private static int GetMaxEditDistance(string symbol)
-	{
-		return symbol.Length >= LongSymbolLength ? MaxLongSymbolEditDistance : MaxShortSymbolEditDistance;
-	}
-
-	private static int GetEditDistance(string source, string target, int maxDistance)
-	{
-		if (source.Length == 0)
-			return target.Length;
-
-		if (target.Length == 0)
-			return source.Length;
-
-		if (Math.Abs(source.Length - target.Length) > maxDistance)
-			return maxDistance + 1;
-
-		var bufferLength = target.Length + 1;
-		var previous = bufferLength <= MaxStackAllocEditDistanceBufferLength ? stackalloc int[bufferLength] : new int[bufferLength];
-		var current = bufferLength <= MaxStackAllocEditDistanceBufferLength ? stackalloc int[bufferLength] : new int[bufferLength];
-
-		for (var i = 0; i <= target.Length; i++)
-			previous[i] = i;
-
-		for (var sourceIndex = 1; sourceIndex <= source.Length; sourceIndex++)
-		{
-			current[0] = sourceIndex;
-			var rowMinimum = current[0];
-
-			for (var targetIndex = 1; targetIndex <= target.Length; targetIndex++)
+			if (suggestedSymbol != null)
 			{
-				var substitutionCost = source[sourceIndex - 1] == target[targetIndex - 1] ? 0 : 1;
-				var deletion = previous[targetIndex] + 1;
-				var insertion = current[targetIndex - 1] + 1;
-				var substitution = previous[targetIndex - 1] + substitutionCost;
-				var distance = Math.Min(Math.Min(deletion, insertion), substitution);
-
-				current[targetIndex] = distance;
-				rowMinimum = Math.Min(rowMinimum, distance);
+				suggestedSymbol = null;
+				return false;
 			}
 
-			if (rowMinimum > maxDistance)
-				return maxDistance + 1;
-
-			var nextPrevious = previous;
-			previous = current;
-			current = nextPrevious;
+			suggestedSymbol = candidate;
 		}
 
-		return previous[target.Length];
+		return suggestedSymbol != null;
 	}
 
+	private static bool IsSingleEdit(ReadOnlySpan<char> source, ReadOnlySpan<char> target)
+	{
+		if (Math.Abs(source.Length - target.Length) > 1)
+			return false;
+
+		var index = 0;
+		while (index < source.Length && index < target.Length && source[index] == target[index])
+			index++;
+
+		if (source.Length != target.Length)
+		{
+			return source.Length > target.Length
+				? source.Slice(index + 1).SequenceEqual(target.Slice(index))
+				: source.Slice(index).SequenceEqual(target.Slice(index + 1));
+		}
+
+		if (index == source.Length)
+			return false;
+
+		if (source.Slice(index + 1).SequenceEqual(target.Slice(index + 1)))
+			return true;
+
+		return index + 1 < source.Length &&
+			source[index] == target[index + 1] &&
+			source[index + 1] == target[index] &&
+			source.Slice(index + 2).SequenceEqual(target.Slice(index + 2));
+	}
+
+	private static bool HaveSameNumericComponents(ReadOnlySpan<char> source, ReadOnlySpan<char> target)
+	{
+		var sourceIndex = 0;
+		var targetIndex = 0;
+		while (sourceIndex < source.Length || targetIndex < target.Length)
+		{
+			var sourceComponent = GetNextNumericComponent(source, ref sourceIndex);
+			var targetComponent = GetNextNumericComponent(target, ref targetIndex);
+			if (!sourceComponent.SequenceEqual(targetComponent))
+				return false;
+		}
+
+		return true;
+	}
+
+	private static ReadOnlySpan<char> GetNextNumericComponent(ReadOnlySpan<char> symbol, ref int index)
+	{
+		while (index < symbol.Length && !char.IsDigit(symbol[index]))
+			index++;
+
+		var start = index;
+		while (index < symbol.Length && char.IsDigit(symbol[index]))
+			index++;
+
+		return symbol.Slice(start, index - start);
+	}
 }
 
 [ExportCodeFixProvider(LanguageNames.CSharp)]
